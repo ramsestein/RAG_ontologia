@@ -25,16 +25,7 @@ Este proyecto implementa y compara **4 estrategias diferentes** para el reconoci
   - Diccionario estático para casos específicos
 - **Fortalezas**: Mejor precision (84.21%), velocidad moderada (0.55s)
 
-### 3. **MITEL** (3er lugar)
-- **Enfoque**: Mistral 7B + RAG con Faiss
-- **Características**:
-  - NER con Mistral 7B via Ollama
-  - RAG con terminologías SNOMED extendidas
-  - Clasificación contextual con LLM
-  - Base de datos terminológica de 50+ conceptos
-- **Estado**: Implementado pero falló por problemas de encoding
-
-### 4. **OntoRAG + GPT-4o** (Implementación Original)
+### 3. **OntoRAG + GPT-4o** (Implementación Original)
 - **Enfoque**: RAG con ontología OWL + GPT-4o
 - **Características**:
   - Pipeline NER + Codificación con GPT-4o
