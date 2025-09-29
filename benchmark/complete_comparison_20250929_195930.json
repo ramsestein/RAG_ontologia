@@ -1,0 +1,227 @@
+{
+  "timestamp": "20250929_195930",
+  "comparison_type": "COMPLETE_4_STRATEGIES_REAL",
+  "strategies": [
+    "1_KIRIs_REAL",
+    "2_SNOBERT_REAL",
+    "4_TU_RAG_GPT4o"
+  ],
+  "results": {
+    "1_KIRIs_REAL": {
+      "precision": 0.8380952380952381,
+      "recall": 0.7652173913043478,
+      "f1": 0.8,
+      "predictions": 105,
+      "matches": 88,
+      "partial_matches": 17,
+      "ground_truth": 115,
+      "coverage": 1.0
+    },
+    "2_SNOBERT_REAL": {
+      "precision": 0.8421052631578947,
+      "recall": 0.6956521739130435,
+      "f1": 0.761904761904762,
+      "predictions": 95,
+      "matches": 80,
+      "partial_matches": 15,
+      "ground_truth": 115,
+      "coverage": 1.0
+    },
+    "4_TU_RAG_GPT4o": {
+      "precision": 0.7627118644067796,
+      "recall": 0.391304347826087,
+      "f1": 0.5172413793103449,
+      "predictions": 59,
+      "matches": 45,
+      "partial_matches": 14,
+      "ground_truth": 115,
+      "coverage": 1.0
+    }
+  },
+  "execution_times": {
+    "1_KIRIs_REAL": 0.024047374725341797,
+    "2_SNOBERT_REAL": 0.5493223667144775,
+    "4_TU_RAG_GPT4o": 38.28529167175293
+  },
+  "dataset_info": {
+    "notes_count": 5,
+    "annotations_count": 115
+  },
+  "ranking": [
+    [
+      "1_KIRIs_REAL",
+      0.8
+    ],
+    [
+      "2_SNOBERT_REAL",
+      0.761904761904762
+    ],
+    [
+      "4_TU_RAG_GPT4o",
+      0.5172413793103449
+    ]
+  ],
+  "sample_predictions": {
+    "1_KIRIs_REAL": [
+      {
+        "note_id": 1,
+        "start": 75,
+        "end": 87,
+        "concept_id": 38341003,
+        "span_text": "hypertension",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'right', 'severity': 'acute', 'temporal': 'old'}"
+      },
+      {
+        "note_id": 1,
+        "start": 92,
+        "end": 109,
+        "concept_id": 73211009,
+        "span_text": "diabetes mellitus",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+      },
+      {
+        "note_id": 1,
+        "start": 155,
+        "end": 163,
+        "concept_id": 13791008,
+        "span_text": "weakness",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+      },
+      {
+        "note_id": 1,
+        "start": 287,
+        "end": 329,
+        "concept_id": 450893003,
+        "span_text": "National Institutes of Health Stroke Scale",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "examination",
+        "attributes": "{'laterality': 'left'}"
+      },
+      {
+        "note_id": 1,
+        "start": 331,
+        "end": 336,
+        "concept_id": 450893003,
+        "span_text": "NIHSS",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "examination",
+        "attributes": "{'laterality': 'left'}"
+      }
+    ],
+    "2_SNOBERT_REAL": [
+      {
+        "note_id": 1,
+        "start": 317,
+        "end": 323,
+        "concept_id": "432102000",
+        "span_text": "Stroke",
+        "confidence": 0.0,
+        "method": "rule_based_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Ischemic stroke"
+      },
+      {
+        "note_id": 1,
+        "start": 618,
+        "end": 624,
+        "concept_id": "432102000",
+        "span_text": "Stroke",
+        "confidence": 0.0,
+        "method": "rule_based_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Ischemic stroke"
+      },
+      {
+        "note_id": 1,
+        "start": 155,
+        "end": 163,
+        "concept_id": "13791008",
+        "span_text": "weakness",
+        "confidence": 0.7999999999465421,
+        "method": "rule_based_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Weakness"
+      },
+      {
+        "note_id": 1,
+        "start": 361,
+        "end": 372,
+        "concept_id": "50582007",
+        "span_text": "hemiparesis",
+        "confidence": 0.7999999999667979,
+        "method": "rule_based_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Hemiparesis"
+      },
+      {
+        "note_id": 1,
+        "start": 356,
+        "end": 372,
+        "concept_id": "50582007",
+        "span_text": "left hemiparesis",
+        "confidence": 0.0,
+        "method": "rule_based_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Hemiparesis"
+      }
+    ],
+    "4_TU_RAG_GPT4o": [
+      {
+        "note_id": 1,
+        "start": 69,
+        "end": 79,
+        "concept_id": "38341003",
+        "span_text": "hypertension",
+        "confidence": 0.9,
+        "method": "simple_rag_gpt4o"
+      },
+      {
+        "note_id": 1,
+        "start": 84,
+        "end": 101,
+        "concept_id": "44054006",
+        "span_text": "diabetes mellitus",
+        "confidence": 0.9,
+        "method": "simple_rag_gpt4o"
+      },
+      {
+        "note_id": 1,
+        "start": 120,
+        "end": 136,
+        "concept_id": "13791008",
+        "span_text": "left-sided weakness",
+        "confidence": 0.95,
+        "method": "simple_rag_gpt4o"
+      },
+      {
+        "note_id": 1,
+        "start": 141,
+        "end": 158,
+        "concept_id": "8011004",
+        "span_text": "speech difficulties",
+        "confidence": 0.85,
+        "method": "simple_rag_gpt4o"
+      },
+      {
+        "note_id": 1,
+        "start": 266,
+        "end": 278,
+        "concept_id": "50582007",
+        "span_text": "left hemiparesis",
+        "confidence": 0.95,
+        "method": "simple_rag_gpt4o"
+      }
+    ]
+  }
+}

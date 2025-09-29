@@ -1,0 +1,60 @@
+note_id,start,end,concept_id,span_text,confidence,method
+1,69,79,38341003,hypertension,0.9,simple_rag_gpt4o
+1,84,101,44054006,diabetes mellitus,0.9,simple_rag_gpt4o
+1,120,136,13791008,left-sided weakness,0.95,simple_rag_gpt4o
+1,141,158,8011004,speech difficulties,0.85,simple_rag_gpt4o
+1,266,278,50582007,left hemiparesis,0.95,simple_rag_gpt4o
+1,280,295,13791008,left facial droop,0.85,simple_rag_gpt4o
+1,301,314,8011004,mild dysarthria,0.95,simple_rag_gpt4o
+1,466,495,230690007,occlusion of the right middle cerebral artery (MCA) M1 segment,0.9,simple_rag_gpt4o
+1,628,661,428191000000109,intravenous tissue plasminogen activator (tPA),0.9,simple_rag_gpt4o
+1,715,737,183007007,mechanical thrombectomy,0.9,simple_rag_gpt4o
+1,818,852,230690007,Thrombolysis in Cerebral Infarction (TICI) 2B flow,0.85,simple_rag_gpt4o
+1,882,915,50960005,minimal hemorrhagic transformation,0.85,simple_rag_gpt4o
+2,38,56,49436004,atrial fibrillation,0.9,simple_rag_gpt4o
+2,106,122,25064002,severe headache,0.95,simple_rag_gpt4o
+2,124,130,422587007,nausea,0.95,simple_rag_gpt4o
+2,136,144,422400008,vomiting,0.9,simple_rag_gpt4o
+2,258,270,231460005,nuchal rigidity,0.9,simple_rag_gpt4o
+2,275,286,267036007,photophobia,0.9,simple_rag_gpt4o
+2,365,387,50960005,subarachnoid hemorrhage,0.95,simple_rag_gpt4o
+2,435,467,116288000,anterior communicating artery aneurysm,0.9,simple_rag_gpt4o
+2,546,571,225362007,neurointensive care unit,0.85,simple_rag_gpt4o
+2,602,611,372687004,Nimodipine,0.9,simple_rag_gpt4o
+2,693,717,433112001,Endovascular coiling,0.9,simple_rag_gpt4o
+2,772,795,230690007,delayed cerebral ischemia,0.9,simple_rag_gpt4o
+2,839,857,118001003,balloon angioplasty,0.9,simple_rag_gpt4o
+3,0,6,230690007,STROKE,0.95,simple_rag_gpt4o
+3,94,102,13791008,weakness,0.9,simple_rag_gpt4o
+3,107,125,13791008,speech difficulties,0.85,simple_rag_gpt4o
+3,362,368,55342001,infarct,0.92,simple_rag_gpt4o
+3,374,393,86547008,corona radiata,0.8,simple_rag_gpt4o
+3,432,460,86547008,internal carotid artery,0.95,simple_rag_gpt4o
+3,631,661,86547008,carotid endarterectomy,0.85,simple_rag_gpt4o
+4,44,50,87486003,aphasia,0.95,simple_rag_gpt4o
+4,55,67,unknown,right hemiplegia,0.8,simple_rag_gpt4o
+4,188,221,26036001,left M1 middle cerebral artery occlusion,0.9,simple_rag_gpt4o
+4,292,303,433112001,thrombectomy,0.95,simple_rag_gpt4o
+4,368,390,86547008,left internal carotid artery,0.9,simple_rag_gpt4o
+4,573,582,50960005,hemorrhage,0.85,simple_rag_gpt4o
+5,0,25,230690007,POSTERIOR CIRCULATION STROKE,0.95,simple_rag_gpt4o
+5,51,78,55342001,vertebrobasilar insufficiency,0.8,simple_rag_gpt4o
+5,103,109,230690007,vertigo,0.85,simple_rag_gpt4o
+5,111,119,230690007,diplopia,0.85,simple_rag_gpt4o
+5,125,131,230690007,ataxia,0.85,simple_rag_gpt4o
+5,198,207,230690007,nystagmus,0.85,simple_rag_gpt4o
+5,209,239,230690007,bilateral internuclear ophthalmoplegia,0.85,simple_rag_gpt4o
+5,245,258,230690007,truncal ataxia,0.85,simple_rag_gpt4o
+5,288,296,230690007,dysmetria,0.85,simple_rag_gpt4o
+5,301,320,230690007,dysdiadochokinesia,0.85,simple_rag_gpt4o
+5,372,379,55342001,infarcts,0.9,simple_rag_gpt4o
+5,384,413,55342001,bilateral medial longitudinal fasciculi,0.8,simple_rag_gpt4o
+5,418,443,55342001,superior cerebellar peduncles,0.8,simple_rag_gpt4o
+5,467,482,86547008,basilar artery,0.85,simple_rag_gpt4o
+5,521,552,55342001,bilateral ostial stenosis,0.85,simple_rag_gpt4o
+5,579,612,26036001,basilar artery branch occlusion,0.9,simple_rag_gpt4o
+5,620,646,86547008,stenotic basilar artery segment,0.85,simple_rag_gpt4o
+5,661,680,55342001,Antiplatelet therapy,0.8,simple_rag_gpt4o
+5,736,759,55342001,endovascular intervention,0.8,simple_rag_gpt4o
+5,765,785,55342001,balloon angioplasty,0.8,simple_rag_gpt4o
+5,790,798,55342001,stenting,0.8,simple_rag_gpt4o

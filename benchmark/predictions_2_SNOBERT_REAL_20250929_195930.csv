@@ -1,0 +1,96 @@
+note_id,start,end,concept_id,span_text,confidence,method,classification_method,concept_description
+1,317,323,432102000,Stroke,0.0,rule_based_ner,sapbert_faiss,Ischemic stroke
+1,618,624,432102000,Stroke,0.0,rule_based_ner,sapbert_faiss,Ischemic stroke
+1,155,163,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+1,361,372,50582007,hemiparesis,0.7999999999667979,rule_based_ner,sapbert_faiss,Hemiparesis
+1,356,372,50582007,left hemiparesis,0.0,rule_based_ner,sapbert_faiss,Hemiparesis
+1,155,163,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+1,394,406,280816001,facial droop,0.0,rule_based_ner,sapbert_faiss,Facial weakness
+1,417,427,8011004,dysarthria,0.7999999999543803,rule_based_ner,sapbert_faiss,Dysarthria
+1,506,516,50960005,hemorrhage,0.7999999999729139,rule_based_ner,sapbert_faiss,Hemorrhage
+1,1027,1037,55342001,Infarction,0.7999999999673344,rule_based_ner,sapbert_faiss,Infarction
+1,546,555,26036001,occlusion,0.7999999999784013,rule_based_ner,sapbert_faiss,Occlusion
+1,883,892,26036001,occlusion,0.7999999999784013,rule_based_ner,sapbert_faiss,Occlusion
+1,593,596,69930009,MCA,0.8800000000000001,rule_based_ner,static_dict,Left middle cerebral artery
+1,598,608,69930009,M1 segment,0.8800000000000001,rule_based_ner,static_dict,MCA M1 segment
+1,521,532,77343006,angiography,0.799999999957424,rule_based_ner,sapbert_faiss,Angiography
+1,930,942,433112001,thrombectomy,0.7999999999639035,rule_based_ner,sapbert_faiss,Thrombectomy
+1,969,983,449894001,recanalization,0.7999999999649005,rule_based_ner,sapbert_faiss,Recanalization
+1,1002,1014,373110003,Thrombolysis,0.7999999999713792,rule_based_ner,sapbert_faiss,Thrombolysis
+1,1105,1119,449894001,recanalization,0.7999999999649005,rule_based_ner,sapbert_faiss,Recanalization
+1,919,942,433112001,mechanical thrombectomy,0.0,rule_based_ner,sapbert_faiss,Thrombectomy
+1,792,820,373110003,tissue plasminogen activator,0.0,rule_based_ner,sapbert_faiss,Thrombolysis
+1,822,825,373110003,tPA,0.0,rule_based_ner,sapbert_faiss,Thrombolysis
+1,474,476,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+1,518,520,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+1,639,641,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+1,665,667,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+1,453,472,77477000,computed tomography,0.7999999999683184,rule_based_ner,sapbert_faiss,Computed tomography
+1,331,336,450893003,NIHSS,0.8800000000000001,rule_based_ner,static_dict,NIHSS score 0
+1,649,656,450893003,ASPECTS,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+1,1039,1043,450893003,TICI,0.8800000000000001,rule_based_ner,static_dict,TICI 0 - no perfusion
+1,1229,1235,450893003,NIHSS ,0.8800000000000001,rule_based_ner,static_dict,NIHSS score 0
+1,287,329,450893003,National Institutes of Health Stroke Scale,0.0,rule_based_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+2,561,571,50960005,hemorrhage,0.7999999999729139,rule_based_ner,sapbert_faiss,Hemorrhage
+2,1081,1089,52674009,ischemia,0.7999999999645762,rule_based_ner,sapbert_faiss,Ischemia
+2,691,699,432101006,aneurysm,0.7999999999633755,rule_based_ner,sapbert_faiss,Aneurysm
+2,971,979,432101006,aneurysm,0.7999999999633755,rule_based_ner,sapbert_faiss,Aneurysm
+2,630,641,77343006,angiography,0.799999999957424,rule_based_ner,sapbert_faiss,Angiography
+2,524,526,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+2,627,629,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+2,151,159,25064002,headache,0.799999999967136,rule_based_ner,sapbert_faiss,Headache
+2,161,167,422587007,nausea,0.7999999999625856,rule_based_ner,sapbert_faiss,Nausea
+2,173,181,422400008,vomiting,0.7999999999676403,rule_based_ner,sapbert_faiss,Vomiting
+2,187,195,25064002,headache,0.799999999967136,rule_based_ner,sapbert_faiss,Headache
+2,224,232,25064002,headache,0.799999999967136,rule_based_ner,sapbert_faiss,Headache
+3,0,6,432102000,STROKE,0.0,rule_based_ner,sapbert_faiss,Ischemic stroke
+3,127,135,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+3,345,353,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+3,127,135,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+3,345,353,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+3,575,582,55342001,infarct,0.0,rule_based_ner,sapbert_faiss,Infarction
+3,853,860,55342001,infarct,0.0,rule_based_ner,sapbert_faiss,Infarction
+3,452,460,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+3,672,680,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+3,897,905,414086009,embolism,0.0,rule_based_ner,sapbert_faiss,Cerebral embolism
+3,919,927,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+3,1011,1019,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+3,614,625,77343006,angiography,0.799999999957424,rule_based_ner,sapbert_faiss,Angiography
+3,508,511,113091000,MRI,0.0,rule_based_ner,sapbert_faiss,Magnetic resonance imaging
+3,551,554,113091000,DWI,0.0,rule_based_ner,sapbert_faiss,Magnetic resonance imaging
+4,105,115,50582007,hemiplegia,0.0,rule_based_ner,sapbert_faiss,Hemiparesis
+4,87,94,87486003,aphasia,0.7999999999685694,rule_based_ner,sapbert_faiss,Aphasia
+4,233,243,50960005,hemorrhage,0.7999999999729139,rule_based_ner,sapbert_faiss,Hemorrhage
+4,324,333,26036001,occlusion,0.7999999999784013,rule_based_ner,sapbert_faiss,Occlusion
+4,949,957,432101006,aneurysm,0.7999999999633755,rule_based_ner,sapbert_faiss,Aneurysm
+4,987,995,414086009,embolism,0.0,rule_based_ner,sapbert_faiss,Cerebral embolism
+4,0,12,433112001,THROMBECTOMY,0.7999999999639035,rule_based_ner,sapbert_faiss,Thrombectomy
+4,272,283,77343006,angiography,0.799999999957424,rule_based_ner,sapbert_faiss,Angiography
+4,633,644,77343006,angiography,0.799999999957424,rule_based_ner,sapbert_faiss,Angiography
+4,659,673,449894001,recanalization,0.7999999999649005,rule_based_ner,sapbert_faiss,Recanalization
+4,780,794,449894001,recanalization,0.7999999999649005,rule_based_ner,sapbert_faiss,Recanalization
+4,0,12,433112001,THROMBECTOMY,0.7999999999639035,rule_based_ner,sapbert_faiss,Thrombectomy
+4,209,211,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+4,269,271,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+4,759,761,450893003,CT,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+4,189,195,450893003,NIHSS ,0.8800000000000001,rule_based_ner,static_dict,NIHSS score 0
+4,249,257,450893003,ASPECTS ,0.8800000000000001,rule_based_ner,static_dict,ASPECTS score 0
+4,652,658,450893003,TICI 3,0.8800000000000001,rule_based_ner,static_dict,TICI 3 - complete perfusion
+4,830,836,450893003,NIHSS ,0.8800000000000001,rule_based_ner,static_dict,NIHSS score 0
+5,22,28,432102000,STROKE,0.0,rule_based_ner,sapbert_faiss,Ischemic stroke
+5,702,708,432102000,STROKE,0.0,rule_based_ner,sapbert_faiss,Ischemic stroke
+5,394,402,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+5,394,402,13791008,weakness,0.7999999999465421,rule_based_ner,sapbert_faiss,Weakness
+5,735,745,55342001,infarction,0.7999999999673344,rule_based_ner,sapbert_faiss,Infarction
+5,1084,1091,55342001,infarct,0.0,rule_based_ner,sapbert_faiss,Infarction
+5,572,580,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+5,691,699,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+5,788,797,26036001,occlusion,0.7999999999784013,rule_based_ner,sapbert_faiss,Occlusion
+5,946,954,415582006,stenosis,0.7999999999658162,rule_based_ner,sapbert_faiss,Stenosis
+5,588,602,67889009,basilar artery,0.7999999999643226,rule_based_ner,sapbert_faiss,Basilar artery
+5,648,658,113305005,Vertebral ,0.0,rule_based_ner,sapbert_faiss,Cerebellum
+5,766,780,67889009,basilar artery,0.7999999999643226,rule_based_ner,sapbert_faiss,Basilar artery
+5,832,846,67889009,basilar artery,0.7999999999643226,rule_based_ner,sapbert_faiss,Basilar artery
+5,546,557,77343006,angiography,0.799999999957424,rule_based_ner,sapbert_faiss,Angiography
+5,427,430,113091000,MRI,0.0,rule_based_ner,sapbert_faiss,Magnetic resonance imaging
+5,123,131,24982008,diplopia,0.7999999999670413,rule_based_ner,sapbert_faiss,Diplopia

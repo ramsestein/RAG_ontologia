@@ -1,0 +1,44 @@
+note_id,text
+1,"HOSPITAL COURSE: This is a 67-year-old right-handed male with a history of hypertension and diabetes mellitus who presented with acute onset of left-sided weakness and speech difficulties. The patient was last seen normal 3 hours prior to presentation. On examination, the patient had a National Institutes of Health Stroke Scale (NIHSS) score of 12, with left hemiparesis (4/5 strength), left facial droop, and mild dysarthria. 
+
+IMAGING: Non-contrast computed tomography (CT) of the head showed no acute hemorrhage. CT angiography demonstrated occlusion of the right middle cerebral artery (MCA) M1 segment. Alberta Stroke Program Early CT Score (ASPECTS) was 8. CT perfusion showed a large penumbra with core-penumbra mismatch ratio of 2.4.
+
+INTERVENTION: The patient received intravenous tissue plasminogen activator (tPA) at 3.5 hours from symptom onset. Given the large vessel occlusion and significant penumbra, mechanical thrombectomy was performed. Successful recanalization was achieved with Thrombolysis in Cerebral Infarction (TICI) 2B flow.
+
+OUTCOME: Post-procedure imaging showed successful recanalization with minimal hemorrhagic transformation. The patient's neurological examination improved significantly, with NIHSS decreasing to 4 at 24 hours."
+2,"ADMISSION NOTE: 72-year-old female with atrial fibrillation (not on anticoagulation) presented to the emergency department with sudden onset of severe headache, nausea, and vomiting. The headache was described as ""the worst headache of her life"" with acute onset while gardening.
+
+EXAMINATION: On presentation, the patient was alert but in significant distress. Blood pressure was elevated at 180/110 mmHg. Neurological examination revealed nuchal rigidity and photophobia. Glasgow Coma Scale was 14.
+
+IMAGING: Non-contrast CT of the head revealed subarachnoid hemorrhage with blood in the basal cisterns and sylvian fissures. CT angiography demonstrated a 7mm anterior communicating artery aneurysm with a daughter sac, consistent with recent rupture. No vasospasm was evident.
+
+MANAGEMENT: The patient was admitted to the neurointensive care unit. Blood pressure was carefully controlled. Nimodipine was initiated for vasospasm prophylaxis. Endovascular coiling of the aneurysm was performed successfully on hospital day 2.
+
+COMPLICATIONS: The patient developed delayed cerebral ischemia on day 7, managed with induced hypertension and balloon angioplasty. Discharge was on day 14 with modified Rankin Scale score of 2."
+3,"STROKE EVALUATION: 58-year-old male with history of smoking and hyperlipidemia presented with transient episode of right-sided weakness and speech difficulties lasting 45 minutes. Symptoms completely resolved prior to arrival.
+
+CLINICAL ASSESSMENT: ABCD2 score was calculated as 5 (age 58, blood pressure 160/95, clinical features of unilateral weakness and speech disturbance, duration 45 minutes, no diabetes). Carotid duplex ultrasound revealed 70% stenosis of the left internal carotid artery.
+
+IMAGING: MRI brain with diffusion-weighted imaging (DWI) showed small acute infarct in the left corona radiata. MR angiography confirmed severe left internal carotid artery stenosis. Echocardiogram revealed normal left ventricular function with no evidence of cardioembolic source.
+
+DIAGNOSIS: Transient ischemic attack (TIA) with completed small vessel infarct, likely related to artery-to-artery embolism from carotid stenosis.
+
+TREATMENT: Dual antiplatelet therapy was initiated. Given the high-grade carotid stenosis and recent symptoms, carotid endarterectomy was recommended and performed without complications."
+4,"THROMBECTOMY REPORT: 45-year-old previously healthy male presented with acute onset of aphasia and right hemiplegia. Last known well time was 2 hours prior to presentation.
+
+PRE-PROCEDURE: NIHSS score was 18. CT head showed no acute hemorrhage with ASPECTS score of 9. CT angiography revealed left M1 middle cerebral artery occlusion with good collateral circulation (collateral score 3).
+
+PROCEDURE: Under general anesthesia, access was obtained via right femoral artery. A 6F guide catheter was positioned in the left internal carotid artery. Using a stent retriever technique, the clot was successfully removed in 2 passes. Final angiography showed TICI 3 recanalization.
+
+POST-PROCEDURE: The patient was monitored in the neurointensive care unit. 24-hour CT showed successful recanalization with no hemorrhagic complications. NIHSS improved to 8 at 24 hours and 3 at discharge.
+
+ETIOLOGY: Workup revealed patent foramen ovale with atrial septal aneurysm, consistent with paradoxical embolism. Anticoagulation was initiated for secondary prevention."
+5,"POSTERIOR CIRCULATION STROKE: 63-year-old female with vertebrobasilar insufficiency presented with acute onset of vertigo, diplopia, and ataxia. Symptoms began suddenly while standing from a seated position.
+
+EXAMINATION: The patient exhibited nystagmus, bilateral internuclear ophthalmoplegia, and truncal ataxia. Cerebellar signs were prominent with dysmetria and dysdiadochokinesia. No limb weakness was observed.
+
+IMAGING: MRI brain revealed acute infarcts in the bilateral medial longitudinal fasciculi and superior cerebellar peduncles. MR angiography showed severe stenosis of the basilar artery with poor posterior circulation collaterals. Vertebral arteries showed bilateral ostial stenosis.
+
+STROKE MECHANISM: The pattern of infarction was consistent with basilar artery branch occlusion, likely embolic from the stenotic basilar artery segment.
+
+TREATMENT: Antiplatelet therapy was optimized. Given the high-risk posterior circulation stenosis, endovascular intervention with balloon angioplasty and stenting was considered but deferred due to clinical stability and small infarct volume."
