@@ -1,0 +1,173 @@
+note_id,start,end,concept_id,span_text,confidence,method,concept_description,reasoning,rag_context,ollama_used
+1,317,323,230690007,Stroke,0.8075,mitel_mistral_rag,Stroke (disorder),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)
+- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",False
+1,620,626,230690007,Stroke,0.8075,mitel_mistral_rag,Stroke (disorder),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)
+- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",False
+1,155,163,13791008,weakness,0.765,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+1,361,372,13791008,hemiparesis,0.765,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 50582007: Hemiparesis partial paralysis weakness one side motor weakness unilateral paresis muscle weakness... (similitud: 0.560)
+- 18060000: Visual field defect hemianopia visual field cut vision l...",False
+1,356,372,13791008,left hemiparesis,0.8075,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 50582007: Hemiparesis partial paralysis weakness one side motor weakness unilateral paresis muscle weakness... (similitud: 0.589)
+- 18060000: Visual field defect hemianopia visual field cut vision l...",False
+1,155,163,13791008,weakness,0.7224999999999999,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+1,394,406,404684003,facial droop,0.7224999999999999,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 280816001: Facial weakness facial paresis facial droop seventh nerve palsy cranial nerve VII... (similitud: 0.505)
+- 8011004: Dysarthria slurred speech speech articulation disorder motor speech diso...",False
+1,417,427,404684003,dysarthria,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 8011004: Dysarthria slurred speech speech articulation disorder motor speech disorder pronunciation difficult... (similitud: 0.610)
+- 87486003: Aphasia language disorder speech disorder communicatio...",False
+1,508,518,50960005,hemorrhage,0.765,mitel_mistral_rag,Hemorrhage (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 50960005: Hemorrhage bleeding blood extravasation haemorrhage vascular rupture vessel bleeding... (similitud: 0.628)
+- 274100004: Intracerebral hemorrhage ICH brain hemorrhage parenchymal hemorrhage...",False
+1,1031,1041,55342001,Infarction,0.8075,mitel_mistral_rag,Infarction (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.556)
+- 55342001: Infarction tissue death necrosis ischemic lesion cel...",False
+1,548,557,404684003,occlusion,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 26036001: Occlusion blockage vessel closure arterial obstruction flow interruption complete blockage... (similitud: 0.497)
+- 31065004: Occipital lobe occipital cortex visual cortex striate cortex vi...",False
+1,887,896,404684003,occlusion,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 26036001: Occlusion blockage vessel closure arterial obstruction flow interruption complete blockage... (similitud: 0.497)
+- 31065004: Occipital lobe occipital cortex visual cortex striate cortex vi...",False
+1,595,598,69930009,MCA,0.8075,mitel_mistral_rag,Middle cerebral artery (body structure),Mapeo simulado basado en coincidencia de palabras clave,"- 69930009: Middle cerebral artery MCA cerebral artery middle arteria cerebri media M1 M2 segments... (similitud: 0.418)
+- 230690007: Stroke cerebrovascular accident CVA brain attack acute stroke synd...",False
+1,600,610,404684003,M1 segment,0.833,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 69930009: Middle cerebral artery MCA cerebral artery middle arteria cerebri media M1 M2 segments... (similitud: 0.426)
+- 6736007: Moderate intermediate medium modest mild-moderate substantial notice...",False
+1,523,534,404684003,angiography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77343006: Angiography vessel imaging arteriography contrast study DSA digital subtraction angiography... (similitud: 0.608)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogra...",False
+1,934,946,404684003,thrombectomy,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 433112001: Thrombectomy mechanical thrombectomy clot removal endovascular treatment stent retriever aspiration... (similitud: 0.573)
+- 373110003: Thrombolysis clot dissolution fibrinolytic therapy t...",False
+1,1006,1018,404684003,Thrombolysis,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 373110003: Thrombolysis clot dissolution fibrinolytic therapy thrombolytic treatment clot busting medication... (similitud: 0.574)
+- 450893003: TICI Thrombolysis Cerebral Infarction reperfusion grad...",False
+1,796,824,404684003,tissue plasminogen activator,0.833,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 387467008: Tissue plasminogen activator tPA rtPA alteplase fibrinolytic agent clot dissolving drug... (similitud: 0.690)
+- 373110003: Thrombolysis clot dissolution fibrinolytic therapy thrombolytic ...",False
+1,826,829,404684003,tPA,0.833,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 387467008: Tissue plasminogen activator tPA rtPA alteplase fibrinolytic agent clot dissolving drug... (similitud: 0.456)
+- 450893003: TICI Thrombolysis Cerebral Infarction reperfusion grade recanali...",False
+1,476,478,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+1,520,522,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+1,641,643,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+1,667,669,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+1,455,474,404684003,computed tomography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.623)
+- 113091000: Magnetic resonance imaging MRI scan nuclear magnetic resonance MR imaging s...",False
+1,331,336,404684003,NIHSS,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 255604002: Mild slight minimal minor subtle trace small degree... (similitud: 0.381)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysmal hemorrhage cisternal blood... (similitud...",False
+1,651,658,404684003,ASPECTS,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 6736007: Moderate intermediate medium modest mild-moderate substantial noticeable... (similitud: 0.406)
+- 24484000: Severe serious marked significant pronounced extensive major critical... (similitu...",False
+1,1043,1047,404684003,TICI,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 450893003: TICI Thrombolysis Cerebral Infarction reperfusion grade recanalization score flow restoration... (similitud: 0.401)
+- 255604002: Mild slight minimal minor subtle trace small degree... (si...",False
+1,1235,1241,404684003,NIHSS ,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 255604002: Mild slight minimal minor subtle trace small degree... (similitud: 0.381)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysmal hemorrhage cisternal blood... (similitud...",False
+2,565,575,50960005,hemorrhage,0.765,mitel_mistral_rag,Hemorrhage (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 50960005: Hemorrhage bleeding blood extravasation haemorrhage vascular rupture vessel bleeding... (similitud: 0.628)
+- 274100004: Intracerebral hemorrhage ICH brain hemorrhage parenchymal hemorrhage...",False
+2,1089,1097,404684003,ischemia,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 52674009: Ischemia reduced blood flow hypoperfusion tissue hypoxia oxygen deficit circulation compromise... (similitud: 0.572)
+- 432102000: Ischemic stroke cerebral infarction brain infarction ische...",False
+2,695,703,404684003,aneurysm,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformation arterial expansion weakness... (similitud: 0.574)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysma...",False
+2,977,985,404684003,aneurysm,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformation arterial expansion weakness... (similitud: 0.574)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysma...",False
+2,634,645,404684003,angiography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77343006: Angiography vessel imaging arteriography contrast study DSA digital subtraction angiography... (similitud: 0.608)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogra...",False
+2,528,530,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+2,631,633,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+2,151,159,404684003,headache,0.7224999999999999,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 25064002: Headache cephalgia head pain cranial pain cephalalgia severe sudden worst headache... (similitud: 0.602)
+- 280816001: Facial weakness facial paresis facial droop seventh nerve palsy crania...",False
+2,161,167,404684003,nausea,0.7224999999999999,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 422587007: Nausea feeling sick queasiness stomach upset gastric distress vomiting sensation... (similitud: 0.638)
+- 422400008: Vomiting emesis throwing up gastric emptying retching stomach contents ...",False
+2,173,181,404684003,vomiting,0.7224999999999999,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 422400008: Vomiting emesis throwing up gastric emptying retching stomach contents expulsion... (similitud: 0.640)
+- 422587007: Nausea feeling sick queasiness stomach upset gastric distress vomiting ...",False
+2,187,195,404684003,headache,0.7224999999999999,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 25064002: Headache cephalgia head pain cranial pain cephalalgia severe sudden worst headache... (similitud: 0.602)
+- 280816001: Facial weakness facial paresis facial droop seventh nerve palsy crania...",False
+2,224,232,404684003,headache,0.7224999999999999,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 25064002: Headache cephalgia head pain cranial pain cephalalgia severe sudden worst headache... (similitud: 0.602)
+- 280816001: Facial weakness facial paresis facial droop seventh nerve palsy crania...",False
+3,0,6,230690007,STROKE,0.8075,mitel_mistral_rag,Stroke (disorder),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)
+- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",False
+3,127,135,13791008,weakness,0.765,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+3,347,355,13791008,weakness,0.765,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+3,127,135,13791008,weakness,0.7224999999999999,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+3,347,355,13791008,weakness,0.7224999999999999,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+3,579,586,55342001,infarct,0.8075,mitel_mistral_rag,Infarction (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 55342001: Infarction tissue death necrosis ischemic lesion cell death hypoxic damage... (similitud: 0.512)
+- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular ...",False
+3,859,866,55342001,infarct,0.8075,mitel_mistral_rag,Infarction (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 55342001: Infarction tissue death necrosis ischemic lesion cell death hypoxic damage... (similitud: 0.512)
+- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular ...",False
+3,454,462,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+3,676,684,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+3,925,933,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+3,1019,1027,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+3,618,629,404684003,angiography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77343006: Angiography vessel imaging arteriography contrast study DSA digital subtraction angiography... (similitud: 0.608)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogra...",False
+3,512,515,404684003,MRI,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 113091000: Magnetic resonance imaging MRI scan nuclear magnetic resonance MR imaging soft tissue... (similitud: 0.636)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogram ves...",False
+3,555,558,404684003,DWI,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 8011004: Dysarthria slurred speech speech articulation disorder motor speech disorder pronunciation difficult... (similitud: 0.419)
+- 29164008: Speech disorder communication disorder verbal communic...",False
+4,105,115,404684003,hemiplegia,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 50582007: Hemiparesis partial paralysis weakness one side motor weakness unilateral paresis muscle weakness... (similitud: 0.541)
+- 18060000: Visual field defect hemianopia visual field cut vision l...",False
+4,87,94,404684003,aphasia,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 87486003: Aphasia language disorder speech disorder communication deficit dysphasia verbal impairment... (similitud: 0.612)
+- 40917007: Confusion mental confusion disorientation cognitive impairment...",False
+4,235,245,50960005,hemorrhage,0.765,mitel_mistral_rag,Hemorrhage (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 50960005: Hemorrhage bleeding blood extravasation haemorrhage vascular rupture vessel bleeding... (similitud: 0.628)
+- 274100004: Intracerebral hemorrhage ICH brain hemorrhage parenchymal hemorrhage...",False
+4,326,335,404684003,occlusion,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 26036001: Occlusion blockage vessel closure arterial obstruction flow interruption complete blockage... (similitud: 0.497)
+- 31065004: Occipital lobe occipital cortex visual cortex striate cortex vi...",False
+4,957,965,404684003,aneurysm,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformation arterial expansion weakness... (similitud: 0.574)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysma...",False
+4,0,12,404684003,THROMBECTOMY,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 433112001: Thrombectomy mechanical thrombectomy clot removal endovascular treatment stent retriever aspiration... (similitud: 0.573)
+- 373110003: Thrombolysis clot dissolution fibrinolytic therapy t...",False
+4,274,285,404684003,angiography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77343006: Angiography vessel imaging arteriography contrast study DSA digital subtraction angiography... (similitud: 0.608)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogra...",False
+4,637,648,404684003,angiography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77343006: Angiography vessel imaging arteriography contrast study DSA digital subtraction angiography... (similitud: 0.608)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogra...",False
+4,211,213,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+4,271,273,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+4,765,767,404684003,CT,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77477000: Computed tomography CT scan CAT scan axial tomography cross sectional imaging... (similitud: 0.432)
+- 36992007: Insula insular cortex island cortex insular lobe deep cortical region... (si...",False
+4,191,197,404684003,NIHSS ,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 255604002: Mild slight minimal minor subtle trace small degree... (similitud: 0.381)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysmal hemorrhage cisternal blood... (similitud...",False
+4,251,259,404684003,ASPECTS ,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 6736007: Moderate intermediate medium modest mild-moderate substantial noticeable... (similitud: 0.406)
+- 24484000: Severe serious marked significant pronounced extensive major critical... (similitu...",False
+4,656,662,404684003,TICI 3,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 450893003: TICI Thrombolysis Cerebral Infarction reperfusion grade recanalization score flow restoration... (similitud: 0.397)
+- 255604002: Mild slight minimal minor subtle trace small degree... (si...",False
+4,836,842,404684003,NIHSS ,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 255604002: Mild slight minimal minor subtle trace small degree... (similitud: 0.381)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysmal hemorrhage cisternal blood... (similitud...",False
+5,22,28,230690007,STROKE,0.8075,mitel_mistral_rag,Stroke (disorder),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)
+- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",False
+5,708,714,230690007,STROKE,0.8075,mitel_mistral_rag,Stroke (disorder),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)
+- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",False
+5,396,404,13791008,weakness,0.765,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+5,396,404,13791008,weakness,0.7224999999999999,mitel_mistral_rag,Weakness (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)
+- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",False
+5,741,751,55342001,infarction,0.8075,mitel_mistral_rag,Infarction (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.556)
+- 55342001: Infarction tissue death necrosis ischemic lesion cel...",False
+5,1092,1099,55342001,infarct,0.8075,mitel_mistral_rag,Infarction (morphologic abnormality),Mapeo simulado basado en coincidencia de palabras clave,"- 55342001: Infarction tissue death necrosis ischemic lesion cell death hypoxic damage... (similitud: 0.512)
+- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular ...",False
+5,576,584,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+5,695,703,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+5,794,803,404684003,occlusion,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 26036001: Occlusion blockage vessel closure arterial obstruction flow interruption complete blockage... (similitud: 0.497)
+- 31065004: Occipital lobe occipital cortex visual cortex striate cortex vi...",False
+5,954,962,404684003,stenosis,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 415582006: Stenosis narrowing vessel constriction luminal reduction flow limitation partial blockage... (similitud: 0.516)
+- 432101006: Aneurysm arterial dilatation vessel bulging vascular malformat...",False
+5,592,606,404684003,basilar artery,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 67889009: Basilar artery arteria basilaris vertebrobasilar system posterior circulation brainstem supply... (similitud: 0.672)
+- 79371005: Anterior cerebral artery ACA cerebral artery anterior arter...",False
+5,652,662,404684003,Vertebral ,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 85234005: Vertebral artery arteria vertebralis vertebrobasilar circulation posterior circulation... (similitud: 0.590)
+- 67889009: Basilar artery arteria basilaris vertebrobasilar system posterior c...",False
+5,772,786,404684003,basilar artery,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 67889009: Basilar artery arteria basilaris vertebrobasilar system posterior circulation brainstem supply... (similitud: 0.672)
+- 79371005: Anterior cerebral artery ACA cerebral artery anterior arter...",False
+5,838,852,404684003,basilar artery,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 67889009: Basilar artery arteria basilaris vertebrobasilar system posterior circulation brainstem supply... (similitud: 0.672)
+- 79371005: Anterior cerebral artery ACA cerebral artery anterior arter...",False
+5,550,561,404684003,angiography,0.8075,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 77343006: Angiography vessel imaging arteriography contrast study DSA digital subtraction angiography... (similitud: 0.608)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogra...",False
+5,431,434,404684003,MRI,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 113091000: Magnetic resonance imaging MRI scan nuclear magnetic resonance MR imaging soft tissue... (similitud: 0.636)
+- 419775003: MR angiography MRA magnetic resonance angiography MR angiogram ves...",False
+5,123,131,404684003,diplopia,0.765,mitel_mistral_rag,Clinical finding (finding),Mapeo simulado basado en coincidencia de palabras clave,"- 24982008: Diplopia double vision binocular diplopia visual disturbance seeing double eye movement... (similitud: 0.495)
+- 21454007: Subarachnoid hemorrhage SAH subarachnoid bleeding aneurysmal hemor...",False

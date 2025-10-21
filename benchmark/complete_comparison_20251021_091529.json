@@ -1,0 +1,247 @@
+{
+  "timestamp": "20251021_091529",
+  "comparison_type": "COMPLETE_4_STRATEGIES_REAL",
+  "strategies": [
+    "1_KIRIs_REAL",
+    "2_SNOBERT_REAL",
+    "3_MITEL_REAL"
+  ],
+  "results": {
+    "1_KIRIs_REAL": {
+      "precision": 0.8380952380952381,
+      "recall": 0.7652173913043478,
+      "f1": 0.8,
+      "predictions": 105,
+      "matches": 88,
+      "partial_matches": 17,
+      "ground_truth": 115,
+      "coverage": 1.0
+    },
+    "2_SNOBERT_REAL": {
+      "precision": 0.3333333333333333,
+      "recall": 1.3130434782608695,
+      "f1": 0.5316901408450705,
+      "predictions": 453,
+      "matches": 151,
+      "partial_matches": 302,
+      "ground_truth": 115,
+      "coverage": 1.0
+    },
+    "3_MITEL_REAL": {
+      "precision": 0.27906976744186046,
+      "recall": 0.20869565217391303,
+      "f1": 0.23880597014925375,
+      "predictions": 86,
+      "matches": 24,
+      "partial_matches": 62,
+      "ground_truth": 115,
+      "coverage": 1.0
+    }
+  },
+  "execution_times": {
+    "1_KIRIs_REAL": 0.04208827018737793,
+    "2_SNOBERT_REAL": 21.87563443183899,
+    "3_MITEL_REAL": 1.836435317993164
+  },
+  "dataset_info": {
+    "notes_count": 5,
+    "annotations_count": 115
+  },
+  "ranking": [
+    [
+      "1_KIRIs_REAL",
+      0.8
+    ],
+    [
+      "2_SNOBERT_REAL",
+      0.5316901408450705
+    ],
+    [
+      "3_MITEL_REAL",
+      0.23880597014925375
+    ]
+  ],
+  "sample_predictions": {
+    "1_KIRIs_REAL": [
+      {
+        "note_id": 1,
+        "start": 75,
+        "end": 87,
+        "concept_id": 38341003,
+        "span_text": "hypertension",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'right', 'severity': 'acute', 'temporal': 'old'}"
+      },
+      {
+        "note_id": 1,
+        "start": 92,
+        "end": 109,
+        "concept_id": 73211009,
+        "span_text": "diabetes mellitus",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+      },
+      {
+        "note_id": 1,
+        "start": 155,
+        "end": 163,
+        "concept_id": 13791008,
+        "span_text": "weakness",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+      },
+      {
+        "note_id": 1,
+        "start": 287,
+        "end": 329,
+        "concept_id": 450893003,
+        "span_text": "National Institutes of Health Stroke Scale",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "examination",
+        "attributes": "{'laterality': 'left'}"
+      },
+      {
+        "note_id": 1,
+        "start": 331,
+        "end": 336,
+        "concept_id": 450893003,
+        "span_text": "NIHSS",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "examination",
+        "attributes": "{'laterality': 'left'}"
+      }
+    ],
+    "2_SNOBERT_REAL": [
+      {
+        "note_id": 1,
+        "start": 17,
+        "end": 21,
+        "concept_id": "20262006",
+        "span_text": "This",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Ataxia"
+      },
+      {
+        "note_id": 1,
+        "start": 6,
+        "end": 7,
+        "concept_id": "69930009",
+        "span_text": "A",
+        "confidence": 0.935,
+        "method": "bert_ner",
+        "classification_method": "static_dict",
+        "concept_description": "Left middle cerebral artery"
+      },
+      {
+        "note_id": 1,
+        "start": 27,
+        "end": 29,
+        "concept_id": "50582007",
+        "span_text": "67",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Hemiparesis"
+      },
+      {
+        "note_id": 1,
+        "start": 30,
+        "end": 34,
+        "concept_id": "113305005",
+        "span_text": "year",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Cerebellum"
+      },
+      {
+        "note_id": 1,
+        "start": 29,
+        "end": 30,
+        "concept_id": "26036001",
+        "span_text": "-",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Occlusion"
+      }
+    ],
+    "3_MITEL_REAL": [
+      {
+        "note_id": 1,
+        "start": 317,
+        "end": 323,
+        "concept_id": "230690007",
+        "span_text": "Stroke",
+        "confidence": 0.8075,
+        "method": "mitel_mistral_rag",
+        "concept_description": "Stroke (disorder)",
+        "reasoning": "Mapeo simulado basado en coincidencia de palabras clave",
+        "rag_context": "- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)\n- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",
+        "ollama_used": false
+      },
+      {
+        "note_id": 1,
+        "start": 620,
+        "end": 626,
+        "concept_id": "230690007",
+        "span_text": "Stroke",
+        "confidence": 0.8075,
+        "method": "mitel_mistral_rag",
+        "concept_description": "Stroke (disorder)",
+        "reasoning": "Mapeo simulado basado en coincidencia de palabras clave",
+        "rag_context": "- 432102000: Ischemic stroke cerebral infarction brain infarction ischemic cerebrovascular accident tissue death ... (similitud: 0.488)\n- 230690007: Stroke cerebrovascular accident CVA brain attack ac...",
+        "ollama_used": false
+      },
+      {
+        "note_id": 1,
+        "start": 155,
+        "end": 163,
+        "concept_id": "13791008",
+        "span_text": "weakness",
+        "confidence": 0.765,
+        "method": "mitel_mistral_rag",
+        "concept_description": "Weakness (finding)",
+        "reasoning": "Mapeo simulado basado en coincidencia de palabras clave",
+        "rag_context": "- 13791008: Weakness motor weakness muscle weakness paresis reduced strength power loss motor deficit... (similitud: 0.521)\n- 50582007: Hemiparesis partial paralysis weakness one side motor weakness u...",
+        "ollama_used": false
+      },
+      {
+        "note_id": 1,
+        "start": 361,
+        "end": 372,
+        "concept_id": "13791008",
+        "span_text": "hemiparesis",
+        "confidence": 0.765,
+        "method": "mitel_mistral_rag",
+        "concept_description": "Weakness (finding)",
+        "reasoning": "Mapeo simulado basado en coincidencia de palabras clave",
+        "rag_context": "- 50582007: Hemiparesis partial paralysis weakness one side motor weakness unilateral paresis muscle weakness... (similitud: 0.560)\n- 18060000: Visual field defect hemianopia visual field cut vision l...",
+        "ollama_used": false
+      },
+      {
+        "note_id": 1,
+        "start": 356,
+        "end": 372,
+        "concept_id": "13791008",
+        "span_text": "left hemiparesis",
+        "confidence": 0.8075,
+        "method": "mitel_mistral_rag",
+        "concept_description": "Weakness (finding)",
+        "reasoning": "Mapeo simulado basado en coincidencia de palabras clave",
+        "rag_context": "- 50582007: Hemiparesis partial paralysis weakness one side motor weakness unilateral paresis muscle weakness... (similitud: 0.589)\n- 18060000: Visual field defect hemianopia visual field cut vision l...",
+        "ollama_used": false
+      }
+    ]
+  }
+}

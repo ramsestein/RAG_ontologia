@@ -1,0 +1,454 @@
+note_id,start,end,concept_id,span_text,confidence,method,classification_method,concept_description
+1,17,21,20262006,This,0.0,bert_ner,sapbert_faiss,Ataxia
+1,6,7,69930009,A,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,27,29,50582007,67,0.0,bert_ner,sapbert_faiss,Hemiparesis
+1,30,34,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,29,30,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+1,39,44,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+1,45,51,50582007,handed,0.0,bert_ner,sapbert_faiss,Hemiparesis
+1,52,56,69930009,male,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+1,6,7,69930009,A,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,64,71,50960005,history,0.0,bert_ner,sapbert_faiss,Hemorrhage
+1,0,1,69930009,H,0.935,bert_ner,static_dict,Right middle cerebral artery
+1,46,49,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+1,92,100,20262006,diabetes,0.0,bert_ner,sapbert_faiss,Ataxia
+1,101,103,69930009,me,0.935,bert_ner,static_dict,MCA M1 segment
+1,110,113,42695009,who,0.0,bert_ner,sapbert_faiss,Thalamus
+1,114,123,77477000,presented,0.0,bert_ner,sapbert_faiss,Computed tomography
+1,57,61,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+1,135,140,20262006,onset,0.0,bert_ner,sapbert_faiss,Ataxia
+1,72,74,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,144,148,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,29,30,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+1,155,163,13791008,weakness,0.8500000238418579,bert_ner,sapbert_faiss,Weakness
+1,46,49,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+1,168,174,29164008,speech,0.0,bert_ner,sapbert_faiss,Speech disorder
+1,175,187,13791008,difficulties,0.0,bert_ner,sapbert_faiss,Weakness
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+1,189,192,42695009,The,0.0,bert_ner,sapbert_faiss,Thalamus
+1,193,200,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+1,210,214,42695009,seen,0.0,bert_ner,sapbert_faiss,Thalamus
+1,215,221,42696002,normal,0.0,bert_ner,sapbert_faiss,Internal capsule
+1,222,223,450893003,3,0.935,bert_ner,static_dict,TICI 3 - complete perfusion
+1,230,235,15926001,prior,0.0,bert_ner,sapbert_faiss,Brainstem
+1,67,69,42695009,to,0.0,bert_ner,sapbert_faiss,Thalamus
+1,239,251,26036001,presentation,0.0,bert_ner,sapbert_faiss,Occlusion
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+1,256,267,113305005,examination,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,189,192,42695009,The,0.0,bert_ner,sapbert_faiss,Thalamus
+1,193,200,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+1,6,7,69930009,A,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,287,295,450893003,National,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,296,306,42695009,Institutes,0.0,bert_ner,sapbert_faiss,Thalamus
+1,72,74,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,310,316,113305005,Health,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,47,48,69930009,n,0.935,bert_ner,static_dict,MCA M1 segment
+1,338,343,450893003,score,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,72,74,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,347,349,273302005,12,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+1,144,148,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,361,364,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+1,374,375,450893003,4,0.935,bert_ner,static_dict,ASPECTS score 4
+1,378,386,13791008,strength,0.0,bert_ner,sapbert_faiss,Weakness
+1,336,337,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,144,148,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,394,400,280816001,facial,0.0,bert_ner,sapbert_faiss,Facial weakness
+1,412,416,422587007,mild,0.0,bert_ner,sapbert_faiss,Nausea
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+1,4,5,69930009,I,0.935,bert_ner,static_dict,Right middle cerebral artery
+1,29,30,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+1,446,454,77477000,contrast,0.0,bert_ner,sapbert_faiss,Computed tomography
+1,455,458,69930009,com,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+1,67,69,42695009,to,0.0,bert_ner,sapbert_faiss,Thalamus
+1,476,478,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+1,336,337,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,72,74,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,487,491,113305005,head,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,215,217,26036001,no,0.0,bert_ner,sapbert_faiss,Occlusion
+1,129,134,422587007,acute,0.0,bert_ner,sapbert_faiss,Nausea
+1,361,364,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+1,476,478,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+1,535,547,26036001,demonstrated,0.0,bert_ner,sapbert_faiss,Occlusion
+1,39,44,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+1,571,577,69930009,middle,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+1,578,586,113305005,cerebral,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,595,598,69930009,MCA,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,612,619,67889009,Alberta,0.0,bert_ner,sapbert_faiss,Basilar artery
+1,627,634,113305005,Program,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,635,640,15926001,Early,0.0,bert_ner,sapbert_faiss,Brainstem
+1,476,478,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+1,202,204,450893003,as,0.935,bert_ner,static_dict,ASPECTS score 0
+1,336,337,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,667,673,77477000,CT per,0.0,bert_ner,sapbert_faiss,Computed tomography
+1,689,694,422587007,large,0.0,bert_ner,sapbert_faiss,Nausea
+1,348,349,69930009,2,0.935,bert_ner,static_dict,MCA M2 segment
+1,260,262,42696002,in,0.0,bert_ner,sapbert_faiss,Internal capsule
+1,189,192,42695009,The,0.0,bert_ner,sapbert_faiss,Thalamus
+1,193,200,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+1,775,783,50960005,received,0.0,bert_ner,sapbert_faiss,Hemorrhage
+1,796,802,42695009,tissue,0.0,bert_ner,sapbert_faiss,Thalamus
+1,3,4,450893003,P,0.935,bert_ner,static_dict,ASPECTS score 0
+1,5,6,69930009,T,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,336,337,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+1,864,869,42695009,Given,0.0,bert_ner,sapbert_faiss,Thalamus
+1,267,268,42695009,",",0.0,bert_ner,sapbert_faiss,Thalamus
+1,923,933,113091000,mechanical,0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,201,204,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+1,951,960,42695009,performed,0.0,bert_ner,sapbert_faiss,Thalamus
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+1,260,262,42696002,in,0.0,bert_ner,sapbert_faiss,Internal capsule
+1,5,6,69930009,T,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+1,1,2,26036001,O,0.0,bert_ner,sapbert_faiss,Occlusion
+1,1070,1074,70382005,Post,0.0,bert_ner,sapbert_faiss,Posterior cerebral artery
+1,433,440,113091000,IMAGING,0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,962,972,449894001,Successful,0.0,bert_ner,sapbert_faiss,Recanalization
+1,1131,1138,13791008,minimal,0.0,bert_ner,sapbert_faiss,Weakness
+1,361,364,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+1,1151,1165,449894001,transformation,0.0,bert_ner,sapbert_faiss,Recanalization
+1,189,192,42695009,The,0.0,bert_ner,sapbert_faiss,Thalamus
+1,193,200,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+1,159,161,42695009,ne,0.0,bert_ner,sapbert_faiss,Thalamus
+1,256,267,113305005,examination,0.0,bert_ner,sapbert_faiss,Cerebellum
+1,1206,1214,449894001,improved,0.0,bert_ner,sapbert_faiss,Recanalization
+1,1215,1228,415582006,significantly,0.0,bert_ner,sapbert_faiss,Stenosis
+1,47,48,69930009,n,0.935,bert_ner,static_dict,MCA M1 segment
+1,67,69,42695009,to,0.0,bert_ner,sapbert_faiss,Thalamus
+1,374,375,450893003,4,0.935,bert_ner,static_dict,ASPECTS score 4
+1,1260,1262,18060000,24,0.0,bert_ner,sapbert_faiss,Visual field defect
+1,187,188,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,0,2,79371005,AD,0.0,bert_ner,sapbert_faiss,Anterior cerebral artery
+2,16,18,18060000,72,0.0,bert_ner,sapbert_faiss,Visual field defect
+2,19,23,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+2,18,19,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+2,24,27,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+2,28,34,273302005,female,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+2,40,42,42695009,at,0.0,bert_ner,sapbert_faiss,Thalamus
+2,47,49,42696002,fi,0.0,bert_ner,sapbert_faiss,Internal capsule
+2,68,72,26036001,anti,0.0,bert_ner,sapbert_faiss,Occlusion
+2,85,94,77477000,presented,0.0,bert_ner,sapbert_faiss,Computed tomography
+2,95,97,42695009,to,0.0,bert_ner,sapbert_faiss,Thalamus
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,102,111,422587007,emergency,0.0,bert_ner,sapbert_faiss,Nausea
+2,112,122,42695009,department,0.0,bert_ner,sapbert_faiss,Thalamus
+2,135,140,20262006,onset,0.0,bert_ner,sapbert_faiss,Ataxia
+2,141,143,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,196,199,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+2,200,209,77477000,described,0.0,bert_ner,sapbert_faiss,Computed tomography
+2,141,143,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+2,236,239,32603002,her,0.0,bert_ner,sapbert_faiss,Basal ganglia
+2,213,214,42695009,"""",0.0,bert_ner,sapbert_faiss,Thalamus
+2,251,256,422587007,acute,0.0,bert_ner,sapbert_faiss,Nausea
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,13,14,69930009,E,0.935,bert_ner,static_dict,Left middle cerebral artery
+2,299,311,26036001,presentation,0.0,bert_ner,sapbert_faiss,Occlusion
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,317,324,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+2,370,378,415582006,pressure,0.0,bert_ner,sapbert_faiss,Stenosis
+2,395,398,273302005,180,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+2,399,402,273302005,110,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+2,283,294,113305005,EXAMINATION,0.0,bert_ner,sapbert_faiss,Cerebellum
+2,8,9,69930009,N,0.935,bert_ner,static_dict,MCA M1 segment
+2,169,172,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+2,463,468,77343006,photo,0.0,bert_ner,sapbert_faiss,Angiography
+2,3,4,69930009,I,0.935,bert_ner,static_dict,Right middle cerebral artery
+2,18,19,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+2,519,527,77477000,contrast,0.0,bert_ner,sapbert_faiss,Computed tomography
+2,528,530,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+2,141,143,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,151,155,113305005,head,0.0,bert_ner,sapbert_faiss,Cerebellum
+2,543,555,415582006,revealed sub,0.0,bert_ner,sapbert_faiss,Stenosis
+2,565,568,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+2,364,369,50960005,Blood,0.0,bert_ner,sapbert_faiss,Hemorrhage
+2,72,73,69930009,c,0.935,bert_ner,static_dict,Left middle cerebral artery
+2,47,49,42696002,fi,0.0,bert_ner,sapbert_faiss,Internal capsule
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,528,530,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+2,646,658,26036001,demonstrated,0.0,bert_ner,sapbert_faiss,Occlusion
+2,16,17,450893003,7,0.935,bert_ner,static_dict,ASPECTS score 7
+2,665,673,79371005,anterior,0.0,bert_ner,sapbert_faiss,Anterior cerebral artery
+2,674,687,87486003,communicating,0.0,bert_ner,sapbert_faiss,Aphasia
+2,711,719,67889009,daughter,0.0,bert_ner,sapbert_faiss,Basilar artery
+2,596,598,21454007,sa,0.0,bert_ner,sapbert_faiss,Subarachnoid hemorrhage
+2,725,735,42696002,consistent,0.0,bert_ner,sapbert_faiss,Internal capsule
+2,35,39,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+2,741,747,55342001,recent,0.0,bert_ner,sapbert_faiss,Infarction
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,196,199,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+2,774,781,50960005,evident,0.0,bert_ner,sapbert_faiss,Hemorrhage
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,317,324,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+2,196,199,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,409,411,42695009,Ne,0.0,bert_ner,sapbert_faiss,Thalamus
+2,364,369,50960005,Blood,0.0,bert_ner,sapbert_faiss,Hemorrhage
+2,370,378,415582006,pressure,0.0,bert_ner,sapbert_faiss,Stenosis
+2,875,884,13791008,carefully,0.0,bert_ner,sapbert_faiss,Weakness
+2,912,921,26036001,initiated,0.0,bert_ner,sapbert_faiss,Occlusion
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,990,999,42695009,performed,0.0,bert_ner,sapbert_faiss,Thalamus
+2,1000,1012,449894001,successfully,0.0,bert_ner,sapbert_faiss,Recanalization
+2,1016,1024,50960005,hospital,0.0,bert_ner,sapbert_faiss,Hemorrhage
+2,72,74,113305005,co,0.0,bert_ner,sapbert_faiss,Cerebellum
+2,98,101,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+2,317,324,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+2,1072,1079,40917007,delayed,0.0,bert_ner,sapbert_faiss,Confusion
+2,1080,1088,113305005,cerebral,0.0,bert_ner,sapbert_faiss,Cerebellum
+2,1025,1028,24982008,day,0.0,bert_ner,sapbert_faiss,Diplopia
+2,1108,1115,42695009,managed,0.0,bert_ner,sapbert_faiss,Thalamus
+2,1121,1128,52674009,induced,0.0,bert_ner,sapbert_faiss,Ischemia
+2,169,172,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+2,196,199,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+2,1196,1204,273302005,modified,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+2,141,143,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+2,17,18,69930009,2,0.935,bert_ner,static_dict,MCA M2 segment
+3,22,26,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+3,27,30,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+3,31,35,69930009,male,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+3,36,40,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+3,41,48,50960005,history,0.0,bert_ner,sapbert_faiss,Hemorrhage
+3,49,51,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+3,52,59,450893003,smoking,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+3,60,63,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+3,39,40,69930009,h,0.935,bert_ner,static_dict,Right middle cerebral artery
+3,79,88,77477000,presented,0.0,bert_ner,sapbert_faiss,Computed tomography
+3,36,40,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+3,94,99,42695009,trans,0.0,bert_ner,sapbert_faiss,Thalamus
+3,104,111,50960005,episode,0.0,bert_ner,sapbert_faiss,Hemorrhage
+3,49,51,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+3,115,120,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+3,60,63,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+3,140,146,29164008,speech,0.0,bert_ner,sapbert_faiss,Speech disorder
+3,147,159,13791008,difficulties,0.0,bert_ner,sapbert_faiss,Weakness
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,189,199,26036001,completely,0.0,bert_ner,sapbert_faiss,Occlusion
+3,200,208,26036001,resolved,0.0,bert_ner,sapbert_faiss,Occlusion
+3,44,46,42695009,to,0.0,bert_ner,sapbert_faiss,Thalamus
+3,218,225,266257000,arrival,0.0,bert_ner,sapbert_faiss,Transient ischemic attack
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,144,145,69930009,c,0.935,bert_ner,static_dict,Left middle cerebral artery
+3,251,254,15926001,ABC,0.0,bert_ner,sapbert_faiss,Brainstem
+3,267,277,77477000,calculated,0.0,bert_ner,sapbert_faiss,Computed tomography
+3,292,297,50960005,blood,0.0,bert_ner,sapbert_faiss,Hemorrhage
+3,298,306,415582006,pressure,0.0,bert_ner,sapbert_faiss,Stenosis
+3,307,310,32603002,160,0.0,bert_ner,sapbert_faiss,Basal ganglia
+3,230,238,77477000,CLINICAL,0.0,bert_ner,sapbert_faiss,Computed tomography
+3,324,332,42695009,features,0.0,bert_ner,sapbert_faiss,Thalamus
+3,336,338,42695009,un,0.0,bert_ner,sapbert_faiss,Thalamus
+3,127,135,13791008,weakness,0.8500000238418579,bert_ner,sapbert_faiss,Weakness
+3,60,63,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+3,140,146,29164008,speech,0.0,bert_ner,sapbert_faiss,Speech disorder
+3,367,378,20262006,disturbance,0.0,bert_ner,sapbert_faiss,Ataxia
+3,380,388,415582006,duration,0.0,bert_ner,sapbert_faiss,Stenosis
+3,168,178,422587007,45 minutes,0.0,bert_ner,sapbert_faiss,Nausea
+3,404,412,20262006,diabetes,0.0,bert_ner,sapbert_faiss,Ataxia
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,380,382,42695009,du,0.0,bert_ner,sapbert_faiss,Thalamus
+3,470,474,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+3,415,418,86547008,Car,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,14,15,69930009,I,0.935,bert_ner,static_dict,Right middle cerebral artery
+3,512,514,273302005,MR,0.935,bert_ner,static_dict,mRS score 0
+3,516,521,15926001,brain,0.0,bert_ner,sapbert_faiss,Brainstem
+3,36,40,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+3,527,536,20262006,diffusion,0.0,bert_ner,sapbert_faiss,Ataxia
+3,537,545,13791008,weighted,0.0,bert_ner,sapbert_faiss,Weakness
+3,503,510,113091000,IMAGING,0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+3,29,30,24982008,d,0.0,bert_ner,sapbert_faiss,Diplopia
+3,412,413,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+3,573,578,422587007,acute,0.0,bert_ner,sapbert_faiss,Nausea
+3,56,58,42696002,in,0.0,bert_ner,sapbert_faiss,Internal capsule
+3,470,474,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+3,189,191,113305005,co,0.0,bert_ner,sapbert_faiss,Cerebellum
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,512,514,273302005,MR,0.935,bert_ner,static_dict,mRS score 0
+3,415,418,86547008,Car,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,751,759,13791008,evidence,0.0,bert_ner,sapbert_faiss,Weakness
+3,49,51,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+3,777,783,42695009,source,0.0,bert_ner,sapbert_faiss,Thalamus
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,94,99,42695009,trans,0.0,bert_ner,sapbert_faiss,Thalamus
+3,42,44,42696002,is,0.0,bert_ner,sapbert_faiss,Internal capsule
+3,1,2,69930009,T,0.935,bert_ner,static_dict,Left middle cerebral artery
+3,868,874,422587007,likely,0.0,bert_ner,sapbert_faiss,Nausea
+3,415,418,86547008,Car,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,967,974,42695009,therapy,0.0,bert_ner,sapbert_faiss,Thalamus
+3,263,266,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+3,979,988,26036001,initiated,0.0,bert_ner,sapbert_faiss,Occlusion
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,990,995,42695009,Given,0.0,bert_ner,sapbert_faiss,Thalamus
+3,415,418,86547008,Car,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+3,180,188,415582006,Symptoms,0.0,bert_ner,sapbert_faiss,Stenosis
+3,290,291,42695009,",",0.0,bert_ner,sapbert_faiss,Thalamus
+3,415,418,86547008,Car,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+3,1076,1087,42695009,recommended,0.0,bert_ner,sapbert_faiss,Thalamus
+3,60,63,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+3,178,179,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+4,23,24,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+4,24,28,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+4,23,24,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+4,29,32,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+4,33,43,415582006,previously,0.0,bert_ner,sapbert_faiss,Stenosis
+4,44,51,42696002,healthy,0.0,bert_ner,sapbert_faiss,Internal capsule
+4,52,56,69930009,male,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+4,57,66,77477000,presented,0.0,bert_ner,sapbert_faiss,Computed tomography
+4,67,71,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+4,72,77,422587007,acute,0.0,bert_ner,sapbert_faiss,Nausea
+4,78,83,20262006,onset,0.0,bert_ner,sapbert_faiss,Ataxia
+4,84,86,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+4,26,27,69930009,a,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,95,98,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+4,99,104,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+4,105,108,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+4,122,127,77477000,known,0.0,bert_ner,sapbert_faiss,Computed tomography
+4,128,132,13791008,well,0.0,bert_ner,sapbert_faiss,Weakness
+4,133,137,266257000,time,0.0,bert_ner,sapbert_faiss,Transient ischemic attack
+4,138,141,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+4,142,143,69930009,2,0.935,bert_ner,static_dict,MCA M2 segment
+4,150,155,15926001,prior,0.0,bert_ner,sapbert_faiss,Brainstem
+4,8,10,42695009,TO,0.0,bert_ner,sapbert_faiss,Thalamus
+4,159,171,26036001,presentation,0.0,bert_ner,sapbert_faiss,Occlusion
+4,115,116,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+4,33,35,70382005,pr,0.0,bert_ner,sapbert_faiss,Posterior cerebral artery
+4,33,35,70382005,pr,0.0,bert_ner,sapbert_faiss,Posterior cerebral artery
+4,62,63,69930009,n,0.935,bert_ner,static_dict,MCA M1 segment
+4,207,209,18060000,18,0.0,bert_ner,sapbert_faiss,Visual field defect
+4,7,9,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+4,72,77,422587007,acute,0.0,bert_ner,sapbert_faiss,Nausea
+4,105,108,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+4,67,71,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+4,90,92,450893003,as,0.935,bert_ner,static_dict,ASPECTS score 0
+4,84,86,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+4,7,9,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+4,295,299,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,300,302,69930009,M1,0.935,bert_ner,static_dict,MCA M1 segment
+4,303,309,69930009,middle,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+4,310,318,113305005,cerebral,0.0,bert_ner,sapbert_faiss,Cerebellum
+4,341,345,77343006,good,0.0,bert_ner,sapbert_faiss,Angiography
+4,198,200,113305005,co,0.0,bert_ner,sapbert_faiss,Cerebellum
+4,198,200,113305005,co,0.0,bert_ner,sapbert_faiss,Cerebellum
+4,33,35,70382005,pr,0.0,bert_ner,sapbert_faiss,Posterior cerebral artery
+4,431,437,26036001,access,0.0,bert_ner,sapbert_faiss,Occlusion
+4,442,450,50960005,obtained,0.0,bert_ner,sapbert_faiss,Hemorrhage
+4,451,454,42695009,via,0.0,bert_ner,sapbert_faiss,Thalamus
+4,99,104,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+4,85,86,69930009,f,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,479,480,450893003,6,0.935,bert_ner,static_dict,ASPECTS score 6
+4,482,487,42695009,guide,0.0,bert_ner,sapbert_faiss,Thalamus
+4,488,491,77477000,cat,0.0,bert_ner,sapbert_faiss,Computed tomography
+4,501,511,26036001,positioned,0.0,bert_ner,sapbert_faiss,Occlusion
+4,295,299,69930009,left,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,524,532,42696002,internal,0.0,bert_ner,sapbert_faiss,Internal capsule
+4,533,536,86547008,car,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+4,549,554,26036001,Using,0.0,bert_ner,sapbert_faiss,Occlusion
+4,563,571,449894001,retrieve,0.0,bert_ner,sapbert_faiss,Recanalization
+4,573,582,42695009,technique,0.0,bert_ner,sapbert_faiss,Thalamus
+4,7,8,69930009,C,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,597,609,449894001,successfully,0.0,bert_ner,sapbert_faiss,Recanalization
+4,0,1,69930009,T,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,15,16,450893003,P,0.935,bert_ner,static_dict,ASPECTS score 0
+4,23,24,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+4,33,35,70382005,pr,0.0,bert_ner,sapbert_faiss,Posterior cerebral artery
+4,423,426,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+4,702,709,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+4,423,426,42695009,the,0.0,bert_ner,sapbert_faiss,Thalamus
+4,413,415,42695009,ne,0.0,bert_ner,sapbert_faiss,Thalamus
+4,757,759,18060000,24,0.0,bert_ner,sapbert_faiss,Visual field defect
+4,144,148,50960005,hour,0.0,bert_ner,sapbert_faiss,Hemorrhage
+4,7,9,450893003,CT,0.935,bert_ner,static_dict,ASPECTS score 0
+4,597,607,449894001,successful,0.0,bert_ner,sapbert_faiss,Recanalization
+4,123,125,26036001,no,0.0,bert_ner,sapbert_faiss,Occlusion
+4,105,108,50960005,hem,0.0,bert_ner,sapbert_faiss,Hemorrhage
+4,821,834,415582006,complications,0.0,bert_ner,sapbert_faiss,Stenosis
+4,62,63,69930009,n,0.935,bert_ner,static_dict,MCA M1 segment
+4,842,850,449894001,improved,0.0,bert_ner,sapbert_faiss,Recanalization
+4,8,10,42695009,TO,0.0,bert_ner,sapbert_faiss,Thalamus
+4,757,759,18060000,24,0.0,bert_ner,sapbert_faiss,Visual field defect
+4,95,98,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+4,387,388,450893003,3,0.935,bert_ner,static_dict,TICI 3 - complete perfusion
+4,877,886,422400008,discharge,0.0,bert_ner,sapbert_faiss,Vomiting
+4,901,905,13791008,Work,0.0,bert_ner,sapbert_faiss,Weakness
+4,60,62,69930009,se,0.935,bert_ner,static_dict,MCA M1 segment
+4,967,977,42696002,consistent,0.0,bert_ner,sapbert_faiss,Internal capsule
+4,67,71,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+4,983,987,15926001,para,0.0,bert_ner,sapbert_faiss,Brainstem
+4,115,116,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+4,1005,1009,26036001,Anti,0.0,bert_ner,sapbert_faiss,Occlusion
+4,138,141,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+4,1025,1034,26036001,initiated,0.0,bert_ner,sapbert_faiss,Occlusion
+4,1039,1048,15926001,secondary,0.0,bert_ner,sapbert_faiss,Brainstem
+4,1049,1059,26036001,prevention,0.0,bert_ner,sapbert_faiss,Occlusion
+5,0,7,42695009,POSTERI,0.0,bert_ner,sapbert_faiss,Thalamus
+5,33,37,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+5,38,41,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+5,42,48,273302005,female,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+5,49,53,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+5,54,56,71186008,ve,0.0,bert_ner,sapbert_faiss,Intraventricular hemorrhage
+5,84,93,77477000,presented,0.0,bert_ner,sapbert_faiss,Computed tomography
+5,49,53,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+5,105,110,20262006,onset,0.0,bert_ner,sapbert_faiss,Ataxia
+5,111,113,450893003,of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+5,54,56,71186008,ve,0.0,bert_ner,sapbert_faiss,Intraventricular hemorrhage
+5,133,136,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+5,154,159,422587007,began,0.0,bert_ner,sapbert_faiss,Nausea
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+5,4,5,69930009,E,0.935,bert_ner,static_dict,Left middle cerebral artery
+5,224,227,42695009,The,0.0,bert_ner,sapbert_faiss,Thalamus
+5,228,235,42695009,patient,0.0,bert_ner,sapbert_faiss,Thalamus
+5,236,245,26036001,exhibited,0.0,bert_ner,sapbert_faiss,Occlusion
+5,20,21,69930009,N,0.935,bert_ner,static_dict,MCA M1 segment
+5,257,266,15926001,bilateral,0.0,bert_ner,sapbert_faiss,Brainstem
+5,267,272,42696002,inter,0.0,bert_ner,sapbert_faiss,Internal capsule
+5,133,136,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+5,3,4,69930009,T,0.935,bert_ner,static_dict,Left middle cerebral artery
+5,317,319,113305005,Ce,0.0,bert_ner,sapbert_faiss,Cerebellum
+5,328,333,42695009,signs,0.0,bert_ner,sapbert_faiss,Thalamus
+5,339,348,415582006,prominent,0.0,bert_ner,sapbert_faiss,Stenosis
+5,133,136,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+5,391,395,113305005,limb,0.0,bert_ner,sapbert_faiss,Cerebellum
+5,396,404,13791008,weakness,0.8500000238418579,bert_ner,sapbert_faiss,Weakness
+5,405,408,13791008,was,0.0,bert_ner,sapbert_faiss,Weakness
+5,409,417,26036001,observed,0.0,bert_ner,sapbert_faiss,Occlusion
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+5,6,7,69930009,I,0.935,bert_ner,static_dict,Right middle cerebral artery
+5,431,433,273302005,MR,0.935,bert_ner,static_dict,mRS score 0
+5,70,72,42696002,in,0.0,bert_ner,sapbert_faiss,Internal capsule
+5,257,266,15926001,bilateral,0.0,bert_ner,sapbert_faiss,Brainstem
+5,482,488,69930009,medial,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+5,489,501,77477000,longitudinal,0.0,bert_ner,sapbert_faiss,Computed tomography
+5,42,43,69930009,f,0.935,bert_ner,static_dict,Left middle cerebral artery
+5,133,136,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+5,516,524,50582007,superior,0.0,bert_ner,sapbert_faiss,Hemiparesis
+5,10,11,69930009,C,0.935,bert_ner,static_dict,Left middle cerebral artery
+5,0,1,450893003,P,0.935,bert_ner,static_dict,ASPECTS score 0
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+5,431,433,273302005,MR,0.935,bert_ner,static_dict,mRS score 0
+5,569,575,422587007,severe,0.0,bert_ner,sapbert_faiss,Nausea
+5,0,9,15926001,POSTERIOR,0.0,bert_ner,sapbert_faiss,Brainstem
+5,639,641,113305005,co,0.0,bert_ner,sapbert_faiss,Cerebellum
+5,257,266,15926001,bilateral,0.0,bert_ner,sapbert_faiss,Brainstem
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+5,730,737,77477000,pattern,0.0,bert_ner,sapbert_faiss,Computed tomography
+5,756,766,42696002,consistent,0.0,bert_ner,sapbert_faiss,Internal capsule
+5,49,53,42695009,with,0.0,bert_ner,sapbert_faiss,Thalamus
+5,805,811,422587007,likely,0.0,bert_ner,sapbert_faiss,Nausea
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+5,912,917,42695009,Given,0.0,bert_ner,sapbert_faiss,Thalamus
+5,922,926,422587007,high,0.0,bert_ner,sapbert_faiss,Nausea
+5,0,9,15926001,POSTERIOR,0.0,bert_ner,sapbert_faiss,Brainstem
+5,10,21,77343006,CIRCULATION,0.0,bert_ner,sapbert_faiss,Angiography
+5,121,122,42695009,",",0.0,bert_ner,sapbert_faiss,Thalamus
+5,133,136,42695009,and,0.0,bert_ner,sapbert_faiss,Thalamus
+5,1032,1042,42695009,considered,0.0,bert_ner,sapbert_faiss,Thalamus
+5,1043,1046,42695009,but,0.0,bert_ner,sapbert_faiss,Thalamus
+5,1047,1050,42695009,def,0.0,bert_ner,sapbert_faiss,Thalamus
+5,1100,1106,113305005,volume,0.0,bert_ner,sapbert_faiss,Cerebellum
+5,143,144,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
