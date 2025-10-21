@@ -16,34 +16,21 @@ import json
 import re
 from datetime import datetime
 
-# --- START: Robust Path Setup ---
-
-# 1. Get the absolute path to THIS script's directory.
-# SCRIPT_DIR is .../RAG_ontologia/benchmark
+# Configuración paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# 2. Define all other paths RELATIVE TO THIS SCRIPT.
-# .../RAG_ontologia/benchmark/data
 DATA_DIR = os.path.join(SCRIPT_DIR, 'data')
-# .../RAG_ontologia/benchmark/real_strategies
 STRATEGIES_DIR = os.path.join(SCRIPT_DIR, 'real_strategies')
-
-# 3. Add the paths needed for Python to find your modules.
-# Add SCRIPT_DIR (benchmark/) to find 'strategy_rag_gpt4o.py'
 if SCRIPT_DIR not in sys.path:
     sys.path.append(SCRIPT_DIR)
-# Add STRATEGIES_DIR (benchmark/real_strategies/) to find 'real_kiris.py', etc.
 if STRATEGIES_DIR not in sys.path:
     sys.path.append(STRATEGIES_DIR)
-    
 RESULTS_DIR = os.path.join(SCRIPT_DIR, 'results')
 if not os.path.exists(RESULTS_DIR):
     os.makedirs(RESULTS_DIR)
 
-# --- END: Robust Path Setup ---
 
-# The rest of your file (def calculate_detailed_metrics...)
 
+# 
 def calculate_detailed_metrics(predictions: pd.DataFrame, ground_truth: pd.DataFrame, strategy_name: str) -> dict:
     """Calcula métricas detalladas de evaluación"""
     
