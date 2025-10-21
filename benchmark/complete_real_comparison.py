@@ -7,16 +7,42 @@ Comparación COMPLETA con las 4 estrategias REALES:
 4. Tu RAG + GPT-4o
 """
 
-import pandas as pd
-import numpy as np
 import sys
 import os
+import pandas as pd
+import numpy as np
 import time
 import json
+import re
 from datetime import datetime
 
-# Agregar paths para importar estrategias
-sys.path.append(os.path.join(os.path.dirname(__file__), 'real_strategies'))
+# --- START: Robust Path Setup ---
+
+# 1. Get the absolute path to THIS script's directory.
+# SCRIPT_DIR is .../RAG_ontologia/benchmark
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# 2. Define all other paths RELATIVE TO THIS SCRIPT.
+# .../RAG_ontologia/benchmark/data
+DATA_DIR = os.path.join(SCRIPT_DIR, 'data')
+# .../RAG_ontologia/benchmark/real_strategies
+STRATEGIES_DIR = os.path.join(SCRIPT_DIR, 'real_strategies')
+
+# 3. Add the paths needed for Python to find your modules.
+# Add SCRIPT_DIR (benchmark/) to find 'strategy_rag_gpt4o.py'
+if SCRIPT_DIR not in sys.path:
+    sys.path.append(SCRIPT_DIR)
+# Add STRATEGIES_DIR (benchmark/real_strategies/) to find 'real_kiris.py', etc.
+if STRATEGIES_DIR not in sys.path:
+    sys.path.append(STRATEGIES_DIR)
+    
+RESULTS_DIR = os.path.join(SCRIPT_DIR, 'results')
+if not os.path.exists(RESULTS_DIR):
+    os.makedirs(RESULTS_DIR)
+
+# --- END: Robust Path Setup ---
+
+# The rest of your file (def calculate_detailed_metrics...)
 
 def calculate_detailed_metrics(predictions: pd.DataFrame, ground_truth: pd.DataFrame, strategy_name: str) -> dict:
     """Calcula métricas detalladas de evaluación"""
@@ -112,8 +138,12 @@ def main():
     # Cargar datasets
     print("\n[CARGA] Cargando datasets...")
     try:
-        notes_df = pd.read_csv("data/mimic-iv_notes_training_set.csv")
-        annotations_df = pd.read_csv("data/train_annotations.csv")
+        
+        notes_path = os.path.join(DATA_DIR, "mimic-iv_notes_training_set.csv")
+        annotations_path = os.path.join(DATA_DIR, "train_annotations.csv")
+
+        notes_df = pd.read_csv(notes_path)
+        annotations_df = pd.read_csv(annotations_path)
         print(f"   Notas: {len(notes_df)}")
         print(f"   Anotaciones: {len(annotations_df)}")
     except Exception as e:
@@ -150,17 +180,17 @@ def main():
         traceback.print_exc()
     
     # 3. MITEL REAL con Ollama
-    print("\n" + "="*80)
-    print("INICIALIZANDO MITEL REAL (3er lugar) - Mistral 7B via Ollama")
-    print("="*80)
-    try:
-        from real_mitel_ollama import RealMITELOllamaStrategy
-        strategies["3_MITEL_REAL"] = RealMITELOllamaStrategy()
-        print("[EXITO] MITEL real con Ollama inicializada")
-    except Exception as e:
-        print(f"[ERROR] MITEL real: {e}")
-        import traceback
-        traceback.print_exc()
+    # print("\n" + "="*80)
+    # print("INICIALIZANDO MITEL REAL (3er lugar) - Mistral 7B via Ollama")
+    # print("="*80)
+    # try:
+    #     from real_mitel_ollama import RealMITELOllamaStrategy
+    #     strategies["3_MITEL_REAL"] = RealMITELOllamaStrategy()
+    #     print("[EXITO] MITEL real con Ollama inicializada")
+    # except Exception as e:
+    #     print(f"[ERROR] MITEL real: {e}")
+    #     import traceback
+    #     traceback.print_exc()
     
     # 4. Tu RAG + GPT-4o (versión simplificada que funciona)
     print("\n" + "="*80)
@@ -168,10 +198,8 @@ def main():
     print("="*80)
     try:
         # Usar la implementación simplificada que ya funciona
-        import sys
-        sys.path.append(os.path.dirname(__file__))
-        from simple_real_comparison import SimpleRAGGPT4oStrategy
-        strategies["4_TU_RAG_GPT4o"] = SimpleRAGGPT4oStrategy()
+        from strategy_rag_gpt4o import RAGWithGPT4oStrategy
+        strategies["4_TU_RAG_GPT4o"] = RAGWithGPT4oStrategy()
         print("[EXITO] Tu RAG + GPT-4o inicializada")
     except Exception as e:
         print(f"[ERROR] Tu RAG + GPT-4o: {e}")
@@ -338,16 +366,41 @@ def main():
         print("   - Velocidad lenta: Optimización necesaria")
     
     # Guardar resultados completos
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+# --- START: Guardar resultados completos en carpeta de ejecución ---
     
-    # Preparar datos para JSON
+    # 1. Find the next execution number
+    exec_num = 1
+    dir_pattern = re.compile(r"^(\d+)_execution_.*$")
+    existing_nums = []
+    for dirname in os.listdir(RESULTS_DIR):
+        if os.path.isdir(os.path.join(RESULTS_DIR, dirname)):
+            match = dir_pattern.match(dirname)
+            if match:
+                existing_nums.append(int(match.group(1)))
+    
+    if existing_nums:
+        exec_num = max(existing_nums) + 1
+    
+    # 2. Get timestamp in your requested format (MM_DD_YYYY_HH_MM)
+    timestamp_str = datetime.now().strftime("%m_%d_%Y_%H_%M")
+    
+    # 3. Create the new directory name (e.g., "01_execution_10_21_2025_13_18")
+    exec_num_str = f"{exec_num:02d}" 
+    dir_name = f"{exec_num_str}_execution_{timestamp_str}"
+    
+    # 4. Create the full path and the directory
+    EXECUTION_DIR = os.path.join(RESULTS_DIR, dir_name)
+    os.makedirs(EXECUTION_DIR, exist_ok=True)
+    
+    # 5. Prepare data for JSON (same as before)
     predictions_json = {}
     for name, df in all_predictions.items():
         if len(df) > 0:
-            predictions_json[name] = df.head(5).to_dict('records')  # Solo primeras 5 para el JSON
+            predictions_json[name] = df.head(5).to_dict('records')
     
     report = {
-        "timestamp": timestamp,
+        "timestamp": timestamp_str,
+        "execution_folder": dir_name,
         "comparison_type": "COMPLETE_4_STRATEGIES_REAL",
         "strategies": list(results.keys()),
         "results": results,
@@ -360,22 +413,25 @@ def main():
         "sample_predictions": predictions_json
     }
     
-    # Guardar reporte
-    report_filename = f"complete_comparison_{timestamp}.json"
+    # 6. Save the report in the new folder
+    # Note: Filename is simpler since the folder has the timestamp
+    report_filename = os.path.join(EXECUTION_DIR, "complete_comparison_report.json")
     with open(report_filename, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False, default=str)
     
     print(f"\nResultados completos guardados en: {report_filename}")
     
-    # Guardar predicciones individuales
+    # 7. Save individual predictions in the new folder
     for name, predictions in all_predictions.items():
         if len(predictions) > 0:
-            pred_filename = f"predictions_{name}_{timestamp}.csv"
+            pred_filename = os.path.join(EXECUTION_DIR, f"predictions_{name}.csv")
             predictions.to_csv(pred_filename, index=False, encoding="utf-8")
             print(f"Predicciones {name}: {pred_filename}")
     
     print(f"\nCOMPARACION COMPLETA DE 4 ESTRATEGIAS REALES FINALIZADA")
     print("=" * 100)
+    
+    # --- END: Guardar resultados completos ---
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,243 @@
+{
+  "timestamp": "10_21_2025_13_50",
+  "execution_folder": "01_execution_10_21_2025_13_50",
+  "comparison_type": "COMPLETE_4_STRATEGIES_REAL",
+  "strategies": [
+    "1_KIRIs_REAL",
+    "2_SNOBERT_REAL",
+    "4_TU_RAG_GPT4o"
+  ],
+  "results": {
+    "1_KIRIs_REAL": {
+      "precision": 0.8380952380952381,
+      "recall": 0.7652173913043478,
+      "f1": 0.8,
+      "predictions": 105,
+      "matches": 88,
+      "partial_matches": 17,
+      "ground_truth": 115,
+      "coverage": 1.0
+    },
+    "2_SNOBERT_REAL": {
+      "precision": 0.3072289156626506,
+      "recall": 0.4434782608695652,
+      "f1": 0.3629893238434164,
+      "predictions": 166,
+      "matches": 51,
+      "partial_matches": 115,
+      "ground_truth": 115,
+      "coverage": 1.0
+    },
+    "4_TU_RAG_GPT4o": {
+      "precision": 0.14285714285714285,
+      "recall": 0.017391304347826087,
+      "f1": 0.031007751937984496,
+      "predictions": 14,
+      "matches": 2,
+      "partial_matches": 12,
+      "ground_truth": 115,
+      "coverage": 1.0
+    }
+  },
+  "execution_times": {
+    "1_KIRIs_REAL": 0.03136587142944336,
+    "2_SNOBERT_REAL": 9.99142599105835,
+    "4_TU_RAG_GPT4o": 74.75311160087585
+  },
+  "dataset_info": {
+    "notes_count": 5,
+    "annotations_count": 115
+  },
+  "ranking": [
+    [
+      "1_KIRIs_REAL",
+      0.8
+    ],
+    [
+      "2_SNOBERT_REAL",
+      0.3629893238434164
+    ],
+    [
+      "4_TU_RAG_GPT4o",
+      0.031007751937984496
+    ]
+  ],
+  "sample_predictions": {
+    "1_KIRIs_REAL": [
+      {
+        "note_id": 1,
+        "start": 75,
+        "end": 87,
+        "concept_id": 38341003,
+        "span_text": "hypertension",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'right', 'severity': 'acute', 'temporal': 'old'}"
+      },
+      {
+        "note_id": 1,
+        "start": 92,
+        "end": 109,
+        "concept_id": 73211009,
+        "span_text": "diabetes mellitus",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+      },
+      {
+        "note_id": 1,
+        "start": 155,
+        "end": 163,
+        "concept_id": 13791008,
+        "span_text": "weakness",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "history",
+        "attributes": "{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+      },
+      {
+        "note_id": 1,
+        "start": 287,
+        "end": 329,
+        "concept_id": 450893003,
+        "span_text": "National Institutes of Health Stroke Scale",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "examination",
+        "attributes": "{'laterality': 'left'}"
+      },
+      {
+        "note_id": 1,
+        "start": 331,
+        "end": 336,
+        "concept_id": 450893003,
+        "span_text": "NIHSS",
+        "confidence": 0.9,
+        "method": "main_dict",
+        "section": "examination",
+        "attributes": "{'laterality': 'left'}"
+      }
+    ],
+    "2_SNOBERT_REAL": [
+      {
+        "note_id": 1,
+        "start": 17,
+        "end": 21,
+        "concept_id": "20262006",
+        "span_text": "This",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Ataxia"
+      },
+      {
+        "note_id": 1,
+        "start": 6,
+        "end": 7,
+        "concept_id": "69930009",
+        "span_text": "A",
+        "confidence": 0.935,
+        "method": "bert_ner",
+        "classification_method": "static_dict",
+        "concept_description": "Left middle cerebral artery"
+      },
+      {
+        "note_id": 1,
+        "start": 57,
+        "end": 61,
+        "concept_id": "42695009",
+        "span_text": "with",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Thalamus"
+      },
+      {
+        "note_id": 1,
+        "start": 129,
+        "end": 140,
+        "concept_id": "266257000",
+        "span_text": "acute onset",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Transient ischemic attack"
+      },
+      {
+        "note_id": 1,
+        "start": 201,
+        "end": 204,
+        "concept_id": "13791008",
+        "span_text": "was",
+        "confidence": 0.0,
+        "method": "bert_ner",
+        "classification_method": "sapbert_faiss",
+        "concept_description": "Weakness"
+      }
+    ],
+    "4_TU_RAG_GPT4o": [
+      {
+        "note_id": 1,
+        "start": 0,
+        "end": 10,
+        "concept_id": "5399005",
+        "span_text": "hemorragia",
+        "confidence": 0.85,
+        "entity_description": "hemorragia disecante (anomalía morfológica)",
+        "anatomy_code": "730422009",
+        "presence_code": "272519000",
+        "llm_used": "GPT-4o"
+      },
+      {
+        "note_id": 1,
+        "start": 0,
+        "end": 21,
+        "concept_id": "119567009",
+        "span_text": "oclusiones arteriales",
+        "confidence": 0.85,
+        "entity_description": "estructura arterial de la cabeza (estructura corporal)",
+        "anatomy_code": "74047007",
+        "presence_code": "52101004",
+        "llm_used": "GPT-4o"
+      },
+      {
+        "note_id": 1,
+        "start": 0,
+        "end": 14,
+        "concept_id": "N42ced7df0aba46af99fbb31625ba0606",
+        "span_text": "escala ASPECTS",
+        "confidence": 0.85,
+        "entity_description": "Escala_de_evaluacion",
+        "anatomy_code": "730422009",
+        "presence_code": "52101004",
+        "llm_used": "GPT-4o"
+      },
+      {
+        "note_id": 1,
+        "start": 0,
+        "end": 19,
+        "concept_id": "Ratio_penumbra-core",
+        "span_text": "ratio penumbra-core",
+        "confidence": 0.85,
+        "entity_description": "Ratio penumbra-core es de tipo Anomalia_morfologica",
+        "anatomy_code": "730422009",
+        "presence_code": "52101004",
+        "llm_used": "GPT-4o"
+      },
+      {
+        "note_id": 2,
+        "start": 0,
+        "end": 10,
+        "concept_id": "5399005",
+        "span_text": "hemorragia",
+        "confidence": 0.85,
+        "entity_description": "hemorragia disecante (anomalía morfológica)",
+        "anatomy_code": "369389009",
+        "presence_code": "52101004",
+        "llm_used": "GPT-4o"
+      }
+    ]
+  }
+}

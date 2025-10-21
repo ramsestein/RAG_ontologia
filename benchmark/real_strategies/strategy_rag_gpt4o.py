@@ -16,6 +16,18 @@ from openai import OpenAI
 import faiss
 from sentence_transformers import SentenceTransformer
 
+
+# --- START: Robust Path Setup ---
+
+# Get the absolute path to THIS script's directory (.../benchmark/real_strategies)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Get the absolute path to the project root (.../RAG_ontologia)
+# We need to go up TWO levels ('..' to benchmark, '..' to root)
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..'))
+
+# --- END: Robust Path Setup ---
+
 class RAGWithGPT4oStrategy:
     """
     Tu estrategia RAG original pero usando GPT-4o via OpenAI API
@@ -41,7 +53,8 @@ class RAGWithGPT4oStrategy:
         
         # API Key de ChatGPT - Cargar desde archivo api_keys
         try:
-            with open("../api_keys", "r") as f:
+            api_key_path = os.path.join(PROJECT_ROOT, 'api_keys')
+            with open(api_key_path, "r") as f:
                 lines = f.readlines()
                 for line in lines:
                     if line.startswith("chatGPT="):

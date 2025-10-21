@@ -1,0 +1,15 @@
+note_id,start,end,concept_id,span_text,confidence,entity_description,anatomy_code,presence_code,llm_used
+1,0,10,5399005,hemorragia,0.85,hemorragia disecante (anomalía morfológica),730422009,272519000,GPT-4o
+1,0,21,119567009,oclusiones arteriales,0.85,estructura arterial de la cabeza (estructura corporal),74047007,52101004,GPT-4o
+1,0,14,N42ced7df0aba46af99fbb31625ba0606,escala ASPECTS,0.85,Escala_de_evaluacion,730422009,52101004,GPT-4o
+1,0,19,Ratio_penumbra-core,ratio penumbra-core,0.85,Ratio penumbra-core es de tipo Anomalia_morfologica,730422009,52101004,GPT-4o
+2,0,10,5399005,hemorragia,0.85,hemorragia disecante (anomalía morfológica),369389009,52101004,GPT-4o
+2,0,21,119567009,oclusiones arteriales,0.85,estructura arterial de la cabeza (estructura corporal),11527006,52101004,GPT-4o
+2,0,16,703868004,lesión isquémica,0.85,lesión por isquemia-reperfusión (anomalía morfológica),119408004,52101004,GPT-4o
+3,0,18,415582006,grado de estenosis,0.85,Grado de estenosis,244203003,52101004,GPT-4o
+4,0,10,46386005,hemorragia,0.85,hemorragia oculta (anomalía morfológica),código_del_contexto_anatomy,272519000,GPT-4o
+4,0,14,N42ced7df0aba46af99fbb31625ba0606,escala ASPECTS,0.85,Escala_de_evaluacion,código_del_contexto_anatomy,52101004,GPT-4o
+4,0,21,119567009,oclusiones arteriales,0.85,estructura arterial de la cabeza (estructura corporal),N/A,52101004,GPT-4o
+5,0,18,415582006,grado de estenosis,0.85,Grado de estenosis,244203003,52101004,GPT-4o
+5,0,16,703868004,lesión isquémica,0.85,lesión por isquemia-reperfusión (anomalía morfológica),279275004,52101004,GPT-4o
+5,0,17,119567009,oclusión arterial,0.85,estructura arterial de la cabeza (estructura corporal),244203003,52101004,GPT-4o
