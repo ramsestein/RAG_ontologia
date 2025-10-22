@@ -1,0 +1,99 @@
+note_id,start,end,concept_id,span_text,confidence,method,classification_method,concept_description
+1,17,24,40917007,This is,0.0,bert_ner,sapbert_faiss,Confusion
+1,6,7,69930009,A,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,27,29,50582007,67,0.0,bert_ner,sapbert_faiss,Hemiparesis
+1,29,30,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+1,35,38,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+1,39,44,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+1,29,30,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+1,45,51,50582007,handed,0.0,bert_ner,sapbert_faiss,Hemiparesis
+1,52,106,69930009,male with a history of hypertension and diabetes melli,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+1,215,251,25064002,normal 3 hours prior to presentation,0.0,bert_ner,sapbert_faiss,Headache
+1,296,309,450893003,Institutes of,0.0,bert_ner,sapbert_faiss,"NIHSS, ASPECTS, TICI"
+1,39,44,69930009,right,0.935,bert_ner,static_dict,Right middle cerebral artery
+1,571,586,69930009,middle cerebral,0.0,bert_ner,sapbert_faiss,Middle cerebral artery
+1,587,595,77343006,artery (,0.0,bert_ner,sapbert_faiss,Angiography
+1,595,598,69930009,MCA,0.935,bert_ner,static_dict,Left middle cerebral artery
+1,336,337,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+1,658,663,55342001,) was,0.0,bert_ner,sapbert_faiss,Infarction
+1,767,783,50960005,patient received,0.0,bert_ner,sapbert_faiss,Hemorrhage
+1,260,262,42696002,in,0.0,bert_ner,sapbert_faiss,Internal capsule
+1,796,826,373110003,tissue plasminogen activator (,0.0,bert_ner,sapbert_faiss,Thrombolysis
+1,826,829,373110003,tPA,0.0,bert_ner,sapbert_faiss,Thrombolysis
+1,187,200,42695009,. The patient,0.0,bert_ner,sapbert_faiss,Thalamus
+1,1178,1179,42695009,',0.0,bert_ner,sapbert_faiss,Thalamus
+2,16,18,18060000,72,0.0,bert_ner,sapbert_faiss,Visual field defect
+2,18,19,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+2,19,23,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+2,18,19,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+2,24,27,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+2,28,46,266257000,female with atrial,0.0,bert_ner,sapbert_faiss,Transient ischemic attack
+2,47,59,266257000,fibrillation,0.0,bert_ner,sapbert_faiss,Transient ischemic attack
+2,364,382,77343006,Blood pressure was,0.0,bert_ner,sapbert_faiss,Angiography
+2,395,398,273302005,180,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+2,398,399,42695009,/,0.0,bert_ner,sapbert_faiss,Thalamus
+2,403,405,113091000,mm,0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+2,476,483,386554004,Glasgow,0.0,bert_ner,sapbert_faiss,Glasgow Coma Scale
+2,538,555,42695009,head revealed sub,0.0,bert_ner,sapbert_faiss,Thalamus
+2,565,570,50960005,hemor,0.0,bert_ner,sapbert_faiss,Hemorrhage
+2,581,606,32603002,blood in the basal cister,0.0,bert_ner,sapbert_faiss,Basal ganglia
+2,621,625,273302005,fiss,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+2,661,664,113091000,7mm,0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+2,665,673,79371005,anterior,0.0,bert_ner,sapbert_faiss,Anterior cerebral artery
+2,674,687,87486003,communicating,0.0,bert_ner,sapbert_faiss,Aphasia
+2,688,697,79371005,artery an,0.0,bert_ner,sapbert_faiss,Anterior cerebral artery
+2,814,829,55342001,admitted to the,0.0,bert_ner,sapbert_faiss,Infarction
+2,949,952,42695009,End,0.0,bert_ner,sapbert_faiss,Thalamus
+2,986,1012,449894001,was performed successfully,0.0,bert_ner,sapbert_faiss,Recanalization
+2,7,9,26036001,ON,0.0,bert_ner,sapbert_faiss,Occlusion
+2,1025,1028,24982008,day,0.0,bert_ner,sapbert_faiss,Diplopia
+2,16,17,450893003,7,0.935,bert_ner,static_dict,ASPECTS score 7
+2,1106,1165,433112001,", managed with induced hypertension and balloon angioplasty",0.0,bert_ner,sapbert_faiss,Thrombectomy
+2,1165,1171,18060000,. Disc,0.0,bert_ner,sapbert_faiss,Visual field defect
+2,1181,1195,24982008,on day 14 with,0.0,bert_ner,sapbert_faiss,Diplopia
+2,181,182,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+3,19,21,422587007,58,0.0,bert_ner,sapbert_faiss,Nausea
+3,21,22,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+3,22,26,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+3,21,22,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+3,27,30,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+3,168,178,422587007,45 minutes,0.0,bert_ner,sapbert_faiss,Nausea
+3,178,185,42695009,. Sympt,0.0,bert_ner,sapbert_faiss,Thalamus
+3,290,306,77343006,", blood pressure",0.0,bert_ner,sapbert_faiss,Angiography
+3,307,310,32603002,160,0.0,bert_ner,sapbert_faiss,Basal ganglia
+3,310,311,42695009,/,0.0,bert_ner,sapbert_faiss,Thalamus
+3,412,413,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+3,430,449,77477000,ultrasound revealed,0.0,bert_ner,sapbert_faiss,Computed tomography
+3,492,498,77343006,artery,0.0,bert_ner,sapbert_faiss,Angiography
+3,558,581,52674009,) showed small acute in,0.0,bert_ner,sapbert_faiss,Ischemia
+3,613,668,86547008,. MR angiography confirmed severe left internal carotid,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+3,669,684,415582006,artery stenosis,0.0,bert_ner,sapbert_faiss,Stenosis
+3,829,864,55342001,) with completed small vessel infar,0.0,bert_ner,sapbert_faiss,Infarction
+4,21,23,422587007,45,0.0,bert_ner,sapbert_faiss,Nausea
+4,23,24,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+4,24,28,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+4,23,24,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+4,29,32,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+4,33,43,415582006,previously,0.0,bert_ner,sapbert_faiss,Stenosis
+4,44,51,42696002,healthy,0.0,bert_ner,sapbert_faiss,Internal capsule
+4,388,389,113091000,),0.0,bert_ner,sapbert_faiss,Magnetic resonance imaging
+4,442,460,449894001,obtained via right,0.0,bert_ner,sapbert_faiss,Recanalization
+4,85,86,69930009,f,0.935,bert_ner,static_dict,Left middle cerebral artery
+4,477,540,86547008,A 6F guide catheter was positioned in the left internal carotid,0.0,bert_ner,sapbert_faiss,Internal carotid artery
+4,319,325,77343006,artery,0.0,bert_ner,sapbert_faiss,Angiography
+4,924,959,266257000,foramen ovale with atrial septal an,0.0,bert_ner,sapbert_faiss,Transient ischemic attack
+4,995,1003,414086009,embolism,0.0,bert_ner,sapbert_faiss,Cerebral embolism
+4,115,116,42695009,.,0.0,bert_ner,sapbert_faiss,Thalamus
+4,1005,1059,433112001,Anticoagulation was initiated for secondary prevention,0.0,bert_ner,sapbert_faiss,Thrombectomy
+5,30,32,40917007,63,0.0,bert_ner,sapbert_faiss,Confusion
+5,32,33,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+5,33,37,113305005,year,0.0,bert_ner,sapbert_faiss,Cerebellum
+5,32,33,26036001,-,0.0,bert_ner,sapbert_faiss,Occlusion
+5,38,41,40917007,old,0.0,bert_ner,sapbert_faiss,Confusion
+5,42,48,273302005,female,0.0,bert_ner,sapbert_faiss,Modified Rankin Scale
+5,49,56,71186008,with ve,0.0,bert_ner,sapbert_faiss,Intraventricular hemorrhage
+5,42,43,69930009,f,0.935,bert_ner,static_dict,Left middle cerebral artery
+5,547,596,67889009,MR angiography showed severe stenosis of the basi,0.0,bert_ner,sapbert_faiss,Basilar artery
+5,846,860,77343006,artery segment,0.0,bert_ner,sapbert_faiss,Angiography
+5,876,880,26036001,Anti,0.0,bert_ner,sapbert_faiss,Occlusion
+5,964,967,42695009,end,0.0,bert_ner,sapbert_faiss,Thalamus

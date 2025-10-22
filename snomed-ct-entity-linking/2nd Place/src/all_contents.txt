@@ -1,0 +1,1861 @@
+--- Content of cut_headers.py ---
+import re
+from collections import OrderedDict
+
+import pandas as pd
+from tqdm.auto import tqdm
+
+true_headers_list = [
+    "past medical history:",
+    "allergies:",
+    "history of present illness:",
+    "physical exam:",
+    "admission date:  discharge date:",
+    "attending:",
+    "major surgical or invasive procedure:",
+    "family history:",
+    "discharge disposition:",
+    "discharge condition:",
+    "discharge instructions:",
+    "name:  unit no:",
+    "social history:",
+    "chief complaint:",
+    "pertinent results:",
+    "discharge medications:",
+    "medications on admission:",
+    "___ on admission:",
+    "discharge diagnosis:",
+    "followup instructions:",
+    "brief hospital course:",
+    "facility:",
+    "impression:",
+]
+
+
+cut_headers_list = [
+    "medications on admission:",
+    "___ on admission:",
+    "discharge medications:",
+]
+
+
+def get_true_header_indices(text, true_headers_list):
+    text = re.sub("\n", " ", text.lower())
+    true_header_indices = {}
+    for true_header in true_headers_list:
+        pos = text.find(true_header)
+        if pos != -1:
+            true_header_indices[true_header] = pos
+    true_header_indices = dict(sorted(true_header_indices.items(), key=lambda item: item[1]))
+    true_header_indices = OrderedDict(true_header_indices)
+    return true_header_indices
+
+
+def cut_headers(df, ann_df):
+    cut_notes = {}
+    cut_ann = []
+    for i, row in tqdm(df.iterrows(), total=len(df)):
+        text = row["text"]
+        adf = ann_df[ann_df.note_id == row.note_id]
+        adf = adf.copy()
+        for cut_header in cut_headers_list:
+            headers = get_true_header_indices(text.lower(), true_headers_list)
+            if cut_header in headers:
+                cut_start = headers[cut_header]
+                i = list(headers).index(cut_header)
+                next_header = list(headers)[i + 1]
+                cut_end = headers[next_header]
+                diff = cut_end - cut_start
+
+                # move spans to the left
+                for j, r in adf.iterrows():
+                    if r.start >= cut_end:
+                        adf.at[j, "start"] -= diff
+                        adf.at[j, "end"] -= diff
+                    elif r.start >= cut_start:
+                        # delete
+                        adf.drop(j, inplace=True)
+                adf.reset_index(drop=True, inplace=True)
+
+                text = text[:cut_start] + text[cut_end:]
+        cut_notes[row.note_id] = text
+        cut_ann.append(adf)
+    cut_notes_df = pd.DataFrame(cut_notes.items(), columns=["note_id", "text"])
+    cut_ann = pd.concat(cut_ann)
+    return cut_notes_df, cut_ann
+
+
+--- Content of data.py ---
+import bisect
+import json
+import re
+from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import torch
+from torch.utils.data import Dataset
+from tqdm import tqdm
+
+
+def load_sctid_syn(sctid_syn_parh: Path):
+    with open(sctid_syn_parh, "r") as f:
+        data = json.load(f)
+        return set(map(int, data.keys()))
+
+
+def add_concept_class(ann_df, sctid_syn_dir: Path):
+    p_cids = load_sctid_syn(Path(sctid_syn_dir) / "proc_sctid_syn.json")
+    p_cids.add(71388002)
+    f_cids = load_sctid_syn(Path(sctid_syn_dir) / "find_sctid_syn.json")
+    b_cids = load_sctid_syn(Path(sctid_syn_dir) / "body_sctid_syn.json")
+    snomed_class = []
+    for i, r in ann_df.iterrows():
+        cid = r.concept_id
+        if cid in p_cids:
+            label = "proc"
+        elif cid in b_cids:
+            label = "body"
+        elif cid in f_cids:
+            label = "find"
+        else:
+            label = "???"
+            raise ValueError(f"unknown concept_id: {cid}")
+        snomed_class.append(label)
+
+    ann_df["cls"] = snomed_class
+    return ann_df
+
+
+def get_labels(starts, ends, spans):
+    """Convert offsets to sequence labels in BIO format."""
+    labels = ["O"] * len(starts)
+    spans = sorted(spans)
+    for s, e, l in spans:
+        li = bisect.bisect_left(starts, s)
+        ri = bisect.bisect_left(starts, e)
+        ni = len(labels[li:ri])
+        labels[li] = f"B-{l}"
+        labels[li + 1 : ri] = [f"I-{l}"] * (ni - 1)
+    return labels
+
+
+class Labeler:
+    def __init__(self, tokenizer):
+        self.tokenizer = tokenizer
+
+    def fix_annotation(self, text, ann_df):
+        trail = False
+        idxs = []
+        for i, c in enumerate(text):
+            if c == " ":
+                if trail:
+                    idxs.append(i)
+                trail = True
+            else:
+                trail = False
+
+        label_char = np.zeros(len(text))
+        label_char[idxs] = 1
+        label_char = np.cumsum(label_char).astype(int)
+
+        char_spans = []
+        for i, r in ann_df.iterrows():
+            span = [r.start, r.end, r.cls]
+            char_spans.append(span)
+
+        # fix spans, delete trailing spaces from text
+        for i, span in enumerate(char_spans):
+            s, e, c = span
+            s -= label_char[s]
+            e -= label_char[e]
+            char_spans[i] = [s, e, c]
+        return char_spans
+
+    def preprocess_text(self, note_ann_df, text):
+        text = re.sub(r"[^a-zA-Z0-9\s.,:\/]", " ", text)
+        char_spans = []
+        for _, r in note_ann_df.iterrows():
+            span = [r.start, r.end, r.cls]
+            char_spans.append(span)
+
+        encoded = self.tokenizer(
+            text, add_special_tokens=False, truncation=False, return_offsets_mapping=True
+        )
+        input_ids = encoded["input_ids"]
+        off = np.array(encoded["offset_mapping"])
+        starts = off[:, 0]
+        ends = off[:, 1]
+
+        labels = get_labels(starts, ends, char_spans)
+        return text, input_ids, labels
+
+
+def convert_labels_tokens(tokenizer, note_df, ann_df):
+    preproc = Labeler(tokenizer)
+
+    agg = ann_df.groupby("note_id")
+    # to dict
+    anns = {}
+    for note_id, r in tqdm(agg):
+        anns[note_id] = r
+
+    res = defaultdict(list)
+    for i, r in tqdm(note_df.iterrows(), total=len(note_df)):
+        note_id = r.note_id
+        text = r.text
+        ann_note_df = anns[note_id]
+        try:
+            t, i, l = preproc.preprocess_text(ann_note_df, text)
+            res["note_id"].append(note_id)
+            res["text"].append(t)
+            res["input_ids"].append(i)
+            res["labels"].append(l)
+            res["fold"].append(r.fold)
+        except Exception as e:
+            print(e)
+            print(note_id)
+
+    tdf = pd.DataFrame(res)
+    return tdf
+
+
+def parallel_convert_labels_tokens(tokenizer, note_df, ann_df, n_jobs=4):
+    from joblib import Parallel, delayed
+
+    note_chunks = np.array_split(note_df, n_jobs)
+    ann_df_gg = ann_df.groupby("note_id")
+    ann_df_dict = {k: v for k, v in ann_df_gg}
+    ann_chunks = []
+    for chunk in note_chunks:
+        note_ids = chunk.note_id
+        ann_chunk = pd.concat([ann_df_dict[nid] for nid in note_ids])
+        ann_chunks.append(ann_chunk)
+
+    res = Parallel(n_jobs=n_jobs)(
+        delayed(convert_labels_tokens)(tokenizer, note_chunk, ann_chunk)
+        for note_chunk, ann_chunk in zip(note_chunks, ann_chunks)
+    )
+    tdf = pd.concat(res)
+    return tdf
+
+
+class PreprocessedDataset(Dataset):
+    def __init__(self, cfg, tokenizer, df, train=False, fold=None, repeat=1, feature=None):
+        self.cfg = cfg
+        if fold is not None:
+            if isinstance(fold, int):
+                df = df[df.fold == fold]
+            elif isinstance(fold, list):
+                df = df[df.fold.isin(fold)]
+
+        self.df = df
+        self.tokenizer = tokenizer
+        self.repeat = repeat
+        self.train = train
+        self.feature = feature
+
+        self.label2id = {
+            "O": 0,
+            "B-find": 1,
+            "I-find": 2,
+            "B-proc": 3,
+            "I-proc": 4,
+            "B-body": 5,
+            "I-body": 6,
+        }
+        self.id2label = {v: k for k, v in self.label2id.items()}
+        self.note_dict = df.set_index("note_id").to_dict()["text"]
+
+        if not self.train:
+            # split input_ids and label_str into 2 parts, then concatenate them
+            res = []
+            for i, r in df.iterrows():
+                input_ids = r.input_ids
+                label_str = r.labels
+                input_ids1 = input_ids[: len(input_ids) // 2]
+                label_str1 = label_str[: len(label_str) // 2]
+                input_ids2 = input_ids[len(input_ids) // 2 :]
+                label_str2 = label_str[len(label_str) // 2 :]
+                row1 = [r.note_id, r.text, input_ids1, label_str1, r.fold]
+                row2 = [r.note_id, r.text, input_ids2, label_str2, r.fold]
+                res.append(row1)
+                res.append(row2)
+            self.df = pd.DataFrame(res)
+            self.df.columns = ["note_id", "text", "input_ids", "labels", "fold"]
+        print("Dataset len:", len(self.df))
+        print("Average token len:", self.df.input_ids.apply(len).mean())
+
+    def __len__(self):
+        return len(self.df) * self.repeat
+
+    def __getitem__(self, idx):
+        if idx > self.__len__():
+            raise StopIteration
+        idx = idx % len(self.df)
+
+        _, text, input_ids, label_str, _ = self.df.iloc[idx]
+
+        max_len = self.cfg.max_len - 2
+
+        if len(input_ids) > max_len:
+            if self.train:
+                offset_fixed = np.random.randint(0, len(input_ids) - max_len)
+            else:
+                offset_fixed = 0
+
+            input_ids = input_ids[offset_fixed : offset_fixed + max_len]
+            label_str = label_str[offset_fixed : offset_fixed + max_len]
+        else:
+            offset_fixed = 0
+
+        labels_int = [self.label2id[l] for l in label_str]
+        labels_int = [-100] + labels_int + [-100]
+        input_ids = [self.tokenizer.cls_token_id] + input_ids + [self.tokenizer.sep_token_id]
+        attention_mask = [1] * len(input_ids)
+        return {
+            "input_ids": torch.tensor(input_ids, dtype=torch.long),
+            "labels": torch.tensor(labels_int, dtype=torch.long),
+            "attention_mask": torch.tensor(attention_mask, dtype=torch.long),
+        }
+
+
+class ChunkedDataset:
+    def __init__(self, tokenizer, fold, df, max_len, repeat=1):
+        self.label2id = {
+            "O": 0,
+            "B-find": 1,
+            "I-find": 2,
+            "B-proc": 3,
+            "I-proc": 4,
+            "B-body": 5,
+            "I-body": 6,
+        }
+        self.id2label = {v: k for k, v in self.label2id.items()}
+        if fold is not None:
+            if isinstance(fold, int):
+                df = df[df.fold == fold]
+            elif isinstance(fold, list):
+                df = df[df.fold.isin(fold)]
+
+        _max_len = max_len - 2
+        # split notes into chunks of max_len
+        chunked_rows = []
+        for i, row in df.iterrows():
+            ids = row["input_ids"]
+            labels = row["labels"]
+
+            for i in range(0, len(ids), _max_len):
+                chunked_rows.append(
+                    {
+                        "fold": row["fold"],
+                        "ids": ids[i : i + _max_len],
+                        "labels": labels[i : i + _max_len],
+                    }
+                )
+        df = pd.DataFrame(chunked_rows)
+        print(f"chunked into {len(df)} rows")
+        self.df = df
+        self.tokenizer = tokenizer
+        self.repeat = repeat
+        self.max_len = max_len
+
+    def __len__(self):
+        return len(self.df) * self.repeat
+
+    def __getitem__(self, idx):
+        if idx > self.__len__():
+            raise StopIteration
+        idx = idx % len(self.df)
+
+        row = self.df.iloc[idx]
+        input_ids = row["ids"]
+        label_str = row["labels"]
+
+        labels_int = [self.label2id[l] for l in label_str]
+        labels_int = [-100] + labels_int + [-100]
+        input_ids = [self.tokenizer.cls_token_id] + input_ids + [self.tokenizer.sep_token_id]
+        attention_mask = [1] * len(input_ids)
+
+        return {
+            "input_ids": torch.tensor(input_ids, dtype=torch.long),
+            "labels": torch.tensor(labels_int, dtype=torch.long),
+            "attention_mask": torch.tensor(attention_mask, dtype=torch.long),
+        }
+
+
+--- Content of embeds.py ---
+import torch
+import torch.nn.functional as F
+from tqdm.auto import tqdm
+from transformers import AutoModel, AutoTokenizer
+
+
+class SepBERTEmbedder:
+    name = "cambridgeltl/SapBERT-from-PubMedBERT-fulltext-mean-token"
+
+    def __init__(self, cuda: bool = True):
+        self.tokenizer = AutoTokenizer.from_pretrained(self.name)
+        self.model = AutoModel.from_pretrained(self.name)
+        self.cuda = cuda
+        if self.cuda:
+            self.model = self.model.cuda()
+
+    def __call__(self, sentences):
+        bs = 256
+        all_embs = []
+        for i in torch.arange(0, len(sentences), bs):
+            toks = self.tokenizer.batch_encode_plus(
+                sentences[i : i + bs],
+                padding="max_length",
+                max_length=25,
+                truncation=True,
+                return_tensors="pt",
+            )
+            toks_cuda = {}
+            for k, v in toks.items():
+                toks_cuda[k] = v.cuda()
+            with torch.no_grad(), torch.cuda.amp.autocast():
+                cls_rep = self.model(**toks_cuda)[0].mean(1)
+                all_embs.append(cls_rep)
+        all_embs = torch.cat(all_embs, 0)
+        all_embs = F.normalize(all_embs, p=2, dim=1)
+        return all_embs
+
+
+def simplify(xb, same_count):
+    start = 0
+    sxb = []
+    for i in same_count:
+        sub = xb[start : start + i]
+        sub = sub.mean(0)
+        sxb.append(sub)
+        start = start + i
+    return torch.stack(sxb)
+
+
+def get_embeds(embedder, sctid_syn: dict, cuda: bool = False):
+    labels, same_count, embeds, batch = [], [], [], []
+    for k, vv in tqdm(sctid_syn.items()):
+        if cuda:
+            vv = vv.copy()
+        labels.append(k)
+        batch.extend(vv)
+        same_count.append(len(vv))
+        if len(batch) >= 128:
+            se = embedder(batch).cpu()
+            se = simplify(se, same_count)
+            embeds.append(se)
+            batch = []
+            same_count = []
+    if batch:
+        se = embedder(batch).cpu()
+        se = simplify(se, same_count)
+        embeds.append(se)
+    xb = torch.vstack(embeds)
+    if cuda:
+        xb = xb.cuda()
+    xb = F.normalize(xb, p=2, dim=1)
+    return {"labels": labels, "embeds": xb}
+
+
+--- Content of main.py ---
+import os
+import shutil
+from datetime import datetime
+from logging import INFO, FileHandler, Formatter, StreamHandler, getLogger
+from pathlib import Path
+
+import hydra
+import numpy as np
+import pandas as pd
+import timm
+import torch
+import transformers
+from omegaconf import OmegaConf
+from sklearn.model_selection import KFold
+from torch.nn.parallel import DistributedDataParallel as DDP
+from torch.utils.data.distributed import DistributedSampler
+from torch.utils.tensorboard import SummaryWriter
+from transformers import AutoTokenizer
+
+os.environ["TOKENIZERS_PARALLELISM"] = "true"
+
+
+from data import (
+    ChunkedDataset,
+    add_concept_class,
+    parallel_convert_labels_tokens,
+)
+from model import CustomModel, get_optimizer_params, get_scheduler
+from train import train_loop
+
+
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+
+def copy_src(cfg, src, dst):
+    shutil.copytree(src / "src", str(dst / "src"))
+
+
+def create_output_dir(cfg):
+    if cfg.IS_MASTER:
+        output_folder = Path(cfg.OUTPUTS)
+        monthf = datetime.now().strftime("%m-%d")
+        timef = datetime.now().strftime("%H_%M_%S")
+        output_folder = output_folder / monthf / timef
+        output_folder.mkdir(exist_ok=True, parents=True)
+        (output_folder / "models").mkdir(exist_ok=True, parents=True)
+    else:
+        output_folder = None
+
+    return output_folder
+
+
+def init_writer(output_folder):
+    if output_folder is None:
+        return None
+    tb_dir = output_folder / "tb"
+    tb_dir.mkdir(exist_ok=True)
+    writer = SummaryWriter(log_dir=tb_dir, comment="Demo")
+    return writer
+
+
+def get_logger(output_dir):
+    logger = getLogger(__name__)
+    logger.setLevel(INFO)
+    handler1 = StreamHandler()
+    handler1.setFormatter(Formatter("%(message)s"))
+    logger.addHandler(handler1)
+
+    if output_dir is not None:
+        filename = output_dir / "train_logs"
+        handler2 = FileHandler(filename=f"{filename}.log")
+        handler2.setFormatter(Formatter("%(message)s"))
+        logger.addHandler(handler2)
+    return logger
+
+
+class Learner:
+    def __init__(self, cfg, output_folder):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.cfg = cfg
+        self.output_folder = output_folder
+        self.logger = get_logger(output_folder)
+        self.writer = init_writer(output_folder)
+        note_path = cfg.data["note_path"]
+        annotations_path = cfg.data["annotations_path"]
+        self.build_data(note_path, annotations_path, cfg.data["sctid_syn_path"])
+        self.build_model()
+
+    def build_data(self, note_path: Path, annotations_path: Path, sctid_syn_path: Path):
+        self.tokenizer = AutoTokenizer.from_pretrained(self.cfg.model)
+        if self.output_folder is not None:
+            self.tokenizer.save_pretrained(self.output_folder / "tokenizer/")
+
+        note_df = pd.read_csv(note_path)
+        ann_df = pd.read_csv(annotations_path)
+
+        ann_df = add_concept_class(ann_df, sctid_syn_path)
+        self.logger.debug(f"{note_df.shape=}")
+        self.logger.debug(f"{ann_df.shape=}")
+
+        Fold = KFold(n_splits=self.cfg.n_fold, shuffle=True, random_state=42)
+        X = np.array(range(len(note_df)))
+        for n, (_, val_index) in enumerate(Fold.split(X)):
+            note_df.loc[val_index, "fold"] = int(n)
+        note_df["fold"] = note_df["fold"].astype(int)
+
+        tdf = parallel_convert_labels_tokens(
+            self.tokenizer, note_df, ann_df, n_jobs=self.cfg.num_workers
+        )
+
+        folds = list(range(self.cfg.n_fold))
+        if self.cfg.split == "all":
+            val_fold = 0  # well, score will be 1.0
+        else:
+            val_fold = folds.pop(self.cfg.split)
+        train_fold = folds
+
+        self.tds = ChunkedDataset(
+            tokenizer=self.tokenizer,
+            fold=train_fold,
+            df=tdf,
+            max_len=self.cfg.max_len,
+            repeat=self.cfg.chunked_repeat,
+        )
+        self.vds = ChunkedDataset(
+            tokenizer=self.tokenizer,
+            fold=val_fold,
+            df=tdf,
+            max_len=self.cfg.max_len,
+            repeat=self.cfg.chunked_repeat,
+        )
+
+        collate = transformers.DataCollatorForTokenClassification(
+            self.tokenizer, max_length=self.cfg.max_len
+        )
+        shuffle = False
+
+        if self.cfg.PARALLEL.DDP:
+            sampler = DistributedSampler(self.tds)
+        else:
+            sampler = None
+
+        self.tdl = torch.utils.data.DataLoader(
+            self.tds,
+            batch_size=self.cfg.batch_size,
+            sampler=sampler,
+            shuffle=shuffle,
+            collate_fn=collate,
+            num_workers=self.cfg.num_workers,
+            pin_memory=True,
+            drop_last=True,
+        )
+
+        self.vdl0 = torch.utils.data.DataLoader(
+            self.vds,
+            batch_size=self.cfg.batch_size,
+            shuffle=shuffle,
+            collate_fn=collate,
+            num_workers=self.cfg.num_workers,
+            pin_memory=True,
+            drop_last=False,
+        )
+
+    def build_model(self):
+        num_classes = len(self.tds.label2id)
+        self.model = CustomModel(
+            model_name=self.cfg.model, fc_dropout=self.cfg.fc_dropout, num_classes=num_classes
+        )
+        try:
+            fc_state = torch.load(Path(self.cfg.model) / "fc.pth")
+            self.model.load_state_dict(fc_state, strict=False)
+        except:
+            pass
+
+        if self.cfg.IS_MASTER:
+            torch.save(self.model.config, self.output_folder / "models/config.pth")
+
+        self.model.to(self.device)
+        self.model_ema = timm.utils.ModelEmaV2(self.model, decay=self.cfg.model_EMA, device=None)
+
+        optimizer_parameters = get_optimizer_params(
+            self.model,
+            encoder_lr=self.cfg.encoder_lr,
+            decoder_lr=self.cfg.decoder_lr,
+            weight_decay=self.cfg.weight_decay,
+        )
+        self.opt = torch.optim.AdamW(
+            optimizer_parameters, lr=self.cfg.encoder_lr, eps=self.cfg.eps, betas=self.cfg.betas
+        )
+        num_train_steps = int(len(self.tds) / self.cfg.batch_size * self.cfg.epochs)
+        self.scheduler = get_scheduler(self.cfg, self.opt, num_train_steps)
+
+        if self.cfg.PARALLEL.DDP:
+            self.model = DDP(
+                self.model, device_ids=[self.cfg.PARALLEL.LOCAL_RANK], find_unused_parameters=True
+            )
+        class_weights = torch.tensor(self.cfg.class_weights)
+        class_weights = class_weights.half().to(self.device)
+        self.criterion = torch.nn.CrossEntropyLoss(
+            weight=class_weights, reduction="none", ignore_index=-100
+        )
+
+
+def parallel_init(cfg):
+    cfg.IS_MASTER = cfg.PARALLEL.LOCAL_RANK == 0
+    torch.cuda.set_device(cfg.PARALLEL.LOCAL_RANK)
+    if cfg.PARALLEL.DDP:
+        torch.distributed.init_process_group(backend="nccl", init_method="env://")
+
+    torch.backends.cudnn.enabled = True
+    torch.backends.cudnn.benchmark = cfg.torch.benchmark
+    torch.backends.cudnn.deterministic = cfg.torch.deterministic
+    torch.set_anomaly_enabled(cfg.torch.detect_anomaly)
+    torch.backends.cuda.matmul.allow_tf32 = True
+
+
+@hydra.main(config_path="../configs", config_name="snom", version_base=None)
+def main(cfg):
+    OmegaConf.set_struct(cfg, False)
+    cfg = OmegaConf.to_container(cfg, resolve=True)
+    cfg = dotdict(cfg)
+    cfg.PARALLEL = dotdict(cfg.PARALLEL)
+    cfg.torch = dotdict(cfg.torch)
+
+    parallel_init(cfg)
+
+    if cfg.IS_MASTER:
+        output_folder = create_output_dir(cfg)
+        src_folder = Path(os.getcwd())
+        copy_src(cfg, src=src_folder, dst=output_folder)
+    else:
+        output_folder = None
+
+    learner = Learner(cfg, output_folder)
+    train_loop(learner)
+
+
+if __name__ == "__main__":
+    main()
+
+
+--- Content of model.py ---
+import torch.nn as nn
+from transformers import (
+    AutoConfig,
+    AutoModel,
+    get_cosine_schedule_with_warmup,
+    get_linear_schedule_with_warmup,
+)
+
+
+class CustomModel(nn.Module):
+    def __init__(self, model_name, fc_dropout, num_classes=1):
+        super().__init__()
+        self.config = AutoConfig.from_pretrained(model_name, output_hidden_states=True)
+        self.model = AutoModel.from_pretrained(model_name, config=self.config)
+
+        self.fc_dropout = nn.Dropout(fc_dropout)
+        self.fc = nn.Linear(self.config.hidden_size, num_classes)
+        self._init_weights(self.fc)
+
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
+            if module.bias is not None:
+                module.bias.data.zero_()
+        elif isinstance(module, nn.Embedding):
+            module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
+            if module.padding_idx is not None:
+                module.weight.data[module.padding_idx].zero_()
+        elif isinstance(module, nn.LayerNorm):
+            module.bias.data.zero_()
+            module.weight.data.fill_(1.0)
+
+    def feature(self, inputs):
+        outputs = self.model(**inputs)
+        last_hidden_states = outputs[0]
+        return last_hidden_states
+
+    def forward(self, **inputs):
+        feature = self.feature(inputs)
+        output = self.fc(self.fc_dropout(feature))
+        return output
+
+
+def get_optimizer_params(model, encoder_lr, decoder_lr, weight_decay=0.0):
+    # param_optimizer = list(model.named_parameters())
+    no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
+    optimizer_parameters = [
+        {
+            "params": [
+                p for n, p in model.model.named_parameters() if not any(nd in n for nd in no_decay)
+            ],
+            "lr": encoder_lr,
+            "weight_decay": weight_decay,
+        },
+        {
+            "params": [
+                p for n, p in model.model.named_parameters() if any(nd in n for nd in no_decay)
+            ],
+            "lr": encoder_lr,
+            "weight_decay": 0.0,
+        },
+        {
+            "params": [p for n, p in model.named_parameters() if "model" not in n],
+            "lr": decoder_lr,
+            "weight_decay": 0.0,
+        },
+    ]
+    return optimizer_parameters
+
+
+def get_scheduler(cfg, optimizer, num_train_steps):
+    if cfg.scheduler == "linear":
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer, num_warmup_steps=cfg.num_warmup_steps, num_training_steps=num_train_steps
+        )
+    elif cfg.scheduler == "cosine":
+        scheduler = get_cosine_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=cfg.num_warmup_steps,
+            num_training_steps=num_train_steps,
+            num_cycles=cfg.num_cycles,
+        )
+    return scheduler
+
+
+--- Content of preprocess.py ---
+import argparse
+import json
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import torch
+from cut_headers import cut_headers
+from embeds import SepBERTEmbedder, get_embeds
+from loguru import logger
+from sklearn.model_selection import KFold
+from snomed_graph import SnomedGraph
+from static_dict import get_most_common_concept
+from transformers import AutoModel, AutoTokenizer
+
+root = 138875005
+BodyId = 123037004
+ProcId = 71388002
+FindId = 404684003
+
+
+def get_syn(class_id, SG: SnomedGraph):
+    allc = SG.get_descendants(class_id)
+    res = {a.sctid: a.synonyms for a in list(allc)}
+    if class_id == FindId:
+        res[298430001] = ["Increased active range of cervical spine right lateral flexion"]
+        res[298577009] = ["Observation of sensation of musculoskeletal structure of thoracic spine"]
+        res[312087002] = ["Disorder following clinical procedure"]
+    return res
+
+
+def convert_snomed_rf2_to_serialized(src_path: Path, dst_path: Path):
+    logger.info(f"Converting RF2 to serialized graph")
+    SG = SnomedGraph.from_rf2(str(src_path))
+    SG.save(dst_path)
+    logger.info(f"serialized snomed graph saved to {dst_path}")
+
+
+def get_checkpoint(name: str, path: Path):
+    model_path = path / "model"
+    model_path.mkdir(parents=True, exist_ok=True)
+    model = AutoModel.from_pretrained(name)
+    model.save_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(name)
+    tokenizer.save_pretrained(model_path)
+    logger.info(f"Successfully saved {name} to {path}")
+    embeds_path = path / "embeds"
+    embeds_path.mkdir(parents=True, exist_ok=True)
+
+
+if __name__ == "__main__":
+    args = argparse.ArgumentParser()
+    args.add_argument("--val", action="store_true")
+    args = args.parse_args()
+
+    root = Path(__file__).parent.parent
+    (root / "data/preprocess_data").mkdir(exist_ok=True, parents=True)
+    (root / "data/first_stage").mkdir(exist_ok=True, parents=True)
+
+    ROOT_DIR = root / "data"
+    if args.val:
+        TRAIN_NOTES_PATH = ROOT_DIR / "preprocess_data" / "splits" / "train_note_split_0.csv"
+        TRAIN_ANNOTAIONS_PATH = ROOT_DIR / "preprocess_data" / "splits" / "train_ann_split_0.csv"
+        STATIC_DICT_PATH = ROOT_DIR / "preprocess_data" / "most_common_concept_val_0.pkl"
+    else:
+        RAW_TRAIN_NOTES_PATH = ROOT_DIR / "competition_data" / "mimic-iv_notes_training_set.csv"
+        RAW_TRAIN_ANNOTAIONS_PATH = ROOT_DIR / "competition_data" / "train_annotations.csv"
+        TRAIN_NOTES_PATH = ROOT_DIR / "competition_data" / "cutmed_notes.csv"
+        TRAIN_ANNOTAIONS_PATH = ROOT_DIR / "competition_data" / "cutmed_fixed_train_annotations.csv"
+        STATIC_DICT_PATH = ROOT_DIR / "preprocess_data" / "most_common_concept.pkl"
+
+    SPLIT_PATH = ROOT_DIR / "preprocess_data" / "splits"
+    SNOMED_GRAPH_RF2_DIR = (
+        ROOT_DIR
+        / "competition_data"
+        / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition"
+    )
+    SNOMED_GRAPH_RF2_SERIALIZED = ROOT_DIR / "competition_data" / "graph.gml"
+
+    PROC_SCTID_SYN_PATH = ROOT_DIR / "preprocess_data" / "proc_sctid_syn.json"
+    FIND_SCTID_SYN_PATH = ROOT_DIR / "preprocess_data" / "find_sctid_syn.json"
+    BODY_SCTID_SYN_PATH = ROOT_DIR / "preprocess_data" / "body_sctid_syn.json"
+    SECOND_STAGE_PATH = ROOT_DIR / "second_stage"
+    SECOND_STAGE_MODELS = {
+        "sapbert": "cambridgeltl/SapBERT-from-PubMedBERT-fulltext-mean-token",
+    }
+
+    if all([TRAIN_NOTES_PATH.exists(), TRAIN_ANNOTAIONS_PATH.exists()]):
+        logger.warning("cutmed_notes already exist, skipping")
+    else:
+        notes = pd.read_csv(RAW_TRAIN_NOTES_PATH)
+        annotation = pd.read_csv(RAW_TRAIN_ANNOTAIONS_PATH)
+        print(notes.shape, annotation.shape)
+        notes, annotation = cut_headers(notes, annotation)
+        print(notes.shape, annotation.shape)
+        notes.to_csv(TRAIN_NOTES_PATH, index=False)
+
+        annotation.to_csv(TRAIN_ANNOTAIONS_PATH, index=False)
+        SPLIT_PATH.mkdir(exist_ok=True, parents=True)
+        Fold = KFold(n_splits=4, shuffle=True, random_state=42)
+
+        X = np.array(range(len(notes)))
+        for n, (_, val_index) in enumerate(Fold.split(X)):
+            val_note_split = notes.copy().loc[val_index]
+            print(val_note_split.head())
+            print(val_note_split.shape, len(val_index))
+            val_note_split.to_csv(SPLIT_PATH / f"val_note_split_{n}.csv", index=False)
+            train_note_split = notes.drop(val_index)
+            train_note_split.to_csv(SPLIT_PATH / f"train_note_split_{n}.csv", index=False)
+            val_ann_split = annotation[annotation.note_id.isin(val_note_split.note_id)]
+            val_ann_split.to_csv(SPLIT_PATH / f"val_ann_split_{n}.csv", index=False)
+            train_ann_split = annotation[annotation.note_id.isin(train_note_split.note_id)]
+            train_ann_split.to_csv(SPLIT_PATH / f"train_ann_split_{n}.csv", index=False)
+    if all(
+        [PROC_SCTID_SYN_PATH.exists(), FIND_SCTID_SYN_PATH.exists(), BODY_SCTID_SYN_PATH.exists()]
+    ):
+        logger.warning("sctid_syns already exist, skipping")
+    else:
+        if not SNOMED_GRAPH_RF2_SERIALIZED.exists():
+            assert SNOMED_GRAPH_RF2_DIR.exists(), f"{SNOMED_GRAPH_RF2_DIR} does not exist"
+            convert_snomed_rf2_to_serialized(SNOMED_GRAPH_RF2_DIR, SNOMED_GRAPH_RF2_SERIALIZED)
+        SG = SnomedGraph.from_serialized(SNOMED_GRAPH_RF2_SERIALIZED)
+        for path, concept_id in [
+            (PROC_SCTID_SYN_PATH, ProcId),
+            (FIND_SCTID_SYN_PATH, FindId),
+            (BODY_SCTID_SYN_PATH, BodyId),
+        ]:
+            syn = get_syn(concept_id, SG)
+            with open(path, "w") as f:
+                json.dump(syn, f)
+            logger.info(f"sctid_syns ({concept_id}) saved to {path}")
+    if STATIC_DICT_PATH.exists():
+        logger.warning("static_dict already exists, skipping")
+    else:
+        notes = pd.read_csv(TRAIN_NOTES_PATH)
+        annotation = pd.read_csv(TRAIN_ANNOTAIONS_PATH)
+        get_most_common_concept(STATIC_DICT_PATH, notes, annotation)
+        logger.info(f"static_dict saved to {STATIC_DICT_PATH}")
+    for path, name in SECOND_STAGE_MODELS.items():
+        if (SECOND_STAGE_PATH / path).exists():
+            logger.warning(f"{name} already exist, skipping")
+        else:
+            get_checkpoint(name, SECOND_STAGE_PATH / path)
+
+    cuda = True
+    embedders = [
+        (SepBERTEmbedder(cuda), "sapbert", "sapbertmean"),
+    ]
+    for embedder, dir_name, name in embedders:
+        for sctid_syn_path, concept_type in [
+            (BODY_SCTID_SYN_PATH, "body"),
+            (FIND_SCTID_SYN_PATH, "find"),
+            (PROC_SCTID_SYN_PATH, "proc"),
+        ]:
+            save_path = SECOND_STAGE_PATH / dir_name / "embeds" / f"{name}_{concept_type}.pth"
+            if save_path.exists():
+                logger.warning(f"{name} {concept_type} embeds already exist, skipping")
+                continue
+            with open(sctid_syn_path) as f:
+                sctid_syn = json.load(f)
+            xb = get_embeds(embedder, sctid_syn, cuda)
+            torch.save(xb, save_path)
+            logger.info(f"embeds saved to {save_path}")
+
+
+--- Content of snomed_graph.py ---
+import re
+from itertools import groupby
+from typing import Dict, Generator, List, Set, Tuple
+
+import networkx as nx
+import pandas as pd
+
+from more_itertools import pairwise
+
+
+class SnomedConceptDetails:
+    """
+    A class to represent the essential details of a SNOMED CT concept
+    """
+
+    def __init__(self, sctid: int, fsn: str, synonyms: List[str] = None) -> None:
+        self.sctid = sctid
+        self.fsn = fsn
+        self.synonyms = synonyms
+
+    def __repr__(self):
+        return f"{self.sctid} | {self.fsn}"
+
+    def __eq__(self, other):
+        return self.sctid == other.sctid
+
+    def __hash__(self):
+        return self.sctid
+
+    @property
+    def hierarchy(self) -> str:
+        hierarchy_match = re.search(r"\(([^)]+)\)\s*$", self.fsn)
+
+
+class SnomedRelationship:
+    """
+    A class to represent a SNOMED CT relationship
+    """
+
+    def __init__(
+        self,
+        src: SnomedConceptDetails,
+        tgt: SnomedConceptDetails,
+        group: int,
+        type: str,
+        type_id: str,
+    ) -> None:
+        self.src = src
+        self.tgt = tgt
+        self.group = group
+        self.type = type
+        self.type_id = type_id
+
+    def __repr__(self):
+        return f"[{self.src}] ---[{self.type}]---> [{self.tgt}]"
+
+
+class SnomedRelationshipGroup:
+    def __init__(self, group: int, relationships: List[SnomedRelationship]) -> None:
+        self.group = group
+        self.relationships = relationships
+
+    def __repr__(self):
+        return f"Group {self.group}\n\t" + "\n\t".join([str(r) for r in self.relationships])
+
+
+class SnomedConcept:
+    def __init__(self, concept_details, parents, children, inferred_relationship_groups) -> None:
+        self.concept_details = concept_details
+        self.inferred_relationship_groups = inferred_relationship_groups
+        self.parents = parents
+        self.children = children
+
+    def __repr__(self):
+        str_ = str(self.concept_details)
+        str_ += f"\n\nSynonyms:\n{self.concept_details.synonyms}"
+        str_ += "\n\nParents:\n"
+        str_ += "\n".join([str(p) for p in self.parents])
+        str_ += "\n\nChildren:\n"
+        str_ += "\n".join([str(c) for c in self.children])
+        str_ += "\n\nInferred Relationships:\n"
+        str_ += "\n".join([str(rg) for rg in self.inferred_relationship_groups])
+        return str_
+
+    @property
+    def sctid(self) -> int:
+        return self.concept_details.sctid
+
+    @property
+    def fsn(self) -> str:
+        return self.concept_details.fsn
+
+    @property
+    def synonyms(self) -> List[str]:
+        return self.concept_details.synonyms
+
+    @property
+    def hierarchy(self) -> str:
+        return self.concept_details.hierarchy
+
+
+class SnomedGraph:
+    """
+    A class to represent a SNOMED CT release as a Graph, using NetworkX.
+
+    Attributes
+    ----------
+    G : nx.DiGraph
+        The underlying graph
+    """
+
+    fsn_typeId = 900000000000003001
+    is_a_relationship_typeId = 116680003
+    root_concept_id = 138875005
+
+    def __init__(self, G: nx.DiGraph) -> None:
+        """
+        Create a new instance of SnomedGraph from a NetworkX DiGraph object
+
+        Args:
+            G: A DiGraph created using SnomedGraph.from_rf2() or SnomedGraph.from_serialized().
+        Returns:
+            self.
+        """
+        self.G = G
+        print(self)
+
+    def __repr__(self):
+        return f"SNOMED graph has {self.G.number_of_nodes()} vertices and {self.G.number_of_edges()} edges"
+
+    def __iter__(self):
+        for sctid in self.G.nodes:
+            yield self.get_concept_details(sctid)
+
+    def get_children(self, sctid: int) -> List[SnomedConceptDetails]:
+        return [
+            r.src
+            for r in self.__get_in_relationships(sctid)
+            if r.type_id == SnomedGraph.is_a_relationship_typeId
+        ]
+
+    def get_parents(self, sctid: int) -> List[SnomedConceptDetails]:
+        return [
+            r.tgt
+            for r in self.__get_out_relationships(sctid)
+            if r.type_id == SnomedGraph.is_a_relationship_typeId
+        ]
+
+    def get_inferred_relationships(self, sctid: int) -> List[SnomedRelationshipGroup]:
+        """
+        Retrieve the inferred relationships for a concept.
+        (N.B. these exclude the "is a" relationships, which can be retrieved by the
+        get_parents() function instead.)
+
+        Args:
+            sctid: A valid SNOMED Concept ID.
+        Returns:
+            A list of SnomedRelationshipGroup objects.
+        """
+        inferred_relationships = [
+            r
+            for r in self.__get_out_relationships(sctid)
+            if r.type_id != SnomedGraph.is_a_relationship_typeId
+        ]
+        key_ = lambda r: r.group
+        inferred_relationships_grouped = groupby(sorted(inferred_relationships, key=key_), key=key_)
+        inferred_relationship_groups = [
+            SnomedRelationshipGroup(g, list(r)) for g, r in inferred_relationships_grouped
+        ]
+        return inferred_relationship_groups
+
+    def get_concept_details(self, sctid: int) -> SnomedConceptDetails:
+        """
+        Retrieve the basic details for a concept: SCTID, FSN and synonyms.
+
+        Args:
+            sctid: A valid SNOMED Concept ID.
+        Returns:
+            A SnomedConceptDetails object.
+        """
+        return SnomedConceptDetails(sctid=sctid, **self.G.nodes[sctid])
+
+    def get_full_concept(self, sctid: int) -> SnomedConcept:
+        """
+        Retrieve all attributes for a given concept.
+
+        Args:
+            sctid: A valid SNOMED Concept ID.
+        Returns:
+            A SnomedConcept object.
+        """
+        concept_details = self.get_concept_details(sctid)
+        parents = self.get_parents(sctid)
+        children = self.get_children(sctid)
+        inferred_relationship_groups = self.get_inferred_relationships(sctid)
+        return SnomedConcept(concept_details, parents, children, inferred_relationship_groups)
+
+    def __get_out_relationships(self, src_sctid: int) -> Generator[Dict, None, None]:
+        src = SnomedConceptDetails(sctid=src_sctid, **self.G.nodes[src_sctid])
+        for _, tgt_sctid in self.G.out_edges(src_sctid):
+            tgt = SnomedConceptDetails(sctid=tgt_sctid, **self.G.nodes[tgt_sctid])
+            vals = self.G.edges[(src_sctid, tgt_sctid)]
+            yield SnomedRelationship(src, tgt, **vals)
+
+    def __get_in_relationships(self, tgt_sctid: int) -> Generator[Dict, None, None]:
+        tgt = SnomedConceptDetails(sctid=tgt_sctid, **self.G.nodes[tgt_sctid])
+        for src_sctid, _ in self.G.in_edges(tgt_sctid):
+            src = SnomedConceptDetails(sctid=src_sctid, **self.G.nodes[src_sctid])
+            vals = self.G.edges[(src_sctid, tgt_sctid)]
+            yield SnomedRelationship(src, tgt, **vals)
+
+    def get_descendants(self, sctid: int, steps_removed: int = None) -> List[SnomedConceptDetails]:
+        """
+        Retrieve descendants of a given concept.
+
+        Args:
+            sctid: A valid SNOMED Concept ID.
+            steps_removed: The number of levels down in the hierarchy to go.
+                           (1 => children; 2 => children + grandchildren, etc)
+                           if None then all children are retrieved.
+        Returns:
+            A list containing the SCTIDs of all descendants.
+        """
+        if steps_removed is None:
+            steps_removed = 99999
+        elif steps_removed <= 0:
+            raise AssertionError("steps_removed must be > 0 or None")
+        children = self.get_children(sctid)
+        descendants = set(children)
+        if steps_removed > 1:
+            for c in children:
+                descendants = descendants.union(self.get_descendants(c.sctid, steps_removed - 1))
+        return descendants
+
+    def get_ancestors(self, sctid: int, steps_removed: int = None) -> List[SnomedConceptDetails]:
+        """
+        Retrieve ancestors of a given concept.
+
+        Args:
+            sctid: A valid SNOMED Concept ID.
+            steps_removed: The number of levels up in the hierarchy to go.
+                           (1 => parents; 2 => parents + grandparents, etc)
+                           if None then all parents are retrieved.
+        Returns:
+            A list containing the SCTIDs of all descendants.
+        """
+        if steps_removed is None:
+            steps_removed = 99999
+        elif steps_removed <= 0:
+            raise AssertionError("steps_removed must be > 0 or None")
+        parents = self.get_parents(sctid)
+        ancestors = set(parents)
+        if steps_removed > 1:
+            for p in parents:
+                ancestors = ancestors.union(self.get_ancestors(p.sctid, steps_removed - 1))
+        return set([a for a in ancestors if not a.sctid == SnomedGraph.root_concept_id])
+
+    def get_neighbourhood(self, sctid: int, steps_removed: int = 1) -> List[SnomedConceptDetails]:
+        """
+        Retrieve neighbours of a given concept.
+        Neighbours include ancestors, descendants and cousins up to the given degree.
+
+        Args:
+            sctid: A valid SNOMED Concept ID.
+            steps_removed: The number of steps up or down in the hierarchy to go.
+                           Defaults to 1 (parents + children).
+        Returns:
+            A list containing the SCTIDs of all neighbours.
+        """
+        assert steps_removed > 0
+        parents = self.get_parents(sctid)
+        children = self.get_children(sctid)
+        neighbourhood = set(parents).union(children)
+        if steps_removed > 1:
+            for n in list(neighbourhood):
+                neighbourhood = neighbourhood.union(
+                    self.get_neighbourhood(n.sctid, steps_removed - 1)
+                )
+        neighbourhood = [
+            n for n in neighbourhood if n.sctid not in [sctid, SnomedGraph.root_concept_id]
+        ]
+        return neighbourhood
+
+    def find_path(self, sctid1: int, sctid2: int, print_: bool = False) -> List[SnomedRelationship]:
+        """
+        Returns details of any path that exists between two concepts.
+        The path considers all relationship types but limits the results to true ancestors
+        or descentants - i.e. concepts that are "cousins" of one another will not result in
+        a returned path.
+
+        Args:
+            sctid1: A valid SNOMED Concept ID.
+            sctid2: A valid SNOMED Concept ID.
+            print_: Whether to print the full path as a string.
+        Returns:
+            A list of Relationships of the form (source, relationship_type, target).
+            These are the steps from source to target.
+        """
+        path = []
+        if nx.has_path(self.G, sctid1, sctid2):
+            nodes = nx.shortest_path(self.G, sctid1, sctid2)
+        elif nx.has_path(self.G, sctid2, sctid1):
+            nodes = nx.shortest_path(self.G, sctid2, sctid1)
+        else:
+            nodes = []
+        for src_sctid, tgt_sctid in pairwise(nodes):
+            vals = self.G.edges[(src_sctid, tgt_sctid)]
+            src = SnomedConceptDetails(sctid=src_sctid, **self.G.nodes[src_sctid])
+            tgt = SnomedConceptDetails(sctid=tgt_sctid, **self.G.nodes[tgt_sctid])
+            relationship = SnomedRelationship(src, tgt, **vals)
+            path.append(relationship)
+        if print_:
+            if len(nodes) > 0:
+                str_ = f"[{path[0].src}]"
+                for r in path:
+                    str_ += f" ---[{r.type}]---> [{r.tgt}]"
+                print(str_)
+            else:
+                print("No path found.")
+        return path
+
+    def save(self, path: str) -> None:
+        """
+        Save this SnomedGraph
+
+        Args:
+            path: path + name of the file to save to.
+        Returns:
+            None
+        """
+        nx.write_gml(self.G, path)
+
+    def to_pandas(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Fetch node and edge CSVs for this graph
+
+        Args:
+            None
+        Returns:
+            Two CSVs (nodes, edges) as Pandas DataFrames
+        """
+        nodes_df = pd.DataFrame([{"sctid": n, **self.G.nodes[n]} for n in self.G.nodes]).set_index(
+            "sctid"
+        )
+        edges_df = nx.to_pandas_edgelist(self.G)
+        return nodes_df, edges_df
+
+    @property
+    def relationship_types(self) -> Set[str]:
+        """
+        Fetch the set of all extant relationship types that exist.
+
+        Args:
+            None
+        Returns:
+            A Set of strings
+        """
+        return set(nx.get_edge_attributes(self.G, "type").values())
+
+    @staticmethod
+    def from_serialized(path: str):
+        """
+        Load a SnomedGraph from a serialization.
+
+        Args:
+            path: path + name of the file to save to.
+        Returns:
+            A SnomedGraph
+        """
+        G = nx.read_gml(path, destringizer=int)
+        return SnomedGraph(G)
+
+    @staticmethod
+    def from_rf2(path: str):
+        """
+        Create a SnomedGraph from a SNOMED RF2 release path.
+
+        Args:
+            path: Path to RF2 release folder.
+        Returns:
+            A SnomedGraph
+        """
+        if path[-1] == "/":
+            path = path[:-1]
+        release_date_pattern = r"\d{8}"
+        match = re.search(release_date_pattern, path)
+        try:
+            release_date = match.group(0)
+        except AttributeError:
+            raise AssertionError(
+                f"The path does not appear to contain a valid SNOMED CT Release Format name."
+            )
+        else:
+            # Load relationships
+            relationships_df = pd.read_csv(
+                f"{path}/Snapshot/Terminology/sct2_Relationship_Snapshot_INT_{release_date}.txt",
+                delimiter="\t",
+            )
+            relationships_df = relationships_df[relationships_df.active == 1]
+
+            # Load concepts
+            concepts_df = pd.read_csv(
+                f"{path}/Snapshot/Terminology/sct2_Description_Snapshot-en_INT_{release_date}.txt",
+                delimiter="\t",
+            )
+            concepts_df = concepts_df[concepts_df.active == 1]
+            concepts_df.set_index("conceptId", inplace=True)
+
+            # Create relationships type lookup
+            relationship_types = concepts_df.loc[relationships_df.typeId.unique()]
+            relationship_types = relationship_types[
+                relationship_types.typeId == SnomedGraph.fsn_typeId
+            ]
+            relationship_types = relationship_types.term.to_dict()
+
+            # Initialise the graph
+            n_concepts = concepts_df.shape[0]
+            n_relationships = relationships_df.shape[0]
+            print(
+                f"{n_concepts} terms and {n_relationships} relationships were found in the release."
+            )
+            G = nx.DiGraph()
+
+            # Create relationships
+            print("Creating Relationships...")
+            for r in relationships_df.to_dict(orient="records"):
+                G.add_edge(
+                    r["sourceId"],
+                    r["destinationId"],
+                    group=r["relationshipGroup"],
+                    type=relationship_types[r["typeId"]],
+                    type_id=r["typeId"],
+                )
+
+            # Add concepts
+            print("Adding Concepts...")
+            for sctid, rows in concepts_df.groupby(concepts_df.index):
+                synonyms = [
+                    row.term for _, row in rows.iterrows() if row.typeId != SnomedGraph.fsn_typeId
+                ]
+                try:
+                    fsn = rows[rows.typeId == SnomedGraph.fsn_typeId].term.values[0]
+                except IndexError:
+                    fsn = synonyms[0]
+                    synonyms = synonyms[1:]
+                    print(f"Concept with SCTID {sctid} has no FSN. Using synonym '{fsn}' instead.")
+                G.add_node(sctid, fsn=fsn, synonyms=synonyms)
+
+            # Remove isolates
+            G.remove_nodes_from(list(nx.isolates(G)))
+
+            # Initialise class
+            return SnomedGraph(G)
+
+
+--- Content of static_dict.py ---
+import pickle
+import re
+from collections import Counter, OrderedDict
+from pathlib import Path
+from typing import Optional
+
+import pandas as pd
+from tqdm.auto import tqdm
+
+
+def get_true_header_indices(text, true_headers):
+    text = re.sub("\n", " ", text.lower())
+    true_header_indices = {}
+    for true_header in true_headers:
+        pos = text.find(true_header)
+        if pos != -1:
+            true_header_indices[true_header] = pos
+    true_header_indices = dict(sorted(true_header_indices.items(), key=lambda item: item[1]))
+    true_header_indices = OrderedDict(true_header_indices)
+    return true_header_indices
+
+
+def calc_header_span(df):
+    true_headers = [
+        "past medical history:",
+        "allergies:",
+        "history of present illness:",
+        "physical exam:",
+        "admission date:  discharge date:",
+        "attending:",
+        "major surgical or invasive procedure:",
+        "family history:",
+        "discharge disposition:",
+        "discharge condition:",
+        "discharge instructions:",
+        "name:  unit no:",
+        "social history:",
+        "chief complaint:",
+        "pertinent results:",
+        "discharge medications:",
+        "medications on admission:",
+        "___ on admission:",
+        "discharge diagnosis:",
+        "followup instructions:",
+        "brief hospital course:",
+        "facility:",
+        "impression:",
+    ]
+    res = {}
+    for i, row in df.iterrows():
+        text = row["text"]
+        headers = get_true_header_indices(text.lower(), true_headers)
+        headers_spans = {}
+        for header, start in headers.items():
+            i = list(headers).index(header)
+            if i == len(headers) - 1:
+                end = len(text)
+            else:
+                next_header = list(headers)[i + 1]
+                end = headers[next_header]
+            headers_spans[header] = (start, end)
+        res[row.note_id] = headers_spans
+    return res
+
+
+class StaticDict:
+    ignore_headers = [
+        "medications on admission:",
+        "___ on admission:",
+        "discharge medications:",
+    ]
+    ignore_term_list = []
+
+    def __init__(self, data: pd.DataFrame, ann: pd.DataFrame, filt_headers: bool = False):
+        self.filt_headers = filt_headers
+        self.static_dict = self.prepare_concepts_dict(data, ann)
+        self.terms = self.term_to_concepts(self.static_dict)
+        self.concepts = self.concepts_to_term(self.static_dict)
+        self.most_common_concept = self.term_to_most_common_concept(self.static_dict)
+
+    @staticmethod
+    def preprocess_text(text: str, keep_len: bool = False):
+        t = text.lower()
+        t = t.replace("\n", " ")
+        t = re.sub("[^a-z0-9]", " ", t)
+        if not keep_len:
+            t = re.sub("\s+", " ", t)
+            t = t.strip()
+        return t
+
+    def ignore_by_headers(self, span, header_spans):
+        for ignore_header in self.ignore_headers:
+            header_span = header_spans.get(ignore_header, None)
+            if (header_span is not None) and max(span[0], header_span[0]) <= min(
+                span[1], header_span[1]
+            ):
+                return True
+        return False
+
+    def prepare_concepts_dict(self, notes: pd.DataFrame, annotation: pd.DataFrame) -> pd.DataFrame:
+        notes = notes.set_index("note_id")
+        note_ids = annotation.note_id.unique()
+        concepts = []
+        for note_id in tqdm(note_ids, desc="Processing notes", total=len(note_ids)):
+            note = notes.loc[note_id].text
+            for i, row in annotation[annotation.note_id == note_id].iterrows():
+                term = self.preprocess_text(note[row.start : row.end], keep_len=False)
+                if term in self.ignore_term_list:
+                    continue
+                concepts.append([note_id, row.concept_id, term])
+        concepts = pd.DataFrame(concepts, columns=["note_id", "concept_id", "term"])
+        # concepts = concepts.drop_duplicates()
+        return concepts
+
+    @staticmethod
+    def term_to_most_common_concept(concepts: pd.DataFrame) -> dict:
+        return (
+            concepts.drop(columns="note_id")
+            .groupby("term")
+            .concept_id.apply(lambda x: Counter(list(x)).most_common(1)[0][0])
+            .to_dict()
+        )
+
+    @staticmethod
+    def term_to_concepts(concepts: pd.DataFrame) -> dict:
+        return (
+            concepts.drop(columns="note_id")
+            .groupby("term")
+            .apply(lambda x: x.concept_id.unique().tolist())
+            .to_dict()
+        )
+
+    @staticmethod
+    def concepts_to_term(concepts: pd.DataFrame) -> dict:
+        return (
+            concepts.drop(columns="note_id")
+            .groupby("concept_id")
+            .apply(lambda x: x.term.unique().tolist())
+            .to_dict()
+        )
+
+    def get_submission_from_static_dict(
+        self, notes: pd.DataFrame, most_common_concept: Optional[dict] = None
+    ) -> pd.DataFrame:
+        spans = []
+        if most_common_concept is None:
+            most_common_concept = self.most_common_concept
+        patterns_list = [w.replace(" ", r"\b\s+\b") for w in most_common_concept.keys()]
+        patterns = r"\b(" + r"|".join(patterns_list) + r")\b"
+        header_span = calc_header_span(notes)
+        for i, note in tqdm(notes.iterrows(), total=len(notes), desc="notes"):
+            matches = re.finditer(patterns, self.preprocess_text(note.text, keep_len=True))
+            for match in matches:
+                full_term = match.group()
+                term = self.preprocess_text(full_term, keep_len=False)
+                concept_id = most_common_concept[term]
+                if self.ignore_by_headers((match.start(), match.end()), header_span[note.note_id]):
+                    continue
+                spans.append(
+                    (note.note_id, term, match.start(), match.end(), concept_id, full_term)
+                )
+        spans = pd.DataFrame(
+            spans, columns=["note_id", "term", "start", "end", "concept_id", "full_term"]
+        )
+        return spans
+
+    def calc_ratio(self, notes: pd.DataFrame) -> pd.DataFrame:
+        static_submission = self.get_submission_from_static_dict(notes)
+        all_positive = (
+            static_submission.drop(columns=["note_id", "start", "end", "full_term"])
+            .groupby("term")
+            .count()
+        )
+        true_positive = self.static_dict.drop(columns=["note_id"]).groupby("term").count()
+        ratio = (true_positive / all_positive).dropna()
+        return ratio
+
+    @staticmethod
+    def filt_by_ratio(concepts, ratio, threshold=0.25):
+        ratio = ratio[ratio > threshold].dropna()
+        concepts = concepts[concepts.term.isin(ratio.index)]
+        return concepts
+
+
+def get_most_common_concept(static_dict_path: Path, notes: pd.DataFrame, annotation: pd.DataFrame):
+    static_dict = StaticDict(notes, annotation, True)
+    precalc_ratio = static_dict.calc_ratio(notes)
+    concepts = static_dict.filt_by_ratio(static_dict.static_dict, precalc_ratio, threshold=0.9)
+    most_common_concept = static_dict.term_to_most_common_concept(concepts)
+    with open(static_dict_path, "wb") as f:
+        pickle.dump(most_common_concept, f)
+
+
+--- Content of train.py ---
+import math
+import shutil
+import time
+import warnings
+
+warnings.filterwarnings("ignore")
+
+import torch
+from sklearn.metrics import confusion_matrix, f1_score, roc_auc_score
+from tqdm.auto import tqdm
+
+
+class AverageMeter(object):
+    """Computes and stores the average and current value"""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count
+
+
+def asMinutes(s):
+    m = math.floor(s / 60)
+    s -= m * 60
+    return "%dm %ds" % (m, s)
+
+
+def timeSince(since, percent):
+    now = time.time()
+    s = now - since
+    es = s / (percent)
+    rs = es - s
+    return "%s (remain %s)" % (asMinutes(s), asMinutes(rs))
+
+
+def train_fn(L, epoch):
+    L.model.train()
+    device = L.device
+    scaler = torch.cuda.amp.GradScaler(enabled=L.cfg.apex)
+    losses = AverageMeter()
+    global_step = 0
+
+    for step, inputs in enumerate(tqdm(L.tdl)):
+        labels = inputs.pop("labels")
+
+        for k, v in inputs.items():
+            inputs[k] = v.to(device)
+        labels = labels.to(device)
+        batch_size = labels.size(0)
+        with torch.cuda.amp.autocast(enabled=L.cfg.apex):
+            y_preds = L.model(**inputs)
+
+        b, c, n = y_preds.shape
+        y_preds = y_preds.view(b * c, n)
+        labels = labels.flatten()
+
+        loss = L.criterion(y_preds, labels)
+        loss = torch.masked_select(loss, labels != -100).mean()
+
+        # fix me
+        if L.cfg.gradient_accumulation_steps > 1:
+            loss = loss / L.cfg.gradient_accumulation_steps
+
+        losses.update(loss.item(), batch_size)
+        scaler.scale(loss).backward()
+
+        if (step + 1) % L.cfg.gradient_accumulation_steps == 0:
+            scaler.step(L.opt)
+            scaler.update()
+            L.opt.zero_grad(set_to_none=True)
+
+            if L.model_ema is not None:
+                m = L.model.module if L.cfg.PARALLEL.DDP else L.model
+                L.model_ema.update(m)
+
+            global_step += 1
+            if L.cfg.batch_scheduler:
+                L.scheduler.step()
+
+    return losses.avg
+
+
+def valid_fn(L, valid_loader):
+    device = L.device
+
+    losses = AverageMeter()
+    if L.model_ema is not None:
+        model = L.model_ema.module
+    else:
+        model = L.model
+
+    model.eval()
+    preds = []
+    gts = []
+
+    for step, inputs in enumerate(valid_loader):
+        labels = inputs.pop("labels")
+        for k, v in inputs.items():
+            inputs[k] = v.to(device)
+        labels = labels.to(device)
+        batch_size = labels.size(0)
+
+        with torch.no_grad(), torch.cuda.amp.autocast(enabled=L.cfg.apex):
+            y_preds = model(**inputs)
+
+        b, c, n = y_preds.shape
+        y_preds = y_preds.view(b * c, n)
+        labels = labels.flatten()
+        loss = L.criterion(y_preds, labels)
+        loss = torch.masked_select(loss, labels != -100).mean()
+
+        pr = y_preds[torch.where(labels != -100)].cpu()
+        gt = torch.masked_select(labels, labels != -100).cpu()
+
+        preds.append(pr)
+        gts.append(gt)
+
+        if L.cfg.gradient_accumulation_steps > 1:
+            loss = loss / L.cfg.gradient_accumulation_steps
+
+        losses.update(loss.item(), batch_size)
+
+    preds = torch.vstack(preds)  # N, 7
+    gts = torch.cat(gts)
+    return losses.avg, gts, preds
+
+
+def save_model(model, tokenizer, save_dir):
+    save_dir.mkdir(parents=True, exist_ok=True)
+    state = model.state_dict()
+    model.model.save_pretrained(save_dir)
+    tokenizer.save_pretrained(save_dir)
+    fc_state = {}
+    for k, v in state.items():
+        if k.startswith("fc"):
+            fc_state[k] = v
+    torch.save(fc_state, save_dir / "fc.pth")
+
+
+def clean_checkpoint(dstf, n):
+    pths = list(dstf.glob("**/model.safetensors"))
+    pths = sorted(pths, key=lambda x: x.stat().st_mtime)
+    for pth in pths[:-n]:
+        shutil.rmtree(pth.parent)
+
+
+def train_loop(learner):
+    best_score = 0
+    L = learner
+
+    for epoch in range(L.cfg.epochs):
+        start_time = time.time()
+        try:
+            L.tdl.sampler.set_epoch(epoch)
+        except Exception:
+            pass
+
+        # train
+        avg_loss = train_fn(L, epoch)
+
+        # eval
+        avg_val_loss, gts, preds = valid_fn(L, L.vdl0)
+        preds = torch.softmax(preds.float(), 1)
+
+        # merge I- and B- classes:
+        id2label = L.tds.id2label.copy()
+        for k, v in id2label.items():
+            if "I-" in v:
+                id2label[k] = v.replace("I-", "B-")
+        gts = [id2label[i] for i in gts.tolist()]
+        preds = torch.stack(
+            [
+                preds[:, 0],
+                preds[:, 1] + preds[:, 2],
+                preds[:, 3] + preds[:, 4],
+                preds[:, 5] + preds[:, 6],
+            ],
+            dim=1,
+        )
+
+        label2id = {
+            "O": 0,
+            "B-find": 1,
+            "B-proc": 2,
+            "B-body": 3,
+        }
+        gts = [label2id[i] for i in gts]
+        auc = roc_auc_score(gts, preds, average="macro", multi_class="ovo")
+        preds = torch.argmax(preds, 1)
+        iou = calc_iou(preds, torch.tensor(gts))
+        labels = list(label2id.values())
+        f1_mic = f1_score(gts, preds, average="micro", labels=labels)
+        f1_mac = f1_score(gts, preds, average="macro", labels=labels)
+        cm = confusion_matrix(gts, preds, normalize="true", labels=labels)
+        cm = (cm * 100).astype(int)
+
+        if L.cfg.IS_MASTER:
+            print("\n", cm)
+
+            L.writer.add_scalar("val/loss", avg_val_loss, epoch)
+            L.writer.add_scalar("val/f1_micro", f1_mic, epoch)
+            L.writer.add_scalar("val/f1_macro", f1_mac, epoch)
+            L.writer.add_scalar("val/auc", auc, epoch)
+            L.writer.add_scalar("val/iou", iou, epoch)
+
+            elapsed = time.time() - start_time
+            L.logger.info(
+                f"Epoch {epoch+1} - avg_train_loss: {avg_loss:.4f}  avg_val_loss: {avg_val_loss:.4f}  time: {elapsed:.0f}s"
+            )
+
+            if iou > best_score:
+                best_score = iou
+                L.logger.info("saving model")
+                model = L.model_ema.module if L.model_ema is not None else L.model
+
+                if L.model_ema is not None:
+                    model = L.model_ema.module
+                elif L.cfg.PARALLEL.DDP:
+                    model = L.model.module
+                else:
+                    model = L.model
+
+                dstf = L.output_folder / "models" / f"S{L.cfg.split}_{epoch}_score_{iou:.4f}"
+                save_model(model, L.tokenizer, dstf)
+                clean_checkpoint(L.output_folder / "models", 3)
+
+
+def calc_iou(preds_oh, gts):
+    ious = []
+    for i in range(0, 4):
+        gt_cat = gts == i
+        pred_cat = preds_oh == i
+        intersection = gt_cat * pred_cat
+        union = gt_cat + pred_cat
+        iou = intersection.sum() / union.sum()
+        ious.append(iou)
+    return torch.mean(torch.tensor(ious))
+
+

@@ -1,0 +1,1784 @@
+--- Content of make_inference_env.py ---
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Mar  7 10:28:22 2024
+
+@author: Yonatan
+"""
+
+from pathlib import Path
+
+import typer
+from mimic_dev_main import make_submission
+
+
+def main(inference_path: Path):
+    inference_path.mkdir(exist_ok=True)
+    (inference_path / "data").mkdir(exist_ok=True)
+    (inference_path / "assets").mkdir(exist_ok=True)
+    make_submission(submission_path=inference_path, no_check=True)
+
+
+if __name__ == "__main__":
+    typer.run(main)
+
+
+--- Content of mimic_common.py ---
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 23 09:10:31 2024
+
+@author: Yonatan
+"""
+
+import re
+from collections import Counter
+
+import pandas as pd
+from tqdm import tqdm
+
+common_headers = [
+    "Allergies",
+    "History of Present Illness",
+    "Family History",
+    "Name",
+    "Major Surgical or Invasive Procedure",
+    "Admission Date",
+    "Discharge Disposition",
+    "Past Medical History",
+    "Attending",
+    "Service",
+    "Date of Birth",
+    "Discharge Instructions",
+    "Discharge Condition",
+    "Chief Complaint",
+    "Physical Exam",
+    "Pertinent Results",
+    "Discharge Medications",
+    "Social History",
+    "Followup Instructions",
+    "Medications on Admission",
+    "Discharge Diagnosis",
+]
+
+internal_blacklist = [
+    "other",
+    "negative",
+    "follow up",
+    "mild",
+    "normal",
+    "inr",
+    "changes",
+    "change",
+    "iv",
+]
+
+pattern_cache = {}
+
+
+def get_pattern(s):
+    if s in pattern_cache:
+        return pattern_cache[s]
+
+    p = " ".join(s.split())
+    for c in "+(){}[]*":
+        p = p.replace(c, f"\\{c}")
+    p = p.replace(" ", "\\s+")
+    p = p.replace("-", "[- ]")
+    p = p.replace("/", "[/ ]")
+    p = p + "s*"
+
+    try:
+        r = re.compile(p)
+    except Exception:
+        print(p)
+        return None
+    pattern_cache[s] = r
+    return r
+
+
+def is_in_header(text, pos):
+    next_nl = text[pos:].index("\n") + pos
+    if text[:next_nl].strip().endswith(":"):
+        return True
+    return False
+
+
+def get_header_by_pos(pos, headers_position, pos_header, legal_headers):
+    prev_pos = [p for p in headers_position if p <= pos]
+    if len(prev_pos) == 0:
+        return None
+    header_pos = max(prev_pos)
+    h = pos_header[header_pos]
+    if h not in legal_headers and h[:-1] not in legal_headers:
+        return "other"
+    if h[-1] != ":":
+        return h + ":"
+    return h
+
+
+def get_sections(text, headers):
+    pos_header = {text.find(h + ":"): h + ":" for h in headers if h + ":" in text}
+    add_break_lines(pos_header, text)
+    positions = list(pos_header.keys())
+    positions.sort()
+    positions.append(len(text))
+    return positions, pos_header
+
+
+def add_break_lines(pos_header, text):
+    prev_line_is_header = False
+    lines = text.split("\n")
+    prev_pos = None
+    for i, l in enumerate(lines):
+        l = l.strip()
+        if len(l) == 0:
+            continue
+        pos = sum([len(line) + 1 for line in lines[:i]])
+        assert text[pos : pos + len(lines[i])] == lines[i]
+        if l.endswith(":") and i < len(lines) - 1 and len(lines[i + 1].strip()) == 0:
+            pos_header[pos] = l
+            prev_line_is_header = True
+        elif (
+            all([c in "-=_:" for c in l])
+            and not prev_line_is_header
+            and len(lines[i - 1].strip()) > 0
+        ):
+            pos_header[prev_pos] = lines[i - 1].strip()
+        else:
+            prev_line_is_header = False
+        prev_pos = pos
+
+
+def annotate_with_dict(text, d, headers, note_id, keep_overlaps=False):
+    ann = pd.DataFrame(columns=["note_id", "start", "end", "concept_id", "section", "dict_entry"])
+    h_positions, pos_header = get_sections(text, headers)
+    for (section, source_text), cid in d.items():
+
+        p = get_pattern(source_text)
+        if p is None:
+            continue
+        for match in p.finditer(text):
+            i = match.start()
+            j = match.end()
+            if i < 100:
+                continue
+            if text[i - 1].isalnum() or text[j].isalnum():
+                continue
+            if is_in_header(text, i) and not keep_overlaps:
+                continue
+            h = get_header_by_pos(i, h_positions, pos_header, headers)
+            if h is None:
+                return
+            if "medication" in h.lower() or "service" in h.lower() or "date of birth" in h.lower():
+                continue
+
+            if h == section or h in section or section == "any":
+                r = len(ann)
+                if type(cid) == Counter:
+                    for k in cid:
+                        vals = [note_id, i, j, k, section, source_text]
+                else:
+                    vals = [note_id, i, j, cid, section, source_text]
+                ann.loc[r] = vals
+
+    if keep_overlaps:
+        return ann
+    return remove_overlaps(ann)
+
+
+def shorter_span(i, j, l):
+    if l.iloc[i] < l.iloc[j]:
+        return i
+    return j
+
+
+def remove_overlaps(df, verbose=False):
+    log = []
+    df = df.sort_values("start").reset_index(drop=True)
+    length = df["end"] - df["start"]
+    length = length.astype(float)
+    section_any = [type(s) == tuple or s == "any" for s in df["section"]]
+    length[
+        section_any
+    ] -= 0.1  # if the section is "other" then we prefer the same span with a section-based annotation
+    to_remove = set()
+    n = len(df)
+    for i in range(n):
+        if df.index[i] in to_remove:
+            continue
+        for j in range(i + 1, n):
+            if df["start"].iloc[j] >= df["end"].iloc[i]:
+                break
+            remove_index = shorter_span(i, j, length)
+            if verbose:
+                log.append(
+                    f'overalpping segments {df.iloc[i]["start"]}-{df.iloc[i]["end"]} and {df.iloc[j]["start"]}-{df.iloc[j]["end"]}'
+                )
+            to_remove.add(df.index[remove_index])
+            if remove_index == i:
+                break
+
+    df2 = df.drop(to_remove)
+    for i in to_remove:
+        s, e = df.loc[i, ["start", "end"]].values
+        overlaps = ((df2["start"] <= s) & (df2["end"] > s)) | (
+            (df2["start"] <= e) & (df2["end"] > e)
+        )
+        if overlaps.sum() == 0:
+            if verbose:
+                log.append(f'returning segment {df.loc[i]["start"]}-{df.loc[i]["end"]}')
+            df2.loc[i] = df.loc[i]
+
+    if verbose:
+        return df2, log
+    return df2
+
+
+def spans_overlap(s1, s2):
+    return s1["start"] <= s2["start"] < s1["end"]
+
+
+def check_for_overlaps(pred):
+    for ni in tqdm(pred["note_id"].unique()):
+        df = pred.query(f'note_id == "{ni}"')
+        df = df.sort_values("start")
+        for i in range(len(df)):
+            for j in range(i + 1, len(df)):
+                if spans_overlap(df.iloc[i], df.iloc[j]):
+                    return df, i, j
+    print("No overlaps")
+    return None
+
+
+--- Content of mimic_dev_main.py ---
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 23 10:29:48 2024
+
+@author: Yonatan
+"""
+
+import os
+import pickle
+import shutil
+from pathlib import Path
+from typing import Optional
+
+import numpy as np
+import pandas as pd
+from mimic_common import common_headers
+from mimic_predict import make_predictions
+from mimic_submission_main import run_main
+from mimic_train import train
+from note_scoring import iou_per_note
+from scoring import iou_per_class
+from tqdm import tqdm
+
+submission_dir = Path(__file__) / "submissions"
+data_directory = Path(__file__).parent.parent / "data"
+src_directory = Path(__file__).parent
+
+
+def mimic_train_test(
+    texts=None,
+    annotations=None,
+    run_name="default",
+    train_size=150,
+    test_size=None,
+    headers=common_headers,
+):
+    if texts is None:
+        texts = pd.read_csv(data_directory / "raw" / "mimic-iv_notes_training_set.csv").set_index(
+            "note_id"
+        )["text"]
+    if annotations is None:
+        annotations = pd.read_csv(data_directory / "interim" / "train_annotations_cln.csv")
+
+    np.random.seed(12345)
+    ids = list(texts.index)
+    np.random.shuffle(ids)
+    train_ids = ids[:train_size]
+    test_ids = ids[train_size:]
+    if test_size is not None:
+        test_ids = ids[-test_size:]
+
+    pred, d, uc_d, scores = do_train_test(
+        texts, annotations, headers, run_name, train_ids, test_ids
+    )
+
+    return pred, d, uc_d
+
+
+def cross_validation(
+    texts=None, annotations=None, n_folds=5, run_name="cv", headers=common_headers
+):
+    if texts is None:
+        texts = pd.read_csv(data_directory / "raw" / "mimic-iv_notes_training_set.csv").set_index(
+            "note_id"
+        )["text"]
+    if annotations is None:
+        annotations = pd.read_csv(data_directory / "interim" / "train_annotations_cln.csv")
+
+    np.random.seed(123456)
+    ids = list(texts.index)
+    np.random.shuffle(ids)
+    fold_size = int(len(ids) / n_folds)
+    scores = []
+    preds = []
+    fold_ids = {}
+    for i in range(n_folds):
+        if i < n_folds - 1:
+            test_ids = ids[i * fold_size : (i + 1) * fold_size]
+        else:
+            test_ids = ids[i * fold_size :]
+        train_ids = [tid for tid in ids if tid not in test_ids]
+        fold_ids[i] = {"test": test_ids, "train": train_ids}
+        p, d, uc_d, s = do_train_test(
+            texts, annotations, headers, f"{run_name}_{i}", train_ids, test_ids
+        )
+        scores.append(s)
+        preds.append(p)
+    with open(f"../debug/{run_name}_fold_ids.pkl", "wb") as f:
+        pickle.dump(fold_ids, f)
+
+    return pd.concat(preds), scores
+
+
+def do_train_test(texts, annotations, headers, run_name, train_ids, test_ids):
+    d, uc_d = train(texts[texts.index.isin(train_ids)], annotations, headers, run_name)
+
+    pred = make_predictions(texts[texts.index.isin(test_ids)], d, uc_d, run_name=run_name)
+    return pred, d, uc_d, print_scores(pred, annotations)
+
+
+def do_predict(d, uc_d={}, texts=None, annotations=None, test_size=54, run_name="default"):
+    if texts is None:
+        texts = pd.read_csv(data_directory / "raw" / "mimic-iv_notes_training_set.csv").set_index(
+            "note_id"
+        )["text"]
+    if annotations is None:
+        annotations = pd.read_csv(data_directory / "intermi" / "train_annotations_cln.csv")
+
+    np.random.seed(12345)
+    ids = list(texts.index)
+    np.random.shuffle(ids)
+
+    test_ids = ids[-test_size:]
+    pred = make_predictions(texts[texts.index.isin(test_ids)], d, uc_d, run_name=run_name)
+    print_scores(pred, annotations)
+    return pred
+
+
+def print_scores(pred, annotations):
+    annotated = annotations[annotations["note_id"].isin(pred["note_id"].unique())]
+    ious_c = pd.Series(iou_per_class(pred, annotated))
+    ious_n = pd.Series(iou_per_note(pred, annotated))
+    print("score by concept", ious_c.mean(), "; score by note", ious_n.mean())
+    return ious_c.mean(), ious_n.mean()
+
+
+def make_submission(submission_number="", no_check=False, submission_path: Optional[Path] = None):
+    if submission_path is None:
+        submission_path = submission_dir / f"submission{submission_number}"
+
+    if not submission_path.exists():
+        print(f"{submission_path} does not exist")
+        return None
+
+    texts = pd.read_csv(data_directory / "raw" / "mimic-iv_notes_training_set.csv").set_index(
+        "note_id"
+    )["text"]
+    annotations = pd.read_csv(data_directory / "interim" / "train_annotations_cln.csv")
+    kiri_dicts = make_kiri_dicts(texts, annotations, submission_path)
+    print("size of dict", len(kiri_dicts[0]), len(kiri_dicts[1]), " (should be around 1M)")
+    shutil.copyfile(src_directory / "mimic_submission_main.py", submission_path / "main.py")
+    shutil.copyfile(src_directory / "mimic_predict.py", submission_path / "mimic_predict.py")
+    shutil.copyfile(src_directory / "mimic_common.py", submission_path / "mimic_common.py")
+    shutil.copyfile(
+        src_directory / "mimic_postprocess_attributes.py",
+        submission_path / "mimic_postprocess_attributes.py",
+    )
+    shutil.copyfile(
+        data_directory / "interim" / "abbr_dict.pkl", submission_path / "assets" / "abbr_dict.pkl"
+    )
+    shutil.copyfile(
+        data_directory / "interim" / "term_extension.csv",
+        submission_path / "assets" / "term_extension.csv",
+    )
+    if no_check:
+        return
+
+    cwd = os.getcwd()
+    os.chdir(submission_path)
+    print("running submission main")
+    run_main()
+    os.chdir(cwd)
+    submission = pd.read_csv(submission_path / "submission.csv")
+    print("number of predictions", len(submission), " (should be around 60k)")
+    overlaps = check_for_overlaps(submission)
+    if overlaps is not None:
+        df, i, j = overlaps
+        print(f"overlaps found, rows {i} and {j} in overlaps.csv")
+        df.to_csv(submission_path / "overlaps.csv")
+
+    ious_c = pd.Series(iou_per_class(submission, annotations))
+    ious_n = pd.Series(iou_per_note(submission, annotations))
+    print("score by concept", ious_c.mean(), "; score by note", ious_n.mean())
+
+
+def spans_overlap(s1, s2):
+    return s1["start"] <= s2["start"] < s1["end"]
+
+
+def check_for_overlaps(pred):
+    for ni in tqdm(pred["note_id"].unique()):
+        df = pred.query(f'note_id == "{ni}"')
+        df = df.sort_values("start")
+        for i in range(len(df)):
+            for j in range(i + 1, len(df)):
+                if spans_overlap(df.iloc[i], df.iloc[j]):
+                    return df, i, j
+    print("No overlaps")
+    return None
+
+
+def make_kiri_dicts(texts, annotations, submission_path: Path, headers: list[str] = common_headers):
+    texts = texts.str.lower()
+    headers = [h.lower() for h in headers]
+    if "source orig" not in annotations:
+        annotations["source orig"] = annotations["source"]
+    annotations["source"] = annotations["source"].str.lower()
+    kiri_dicts = train(texts, annotations, common_headers)
+    with (submission_path / "assets" / "kiri_dicts.pkl").open("wb") as f:
+        pickle.dump(kiri_dicts, f)
+    return kiri_dicts
+
+
+if __name__ == "__main__":
+    pred, d, d_uc = mimic_train_test()
+    data = pd.read_pickle("../debug/default.pkl")
+    for k in data:
+        globals()[k] = data[k]
+
+
+--- Content of mimic_postprocess_attributes.py ---
+import re
+
+import pandas as pd
+
+
+def postprocess_annotations(
+    data_df, ann_df, att_df, submission=False, do_before=True, do_after=False
+):
+    ann_list = []
+    max_words_before = 2
+    max_words_after = 2
+    max_chars = 20
+
+    for id, txt in data_df.items():
+        ann = ann_df[ann_df.note_id == id]
+
+        for i in range(0, len(ann)):
+            a = ann.iloc[i]
+            a_txt = txt[a.start : a.end]
+            next_a = None
+            prev_a = None
+            if i < len(ann) - 1:
+                next_a = ann.iloc[i + 1]
+            if i > 0:
+                prev_a = ann.iloc[i - 1]
+            found = False
+            cand = att_df[att_df.generalId == a.concept_id]
+            if len(cand) > 0:
+                reg_str = r"(?:\b\S+\s*){{,{0}}}{1}\b(?:\s*\S+\s*?){{,{2}}}".format(
+                    max_words_before, re.escape(a_txt), max_words_after
+                )
+                if prev_a is not None:
+                    left_lim = max(prev_a.end + 1, a.start - max_chars)
+                else:
+                    left_lim = max(0, a.start - max_chars)
+                if next_a is not None:
+                    right_lim = min(next_a.start - 1, a.end + max_chars)
+                else:
+                    right_lim = min(a.end + max_chars, len(txt) - 1)
+
+                words = re.findall(reg_str, txt[left_lim:right_lim])
+                if len(words) > 0:
+                    words = words[0].split(a_txt)
+                    txt_before = words[0]
+                    txt_after = words[1]
+                    words_before = txt_before.split()
+                    words_after = txt_after.split()
+
+                    for i, c in cand.iterrows():
+                        attribute = c.additionalWord
+                        new_concept = c.specificId
+                        new_start = a.start
+                        new_end = a.end
+                        side_words = [attribute, attribute.title(), attribute.upper()]
+                        if attribute in ["left", "right"]:
+                            side_words = side_words + [
+                                attribute[0].upper(),
+                                attribute + "-sided",
+                            ]
+
+                        if do_before:
+                            ind_before = [
+                                ind for (ind, w) in enumerate(words_before) if w in side_words
+                            ]
+                            if len(ind_before) > 0:
+                                if ind_before[0] == len(words_before) - 1:
+                                    delta = len(txt_before) - len(txt_before.rstrip())
+                                    new_start = new_start - len(words_before[-1]) - delta
+                                found = True
+                                break
+
+                        if do_after:
+                            ind_after = [
+                                ind for (ind, w) in enumerate(words_after) if w in side_words
+                            ]
+                            if len(ind_after) > 0:
+                                if ind_after[0] == 0:
+                                    delta = len(txt_after) - len(txt_after.lstrip())
+                                    new_end = new_end + len(words_after[0]) + delta
+                                found = True
+                                break
+
+            if found:
+                # update annotation
+                ann_list.append(
+                    {
+                        "note_id": id,
+                        "start": new_start,
+                        "end": new_end,
+                        "concept_id": new_concept,
+                    }
+                )
+            else:
+                # keep original annotation
+                ann_list.append(
+                    {
+                        "note_id": id,
+                        "start": a.start,
+                        "end": a.end,
+                        "concept_id": a.concept_id,
+                    }
+                )
+
+    post_ann_df = pd.DataFrame(ann_list)
+    return post_ann_df
+
+
+if __name__ == "__main__":
+    dataset = "../../dev/mimic-iv_notes_training_set.csv"
+    ann_file = "../../dev/predicted annotations/base_ann_vcv13.csv"
+    out_ann_file = "./base_ann_vcv_post.csv"
+    gt_ann_file = "../../dev/train_annotations_cln.csv"
+    att_fn = "../../dev/term_extension.csv"
+
+    ann_df = pd.read_csv(ann_file)
+    data_df = pd.read_csv(dataset)
+    data_df = data_df[data_df.note_id.isin(ann_df["note_id"])]
+
+    att_df = pd.read_csv(att_fn)
+
+    post_ann_df = postprocess_annotations(data_df, ann_df, att_df)
+    post_ann_df.to_csv(out_ann_file, index=False)
+
+    # run scoring on original and post-processed results
+    gt_ann_df = pd.read_csv(gt_ann_file)
+    gt_ann_df = gt_ann_df[gt_ann_df.note_id.isin(ann_df["note_id"])]
+
+    exit(0)
+
+
+--- Content of mimic_predict.py ---
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 23 09:29:11 2024
+
+@author: Yonatan
+"""
+
+import pickle
+from pathlib import Path
+
+import pandas as pd
+from mimic_common import annotate_with_dict, common_headers, remove_overlaps
+from mimic_postprocess_attributes import postprocess_annotations
+from tqdm import tqdm
+
+data_directory = Path(__file__).parent.parent / "data"
+
+
+def predict(texts, headers, d, submission, run_name):
+    pred = []
+    if not submission:
+        print("generating predictions")
+    for i in tqdm(texts.index, disable=submission):
+        pred.append(annotate_with_dict(texts[i], d, headers, i))
+    pred = pd.concat(pred)
+    if not submission:
+        pred.to_csv(f"../debug/{run_name}_pred.csv")
+    return pred
+
+
+def get_case_sensitive_dict():
+    csd = {
+        (("other", "Pertinent Results:"), "K"): 312468003,
+        ("any", "T"): 105723007,
+        (("other", "Pertinent Results:"), "Mg"): 271285000,
+        ("Physical Exam:", "RA"): 722742002,
+        (("other", "Pertinent Results:"), "Plt"): 61928009,
+        (("other", "Pertinent Results:"), "MR"): 48724000,
+    }
+    return csd
+
+
+def join_predictions(predictions):
+    predictions = pd.concat(predictions)
+    no_overlaps = []
+    for nid in predictions["note_id"].unique():
+        df = predictions.query(f'note_id == "{nid}"')
+        no_overlaps.append(remove_overlaps(df))
+    return pd.concat(no_overlaps)
+
+
+def get_abbr_dict(submission: bool):
+    if submission:
+        path = Path("assets") / "abbr_dict.pkl"
+    else:
+        path = data_directory / "interim" / "abbr_dict.pkl"
+    with path.open("rb") as f:
+        abbr_dict = pickle.load(f)
+    return abbr_dict
+
+
+def get_attr_file(submission):
+    if submission:
+        fn = "assets/term_extension.csv"
+    else:
+        fn = "../term_extension.csv"
+    df = pd.read_csv(fn)
+    return df
+
+
+def make_predictions(texts, d, uc_dict, submission=False, run_name="default"):
+    assert isinstance(uc_dict, dict)
+    texts_lc = texts.str.lower()
+    headers = [h.lower() for h in common_headers]
+
+    pred_lc = predict(texts_lc, headers, d, submission, run_name + "_lc")
+    uc_dict.update(get_case_sensitive_dict())
+    abbr_dict = get_abbr_dict(submission)
+    abbr_dict.update(uc_dict)
+    uc_dict = abbr_dict
+    pred_uc = predict(texts, common_headers, uc_dict, submission, run_name + "_uc")
+    pred = join_predictions((pred_lc, pred_uc))
+
+    att_df = get_attr_file(submission)
+    pred = postprocess_annotations(texts, pred, att_df, submission)
+
+    return pred
+
+
+--- Content of mimic_submission_main.py ---
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 23 09:50:10 2024
+
+@author: Yonatan
+"""
+
+import pickle
+from pathlib import Path
+
+import pandas as pd
+from mimic_predict import make_predictions
+
+NOTES_PATH = Path("data/test_notes.csv")
+SUBMISSION_PATH = Path("submission.csv")
+
+
+def run_main():
+    with open("assets/kiri_dicts.pkl", "rb") as f:
+        kiri_dicts = pickle.load(f)
+
+    texts = pd.read_csv(NOTES_PATH).set_index("note_id")["text"]
+    pred = make_predictions(texts, kiri_dicts[0], kiri_dicts[1], submission=True)
+
+    pred = pred[["note_id", "start", "end", "concept_id"]]
+    pred.to_csv(SUBMISSION_PATH, index=False)
+
+
+if __name__ == "__main__":
+    run_main()
+
+
+--- Content of mimic_train.py ---
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 23 09:19:31 2024
+
+@author: Yonatan
+"""
+
+import pickle
+from collections import Counter
+from itertools import permutations
+from pathlib import Path
+
+import pandas as pd
+from mimic_common import (
+    annotate_with_dict,
+    common_headers,
+    get_header_by_pos,
+    get_sections,
+    internal_blacklist,
+)
+from tqdm import tqdm
+
+data_directory = Path(__file__).parent.parent / "data"
+(debug_directory := Path(__file__).parent.parent / "debug").mkdir(exist_ok=True)
+correct_frac_for_dict = 0.2
+correct_frac_for_any = 0.3
+yuvals_method_ratio = 1
+snomed_min_len = 2
+snomed_max_len = 5
+blacklist_thresh = 2000
+train_size = 150
+test_size = None
+words_counter = Counter()
+
+
+def get_blacklist():
+    if len(words_counter) == 0:
+        print("word counter not initiated")
+        return None
+    bl = [v for v in words_counter if words_counter[v] > blacklist_thresh]
+    bl.extend(internal_blacklist)
+    return bl
+
+
+def build_dict(text, text_annotations, headers, blacklist):
+    d = {}
+    length = text_annotations["end"] - text_annotations["start"]
+    h_positions, pos_header = get_sections(text, headers)
+    section_blacklist = {}
+    for bl in blacklist:
+        if type(bl) == tuple:
+            section_blacklist.setdefault(bl[0], set()).add(bl[1])
+
+    rows = (length > 1) & ~text_annotations["source"].isin(blacklist)
+    for i in text_annotations.index[rows]:
+        mention = text_annotations["source"][i]
+        h = get_header_by_pos(text_annotations["start"][i], h_positions, pos_header, headers)
+        if h in section_blacklist and mention in section_blacklist[h]:
+            continue
+        d.setdefault((h, mention), Counter())[text_annotations["concept_id"][i]] += 1
+        d.setdefault(("any", mention), Counter())[text_annotations["concept_id"][i]] += 1
+
+    return d
+
+
+def score_dict(text, ref, d, headers):
+    scores = {}
+    ann = annotate_with_dict(text, d, headers, None, keep_overlaps=True)
+    ann["start"] = ann["start"].astype(int)
+    ann["end"] = ann["end"].astype(int)
+    ann["concept_id"] = ann["concept_id"].astype(int)
+    compare_ref_pred(ref.copy(), ann)
+    scores_counter = Counter()
+    for i in ann.index:
+        h = ann["section"][i]
+        source = ann["dict_entry"][i]
+        k = (h, source)
+        if k in d:
+            if type(d[k]) == Counter:
+                k = (k, ann["concept_id"][i][-1])
+            scores.setdefault(k, []).append(ann["score"][i])
+            scores_counter[(k, ann["score"][i])] += 1
+        else:
+            print("key not in dict:", k)
+
+    return scores, scores_counter
+
+
+def compare_ref_pred(ref, ann):
+    ref.sort_values("start", inplace=True)
+    ann.sort_values("start", inplace=True)
+    i_ref = 0
+    n_ref = len(ref)
+    ann["score"] = None
+    for i in ann.index:
+        while i_ref + 1 < n_ref - 1 and ref.iloc[i_ref + 1]["start"] <= ann.loc[i, "start"]:
+            i_ref = i_ref + 1
+
+        score = overlap_score(
+            ref.iloc[i_ref]["start"],
+            ref.iloc[i_ref]["end"],
+            ann.loc[i, "start"],
+            ann.loc[i, "end"],
+            ref.iloc[i_ref]["concept_id"],
+            ann.loc[i, "concept_id"],
+            ann.loc[i, "dict_entry"],
+        )
+
+        if score == 0 and i_ref + 1 < n_ref - 1:
+            score = overlap_score(
+                ref.iloc[i_ref + 1]["start"],
+                ref.iloc[i_ref + 1]["end"],
+                ann.loc[i, "start"],
+                ann.loc[i, "end"],
+                ref.iloc[i_ref + 1]["concept_id"],
+                ann.loc[i, "concept_id"],
+                ann.loc[i, "dict_entry"],
+            )
+        if score == 0:
+            score = -1
+        ann.loc[i, "score"] = score
+
+
+def overlap_score(ref_start, ref_end, ann_start, ann_end, ref_concept, ann_concept, mention):
+    if ref_start > ann_start:
+        return -1
+    elif ref_end < ann_start:
+        return 0  # it might overlap the next one
+    elif ref_concept == ann_concept:
+        if (ref_start == ann_start and ref_end == ann_end) or " " in mention:
+            return 1
+        return -1
+    else:
+        return -1
+
+
+def add_snomed_syn(d, c_id, c_name, min_len, max_len):
+    n = len(c_name.split())
+    if len(c_name) < 3:
+        return
+    if "machine translation" in c_name:
+        return
+    if "]" in c_name and c_name.index("[") > 5:
+        return
+    pt = process_term(c_name)
+    n = len(pt.split())
+    if n > max_len or n < min_len:
+        return
+    if not pt[0].isalnum():
+        return
+    if len(pt) > 1:
+        d[("any", pt)] = c_id
+
+
+def get_snomed_synonyms(min_len=snomed_min_len, max_len=snomed_max_len, fsn_only=False):
+    snomed_syns = pd.read_csv(
+        data_directory / "interim" / "flattened_terminology_syn_snomed+omop_v5.csv"
+    ).drop_duplicates("concept_name", keep="first")
+
+    sno_fsn = (
+        pd.read_csv(data_directory / "interim" / "flattened_terminology.csv")
+        .drop_duplicates("concept_name")
+        .set_index("concept_id")["concept_name"]
+    )
+    replacements = {
+        "procedure": "procedure",
+        "body structure": "body structure",
+        "disorder": "finding",
+        "finding": "finding",
+        "morphologic abnormality": "body structure",
+        "cell structure": "body structure",
+        "regime/therapy": "finding",
+    }
+    cid_to_type = sno_fsn.apply(lambda x: x.split("(")[-1][:-1]).replace(replacements)
+
+    d = {}
+    if not fsn_only:
+        for c_id, c_name in snomed_syns[["concept_id", "concept_name"]].values:
+            add_snomed_syn(d, c_id, c_name, min_len, max_len)
+    for c_id in sno_fsn.index:
+        add_snomed_syn(d, c_id, sno_fsn[c_id], min_len, max_len)
+
+    sno_fsn = sno_fsn.apply(lambda t: process_term(t))
+
+    return d, sno_fsn, cid_to_type
+
+
+def process_term(t):
+    t = t.lower()
+    if "(" in t:
+        t = t[: t.rindex("(") - 1]
+    if "]" in t:
+        t = t[t.index("]") + 1 :]
+
+    return t.strip()
+
+
+def get_permutations(d, blacklist):
+    permuted = {}
+    for k in d:
+        words = k[1].split()
+        new_mentions = []
+        n = len(words)
+        if n < 3 or n > 4:
+            continue
+        if n == 3 and words[1] == "of":
+            new_mentions = [f"{words[2]} {words[0]}"]
+        elif n == 4:
+            if words[1] == "of":
+                new_mentions = [f"{words[2]} {words[3]} {words[0]}"]
+            elif words[2] == "of":
+                new_mentions = [
+                    f"{words[3]} {words[0]} {words[1]}",
+                    f"{words[0]} {words[3]} {words[1]}",
+                ]
+        elif (n == 3 or n == 4) and all([w not in blacklist for w in words]):
+            new_mentions = [" ".join(p) for p in permutations(words)]
+        for new_mention in new_mentions:
+            new_key = (k[0], new_mention)
+            if new_key not in d:
+                permuted[new_key] = d[k]
+    return permuted
+
+
+def get_word_replacements(d):
+    wr = {}
+    replacements = {
+        ",": "",
+        " and ": " with ",
+        " with ": " and ",
+        " valve ": " ",
+        " of ": " of the ",
+    }
+    for k in d:
+        mention = k[1]
+        for s1, s2 in replacements.items():
+            if s1 in mention:
+                wr[(k[0], mention.replace(s1, s2))] = d[k]
+
+    return wr
+
+
+def remove_bad_keys(d, scores, scores_include_cid=False):
+    bad_keys = []
+    for k in scores:
+        if scores_include_cid and (k[0] not in d or d[k[0]] != k[1]):
+            continue
+
+        if is_naive_key_remove(count_correct(scores[k]), k, scores_include_cid):
+            if scores_include_cid:
+                bad_keys.append(k[0])
+            else:
+                bad_keys.append(k)
+
+    print(
+        "number of bad keys:",
+        len(bad_keys),
+        "in d:",
+        len(set(bad_keys).intersection(d.keys())),
+    )
+    for k in bad_keys:
+        d.pop(k, None)
+    return bad_keys
+
+
+def yuvals_key_selection(d, scores_by_mention, scores_by_note, annotations):
+    cids = annotations["concept_id"].unique()
+    bad_keys = []
+    print("removing bad keys")
+    for cid in tqdm(cids):
+        keys = [k for k in d if d[k] == cid]
+        t_scores = {k: count_correct(scores_by_mention[k]) for k in keys if k in scores_by_mention}
+        n_annotations = (annotations["concept_id"] == cid).sum()
+        bad_keys.extend(get_bad_keys_for_concept(t_scores, n_annotations))
+
+    print(
+        "number of bad keys (yuval method):",
+        len(bad_keys),
+        "in d:",
+        len(set(bad_keys).intersection(d.keys())),
+    )
+    for k in bad_keys:
+        d.pop(k, None)
+    return bad_keys
+
+
+def count_correct(l):
+    s = pd.Series(l)
+    return (s == 1).sum(), (s == -1).sum()
+
+
+def get_bad_keys_for_concept(scores, n):
+    assert n > 0
+    bad_keys = []
+    key_to_ratio = pd.Series(
+        [scores[k][0] / (scores[k][1] + 0.01) for k in scores], index=scores.keys()
+    )
+    correct = 0
+    incorrect = 0
+    key_to_ratio.sort_values(ascending=False, inplace=True)
+    for i, k in enumerate(key_to_ratio.index):
+        curr_score = correct / (incorrect + n)
+
+        if curr_score < key_to_ratio[k] or not is_naive_key_remove(
+            scores[k], k, double_thr=(i > 2)
+        ):
+            correct += scores[k][0]
+            incorrect += scores[k][1]
+        else:
+            bad_keys.append(k)
+    return bad_keys
+
+
+def is_naive_key_remove(counts, k, scores_include_cid=False, double_thr=False):
+    section = k[0] if not scores_include_cid else k[0][0]
+    th = correct_frac_for_any if section == "any" else correct_frac_for_dict
+    if double_thr:
+        th = th * 2
+
+    correct = counts[0]
+    if correct == 1:
+        th = 1
+    incorrect = counts[1]
+    return correct < th * incorrect
+
+
+def mock_train(texts, annotations, headers, run_name):
+    blacklist = get_blacklist()
+    d, d_all = {}, {}
+    print("extracting annotations")
+
+    ids = texts.index
+
+    d_combined = {}
+    for i in tqdm(ids):
+        t = build_dict(texts[i], annotations.query(f'note_id == "{i}"'), headers, blacklist)
+
+        for k in t:
+            d_combined.setdefault(k, Counter()).update(t[k])
+        d_all[i] = t
+
+    for k in d_combined:
+        mc = d_combined[k].most_common(1)
+        if len(mc) == 1:
+            d[k] = mc[0][0]
+
+    scores_by_note = {}
+    scores_by_mention = {}
+    scores_counter = {}
+    print("scoring")
+    for i in tqdm(ids):
+        t, scores_counter[i] = score_dict(
+            texts[i], annotations.query(f'note_id == "{i}"'), d, headers
+        )
+        for k in t:
+            scores_by_mention.setdefault(k, []).extend(t[k])
+            for s in [1, -1]:
+                if s in t[k]:
+                    scores_by_note.setdefault(k, []).append(s)
+
+    d_full = d.copy()
+    bad_keys = remove_bad_keys(d, scores_by_note)
+
+    with (debug_directory / f"{run_name}.pkl").open("wb") as fp:
+        pickle.dump(
+            {
+                "d_trained": d,
+                "d_full": d_full,
+                "d_all": d_all,
+                "bad_keys": bad_keys,
+                "d_combined": d_combined,
+                "scores_by_note": scores_by_note,
+                "scores_by_mention": scores_by_mention,
+                "scores_counter": scores_counter,
+            },
+            fp,
+        )
+
+    return d, scores_by_note, scores_by_mention
+
+
+def get_cid_type_sections_pairs(texts, annotations, headers, cid_to_type):
+    pairs = set()
+    for nid in annotations["note_id"].unique():
+        if nid not in texts.index:
+            continue
+        df = annotations.query(f'note_id == "{nid}"')
+        h_positions, pos_header = get_sections(texts[nid], headers)
+        for i, cid in df[["start", "concept_id"]].values:
+            h = get_header_by_pos(i, h_positions, pos_header, headers)
+            pairs.add((h, cid_to_type[cid]))
+    return pairs
+
+
+def get_allowed_sections(texts, annotations, headers, cid_to_type):
+    act = {}
+    for section, ct in get_cid_type_sections_pairs(texts, annotations, headers, cid_to_type):
+        act.setdefault(ct, set()).add(section)
+    return act
+
+
+def limit_any_to_allowed_sections(d, allowed_sec, cid_to_type):
+    any_keys = [k for k in d if k[0] == "any"]
+    for k in any_keys:
+        cid = d[k]
+        if cid not in cid_to_type.index:
+            print(f"CID {cid} not in flat snomed, skipping")
+            continue
+        ct = cid_to_type[cid]
+        d[(tuple(allowed_sec[ct]), k[1])] = cid
+        d.pop(k, None)
+
+
+def cond_update(d, d2, sno_fsn, blacklist):
+    for k, v in d2.items():
+        if k[1] in blacklist:
+            continue
+        if k not in d or k[1] == sno_fsn.loc[v].lower():
+            d[k] = v
+
+
+def extract_uppercase_mentions(d, annotations):
+    uc_d = {}
+    to_remove = []
+    for k in d:
+        section, mention = k
+        mention_source = annotations.loc[annotations["source"] == mention, "source orig"]
+        if (mention_source == mention_source.str.upper()).mean() > 0.99:
+            uc_d[(capitalize_section(section), mention.upper())] = d[k]
+            to_remove.append(k)
+    for k in to_remove:
+        d.pop(k, None)
+    return uc_d
+
+
+def capitalize_section(section):
+    if section in ["other", "any"]:
+        return section
+    for h in common_headers:
+        if section == h.lower() + ":":
+            return h + ":"
+    print("section not found", section)
+    return "any"
+
+
+def add_external_dicts(d, sno_syns, sno_fsn, blacklist):
+    print("initial dict size", len(d))
+
+    cond_update(d, sno_syns, sno_fsn, blacklist)
+    print("after adding snomed", len(d))
+
+    with open(
+        data_directory / "interim" / "snomed_unigrams_annotation_dict_3k_v4_new.pkl", "rb"
+    ) as fp:
+        d_unigrams = pickle.load(fp)
+    cond_update(d, d_unigrams, sno_fsn, blacklist)
+    print("after adding snomed unigrams", len(d))
+
+    with open(
+        data_directory / "interim" / "snomed_unigrams_annotation_dict_20k_v4_fsn.pkl", "rb"
+    ) as fp:
+        d_unigrams = pickle.load(fp)
+    cond_update(d, d_unigrams, sno_fsn, blacklist)
+    print("after adding FSN snomed unigrams", len(d))
+
+    wr = get_word_replacements(d)
+    cond_update(d, wr, sno_fsn, blacklist)
+    print("after doing word replacements", len(d))
+
+    permuted = get_permutations(d, blacklist)
+    cond_update(d, permuted, sno_fsn, blacklist)
+    print("after adding permutations", len(d))
+
+
+def train(texts, annotations, headers=common_headers, run_name="debug"):
+    texts_lc = texts.str.lower()
+    words = "\n".join(texts_lc).split()
+    if len(words_counter) == 0:
+        words_counter.update(Counter(words))
+
+    headers = [h.lower() for h in headers]
+    if "source orig" not in annotations:
+        annotations["source orig"] = annotations["source"]
+        annotations["source"] = annotations["source"].str.lower()
+
+    sno_syns, sno_fsn, cid_to_type = get_snomed_synonyms()
+    allowed_sec = get_allowed_sections(texts_lc, annotations, headers, cid_to_type)
+
+    d, scores_by_note, scores_by_mention = mock_train(texts_lc, annotations, headers, run_name)
+    uc_d = extract_uppercase_mentions(d, annotations)
+    print("number of entries moved to uc dict", len(uc_d))
+
+    add_external_dicts(d, sno_syns, sno_fsn, get_blacklist())
+
+    limit_any_to_allowed_sections(d, allowed_sec, cid_to_type)
+
+    with (debug_directory / f"{run_name}_full.pkl").open("wb") as fp:
+        pickle.dump(d, fp)
+
+    return d, uc_d
+
+
+--- Content of note_scoring.py ---
+from pathlib import Path
+from typing import List
+
+import numpy as np
+import pandas as pd
+import typer
+
+
+def iou_per_note(user_annotations: pd.DataFrame, target_annotations: pd.DataFrame) -> List[float]:
+    """
+    Calculate the IoU metric for each note in a set of annotations.
+    """
+    user_note_concepts = user_annotations.groupby("note_id")["concept_id"].agg(set)
+    target_note_concepts = target_annotations.groupby("note_id")["concept_id"].agg(set)
+    ious = {
+        nid: iou_score(user_note_concepts[nid], target_note_concepts[nid])
+        for nid in user_note_concepts.index
+        if nid in target_note_concepts.index
+    }
+
+    return ious
+
+
+def iou_score(s1, s2):
+    return len(s1.intersection(s2)) / len(s1.union(s2))
+
+
+def main(
+    user_annotations_path: Path,
+    target_annotations_path: Path,
+):
+    """
+    Calculate the macro-averaged character IoU metric for each class in a set of annotations.
+    """
+    user_annotations = pd.read_csv(user_annotations_path)
+    target_annotations = pd.read_csv(target_annotations_path)
+    ious = iou_per_note(user_annotations, target_annotations)
+    print(f"macro-averaged character IoU metric (per note): {np.mean(list(ious.values())):0.4f}.")
+
+
+if __name__ == "__main__":
+    typer.run(main)
+
+
+--- Content of process_data.py ---
+import csv
+import pickle
+import re
+from collections import Counter
+from pathlib import Path
+
+import pandas as pd
+import typer
+from loguru import logger
+from mimic_common import common_headers
+from mimic_train import (
+    get_allowed_sections,
+    get_snomed_synonyms,
+    limit_any_to_allowed_sections,
+)
+
+app = typer.Typer()
+data_directory = Path(__file__).parent.parent / "data"
+raw_directory = data_directory / "raw"
+(interim_directory := data_directory / "interim").mkdir(exist_ok=True, parents=True)
+
+invalid_vocabs = (
+    "SNOMED",
+    "CAP",
+    "CPT4",
+    "MedDRA",
+    "Gemscript",
+    "ICD10CN",
+    "ICD10GM",
+    "ICD9ProcCN",
+    "OPS",
+)
+
+
+def load_snomed_ct(data_path: Path):
+    """
+    Create a SNOMED CT concept DataFrame.
+
+    Derived from: https://github.com/CogStack/MedCAT/blob/master/medcat/utils/preprocess_snomed.py
+
+    Returns:
+        pandas.DataFrame: SNOMED CT concept DataFrame.
+    """
+
+    def _read_file_and_subset_to_active(filename):
+        with open(filename, encoding="utf-8") as f:
+            entities = [[n.strip() for n in line.split("\t")] for line in f]
+            df = pd.DataFrame(entities[1:], columns=entities[0])
+        return df[df.active == "1"]
+
+    active_terms = _read_file_and_subset_to_active(
+        data_path / "sct2_Concept_Snapshot_INT_20230531.txt"
+    )
+    active_descs = _read_file_and_subset_to_active(
+        data_path / "sct2_Description_Snapshot-en_INT_20230531.txt"
+    )
+
+    df = pd.merge(active_terms, active_descs, left_on=["id"], right_on=["conceptId"], how="inner")[
+        ["id_x", "term", "typeId"]
+    ].rename(columns={"id_x": "concept_id", "term": "concept_name", "typeId": "name_type"})
+
+    # active description or active synonym
+    df["name_type"] = df["name_type"].replace(
+        ["900000000000003001", "900000000000013009"], ["P", "A"]
+    )
+    active_snomed_df = df[df.name_type.isin(["P", "A"])]
+
+    active_snomed_df["hierarchy"] = active_snomed_df["concept_name"].str.extract(
+        r"\((\w+\s?.?\s?\w+.?\w+.?\w+.?)\)$"
+    )
+    active_snomed_df = active_snomed_df[active_snomed_df.hierarchy.notnull()].reset_index(drop=True)
+    return active_snomed_df
+
+
+@app.command()
+def make_flattened_terminology(
+    snomed_ct_directory: Path = data_directory
+    / "raw"
+    / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition",
+    output_path: Path = interim_directory / "flattened_terminology.csv",
+):
+    # unzip the terminology provided on the data download page and specify the path to the folder here
+    snomed_rf2_path = Path(snomed_ct_directory)
+
+    # load the SNOMED release
+    df = load_snomed_ct(snomed_rf2_path / "Snapshot" / "Terminology")
+    logger.debug(f"Loaded SNOMED CT release containing {len(df):,} rows (expected 364,323).")
+
+    concept_type_subset = [
+        "procedure",  # top level category
+        "body structure",  # top level category
+        "finding",  # top level category
+        "disorder",  # child of finding
+        "morphologic abnormality",  # child of body structure
+        "regime/therapy",  # child of procedure
+        "cell structure",  # child of body structure
+    ]
+
+    filtered_df = df[
+        (
+            df.hierarchy.isin(concept_type_subset)
+        )  # Filter the SNOMED data to the selected Concept Types
+        & (df.name_type == "P")  # Preferred Terms only (i.e. one row per concept, drop synonyms)
+    ].copy()
+    logger.debug(f"Filtered to {len(filtered_df):,} relevant rows (expected 218,467).")
+
+    logger.debug(f"Value counts:\n{filtered_df.hierarchy.value_counts()}")
+
+    logger.debug(f"Saving flattened terminology with {len(filtered_df):,} rows to {output_path}")
+    filtered_df.drop("name_type", axis="columns", inplace=True)
+    filtered_df.to_csv(output_path)
+    return filtered_df
+
+
+@app.command()
+def make_clean_annotations():
+    logger.info("Loading SNOMED CT terms, notes, and annotations...")
+    snomed = pd.read_csv(
+        interim_directory / "flattened_terminology.csv", usecols=["concept_id", "concept_name"]
+    )
+    snomed = snomed.drop_duplicates("concept_id").set_index("concept_id")["concept_name"]
+    texts = pd.read_csv(raw_directory / "mimic-iv_notes_training_set.csv").set_index("note_id")[
+        "text"
+    ]
+
+    annotations = pd.read_csv(raw_directory / "train_annotations.csv")
+    logger.info(f"""Loaded {len(annotations):,} from {raw_directory / "train_annotations.csv"}""")
+
+    annotations["source"] = [
+        texts[annotations.loc[i, "note_id"]][
+            annotations.loc[i, "start"] : annotations.loc[i, "end"]
+        ]
+        for i in annotations.index
+    ]
+
+    annotations["concept text"] = [
+        snomed[annotations.loc[i, "concept_id"]] for i in annotations.index
+    ]
+
+    annotations["source"] = [" ".join(s.split()) for s in annotations["source"]]
+    output_path = interim_directory / "train_annotations_cln.csv"
+    logger.info(f"Saving {len(annotations):,} cleaned annotations to {output_path}")
+    annotations.to_csv(output_path, index=False)
+
+
+def get_snomed_ct_synonyms(snomed_ct_directory: Path, flattened_path: Path):
+    descriptions = pd.read_csv(
+        Path(snomed_ct_directory)
+        / "Snapshot"
+        / "Terminology"
+        / "sct2_Description_Snapshot-en_INT_20230531.txt",
+        sep="\t",
+    )
+
+    flattened = pd.read_csv(flattened_path)
+
+    df = flattened.merge(descriptions, left_on="concept_id", right_on="conceptId")
+
+    df = df[["concept_id", "term", "hierarchy", "typeId"]].copy()
+    df.rename(columns={"term": "concept_name"}, inplace=True)
+
+    df["type"] = df.typeId.replace({900000000000013009: "SYN", 900000000000003001: "FSN"})
+    del df["typeId"]
+
+    return df
+
+
+@app.command()
+def make_synonyms(
+    athena_directory: Path = raw_directory / "athena",
+    snomed_ct_directory: Path = data_directory
+    / "raw"
+    / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition",
+    flattened_path: Path = interim_directory / "flattened_terminology.csv",
+    output_path: Path = interim_directory / "flattened_terminology_syn_snomed+omop_v5.csv",
+):
+    athena_directory = Path(athena_directory)
+    snomed_ct_directory = Path(snomed_ct_directory)
+    flattened_path = Path(flattened_path)
+    output_path = Path(output_path)
+
+    concepts = pd.read_csv(
+        athena_directory / "CONCEPT.csv",
+        usecols=["concept_id", "concept_name", "vocabulary_id", "concept_code", "standard_concept"],
+        dtype={"concept_id": int, "concept_code": str, "standard_concept": str},
+        sep="\t",
+    )
+    concepts.dtypes
+
+    concept_relationships = pd.read_csv(
+        athena_directory / "CONCEPT_RELATIONSHIP.csv",
+        usecols=["concept_id_1", "concept_id_2", "relationship_id"],
+        dtype={"concept_id_1": int, "concept_id_2": int},
+        sep="\t",
+    )
+
+    code_list = pd.read_csv(flattened_path, usecols=["concept_id"]).concept_id.astype(str).tolist()
+    logger.debug(f"Subsetting Athena synonyms to {len(code_list):,} SNOMED CT codes")
+
+    athena_synonyms = (
+        concepts.loc[
+            (concepts.vocabulary_id == "SNOMED") & (concepts.concept_code.isin(code_list)),
+            ["concept_id", "concept_code"],
+        ]
+        .merge(
+            concept_relationships.loc[concept_relationships.relationship_id == "Maps to"],
+            left_on="concept_id",
+            right_on="concept_id_2",
+        )
+        .drop(columns=["concept_id", "concept_id_2", "relationship_id"])
+        .merge(
+            concepts.loc[
+                ~concepts.vocabulary_id.isin(invalid_vocabs),
+                ["concept_id", "concept_name", "vocabulary_id"],
+            ],
+            left_on="concept_id_1",
+            right_on="concept_id",
+            suffixes=("", "_other"),
+            validate="many_to_one",
+        )
+        .drop(columns=["concept_id", "concept_id_1", "vocabulary_id"])
+        .drop_duplicates(keep="first")
+        .rename(columns={"concept_code": "concept_id"})
+    )
+
+    athena_synonyms["concept_id"] = athena_synonyms.concept_id.astype(int)
+    athena_synonyms.sort_values("concept_id", inplace=True)
+    logger.debug(f"Loaded {len(athena_synonyms):,} synonyms from Athena.")
+
+    snomed_synonyms = get_snomed_ct_synonyms(snomed_ct_directory, flattened_path)
+    logger.debug(f"Loaded {len(snomed_synonyms):,} synonyms from SNOMED CT.")
+
+    # lookup hierarchy from snomed
+    athena_synonyms = athena_synonyms.merge(
+        snomed_synonyms.set_index("concept_id")["hierarchy"], left_on="concept_id", right_index=True
+    )
+
+    synonyms = (
+        pd.concat(
+            [
+                athena_synonyms[["concept_id", "concept_name", "hierarchy"]].assign(type="SYN"),
+                snomed_synonyms,
+            ]
+        )
+        .drop_duplicates(keep="first")
+        .sort_values(["concept_id", "type", "hierarchy", "concept_name"])
+        .reset_index(drop=True)
+    )
+
+    logger.debug(f"Saving {len(synonyms):,} synonyms to {output_path}")
+    synonyms.to_csv(output_path, index=False)
+    return synonyms
+
+
+@app.command()
+def make_abbreviations():
+    logger.info("Loading abbreviations...")
+    abbr = pd.read_csv(
+        raw_directory / "medical_abbreviations.csv",
+        usecols=["Abbreviation/Shorthand", "Meaning"],
+    )
+    logger.info("Loading synonyms...")
+    snomed = pd.read_csv(interim_directory / "flattened_terminology_syn_snomed+omop_v5.csv")
+
+    abbr_meanings = abbr.Meaning.tolist()
+    snomed_concept_names = snomed.concept_name.tolist()
+
+    snomed_to_abbr = []
+    logger.info(f"Processing {len(abbr_meanings):,} meanings...")
+    for abbr_meaning in abbr_meanings:
+        for concept_name in snomed_concept_names:
+            if str(abbr_meaning).lower() == str(concept_name).lower():
+                snomed_to_abbr.append([concept_name, abbr_meaning])
+                break
+            elif str(abbr_meaning).lower() == str(concept_name).lower().split(" (")[0]:
+                if (
+                    len(str(concept_name).lower().split(" (")[-1]) <= 10
+                    and len(str(concept_name).lower().split(" (")) <= 2
+                ):
+                    snomed_to_abbr.append([concept_name, abbr_meaning])
+                    break
+                else:
+                    continue
+            else:
+                continue
+
+    snomed_to_abbr_df = pd.DataFrame(snomed_to_abbr, columns=["concept_name", "Meaning"])
+    snomed_to_abbr_df = snomed_to_abbr_df.merge(
+        snomed[["concept_id", "concept_name"]], on="concept_name", how="left"
+    )
+    snomed_to_abbr_df = snomed_to_abbr_df.merge(abbr, on="Meaning", how="left")
+    snomed_to_abbr_df.drop_duplicates(
+        subset=["concept_name", "Meaning", "concept_id"], inplace=True
+    )
+
+    output_path = interim_directory / "abbreviations_snomed_v5.csv"
+    logger.info(f"Saving output to {output_path}")
+    snomed_to_abbr_df.to_csv(output_path, index=False)
+
+
+@app.command()
+def make_abbr_dict():
+    logger.info("Loading abbreviations, notes, and annotations...")
+    abbr = pd.read_csv(interim_directory / "abbreviations_snomed_v5.csv")
+    abbr = abbr[abbr["Abbreviation/Shorthand"].str.len() > 3].drop_duplicates(
+        "Abbreviation/Shorthand", keep="first"
+    )
+    texts = pd.read_csv(raw_directory / "mimic-iv_notes_training_set.csv").set_index("note_id")[
+        "text"
+    ]
+    annotations = pd.read_csv(interim_directory / "train_annotations_cln.csv")
+    abbr_dict = {("any", k): v for k, v in abbr[["Abbreviation/Shorthand", "concept_id"]].values}
+
+    sno_syns, sno_fsn, cid_to_type = get_snomed_synonyms()
+
+    allowed_sec = get_allowed_sections(texts, annotations, common_headers, cid_to_type)
+    limit_any_to_allowed_sections(abbr_dict, allowed_sec, cid_to_type)
+
+    output_path = interim_directory / "abbr_dict.pkl"
+    logger.info(f"Saving dictionary of {len(abbr_dict):,} abbreviations to {output_path}")
+    with output_path.open("wb") as f:
+        pickle.dump(abbr_dict, f)
+
+
+@app.command()
+def make_term_extension():
+    logger.info("Loading SNOMED CT relationships, descriptions, and flattened terminology...")
+    relationships = pd.read_csv(
+        raw_directory
+        / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition"
+        / "Snapshot"
+        / "Terminology"
+        / "sct2_Relationship_Snapshot_INT_20230531.txt",
+        dtype={"sourceId": int, "typeId": int, "destinationId": int},
+        sep="\t",
+    )
+    descriptions = pd.read_csv(
+        raw_directory
+        / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition"
+        / "Snapshot"
+        / "Terminology"
+        / "sct2_Description_Snapshot-en_INT_20230531.txt",
+        sep="\t",
+        dtype={"conceptId": int, "typeId": int, "active": int},
+        quoting=csv.QUOTE_NONE,
+    )
+
+    terminology = pd.read_csv(
+        interim_directory / "flattened_terminology_syn_snomed+omop_v5.csv",
+        dtype={"concept_id": int},
+    )
+
+    logger.info("Processing...")
+    relationships = relationships[relationships["active"] == 1]
+    relationships = relationships[
+        relationships["sourceId"].isin(terminology["concept_id"])
+        | relationships["destinationId"].isin(terminology["concept_id"])
+    ]
+
+    descriptions = descriptions.loc[
+        (descriptions["active"] == 1) & (descriptions["typeId"] == 900000000000003001),
+        ["conceptId", "term"],
+    ].drop_duplicates(keep="first")
+
+    relationships = relationships[["sourceId", "typeId", "destinationId"]].drop_duplicates(
+        keep="first"
+    )
+
+    relationships = (
+        relationships.merge(
+            descriptions.rename(columns={"term": "sourceName"}),
+            left_on="sourceId",
+            right_on="conceptId",
+        )
+        .merge(
+            descriptions.rename(columns={"term": "destinationName"}),
+            left_on="destinationId",
+            right_on="conceptId",
+        )
+        .merge(
+            descriptions.rename(columns={"term": "typeName"}),
+            left_on="typeId",
+            right_on="conceptId",
+        )
+    )
+
+    relationships = relationships.loc[
+        relationships["typeId"] == 116680003,  # Is A
+        ["sourceId", "sourceName", "typeId", "typeName", "destinationId", "destinationName"],
+    ]
+
+    stop_words = set(
+        """a an and are as at be but by for if in into is it no not of on or such that the their then there these they this to was will with""".split()
+    )
+
+    res = []
+    for i, row in enumerate(relationships.itertuples()):
+        s_term = re.split(r"\(", row.sourceName.lower())[0]
+        d_term = re.split(r"\(", row.destinationName.lower())[0]
+
+        s_words = re.split(r"\s", s_term)
+        d_words = re.split(r"\s", d_term)
+
+        s_min_d = set(s_words) - set(d_words) - stop_words
+        d_min_s = set(d_words) - set(s_words) - stop_words
+
+        if len(d_min_s) == 0 and len(s_min_d) == 1:
+            res.append(
+                {
+                    "generalId": row.destinationId,
+                    "generalName": row.destinationName,
+                    "specificId": row.sourceId,
+                    "specificName": row.sourceName,
+                    "typeName": row.typeName,
+                    "additionalWord": list(s_min_d)[0],
+                }
+            )
+
+    logger.info(
+        f"""Saving {len(res):,} term extensions to {interim_directory / "term_extension.csv"}"""
+    )
+    pd.DataFrame(res).to_csv(interim_directory / "term_extension.csv", index=False)
+
+
+@app.command()
+def make_unigrams():
+    discharge = pd.read_csv(raw_directory / "discharge.csv.gz", usecols=["text"])
+
+    text = "\n".join(discharge["text"]).lower()
+    all_text = " ".join(text.split())
+    text_counter = Counter(all_text.split())
+
+    th = 20_000
+    snomed_syns, sno_fsn, z_ = get_snomed_synonyms(min_len=1, max_len=1, fsn_only=True)
+    unigram_dict_20k = {k: v for k, v in snomed_syns.items() if text_counter[k[1]] < th}
+    with (interim_directory / "snomed_unigrams_annotation_dict_20k_v4_fsn.pkl").open("wb") as fp:
+        pickle.dump(unigram_dict_20k, fp)
+
+    th = 3000
+    snomed_syns, sno_fsn, z_ = get_snomed_synonyms(min_len=1, max_len=1, fsn_only=False)
+    unigram_dict_3k = {k: v for k, v in snomed_syns.items() if text_counter[k[1]] < th}
+
+    with (interim_directory / "snomed_unigrams_annotation_dict_3k_v4_new.pkl").open("wb") as fp:
+        pickle.dump(unigram_dict_3k, fp)
+
+
+if __name__ == "__main__":
+    app()
+
+
+--- Content of scoring.py ---
+from pathlib import Path
+from typing import List
+
+import numpy as np
+import pandas as pd
+import scipy.sparse as sp
+import typer
+
+
+def iou_per_class(user_annotations: pd.DataFrame, target_annotations: pd.DataFrame) -> List[float]:
+    """
+    Calculate the IoU metric for each class in a set of annotations.
+    """
+    # Get mapping from note_id to index in array
+    docs = np.unique(np.concatenate([user_annotations.note_id, target_annotations.note_id]))
+    doc_index_mapping = dict(zip(docs, range(len(docs))))
+
+    # Identify union of categories in GT and PRED
+    cats = np.unique(np.concatenate([user_annotations.concept_id, target_annotations.concept_id]))
+
+    # Find max character index in GT or PRED
+    max_end = np.max(np.concatenate([user_annotations.end, target_annotations.end]))
+
+    # Populate matrices for keeping track of character class categorization
+    def populate_char_mtx(n_rows, n_cols, annot_df):
+        mtx = sp.lil_array((n_rows, n_cols), dtype=np.uint64)
+        for row in annot_df.itertuples():
+            doc_index = doc_index_mapping[row.note_id]
+            mtx[doc_index, row.start : row.end] = row.concept_id  # noqa: E203
+        return mtx.tocsr()
+
+    gt_mtx = populate_char_mtx(docs.shape[0], max_end, target_annotations)
+    pred_mtx = populate_char_mtx(docs.shape[0], max_end, user_annotations)
+
+    # Calculate IoU per category
+    ious = []
+    for cat in cats:
+        gt_cat = gt_mtx == cat
+        pred_cat = pred_mtx == cat
+        # sparse matrices don't support bitwise operators, but the _cat matrices
+        # have bool dtypes so when we multiply/add them we end up with only T/F values
+        intersection = gt_cat * pred_cat
+        union = gt_cat + pred_cat
+        iou = intersection.sum() / union.sum()
+        ious.append(iou)
+
+    return ious
+
+
+def main(
+    user_annotations_path: Path,
+    target_annotations_path: Path,
+):
+    """
+    Calculate the macro-averaged character IoU metric for each class in a set of annotations.
+    """
+    user_annotations = pd.read_csv(user_annotations_path)
+    target_annotations = pd.read_csv(target_annotations_path)
+    ious = iou_per_class(user_annotations, target_annotations)
+    print(f"macro-averaged character IoU metric: {np.mean(ious):0.4f}.")
+
+
+if __name__ == "__main__":
+    typer.run(main)
+
+

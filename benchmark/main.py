@@ -316,11 +316,14 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python evaluate_strategy.py                 # Run all active strategies (1, 2, 4)
-  python evaluate_strategy.py -s 1            # Run only strategy 1 (KIRIs)
-  python evaluate_strategy.py -s 2            # Run only strategy 2 (SNOBERT)
-  python evaluate_strategy.py -s 4            # Run only strategy 4 (RAG GPT-4o)
-  python evaluate_strategy.py -s 1 4          # Run strategies 1 and 4, then compare
+  python main.py                              # Run all active strategies (1, 2, 4) - NO SAVE
+  python main.py 1                            # Run only strategy 1 (KIRIs) - NO SAVE
+  python main.py 2                            # Run only strategy 2 (SNOBERT) - NO SAVE
+  python main.py 4                            # Run only strategy 4 (RAG GPT-4o) - NO SAVE
+  python main.py 1 4                          # Run strategies 1 and 4, then compare - NO SAVE
+  python main.py 1 -r                         # Run strategy 1 and SAVE results
+  python main.py -s 1 4 -r                    # Run strategies 1 and 4, and SAVE results
+  python main.py -r                           # Run all active strategies and SAVE results
 
 Active Strategies:
   1: KIRIs REAL - Hybrid dictionary + linguistic rules
@@ -332,17 +335,51 @@ Note: Strategy 3 (Ollama) is currently disabled.
     )
     
     parser.add_argument(
+        'strategy_ids',
+        nargs='*',
+        type=int,
+        help='Strategy ID(s) to run (positional). If not specified, runs all active strategies.'
+    )
+    
+    parser.add_argument(
         '-s', '--strategy-id',
         nargs='+',
         type=int,
         choices=[1, 2, 3, 4],
-        help='Strategy ID(s) to run. If not specified, runs all active strategies.'
+        help='Strategy ID(s) to run (alternative flag). If not specified, runs all active strategies.'
+    )
+    
+    parser.add_argument(
+        '-r', '--save-results',
+        action='store_true',
+        help='Save results to disk. By default, results are only printed to console.'
     )
     
     args = parser.parse_args()
     
     # Determine which strategies to run
-    if args.strategy_id:
+    # Priority: positional args > -s flag > default (all active)
+    if args.strategy_ids:
+        # Positional arguments provided
+        strategies_to_run = args.strategy_ids
+        
+        # Validate strategy IDs
+        invalid_ids = [sid for sid in strategies_to_run if sid not in STRATEGY_CONFIG]
+        if invalid_ids:
+            print(f"[ERROR] Invalid strategy ID(s): {invalid_ids}")
+            print(f"Valid strategy IDs are: {list(STRATEGY_CONFIG.keys())}")
+            return
+        
+        # Filter out inactive strategies
+        strategies_to_run = [sid for sid in strategies_to_run 
+                            if STRATEGY_CONFIG[sid]['active']]
+        
+        if not strategies_to_run:
+            print("[ERROR] All specified strategies are inactive.")
+            return
+    
+    elif args.strategy_id:
+        # Flag-based arguments provided
         strategies_to_run = args.strategy_id
         # Filter out inactive strategies
         strategies_to_run = [sid for sid in strategies_to_run 
@@ -402,9 +439,14 @@ Note: Strategy 3 (Ollama) is currently disabled.
         comparison_report = metrics_calc.format_comparison_report(comparison_data)
         print(comparison_report)
     
-    # Create execution directory and save results
-    dir_name, exec_path = create_execution_directory()
-    save_results(results, notes_df, annotations_df, exec_path)
+    # Save results only if -r flag is provided
+    if args.save_results:
+        # Create execution directory and save results
+        dir_name, exec_path = create_execution_directory()
+        save_results(results, notes_df, annotations_df, exec_path)
+        print(f"\n[INFO] Results saved to: {exec_path}")
+    else:
+        print(f"\n[INFO] Results not saved. Use -r or --save-results flag to save results to disk.")
     
     # Final message
     print(f"\n{'='*100}")

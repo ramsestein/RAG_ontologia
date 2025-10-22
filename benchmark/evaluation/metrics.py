@@ -4,6 +4,10 @@ Métricas de evaluación para SNOMED CT Entity Linking
 Basado en las métricas oficiales de la competencia
 """
 
+
+# TODO: # DEPRECATED?? revisar si esto está siendo usado en algún sitio
+
+
 import pandas as pd
 import numpy as np
 from typing import List, Dict, Tuple, Set

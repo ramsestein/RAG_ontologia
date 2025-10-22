@@ -79,3 +79,17 @@ Vale, re-estructuración hecha. Hago push.
 
 Antes de ponerme a mejorar el gpt 4o, que ya tengo una idea: (primero cachear los 14k embeddings, para solo tener que tardar la 1a vez), voy a:
     1. SNOBERT: Arreglar warnings, asegurarme que está loadeando correctamente el modelo-> luego arreglar tema corte de palabras.
+
+**TODO**
+Vale, me doy cuenta que **SÍ** está loadeando el modelo correcto. Voy a tratar de identificar todas las diferencias entre nuestra implementación de SNOMED y la implementación real:
+    -Por lo que entiendo básicamente nuestra implementació NO está entrenando el modelo -> Investigar.
+**TODO**
+
+Hago esto ahora:
+->Cambiar, nombre de evaluate_strategy.py a main.py
+->Cambiar que por defecto no guarde los results solo los printee, se pueda añadir flag para guardarlos.
+->README con un poco de informacion como estoy haciendo todo.
+
+Ahora empiezo a mirar como mejorar nuestra implementacion. Problema de que tarda 15minutos (cada vez) a procesar los 14k chunks.
+
+->Cambiar para que el output sque en formato 3 decimales no solo 1 decimal.
