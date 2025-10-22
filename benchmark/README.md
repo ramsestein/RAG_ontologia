@@ -140,6 +140,30 @@ python main.py --help
   - Ontología personalizada (`conceptos_con_narrativas.csv`)
 - **Estado**: ✅ Activa (requiere API key de OpenAI)
 
+#### ⚡ Optimización de Rendimiento (IMPORTANTE)
+
+Esta estrategia usa un **índice Faiss pre-construido** para búsqueda rápida. **Antes de usarla por primera vez**, debes construir el índice:
+
+```bash
+# Construcción del índice (una sola vez, tarda ~10 minutos)
+cd benchmark
+python build_rag_index.py
+```
+
+Esto generará archivos en `benchmark/assets/`:
+- `ontology.index` - Índice Faiss con 45,440 conceptos
+- `ontology_concepts.pkl` - Lista de códigos SNOMED-CT
+- `ontology_narrativas.pkl` - Narrativas para generar contexto
+- `ontology_metadata.pkl` - Metadatos del índice
+
+**Ventajas de esta arquitectura:**
+- 🚀 Inicialización instantánea (~2 segundos vs ~20 minutos)
+- 🔄 Consistencia: mismo índice en todas las ejecuciones
+- 🧩 Modularidad: separación de responsabilidades (SRP)
+- 📦 Extensibilidad: cambios en el índice no afectan la estrategia (OCP)
+
+Ver `RAG_OPTIMIZATION.md` para detalles técnicos completos.
+
 ## 📊 Métricas de Evaluación
 
 El sistema calcula las siguientes métricas para cada estrategia:

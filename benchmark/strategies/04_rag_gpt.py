@@ -2,6 +2,11 @@
 """
 Tu estrategia RAG original modificada para usar GPT-4o en lugar de Llama 3.3 70B
 Mantiene toda la lógica de RAG + búsqueda semántica pero cambia el LLM
+
+OPTIMIZED VERSION:
+- Loads pre-built Faiss index for instant initialization (no embedding generation)
+- Follows Single Responsibility Principle: index creation separated to build_rag_index.py
+- Adheres to Open/Closed Principle: strategy class only depends on index artifact
 """
 
 import pandas as pd
@@ -11,6 +16,7 @@ import re
 import json
 import sys
 import os
+import pickle
 import openai
 from openai import OpenAI
 import faiss
@@ -19,18 +25,28 @@ from sentence_transformers import SentenceTransformer
 
 # --- START: Robust Path Setup ---
 
-# Get the absolute path to THIS script's directory (.../benchmark/real_strategies)
+# Get the absolute path to THIS script's directory (.../benchmark/strategies)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Get the absolute path to the project root (.../RAG_ontologia)
 # We need to go up TWO levels ('..' to benchmark, '..' to root)
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..'))
 
+# Path to benchmark directory
+BENCHMARK_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, '..'))
+
+# Path to assets directory (where pre-built index is stored)
+ASSETS_DIR = os.path.join(BENCHMARK_DIR, 'assets')
+
 # --- END: Robust Path Setup ---
 
 class RAGWithGPT4oStrategy:
     """
     Tu estrategia RAG original pero usando GPT-4o via OpenAI API
+    
+    OPTIMIZED: Now loads pre-built Faiss index instead of building on-the-fly
+    This provides instant initialization and follows SRP by separating index
+    creation (build_rag_index.py) from index usage (this class).
     """
     
     def __init__(self):
@@ -39,14 +55,16 @@ class RAGWithGPT4oStrategy:
         # Configurar OpenAI
         self._setup_openai()
         
-        # Cargar tu ontología procesada
+        # Cargar ontología y conceptos pre-procesados
         self._load_ontology_data()
         
-        # Construir índice Faiss para búsqueda semántica
-        self._build_faiss_index()
+        # Cargar índice Faiss pre-construido (¡RÁPIDO! 🚀)
+        self._load_faiss_index()
         
         # Configurar prompts
         self._setup_prompts()
+        
+        print("[RAG+GPT4o] ✅ Inicialización completada")
     
     def _setup_openai(self):
         """Configura la API de OpenAI con GPT-4o"""
@@ -76,26 +94,56 @@ class RAGWithGPT4oStrategy:
         print("[RAG+GPT4o] OpenAI configurado con GPT-4o")
     
     def _load_ontology_data(self):
-        """Carga tu ontología procesada (conceptos_con_narrativas.csv)"""
+        """
+        Carga conceptos y narrativas pre-procesados desde archivos pickle.
+        
+        Esto es mucho más rápido que cargar el CSV completo y permite
+        mantener la alineación exacta con el índice Faiss.
+        """
+        concepts_path = os.path.join(ASSETS_DIR, 'ontology_concepts.pkl')
+        narratives_path = os.path.join(ASSETS_DIR, 'ontology_narratives.pkl')
+        
+        # Intentar cargar desde archivos pickle pre-construidos
+        if os.path.exists(concepts_path) and os.path.exists(narratives_path):
+            try:
+                print("[RAG+GPT4o] Cargando conceptos desde archivos pre-procesados...")
+                
+                with open(concepts_path, 'rb') as f:
+                    self.conceptos = pickle.load(f)
+                
+                with open(narratives_path, 'rb') as f:
+                    self.narrativas = pickle.load(f)
+                
+                print(f"[RAG+GPT4o] ✅ Cargados {len(self.conceptos)} conceptos (pre-procesados)")
+                return
+                
+            except Exception as e:
+                print(f"[RAG+GPT4o] ⚠️  Error cargando archivos pre-procesados: {e}")
+                print("[RAG+GPT4o] Intentando cargar desde CSV...")
+        
+        # Fallback: cargar desde CSV (si los pickle no existen)
+        print("[RAG+GPT4o] ⚠️  Archivos pre-procesados no encontrados")
+        print("[RAG+GPT4o] Por favor, ejecuta primero: python build_rag_index.py")
+        print("[RAG+GPT4o] Intentando cargar desde CSV como fallback...")
+        
         try:
             # Intentar cargar desde el directorio principal
-            conceptos_path = os.path.join('..', 'conceptos_con_narrativas.csv')
-            if os.path.exists(conceptos_path):
-                self.df_conceptos = pd.read_csv(conceptos_path)
-            else:
-                # Fallback: usar path absoluto
-                conceptos_path = r"C:\Users\Ramses\Desktop\IAgen\ontology_RAG\conceptos_con_narrativas.csv"
-                self.df_conceptos = pd.read_csv(conceptos_path)
+            conceptos_path_csv = os.path.join(PROJECT_ROOT, 'conceptos_con_narrativas.csv')
             
-            print(f"[RAG+GPT4o] Cargados {len(self.df_conceptos)} conceptos de tu ontología")
+            if os.path.exists(conceptos_path_csv):
+                self.df_conceptos = pd.read_csv(conceptos_path_csv)
+            else:
+                raise FileNotFoundError(f"No se encuentra: {conceptos_path_csv}")
+            
+            print(f"[RAG+GPT4o] Cargados {len(self.df_conceptos)} conceptos desde CSV")
             
             # Preparar listas para búsqueda
             self.conceptos = self.df_conceptos["concepto"].tolist()
             self.narrativas = self.df_conceptos["narrativa"].tolist()
             
         except Exception as e:
-            print(f"[RAG+GPT4o] Error cargando ontología: {e}")
-            print("[RAG+GPT4o] Usando ontología simplificada...")
+            print(f"[RAG+GPT4o] ❌ Error cargando ontología desde CSV: {e}")
+            print("[RAG+GPT4o] Usando ontología simplificada como último recurso...")
             self._create_fallback_ontology()
     
     def _create_fallback_ontology(self):
@@ -132,32 +180,66 @@ class RAGWithGPT4oStrategy:
         
         print(f"[RAG+GPT4o] Usando {len(self.conceptos)} conceptos de fallback")
     
-    def _build_faiss_index(self):
-        """Construye índice Faiss real para búsqueda semántica"""
-        try:
-            print("[RAG+GPT4o] Construyendo índice Faiss con SentenceTransformer...")
+    def _load_faiss_index(self):
+        """
+        Carga el índice Faiss pre-construido desde disco.
+        
+        Este método SOLO carga el índice, no lo construye. La construcción
+        se hace offline con build_rag_index.py (separación de responsabilidades).
+        
+        Benefits:
+          🚀 Instant loading (milliseconds vs minutes)
+          🔄 Consistency (same index across all runs)
+          🧩 Modularity (index creation logic separated)
+        """
+        index_path = os.path.join(ASSETS_DIR, 'ontology.index')
+        metadata_path = os.path.join(ASSETS_DIR, 'ontology_metadata.pkl')
+        
+        # Verificar que el índice existe
+        if not os.path.exists(index_path):
+            print("[RAG+GPT4o] ❌ Índice Faiss no encontrado")
+            print(f"[RAG+GPT4o] Esperado en: {index_path}")
+            print("[RAG+GPT4o] ")
+            print("[RAG+GPT4o] 🔧 SOLUCIÓN: Ejecuta el siguiente comando:")
+            print("[RAG+GPT4o]    python build_rag_index.py")
+            print("[RAG+GPT4o] ")
+            print("[RAG+GPT4o] Esto generará el índice una sola vez (tarda ~10 min)")
+            print("[RAG+GPT4o] Después, la inicialización será instantánea.")
+            print("[RAG+GPT4o] ")
+            print("[RAG+GPT4o] ⚠️  Usando fallback sin Faiss (búsqueda simple)...")
             
-            # Cargar modelo de embeddings (el mismo que usas)
+            self.faiss_index = None
+            self.embedding_model = None
+            return
+        
+        try:
+            print("[RAG+GPT4o] Cargando índice Faiss pre-construido...")
+            
+            # Cargar índice Faiss
+            self.faiss_index = faiss.read_index(index_path)
+            
+            # Cargar metadata (opcional, para validación)
+            if os.path.exists(metadata_path):
+                with open(metadata_path, 'rb') as f:
+                    metadata = pickle.load(f)
+                
+                print(f"[RAG+GPT4o] ✅ Índice cargado: {metadata['n_concepts']} conceptos")
+                print(f"[RAG+GPT4o]    - Dimensión: {metadata['embedding_dim']}")
+                print(f"[RAG+GPT4o]    - Modelo: {metadata['model_name']}")
+                print(f"[RAG+GPT4o]    - Creado: {metadata['created_at'][:10]}")
+            else:
+                print(f"[RAG+GPT4o] ✅ Índice cargado: {self.faiss_index.ntotal} vectores")
+            
+            # Cargar modelo de embeddings (SOLO para consultas, NO para construir índice)
+            # Esto es ligero porque no genera embeddings para toda la ontología
+            print("[RAG+GPT4o] Cargando modelo de embeddings para consultas...")
             self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
             
-            # Generar embeddings para todas las narrativas
-            print("[RAG+GPT4o] Generando embeddings...")
-            embeddings = self.embedding_model.encode(
-                self.narrativas, 
-                show_progress_bar=True,
-                batch_size=32
-            )
-            
-            # Crear índice Faiss
-            dimension = embeddings.shape[1]
-            self.faiss_index = faiss.IndexFlatL2(dimension)
-            self.faiss_index.add(embeddings.astype('float32'))
-            
-            print(f"[RAG+GPT4o] Índice Faiss construido: {len(self.narrativas)} conceptos, dimensión {dimension}")
+            print("[RAG+GPT4o] 🚀 Índice listo para búsqueda semántica")
             
         except Exception as e:
-            print(f"[RAG+GPT4o] Error construyendo Faiss: {e}")
-            print("[RAG+GPT4o] Usando búsqueda simple...")
+            print(f"[RAG+GPT4o] ❌ Error cargando índice Faiss: {e}")
+            print("[RAG+GPT4o] ⚠️  Usando búsqueda simple como fallback...")
             self.faiss_index = None
             self.embedding_model = None
     

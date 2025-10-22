@@ -128,7 +128,7 @@ class MetricsCalculator:
                   f"{metrics['recall']:<10.4f} "
                   f"{metrics['predictions']:<6} "
                   f"{metrics['matches']:<6} "
-                  f"{exec_time:<10.1f}s")
+                  f"{exec_time:<10.3f}s")
             report.append(row)
         
         # Ranking

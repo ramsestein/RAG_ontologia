@@ -93,3 +93,12 @@ Hago esto ahora:
 Ahora empiezo a mirar como mejorar nuestra implementacion. Problema de que tarda 15minutos (cada vez) a procesar los 14k chunks.
 
 ->Cambiar para que el output sque en formato 3 decimales no solo 1 decimal.
+
+Todo esto ya está solucionado.
+
+Ahora he hablado con `Ramses`. 
+Básicamente el documento conceptos_con_narrativas.csv son 40k lineas y tengo 14k chunks, esto son 3 lineas por chunk.
+Hay que probar 1 chunk por linea.
+Falta reorganizar ficheros-> build rag index se deberia llamar ontology_preprocessor.py y ponerlo en un directorio /04_strategy.
+Además la carpeta assets debería ir dentro de 04_strategy.
+Focus en mejorar el rendimiento del GPT (no es muy importante tema API calls).
