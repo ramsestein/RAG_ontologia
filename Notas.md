@@ -2,7 +2,7 @@
 
 **AUTOR:** Oriol Farrés
 
-## Día 1: 20 Octubre 2025
+## Día 1: 20 Octubre 2025 (8h)
 
 Primera toma de contacto. Explicaciones, cursos Anthropic, huella...
 
@@ -10,7 +10,7 @@ Primera toma de contacto. Explicaciones, cursos Anthropic, huella...
 ---
 
 
-## Día 2: 21 Octubre 2025
+## Día 2: 21 Octubre 2025 (8h)
 
 He empezado instalando todas las herramientas para poder trabajar.
 He hablado con ``Ramses`` para tener más idea de como plantear el proyecto.
@@ -56,3 +56,26 @@ TEORÍA:
 -BERT los coge casi todos, pero coge algunos que no debería.
 -gpt coge algunos pero se deja muchos.
 -> Él propone (cree) que la mejor ocion sera hacer un BERT y luego un pruning con un LLM.
+
+Antes de tratar estrategia 4, solucionaré SNOBERT.
+
+
+---
+
+
+## Día 3: 22 Octubre 2025 (4h)
+Voy a empezar tratando de descargarme el modelo adecuado de BERT con Hugging Face.
+Parece que sí estoy descargando el modelo real... 
+Antes de seguir voy a hacer una reorganización de programas:
+    - Cambio nombres de estrategias a 01, 02, 03, 04.
+    - Cambiar nombre de la comparativa de todos a all_evaluate_strategies.py.
+    - Crear evaluate_strategies.py, que se ejecuta con el argumento -<strategyID> para escojer que algoritmo ejecutar.
+    - Cambio el nombre del directorio real_strategies a strategies.
+Después de todo esto me doy cuenta que puedo hacer una implementación mucho más modular:
+    Puedo tener solo un fichero evaluate_strategies.py y si le entra strategyID = 0 o simplemente si no se le asigna ningún parámetro (0 por defecto) que ejecute la comparativa general, que simplemente debe ser un for con un vector de las 3 estrategias válidas (01, 02 y 04) + una comparativa final de la métricas F1, recall y precision.
+    Además, en lugar de estar hard-codeado en el mismo fichero, puede llamar a una clase Metrics con funciones como compare_N_metrics (N as argument) donde N es el numero de estrategias con las que compararé, siempre 1, menos en el caso de strategyID = 0, que ahí comparará con N = 3. Por ejemplo ora que sea print_metrics...
+
+Vale, re-estructuración hecha. Hago push.
+
+Antes de ponerme a mejorar el gpt 4o, que ya tengo una idea: (primero cachear los 14k embeddings, para solo tener que tardar la 1a vez), voy a:
+    1. SNOBERT: Arreglar warnings, asegurarme que está loadeando correctamente el modelo-> luego arreglar tema corte de palabras.

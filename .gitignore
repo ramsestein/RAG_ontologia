@@ -1,5 +1,5 @@
 .venv/
 
-benchmark/real_strategies/__pycache__/
+__pycache__/
 
 api_keys

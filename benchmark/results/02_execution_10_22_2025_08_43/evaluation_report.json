@@ -1,0 +1,56 @@
+{
+  "timestamp": "10_22_2025_08_43",
+  "execution_folder": "02_execution_10_22_2025_08_43",
+  "strategies_evaluated": [
+    "01_KIRIs",
+    "02_SNOBERT"
+  ],
+  "dataset_info": {
+    "notes_count": 5,
+    "annotations_count": 115
+  },
+  "results": {
+    "01_KIRIs": {
+      "display_name": "KIRIs REAL (1st Place)",
+      "description": "Hybrid dictionary + linguistic rules",
+      "metrics": {
+        "precision": 0.8380952380952381,
+        "recall": 0.7652173913043478,
+        "f1": 0.8,
+        "predictions": 105,
+        "matches": 88,
+        "partial_matches": 17,
+        "ground_truth": 115,
+        "coverage": 1.0
+      },
+      "execution_time": 0.035622596740722656,
+      "error": null
+    },
+    "02_SNOBERT": {
+      "display_name": "SNOBERT REAL (2nd Place)",
+      "description": "BERT + SapBERT + embeddings",
+      "metrics": {
+        "precision": 0.2743142144638404,
+        "recall": 0.9565217391304348,
+        "f1": 0.42635658914728686,
+        "predictions": 401,
+        "matches": 110,
+        "partial_matches": 291,
+        "ground_truth": 115,
+        "coverage": 1.0
+      },
+      "execution_time": 16.44316840171814,
+      "error": null
+    }
+  },
+  "ranking": [
+    {
+      "strategy": "01_KIRIs",
+      "f1_score": 0.8
+    },
+    {
+      "strategy": "02_SNOBERT",
+      "f1_score": 0.42635658914728686
+    }
+  ]
+}
