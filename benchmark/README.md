@@ -24,8 +24,8 @@ benchmark/
 │   └── metrics.py                  # Funciones auxiliares de métricas
 │
 └── results/                         # Resultados de ejecuciones
-    ├── 01_execution_XX_XX_XXXX_XX_XX/
-    ├── 02_execution_XX_XX_XXXX_XX_XX/
+    ├── 01_execution_DD_MM_YYYY_HH_MM/
+    ├── 02_execution_DD_MM_YYYY_HH_MM/
     └── ...
 ```
 
