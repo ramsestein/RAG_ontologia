@@ -102,3 +102,5 @@ Hay que probar 1 chunk por linea.
 Falta reorganizar ficheros-> build rag index se deberia llamar ontology_preprocessor.py y ponerlo en un directorio /04_strategy.
 Además la carpeta assets debería ir dentro de 04_strategy.
 Focus en mejorar el rendimiento del GPT (no es muy importante tema API calls).
+Faltará volver a ejecutar el builder, ya aprovehcar y hacer lo de los chunks.
+Además problema de que el fichero ontology.index es 66.5MB y github maximo permite 50 MB, ponerlo en gitignore.
