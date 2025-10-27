@@ -3,10 +3,13 @@
 Tu estrategia RAG original modificada para usar GPT-4o en lugar de Llama 3.3 70B
 Mantiene toda la lógica de RAG + búsqueda semántica pero cambia el LLM
 
-OPTIMIZED VERSION:
-- Loads pre-built Faiss index for instant initialization (no embedding generation)
-- Follows Single Responsibility Principle: index creation separated to build_rag_index.py
-- Adheres to Open/Closed Principle: strategy class only depends on index artifact
+REFACTORED VERSION (for F1-Score improvement):
+- Updates asset paths to new '04_rag_gpt_assets' directory
+- Replaces abstractive-summary NER prompt with an EXTRACTIVE-NER prompt
+- Preserves the original 'span_text' through the coding pipeline
+- Implements span-finding logic in predict() to get correct start/end offsets
+
+*** ARREGLO v5: Corregir el prompt de CODIFICACIÓN para que ELIJA el código ***
 """
 
 import pandas as pd
@@ -23,20 +26,17 @@ import faiss
 from sentence_transformers import SentenceTransformer
 
 
-# --- START: Robust Path Setup ---
+# --- START: Robust Path Setup (Updated for new location) ---
 
 # Get the absolute path to THIS script's directory (.../benchmark/strategies)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Get the absolute path to the project root (.../RAG_ontologia)
-# We need to go up TWO levels ('..' to benchmark, '..' to root)
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..'))
 
-# Path to benchmark directory
-BENCHMARK_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, '..'))
-
-# Path to assets directory (where pre-built index is stored)
-ASSETS_DIR = os.path.join(BENCHMARK_DIR, 'assets')
+# --- RUTA CORREGIDA ---
+# Path to the NEW assets directory (basado en tu log: 04_utils/assets)
+ASSETS_DIR = os.path.join(SCRIPT_DIR, '04_utils', 'assets')
 
 # --- END: Robust Path Setup ---
 
@@ -44,9 +44,9 @@ class RAGWithGPT4oStrategy:
     """
     Tu estrategia RAG original pero usando GPT-4o via OpenAI API
     
-    OPTIMIZED: Now loads pre-built Faiss index instead of building on-the-fly
-    This provides instant initialization and follows SRP by separating index
-    creation (build_rag_index.py) from index usage (this class).
+    REFACTORED:
+    - Carga el índice Faiss pre-construido desde la nueva ruta de assets.
+    - Utiliza un pipeline NER extractivo para mejorar drásticamente el F1-Score.
     """
     
     def __init__(self):
@@ -58,13 +58,13 @@ class RAGWithGPT4oStrategy:
         # Cargar ontología y conceptos pre-procesados
         self._load_ontology_data()
         
-        # Cargar índice Faiss pre-construido (¡RÁPIDO! 🚀)
+        # Cargar índice Faiss pre-construido (¡RÁPIDO! [READY])
         self._load_faiss_index()
         
         # Configurar prompts
         self._setup_prompts()
         
-        print("[RAG+GPT4o] ✅ Inicialización completada")
+        print("[RAG+GPT4o] [OK] Inicialización completada")
     
     def _setup_openai(self):
         """Configura la API de OpenAI con GPT-4o"""
@@ -86,8 +86,8 @@ class RAGWithGPT4oStrategy:
         # Configuración del modelo
         self.model_config = {
             "model": "gpt-4o",  # GPT-4o más reciente
-            "temperature": 0.3,  # Misma configuración que tu Llama
-            "max_tokens": 1500,
+            "temperature": 0.1, # Bajar temperatura para NER más predecible
+            "max_tokens": 2048, # Aumentar para informes largos
             "top_p": 0.9
         }
         
@@ -95,15 +95,12 @@ class RAGWithGPT4oStrategy:
     
     def _load_ontology_data(self):
         """
-        Carga conceptos y narrativas pre-procesados desde archivos pickle.
-        
-        Esto es mucho más rápido que cargar el CSV completo y permite
-        mantener la alineación exacta con el índice Faiss.
+        Carga conceptos y narrativas pre-procesados desde archivos pickle
+        en la NUEVA ubicación de assets.
         """
         concepts_path = os.path.join(ASSETS_DIR, 'ontology_concepts.pkl')
         narratives_path = os.path.join(ASSETS_DIR, 'ontology_narratives.pkl')
         
-        # Intentar cargar desde archivos pickle pre-construidos
         if os.path.exists(concepts_path) and os.path.exists(narratives_path):
             try:
                 print("[RAG+GPT4o] Cargando conceptos desde archivos pre-procesados...")
@@ -114,38 +111,19 @@ class RAGWithGPT4oStrategy:
                 with open(narratives_path, 'rb') as f:
                     self.narrativas = pickle.load(f)
                 
-                print(f"[RAG+GPT4o] ✅ Cargados {len(self.conceptos)} conceptos (pre-procesados)")
+                print(f"[RAG+GPT4o] [OK] Cargados {len(self.conceptos)} conceptos (pre-procesados)")
                 return
                 
             except Exception as e:
-                print(f"[RAG+GPT4o] ⚠️  Error cargando archivos pre-procesados: {e}")
+                print(f"[RAG+GPT4o] [WARNING]  Error cargando archivos pre-procesados: {e}")
                 print("[RAG+GPT4o] Intentando cargar desde CSV...")
         
         # Fallback: cargar desde CSV (si los pickle no existen)
-        print("[RAG+GPT4o] ⚠️  Archivos pre-procesados no encontrados")
-        print("[RAG+GPT4o] Por favor, ejecuta primero: python build_rag_index.py")
-        print("[RAG+GPT4o] Intentando cargar desde CSV como fallback...")
-        
-        try:
-            # Intentar cargar desde el directorio principal
-            conceptos_path_csv = os.path.join(PROJECT_ROOT, 'conceptos_con_narrativas.csv')
-            
-            if os.path.exists(conceptos_path_csv):
-                self.df_conceptos = pd.read_csv(conceptos_path_csv)
-            else:
-                raise FileNotFoundError(f"No se encuentra: {conceptos_path_csv}")
-            
-            print(f"[RAG+GPT4o] Cargados {len(self.df_conceptos)} conceptos desde CSV")
-            
-            # Preparar listas para búsqueda
-            self.conceptos = self.df_conceptos["concepto"].tolist()
-            self.narrativas = self.df_conceptos["narrativa"].tolist()
-            
-        except Exception as e:
-            print(f"[RAG+GPT4o] ❌ Error cargando ontología desde CSV: {e}")
-            print("[RAG+GPT4o] Usando ontología simplificada como último recurso...")
-            self._create_fallback_ontology()
-    
+        print(f"[RAG+GPT4o] [WARNING]  Archivos pre-procesados no encontrados en {ASSETS_DIR}")
+        print("[RAG+GPT4o] Por favor, ejecuta primero: python strategies/04_utils/ontology_preprocessor.py")
+        print("[RAG+GPT4o] Usando ontología simplificada como último recurso...")
+        self._create_fallback_ontology()
+
     def _create_fallback_ontology(self):
         """Crea ontología simplificada si no se puede cargar la original"""
         
@@ -166,184 +144,188 @@ class RAGWithGPT4oStrategy:
             "86547008": "internal carotid artery ICA carotid artery carotid stenosis carotid occlusion arteria carótida interna",
             "67889009": "basilar artery basilar arteria basilar",
             "450893003": "NIHSS ASPECTS TICI clinical scale neurological scale stroke scale assessment escala clínica evaluación neurológica",
-            "32603002": "basal ganglia ganglios basales núcleos basales",
-            "113305005": "cerebellum cerebelo",
-            "15926001": "brainstem brain stem troncoencéfalo tronco encefálico",
-            "415582006": "stenosis narrowing estenosis estrechamiento",
-            "26036001": "occlusion blockage oclusión bloqueo",
-            "432101006": "aneurysm aneurisma dilatación arterial",
-            "230691006": "penumbra penumbra isquémica tejido salvable"
         }
         
         self.conceptos = list(fallback_concepts.keys())
         self.narrativas = list(fallback_concepts.values())
         
         print(f"[RAG+GPT4o] Usando {len(self.conceptos)} conceptos de fallback")
-    
+
     def _load_faiss_index(self):
         """
-        Carga el índice Faiss pre-construido desde disco.
-        
-        Este método SOLO carga el índice, no lo construye. La construcción
-        se hace offline con build_rag_index.py (separación de responsabilidades).
-        
-        Benefits:
-          🚀 Instant loading (milliseconds vs minutes)
-          🔄 Consistency (same index across all runs)
-          🧩 Modularity (index creation logic separated)
+        Carga el índice Faiss pre-construido desde la NUEVA ubicación.
         """
         index_path = os.path.join(ASSETS_DIR, 'ontology.index')
         metadata_path = os.path.join(ASSETS_DIR, 'ontology_metadata.pkl')
         
         # Verificar que el índice existe
         if not os.path.exists(index_path):
-            print("[RAG+GPT4o] ❌ Índice Faiss no encontrado")
+            print("[RAG+GPT4o] [ERROR] Índice Faiss no encontrado")
             print(f"[RAG+GPT4o] Esperado en: {index_path}")
             print("[RAG+GPT4o] ")
-            print("[RAG+GPT4o] 🔧 SOLUCIÓN: Ejecuta el siguiente comando:")
-            print("[RAG+GPT4o]    python build_rag_index.py")
+            print("[RAG+GPT4o] [FIX] SOLUCIÓN: Ejecuta el siguiente comando:")
+            print("[RAG+GPT4o]    python strategies/04_utils/ontology_preprocessor.py")
             print("[RAG+GPT4o] ")
-            print("[RAG+GPT4o] Esto generará el índice una sola vez (tarda ~10 min)")
-            print("[RAG+GPT4o] Después, la inicialización será instantánea.")
-            print("[RAG+GPT4o] ")
-            print("[RAG+GPT4o] ⚠️  Usando fallback sin Faiss (búsqueda simple)...")
+            print("[RAG+GPT4o] [WARNING]  Usando fallback sin Faiss (búsqueda simple)...")
             
             self.faiss_index = None
             self.embedding_model = None
             return
         
         try:
-            print("[RAG+GPT4o] Cargando índice Faiss pre-construido...")
+            print(f"[RAG+GPT4o] Cargando índice Faiss pre-construido desde: {index_path}")
             
-            # Cargar índice Faiss
             self.faiss_index = faiss.read_index(index_path)
             
-            # Cargar metadata (opcional, para validación)
             if os.path.exists(metadata_path):
                 with open(metadata_path, 'rb') as f:
                     metadata = pickle.load(f)
-                
-                print(f"[RAG+GPT4o] ✅ Índice cargado: {metadata['n_concepts']} conceptos")
-                print(f"[RAG+GPT4o]    - Dimensión: {metadata['embedding_dim']}")
-                print(f"[RAG+GPT4o]    - Modelo: {metadata['model_name']}")
-                print(f"[RAG+GPT4o]    - Creado: {metadata['created_at'][:10]}")
-            else:
-                print(f"[RAG+GPT4o] ✅ Índice cargado: {self.faiss_index.ntotal} vectores")
+                print(f"[RAG+GPT4o] [OK] Índice cargado: {metadata['n_concepts']} conceptos")
+                print(f"[RAG+GPT4o]     - Modelo: {metadata['model_name']}")
             
-            # Cargar modelo de embeddings (SOLO para consultas, NO para construir índice)
-            # Esto es ligero porque no genera embeddings para toda la ontología
             print("[RAG+GPT4o] Cargando modelo de embeddings para consultas...")
             self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
             
-            print("[RAG+GPT4o] 🚀 Índice listo para búsqueda semántica")
+            print("[RAG+GPT4o] [READY] Índice listo para búsqueda semántica")
             
         except Exception as e:
-            print(f"[RAG+GPT4o] ❌ Error cargando índice Faiss: {e}")
-            print("[RAG+GPT4o] ⚠️  Usando búsqueda simple como fallback...")
+            print(f"[RAG+GPT4o] [ERROR] Error cargando índice Faiss: {e}")
+            print("[RAG+GPT4o] [WARNING]  Usando búsqueda simple como fallback...")
             self.faiss_index = None
             self.embedding_model = None
-    
+
     def _setup_prompts(self):
-        """Configura los prompts (mismos que tu notebook original)"""
+        """
+        Configura los prompts.
+        *** PROMPT DE CODIFICACIÓN (v5) ARREGLADO ***
+        """
         
-        # Prompt NER (exactamente igual que tu notebook)
+        # --- PROMPT NER EN INGLÉS (OPTIMIZADO PARA SPANS CORTOS) ---
         self.ner_prompt_template = """
 <task>
-You are an agent that recognizes clinical entities in Spanish Computed Tomography reports of patients with suspected acute stroke.
+You are an expert clinical NER agent. Your task is to extract ALL relevant clinical entities from the English medical report.
 
-**Entidades a Extraer:**
-- hemorragia, lesión isquémica, escala ASPECTS, lesiones parenquimatosas, oclusiones arteriales, grado de estenosis, retraso en los tiempos de circulación, ratio penumbra-core
+**CRITICAL: Extract the SHORTEST, MOST SPECIFIC span for each entity**
+- For "left-sided weakness" → extract just "weakness"  
+- For "NIHSS score of 12" → extract just "NIHSS"
+- For "mechanical thrombectomy" → extract just "thrombectomy"
+- Extract SINGLE WORDS or SHORT PHRASES, not full sentences
 
-**Ubicaciones Anatómicas:**
-- caudado, lenticular, cápsula interna, ribete insular, segmentos M1, M2, M3, M4, M5, arterias de cabeza y cuello, cerebelo, troncoencéfalo, territorios arteriales
+**Entities to Extract:**
+- Findings (e.g., hemorrhage, infarct, occlusion, stenosis)
+- Anatomy (e.g., MCA, M1, M2, caudate, internal capsule)
+- Scales (e.g., NIHSS, ASPECTS, TICI, GCS, mRS)
+- Symptoms (e.g., hemiparesis, aphasia, dysarthria, weakness)
+- Procedures (e.g., thrombectomy, thrombolysis, tPA, angiography)
+- Comorbidities (e.g., hypertension, diabetes)
 
-**Reglas:**
-- Detecta solo entidades presentes en el texto
-- Para cada entidad, indica ubicación anatómica, presencia y valor si aplica
+**Rules:**
+- Extract EVERY instance - if "CT" appears 5 times, extract all 5
+- Use the SHORTEST span possible (usually 1-2 words)
+- For abbreviations, extract ONLY the abbreviation (e.g., "CT" not "computed tomography")
+- For scales with values, extract ONLY the scale name (e.g., "NIHSS" not "NIHSS score of 12")
+- For each entity, provide:
+  1. `span_text`: The SHORTEST, MOST SPECIFIC text from the report
+  2. `anatomical_location`: The location if mentioned, or 'Not specified'
+  3. `presence`: "present", "absent", or "uncertain"
+  4. `value`: The value if applicable (e.g., "18" for "NIHSS score was 18")
 </task>
 
 <output_format>
 {{
-  "findings": [
+  "entities": [
     {{
-      "anatomical_location": "string",
-      "presence": "string", 
-      "entity": "string",
-      "value": "string | null"
+      "span_text": "shortest specific term",
+      "anatomical_location": "location or 'Not specified'",
+      "presence": "present | absent | uncertain",
+      "value": "value or null"
     }}
   ]
 }}
 </output_format>
 
-<informe>
+<report>
 {informe}
-</informe>
+</report>
 
-Responde ÚNICAMENTE con el JSON válido, sin texto adicional:
+Respond ONLY with the valid JSON:
 """
         
-        # Prompt de codificación (exactamente igual que tu notebook)
+        # --- PROMPT DE CODIFICACIÓN (ULTRA-SIMPLIFICADO v7) ---
+        # Enfoque de selección múltiple forzada
         self.coding_prompt_template = """
-<task>
-Eres un experto en terminología clínica. Asigna códigos apropiados de tu ontología a esta entidad clínica específica.
+You are a SNOMED-CT coder. Your ONLY job is to select codes from the list below.
 
-Entidad detectada: {entity}
-Ubicación anatómica: {location}
-Presencia: {presence}
-Valor: {value}
+**ENTITY TO CODE:** "{entity}"
+**ANATOMICAL LOCATION:** "{location}"
+**PRESENCE:** "{presence}"
 
-Contexto ontológico disponible:
+**AVAILABLE CODES (SELECT FROM THIS LIST ONLY):**
 {contexto_ontologico}
 
-Reglas:
-- Usa los conceptos y códigos exactos del contexto ontológico proporcionado
-- Si no hay coincidencia exacta, usa el concepto más similar
-- Para presencia: presente (52101004), ausente (272519000), unknown (261665006)
-</task>
+**CRITICAL RULES:**
+[ERROR] DO NOT use "404684003" or "12738006" if ANY other code in the list matches
+[ERROR] DO NOT invent codes - ONLY use codes from the list above
+[OK] COPY the exact CODE number (digits only) from the list
+[OK] Choose the MOST SPECIFIC match
 
-Responde ÚNICAMENTE con este JSON exacto:
+**PRESENCE CODES (FIXED - DO NOT CHANGE):**
+- If presence is "present" → use "52101004"
+- If presence is "absent" → use "272519000"
+- Otherwise → use "261665006"
+
+**YOUR TASK:**
+1. Find the line in "AVAILABLE CODES" that best matches "{entity}"
+2. Copy ONLY the number after "CODE:"
+3. That number goes in "entity_code"
+4. Do the same for "{location}" → "anatomy_code"
+
+**OUTPUT (JSON only, no explanation):**
 {{
-  "anatomical_location": "{location}",
-  "anatomy_terminology": "OWL_Ontology",
-  "anatomy_code": "código_del_contexto_anatomy",
-  "anatomy_description": "descripción_del_contexto_anatomy",
-  "presence": "{presence}",
-  "presence_terminology": "SNOMED-CT",
-  "presence_code": "código_presencia_apropiado",
-  "presence_description": "descripción_presencia",
-  "entity": "{entity}",
-  "entity_terminology": "OWL_Ontology", 
-  "entity_code": "código_del_contexto_entity",
-  "entity_description": "descripción_del_contexto_entity",
-  "value": {value}
+  "entity_code": "NUMBER_FROM_LIST",
+  "anatomy_code": "NUMBER_FROM_LIST_OR_12738006_IF_NO_LOCATION",
+  "presence_code": "52101004_OR_272519000_OR_261665006"
 }}
+
+**EXAMPLE:**
+If list has: "CODE: 230690007 | DESCRIPTION: stroke ictus cerebrovascular accident"
+And entity is "ictus"
+Then output: {{"entity_code": "230690007", ...}}
 """
-    
+
     def _call_gpt4o(self, prompt: str, max_retries: int = 3) -> str:
-        """Llama a GPT-4o con manejo de errores"""
+        """
+        Llama a GPT-4o con manejo de errores
+        MEJORADO: Temperature muy baja para codificación determinística
+        """
         
         for attempt in range(max_retries):
             try:
                 response = self.client.chat.completions.create(
                     model=self.model_config["model"],
                     messages=[
-                        {"role": "system", "content": "Eres un experto en terminología médica SNOMED-CT especializado en ictus. Responde siempre con JSON válido."},
+                        {
+                            "role": "system", 
+                            "content": "You are a SNOMED-CT coding assistant. You ONLY select codes from the provided list. You NEVER invent codes. You ALWAYS respond with valid JSON containing only the requested fields. You are precise and deterministic."
+                        },
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=self.model_config["temperature"],
-                    max_tokens=self.model_config["max_tokens"],
-                    top_p=self.model_config["top_p"]
+                    temperature=0.0,  # Totalmente determinístico
+                    max_tokens=4000,   # AUMENTADO - para NER completo
+                    top_p=1.0,
+                    response_format={"type": "json_object"}  # Forzar salida JSON
                 )
                 
                 return response.choices[0].message.content.strip()
                 
             except Exception as e:
-                print(f"[RAG+GPT4o] Error en llamada GPT-4o (intento {attempt+1}): {e}")
+                print(f"[RAG+GPT4o] [ERROR] Error en llamada GPT-4o (intento {attempt+1}/{max_retries}): {e}")
                 if attempt == max_retries - 1:
-                    return "{\"error\": \"GPT-4o no disponible\"}"
+                    # Devolver JSON válido con error
+                    return '{"error": "GPT-4o no disponible", "entity_code": "LINKING_FAILED", "anatomy_code": "LINKING_FAILED", "presence_code": "261665006"}'
         
-        return "{\"error\": \"GPT-4o falló\"}"
-    
+        return '{"error": "GPT-4o falló", "entity_code": "LINKING_FAILED", "anatomy_code": "LINKING_FAILED", "presence_code": "261665006"}'
+
     def _recuperar_conceptos(self, texto: str, k: int = 3) -> List[Tuple[str, str, float]]:
         """
         Tu función recuperar_conceptos original usando Faiss real
@@ -376,7 +358,7 @@ Responde ÚNICAMENTE con este JSON exacto:
         except Exception as e:
             print(f"[RAG+GPT4o] Error en búsqueda Faiss: {e}")
             return self._simple_text_search(texto, k)
-    
+
     def _simple_text_search(self, texto: str, k: int = 3) -> List[Tuple[str, str, float]]:
         """Búsqueda simple de texto como fallback"""
         
@@ -396,11 +378,13 @@ Responde ÚNICAMENTE con este JSON exacto:
         # Ordenar por similitud y tomar top k
         resultados.sort(key=lambda x: x[2])
         return resultados[:k]
-    
+
     def _execute_ner_step(self, texto: str) -> List[Dict]:
-        """Ejecuta el Paso 1: NER básico con GPT-4o"""
+        """
+        Ejecuta el Paso 1: NER EXTRACTIVO con GPT-4o (SIMPLIFICADO)
+        """
         
-        print("[RAG+GPT4o] Paso 1: Ejecutando NER con GPT-4o...")
+        print("[RAG+GPT4o] Paso 1: Ejecutando NER EXTRACTIVO con GPT-4o...")
         
         # Preparar prompt
         prompt_ner = self.ner_prompt_template.format(informe=texto)
@@ -410,112 +394,250 @@ Responde ÚNICAMENTE con este JSON exacto:
         
         # Parsear respuesta JSON
         try:
-            # Limpiar respuesta (GPT-4o a veces agrega texto extra)
-            json_match = re.search(r'\{.*\}', response, re.DOTALL)
-            if json_match:
-                json_content = json_match.group()
-                entidades_basicas = json.loads(json_content)
-            else:
-                entidades_basicas = json.loads(response)
+            # Limpiar respuesta - remover markdown y espacios
+            response_clean = response.strip()
             
-            # Extraer entidades
+            # Buscar el JSON - puede estar envuelto en ```json ... ```
+            if '```json' in response_clean:
+                json_start = response_clean.find('```json') + 7
+                json_end = response_clean.find('```', json_start)
+                response_clean = response_clean[json_start:json_end].strip()
+            elif '```' in response_clean:
+                json_start = response_clean.find('```') + 3
+                json_end = response_clean.find('```', json_start)
+                response_clean = response_clean[json_start:json_end].strip()
+            
+            # NUEVO: Limpiar trailing commas que rompen el JSON
+            # Patrón: ,\s*} o ,\s*]
+            response_clean = re.sub(r',(\s*[}\]])', r'\1', response_clean)
+            
+            # Intentar parsear directamente
+            try:
+                entidades_basicas = json.loads(response_clean)
+            except json.JSONDecodeError as json_err:
+                print(f"[RAG+GPT4o] Error JSON decode: {json_err}")
+                print(f"[RAG+GPT4o] JSON problemático (primeros 1000 chars):")
+                print(response_clean[:1000])
+                
+                # Buscar con regex si falla
+                json_match = re.search(r'\{.*\}', response_clean, re.DOTALL)
+                if json_match:
+                    json_str = json_match.group()
+                    # Limpiar trailing commas otra vez
+                    json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
+                    entidades_basicas = json.loads(json_str)
+                else:
+                    raise ValueError("No se pudo extraer JSON válido")
+            
+            # Extraer entidades (NUEVO FORMATO SIMPLIFICADO)
             entidades_detectadas = []
-            if "findings" in entidades_basicas:
-                for finding in entidades_basicas["findings"]:
-                    entity = finding.get("entity", "")
-                    if entity:
+            if "entities" in entidades_basicas: 
+                for finding in entidades_basicas["entities"]:
+                    span = finding.get("span_text", "")
+                    
+                    # Requerir solo span_text para continuar
+                    if span:
                         entidades_detectadas.append({
-                            "entity": entity,
-                            "anatomical_location": finding.get("anatomical_location", ""),
-                            "presence": finding.get("presence", ""),
+                            "span_text": span,
+                            "anatomical_location": finding.get("anatomical_location", "Not specified"),
+                            "presence": finding.get("presence", "present"),
                             "value": finding.get("value")
                         })
             
-            print(f"[RAG+GPT4o] Entidades detectadas: {len(entidades_detectadas)}")
-            for ent in entidades_detectadas:
-                print(f"  - {ent['entity']} en {ent['anatomical_location']} ({ent['presence']})")
+            print(f"[RAG+GPT4o] Entidades EXTRACTIVAS detectadas: {len(entidades_detectadas)}")
+            for i, ent in enumerate(entidades_detectadas[:3]): # Imprimir solo las primeras 3
+                 print(f"  - Span: \"{ent['span_text']}\"")
+            if len(entidades_detectadas) > 3:
+                print(f"  ... y {len(entidades_detectadas) - 3} más")
             
             return entidades_detectadas
             
         except Exception as e:
             print(f"[RAG+GPT4o] Error parseando NER: {e}")
-            print(f"[RAG+GPT4o] Respuesta GPT-4o: {response[:200]}...")
+            print(f"[RAG+GPT4o] Respuesta GPT-4o (primeros 500 chars): {response[:500]}...")
             return []
-    
-    def _execute_coding_step(self, entidades_detectadas: List[Dict]) -> List[Dict]:
-        """Ejecuta el Paso 2: Codificación con RAG + GPT-4o"""
+
+    def _execute_coding_step(self, entidades_detectadas: List[Dict], texto_original: str = "") -> List[Dict]:
+        """
+        Ejecuta el Paso 2: Codificación con RAG + GPT-4o
+        *** VERSIÓN MEJORADA CON LOGGING DETALLADO ***
+        
+        Args:
+            entidades_detectadas: Lista de entidades del NER
+            texto_original: Texto original del informe (para debugging)
+        """
         
         print("[RAG+GPT4o] Paso 2: Generando contexto OWL para codificación...")
         entidades_codificadas = []
         
-        for ent_data in entidades_detectadas:
-            entity = ent_data["entity"]
+        for idx, ent_data in enumerate(entidades_detectadas):
+            # Extraer datos del NER
+            span_text_original = ent_data["span_text"] # <-- El SPAN COMPLETO
             location = ent_data["anatomical_location"]
             presence = ent_data["presence"]
             value = ent_data.get("value")
             
-            # Buscar conceptos similares para la entidad (tu RAG original)
+            print(f"\n[RAG+GPT4o] [SEARCH] Codificando entidad {idx+1}/{len(entidades_detectadas)}")
+            print(f"[RAG+GPT4o]   [NOTE] Span: '{span_text_original}'")
+            print(f"[RAG+GPT4o]   [LOCATION] Ubicación: '{location}'")
+            print(f"[RAG+GPT4o]   [OK] Presencia: '{presence}'")
+            
+            # 1. Usar el SPAN_TEXT_ORIGINAL para la búsqueda RAG
             contexto_entity = ""
-            if entity:
-                similares_entity = self._recuperar_conceptos(entity, k=3)
-                contexto_entity += f"Entidad '{entity}':\n"
-                for concepto, narrativa, dist in similares_entity:
-                    contexto_entity += f"- {concepto}: {narrativa}\n"
+            if span_text_original:
+                # Usar el span_text original para la búsqueda semántica
+                similares_entity = self._recuperar_conceptos(span_text_original, k=5)  # Aumentado de 3 a 5
+                
+                # FILTRAR códigos no numéricos
+                similares_entity_limpios = [
+                    (concepto, narrativa, dist) 
+                    for concepto, narrativa, dist in similares_entity
+                    if str(concepto).isdigit()  # Solo códigos numéricos
+                ]
+                
+                if similares_entity_limpios:
+                    contexto_entity += f"--- ENTITY CODES for '{span_text_original}' ---\n"
+                    for idx, (concepto, narrativa, dist) in enumerate(similares_entity_limpios, 1):
+                        # Formato numerado y limpio
+                        contexto_entity += f"{idx}. CODE: {concepto} | DESCRIPTION: {narrativa[:150]}\n"
+                    
+                    print(f"[RAG+GPT4o]   [FIND] Contexto RAG recuperado: {len(similares_entity_limpios)} conceptos válidos")
+                    # Mostrar el mejor match
+                    if similares_entity_limpios:
+                        best_code, best_desc, best_dist = similares_entity_limpios[0]
+                        print(f"[RAG+GPT4o]   [TARGET] Mejor match: {best_code} (dist: {best_dist:.3f})")
+                else:
+                    print(f"[RAG+GPT4o]   [WARNING]  No se encontraron códigos numéricos válidos para '{span_text_original}'")
             
             # Buscar conceptos similares para la ubicación anatómica
             contexto_anatomy = ""
-            if location and location != "No especificado":
-                similares_anatomy = self._recuperar_conceptos(location, k=3)
-                contexto_anatomy += f"Ubicación '{location}':\n"
-                for concepto, narrativa, dist in similares_anatomy:
-                    contexto_anatomy += f"- {concepto}: {narrativa}\n"
+            if location and location != "Not specified":
+                similares_anatomy = self._recuperar_conceptos(location, k=5)  # Aumentado de 3 a 5
+                
+                # FILTRAR códigos no numéricos
+                similares_anatomy_limpios = [
+                    (concepto, narrativa, dist) 
+                    for concepto, narrativa, dist in similares_anatomy
+                    if str(concepto).isdigit()
+                ]
+                
+                if similares_anatomy_limpios:
+                    contexto_anatomy += f"\n--- ANATOMY CODES for '{location}' ---\n"
+                    for idx, (concepto, narrativa, dist) in enumerate(similares_anatomy_limpios, 1):
+                        contexto_anatomy += f"{idx}. CODE: {concepto} | DESCRIPTION: {narrativa[:150]}\n"
             
-            contexto_ontologico = contexto_entity + "\n" + contexto_anatomy
+            contexto_ontologico = contexto_entity + contexto_anatomy
             
-            # Preparar prompt de codificación
+            # Si no hay contexto válido, usar mensaje explícito
+            if not contexto_ontologico.strip():
+                contexto_ontologico = "--- NO SPECIFIC CODES AVAILABLE ---\nUse default codes."
+            
+            # 2. Preparar prompt mejorado con formato más claro
+            # Mapeo de presencia a código
+            presence_code_map = {
+                "present": "52101004",
+                "absent": "272519000",
+                "uncertain": "261665006"
+            }
+            presence_code_fixed = presence_code_map.get(presence.lower(), "261665006")
+            
             prompt_coding = self.coding_prompt_template.format(
-                entity=entity,
+                entity=span_text_original,
                 location=location,
                 presence=presence,
-                value=json.dumps(value) if value else "null",
                 contexto_ontologico=contexto_ontologico
             )
             
             # Llamar a GPT-4o para codificación
+            print(f"[RAG+GPT4o]   [AI] Consultando GPT-4o...")
             response = self._call_gpt4o(prompt_coding)
             
+            # 3. LOGGING DETALLADO de la respuesta
+            print(f"[RAG+GPT4o]   [RESPONSE] Respuesta GPT-4o (primeros 150 chars):")
+            print(f"[RAG+GPT4o]      {response[:150]}...")
+            
             try:
-                # Parsear respuesta de codificación
+                # Parsear la respuesta JSON
                 json_match = re.search(r'\{.*\}', response, re.DOTALL)
-                if json_match:
-                    coded_entity = json.loads(json_match.group())
-                else:
-                    coded_entity = json.loads(response)
+                if not json_match:
+                    raise ValueError("No se encontró JSON en la respuesta")
                 
+                coded_response = json.loads(json_match.group(0))
+                
+                # VALIDACIÓN ESTRICTA: verificar que contiene los campos necesarios
+                required_fields = ["entity_code", "presence_code"]
+                missing_fields = [f for f in required_fields if f not in coded_response]
+                
+                if missing_fields:
+                    print(f"[RAG+GPT4o]   [WARNING]  WARNING: Campos faltantes en JSON: {missing_fields}")
+                    print(f"[RAG+GPT4o]   [WARNING]  JSON recibido: {coded_response}")
+                
+                # Extraer códigos con validación
+                entity_code = str(coded_response.get("entity_code", "404684003"))
+                anatomy_code = str(coded_response.get("anatomy_code", "12738006"))
+                
+                # Validar que son códigos numéricos
+                if not entity_code.isdigit():
+                    print(f"[RAG+GPT4o]   [WARNING]  ALERTA: entity_code no numérico: '{entity_code}', usando default")
+                    entity_code = "404684003"
+                
+                if not anatomy_code.isdigit():
+                    print(f"[RAG+GPT4o]   [WARNING]  ALERTA: anatomy_code no numérico: '{anatomy_code}', usando default")
+                    anatomy_code = "12738006"
+                
+                # LOGGING de los códigos asignados
+                print(f"[RAG+GPT4o]   [OK] Códigos asignados:")
+                print(f"[RAG+GPT4o]      • entity_code: {entity_code}")
+                print(f"[RAG+GPT4o]      • anatomy_code: {anatomy_code}")
+                print(f"[RAG+GPT4o]      • presence_code: {presence_code_fixed}")
+                
+                # Verificar si se usaron defaults (indicador de problema)
+                if entity_code == "404684003":
+                    print(f"[RAG+GPT4o]   [WARNING]  PROBLEMA: Usando entity_code DEFAULT (Clinical finding)")
+                if anatomy_code == "12738006":
+                    print(f"[RAG+GPT4o]   [INFO]   Usando anatomy_code DEFAULT (Brain structure)")
+
+                # 4. Construir el diccionario final de la entidad
+                coded_entity = {
+                    "original_span_text": span_text_original,
+                    "anatomical_location": location,
+                    "presence": presence,
+                    "value": value,
+                    
+                    "entity_code": entity_code,
+                    "entity_description": span_text_original,  # Usar el span como descripción
+                    "anatomy_code": anatomy_code,
+                    "anatomy_description": location,
+                    "presence_code": presence_code_fixed  # Usar el código fijo calculado
+                }
                 entidades_codificadas.append(coded_entity)
-                print(f"[RAG+GPT4o] Codificado: {entity} -> {coded_entity.get('entity_code', 'No asignado')}")
                 
             except Exception as e:
-                print(f"[RAG+GPT4o] Error codificando {entity}: {e}")
+                print(f"[RAG+GPT4o]   [ERROR] ERROR parseando respuesta: {e}")
+                print(f"[RAG+GPT4o]   [ERROR] Respuesta completa: {response}")
+                print(f"[RAG+GPT4o]   [ERROR] Usando códigos FALLBACK (esto causará Match=0)")
+                
                 # Fallback con estructura básica
-                entidades_codificadas.append({
-                    "entity": entity,
-                    "entity_code": "404684003",  # Clinical finding
-                    "entity_description": entity,
+                fallback_data = {
+                    "entity_code": "LINKING_FAILED",  # Código especial para identificar fallos
+                    "entity_description": span_text_original,
                     "anatomical_location": location,
-                    "anatomy_code": "12738006",  # Brain structure
+                    "anatomy_code": "LINKING_FAILED",
                     "presence": presence,
-                    "presence_code": "52101004" if presence == "presente" else "272519000",
-                    "value": value
-                })
+                    "presence_code": "52101004" if presence == "present" else "272519000",
+                    "value": value,
+                    "original_span_text": span_text_original 
+                }
+                entidades_codificadas.append(fallback_data)
         
+        print(f"\n[RAG+GPT4o] [OK] Codificación completada para {len(entidades_codificadas)} entidades.")
         return entidades_codificadas
-    
+
     def extract_entities(self, texto: str) -> List[Dict]:
         """
-        Pipeline completo de tu RAG original con GPT-4o:
-        1. NER básico con GPT-4o
-        2. RAG + Codificación con GPT-4o
+        Pipeline completo REFACTORIZADO:
+        1. NER EXTRACTIVO con GPT-4o (devuelve spans)
+        2. RAG + Codificación con GPT-4o (preserva spans)
         """
         
         # Paso 1: NER con GPT-4o
@@ -524,14 +646,15 @@ Responde ÚNICAMENTE con este JSON exacto:
         if not entidades_detectadas:
             return []
         
-        # Paso 2: Codificación RAG + GPT-4o
-        entidades_codificadas = self._execute_coding_step(entidades_detectadas)
+        # Paso 2: Codificación RAG + GPT-4o (con texto original para debugging)
+        entidades_codificadas = self._execute_coding_step(entidades_detectadas, texto)
         
         return entidades_codificadas
-    
+
     def predict(self, notes_df: pd.DataFrame) -> pd.DataFrame:
         """
-        Predice entidades usando tu RAG original con GPT-4o
+        Predice entidades usando RAG + GPT-4o
+        (Lógica de búsqueda de spans flexible)
         """
         print(f"[RAG+GPT4o] Procesando {len(notes_df)} notas con RAG + GPT-4o...")
         
@@ -543,24 +666,74 @@ Responde ÚNICAMENTE con este JSON exacto:
             
             print(f"\n[RAG+GPT4o] === Procesando nota {note_id} ({idx+1}/{len(notes_df)}) ===")
             
-            # Aplicar tu pipeline completo con GPT-4o
             entities = self.extract_entities(text)
             
+            last_search_idx = {}
+            
             for entity in entities:
+                span_text = entity.get('original_span_text')
+                
+                if not span_text:
+                    span_text = entity.get('entity') # Fallback por si acaso
+                    if not span_text:
+                        print(f"[RAG+GPT4o] WARNING: Entidad sin span_text o entity, saltando.")
+                        continue
+                
+                # Crear un patrón regex flexible que ignore múltiples espacios/saltos de línea
+                palabras = re.split(r'\s+', span_text)
+                palabras_escapadas = [re.escape(palabra) for palabra in palabras if palabra]
+                regex_pattern = r'\s+'.join(palabras_escapadas)
+                
+                start_from = last_search_idx.get(regex_pattern, 0)
+                
+                # Usar el nuevo regex_pattern flexible
+                match = re.search(regex_pattern, text[start_from:], re.IGNORECASE)
+                
+                if match:
+                    # Calcular 'start' y 'end' absolutos
+                    start = match.start() + start_from
+                    end = match.end() + start_from
+                    
+                    # Actualizar el índice de última búsqueda para ESTE patrón
+                    last_search_idx[regex_pattern] = end
+                    
+                    span_text_real = text[start:end]
+                    
+                else:
+                    # Fallback: buscar desde el inicio (solo si no se ha encontrado antes)
+                    if start_from == 0:
+                        match_fallback = re.search(regex_pattern, text, re.IGNORECASE)
+                        if match_fallback:
+                            start = match_fallback.start()
+                            end = match_fallback.end()
+                            last_search_idx[regex_pattern] = end
+                            span_text_real = text[start:end]
+                        else:
+                            print(f"[RAG+GPT4o] WARNING: No se pudo encontrar el span flexible '{span_text}' (patrón: {regex_pattern}) en la nota {note_id}. Saltando entidad.")
+                            continue
+                    else:
+                        print(f"[RAG+GPT4o] WARNING: No se pudo encontrar otra instancia del span '{span_text}' (patrón: {regex_pattern}) en la nota {note_id} después de {start_from}. Saltando entidad.")
+                        continue # No añadir predicciones con start=0
+
                 predictions.append({
                     'note_id': note_id,
-                    'start': 0,  # GPT-4o no devuelve posiciones exactas
-                    'end': len(entity.get('entity', '')),
-                    'concept_id': entity.get('entity_code', '404684003'),
-                    'span_text': entity.get('entity', ''),
-                    'confidence': 0.85,  # Confianza típica de tu sistema
+                    'start': start,
+                    'end': end,
+                    'concept_id': str(entity.get('entity_code', '404684003')),  # El código de la entidad principal
+                    'span_text': span_text_real,
+                    'confidence': 0.85,  # Confianza base
                     'entity_description': entity.get('entity_description', ''),
                     'anatomy_code': entity.get('anatomy_code', ''),
                     'presence_code': entity.get('presence_code', ''),
                     'llm_used': 'GPT-4o'
                 })
+                
+                # LOGGING para debugging
+                entity_code_used = entity.get('entity_code', 'MISSING')
+                if entity_code_used in ['404684003', 'LINKING_FAILED', 'MISSING']:
+                    print(f"[RAG+GPT4o]   [WARNING]  ALERTA: Predicción con código genérico/fallback: {entity_code_used} para span '{span_text[:50]}'")
             
-            print(f"[RAG+GPT4o] Nota {note_id}: {len(entities)} entidades extraídas")
+            print(f"[RAG+GPT4o] Nota {note_id}: {len([p for p in predictions if p['note_id'] == note_id])} predicciones generadas")
         
         print(f"\n[RAG+GPT4o] Completado: {len(predictions)} predicciones generadas con GPT-4o")
         return pd.DataFrame(predictions)
