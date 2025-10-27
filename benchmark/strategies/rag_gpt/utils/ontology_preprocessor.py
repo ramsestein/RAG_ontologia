@@ -24,15 +24,16 @@ from datetime import datetime
 
 # --- START: Robust Path Setup (Updated for new location) ---
 
-# Get the absolute path to THIS script's directory (.../strategies/04_rag_gpt_assets)
+# Get the absolute path to THIS script's directory (.../strategies/rag_gpt/utils)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Get the absolute path to the project root (.../RAG_ontologia)
-# We need to go up THREE levels ('..' to strategies, '..' to benchmark, '..' to root)
-PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..', '..'))
+# We need to go up FOUR levels ('..' to rag_gpt, '..' to strategies, '..' to benchmark, '..' to root)
+PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..', '..', '..'))
 
-# Path to assets directory (now a subdirectory of this script)
-ASSETS_DIR = os.path.join(SCRIPT_DIR, 'assets')
+# Path to assets directory (sibling to this script, under rag_gpt/04_utils/assets)
+ASSETS_DIR = os.path.join(SCRIPT_DIR, '..', '04_utils', 'assets')
+ASSETS_DIR = os.path.abspath(ASSETS_DIR)
 
 # --- END: Robust Path Setup ---
 

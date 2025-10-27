@@ -109,7 +109,7 @@ Además problema de que el fichero ontology.index es 66.5MB y github maximo perm
 ---
 
 
-## Día 4: 27 Octubre 2025 (4h)
+## Día 4: 27 Octubre 2025 (8h)
 
 Básiamente he empezado compilando la ontología de nuevo y he aplicado los cambios que `Ramses` decía, a ver que resultados obtengo.
 He hecho un par de cambios:
@@ -233,4 +233,10 @@ Strategy                       F1-Score   Precision  Recall     Pred   Match  Ti
 02_SNOBERT                     0.2857     0.2936     0.2783     109    32     4.604     s
 04_RAG_GPT                     0.2474     0.3038     0.2087     79     24     164.036   s
 
+Refactor hecho, para el próximo día: asegurar que todo funciona, y empezar a mejorar el rag.
 
+
+---
+
+
+## Día 5: 30 Octubre 2025 (8h)
