@@ -58,7 +58,7 @@ def load_ontology_csv():
     print("STEP 1: Loading Ontology Data")
     print("="*80)
     
-    # UPDATED: Use hybrid ontology (26 missing + 6 existing + 30 noise concepts)
+    # UPDATED: Use hybrid ontology
     hybrid_path = os.path.join(PROJECT_ROOT, 'hybrid_ontology.csv')
     fallback_path = os.path.join(PROJECT_ROOT, 'conceptos_con_narrativas.csv')
     
@@ -68,7 +68,7 @@ def load_ontology_csv():
         df = pd.read_csv(hybrid_path)
         print(f"[SUCCESS] Loaded {len(df)} concepts")
         print(f"           - Contains all training concepts (32 total)")
-        print(f"           - Plus ~30 noise concepts for robustness testing")
+        print(f"           - Plus 2468 noise concepts for robustness testing")
         return df
     
     # Fallback to original (incomplete for stroke task)

@@ -1,0 +1,106 @@
+note_id,start,end,concept_id,span_text,confidence,method,section,attributes
+1,75,87,38341003,hypertension,0.9,main_dict,history,"{'laterality': 'right', 'severity': 'acute', 'temporal': 'old'}"
+1,92,109,73211009,diabetes mellitus,0.9,main_dict,history,"{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+1,155,163,13791008,weakness,0.9,main_dict,history,"{'laterality': 'left', 'severity': 'acute', 'temporal': 'acute'}"
+1,287,329,450893003,National Institutes of Health Stroke Scale,0.9,main_dict,examination,{'laterality': 'left'}
+1,331,336,450893003,NIHSS,0.9,main_dict,examination,{'laterality': 'left'}
+1,356,372,50582007,left hemiparesis,0.9,main_dict,examination,"{'laterality': 'left', 'severity': 'mild'}"
+1,389,406,280816001,left facial droop,0.9,main_dict,examination,"{'laterality': 'left', 'severity': 'mild'}"
+1,417,427,8011004,dysarthria,0.9,main_dict,examination,"{'laterality': 'left', 'severity': 'mild'}"
+1,455,474,77477000,computed tomography,0.9,main_dict,imaging,"{'negated': True, 'severity': 'mild', 'temporal': 'acute'}"
+1,476,478,77477000,CT,0.9,main_dict,imaging,"{'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+1,499,518,50960005,no acute hemorrhage,0.92,section_specific,imaging,"{'negated': True, 'severity': 'acute', 'temporal': 'acute', 'term_type': 'no_hemorrhage'}"
+1,520,534,419775003,CT angiography,0.9,main_dict,imaging,"{'laterality': 'right', 'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+1,548,557,26036001,occlusion,0.9,main_dict,imaging,"{'laterality': 'right', 'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+1,571,593,69930009,middle cerebral artery,0.9,main_dict,imaging,{'laterality': 'right'}
+1,595,598,69930009,MCA,0.9,main_dict,imaging,{'laterality': 'right'}
+1,600,602,69930009,M1,0.95,case_sensitive,imaging,{'laterality': 'right'}
+1,612,649,450893003,Alberta Stroke Program Early CT Score,0.9,main_dict,imaging,"{'laterality': 'right', 'severity': 'large'}"
+1,651,658,450893003,ASPECTS,0.9,main_dict,imaging,{'severity': 'large'}
+1,667,669,77477000,CT,0.9,main_dict,imaging,{'severity': 'large'}
+1,796,824,387467008,tissue plasminogen activator,0.9,main_dict,imaging,{}
+1,826,829,387467008,tPA,0.9,main_dict,imaging,{'severity': 'large'}
+1,880,896,26036001,vessel occlusion,0.9,main_dict,imaging,{'severity': 'large'}
+1,923,946,433112001,mechanical thrombectomy,0.9,main_dict,imaging,{'severity': 'large'}
+1,973,987,449894001,recanalization,0.9,main_dict,imaging,{}
+1,1006,1041,450893003,Thrombolysis in Cerebral Infarction,0.9,main_dict,imaging,{}
+1,1043,1047,450893003,TICI,0.9,main_dict,imaging,{}
+1,1111,1125,449894001,recanalization,0.9,main_dict,imaging,{}
+1,1139,1165,432102000,hemorrhagic transformation,0.92,section_specific,imaging,{'term_type': 'hemorrhagic_transformation'}
+1,1235,1240,450893003,NIHSS,0.9,main_dict,imaging,{}
+2,40,59,49436004,atrial fibrillation,0.9,main_dict,general,"{'negated': True, 'temporal': 'old'}"
+2,144,159,25064002,severe headache,0.9,main_dict,general,{'severity': 'severe'}
+2,161,167,422587007,nausea,0.9,main_dict,general,{'severity': 'severe'}
+2,173,181,422400008,vomiting,0.9,main_dict,general,{'severity': 'severe'}
+2,187,195,25064002,headache,0.9,main_dict,general,{'severity': 'severe'}
+2,218,232,25064002,worst headache,0.9,main_dict,general,"{'severity': 'acute', 'temporal': 'acute'}"
+2,443,458,405944004,nuchal rigidity,0.92,section_specific,examination,{'term_type': 'nuchal_rigidity'}
+2,476,494,386554004,Glasgow Coma Scale,0.9,main_dict,examination,{}
+2,528,530,77477000,CT,0.9,main_dict,imaging,{}
+2,552,575,21454007,subarachnoid hemorrhage,0.9,main_dict,imaging,{}
+2,631,645,419775003,CT angiography,0.9,main_dict,imaging,{}
+2,695,703,432101006,aneurysm,0.9,main_dict,imaging,{'temporal': 'recent'}
+2,977,985,432101006,aneurysm,0.9,main_dict,intervention,{}
+2,1080,1097,52674009,cerebral ischemia,0.9,main_dict,general,{}
+2,1129,1141,38341003,hypertension,0.9,main_dict,general,{}
+2,1196,1217,273302005,modified Rankin Scale,0.9,main_dict,general,{}
+3,0,6,230690007,STROKE,0.9,main_dict,general,{'temporal': 'old'}
+3,52,59,77176002,smoking,0.9,main_dict,history,{'temporal': 'old'}
+3,64,78,55822004,hyperlipidemia,0.9,main_dict,history,"{'laterality': 'right', 'temporal': 'old'}"
+3,127,135,13791008,weakness,0.9,main_dict,history,{'laterality': 'right'}
+3,347,355,13791008,weakness,0.9,main_dict,assessment,{'negated': True}
+3,404,412,73211009,diabetes,0.9,main_dict,assessment,{'negated': True}
+3,454,462,415582006,stenosis,0.9,main_dict,general,{'laterality': 'left'}
+3,475,498,86547008,internal carotid artery,0.9,main_dict,general,{'laterality': 'left'}
+3,512,515,113091000,MRI,0.9,main_dict,imaging,{'laterality': 'left'}
+3,555,558,113091000,DWI,0.9,main_dict,imaging,"{'laterality': 'left', 'severity': 'small', 'temporal': 'acute'}"
+3,573,586,55342001,acute infarct,0.9,main_dict,imaging,"{'laterality': 'left', 'severity': 'small', 'temporal': 'acute'}"
+3,599,613,89777002,corona radiata,0.9,main_dict,imaging,"{'laterality': 'left', 'severity': 'severe', 'temporal': 'acute'}"
+3,615,617,48724000,MR,0.95,case_sensitive,imaging,"{'laterality': 'left', 'severity': 'severe', 'temporal': 'acute'}"
+3,618,629,77343006,angiography,0.9,main_dict,imaging,"{'laterality': 'left', 'severity': 'severe', 'temporal': 'acute'}"
+3,652,675,86547008,internal carotid artery,0.9,main_dict,imaging,"{'laterality': 'left', 'severity': 'severe'}"
+3,676,684,415582006,stenosis,0.9,main_dict,imaging,"{'laterality': 'left', 'severity': 'severe'}"
+3,826,829,266257000,TIA,0.85,abbreviation,imaging,{'severity': 'small'}
+3,859,866,55342001,infarct,0.9,main_dict,imaging,{'severity': 'small'}
+3,903,911,414086009,embolism,0.9,main_dict,imaging,{}
+3,925,933,415582006,stenosis,0.9,main_dict,imaging,{}
+3,1019,1027,415582006,stenosis,0.9,main_dict,imaging,{'temporal': 'recent'}
+4,0,12,433112001,THROMBECTOMY,0.9,main_dict,general,{'temporal': 'old'}
+4,87,94,87486003,aphasia,0.9,main_dict,imaging,"{'laterality': 'right', 'severity': 'acute', 'temporal': 'acute'}"
+4,105,115,50582007,hemiplegia,0.9,main_dict,imaging,"{'laterality': 'right', 'severity': 'acute', 'temporal': 'acute'}"
+4,191,196,450893003,NIHSS,0.9,main_dict,imaging,"{'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+4,211,213,77477000,CT,0.9,main_dict,intervention,"{'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+4,226,245,50960005,no acute hemorrhage,0.92,section_specific,imaging,"{'negated': True, 'severity': 'acute', 'temporal': 'acute', 'term_type': 'no_hemorrhage'}"
+4,251,258,450893003,ASPECTS,0.9,main_dict,imaging,"{'laterality': 'left', 'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+4,271,285,419775003,CT angiography,0.9,main_dict,imaging,"{'laterality': 'left', 'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+4,300,302,69930009,M1,0.95,case_sensitive,imaging,{'laterality': 'left'}
+4,303,325,69930009,middle cerebral artery,0.9,main_dict,imaging,{'laterality': 'left'}
+4,326,335,26036001,occlusion,0.9,main_dict,imaging,{'laterality': 'left'}
+4,524,547,86547008,internal carotid artery,0.9,main_dict,intervention,{'laterality': 'left'}
+4,637,648,77343006,angiography,0.9,main_dict,general,{}
+4,656,660,450893003,TICI,0.9,main_dict,general,{}
+4,663,677,449894001,recanalization,0.9,main_dict,general,{}
+4,765,767,77477000,CT,0.9,main_dict,intervention,{'negated': True}
+4,786,800,449894001,recanalization,0.9,main_dict,imaging,{'negated': True}
+4,836,841,450893003,NIHSS,0.9,main_dict,imaging,{'negated': True}
+4,957,965,432101006,aneurysm,0.9,main_dict,imaging,{}
+4,995,1003,414086009,embolism,0.9,main_dict,general,{}
+5,22,28,230690007,STROKE,0.9,main_dict,general,{'temporal': 'old'}
+5,114,121,399153001,vertigo,0.9,main_dict,general,"{'severity': 'acute', 'temporal': 'acute'}"
+5,123,131,24982008,diplopia,0.9,main_dict,general,"{'severity': 'acute', 'temporal': 'acute'}"
+5,137,143,20262006,ataxia,0.9,main_dict,general,"{'severity': 'acute', 'temporal': 'acute'}"
+5,309,315,20262006,ataxia,0.9,main_dict,examination,{}
+5,396,404,13791008,weakness,0.9,main_dict,examination,{'negated': True}
+5,431,434,113091000,MRI,0.9,main_dict,imaging,"{'laterality': 'bilateral', 'negated': True, 'severity': 'acute', 'temporal': 'acute'}"
+5,547,549,48724000,MR,0.95,case_sensitive,imaging,{'severity': 'severe'}
+5,550,561,77343006,angiography,0.9,main_dict,imaging,{'severity': 'severe'}
+5,576,584,415582006,stenosis,0.9,main_dict,imaging,{'severity': 'severe'}
+5,592,606,67889009,basilar artery,0.9,main_dict,imaging,{'severity': 'severe'}
+5,695,703,415582006,stenosis,0.9,main_dict,general,{'laterality': 'bilateral'}
+5,708,714,230690007,STROKE,0.9,main_dict,general,{'laterality': 'bilateral'}
+5,741,751,55342001,infarction,0.9,main_dict,general,{}
+5,772,786,67889009,basilar artery,0.9,main_dict,imaging,{}
+5,794,803,26036001,occlusion,0.9,main_dict,imaging,{}
+5,838,852,67889009,basilar artery,0.9,main_dict,imaging,{}
+5,954,962,415582006,stenosis,0.9,main_dict,intervention,{}
+5,1092,1099,55342001,infarct,0.9,main_dict,intervention,{'severity': 'small'}

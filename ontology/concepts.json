@@ -1,0 +1,162 @@
+{
+  "230690007": {
+    "preferred_term": "Accidente cerebrovascular",
+    "synonyms": ["ictus", "ACV", "ataque cerebral", "apoplejía", "infarto cerebral", "derrame cerebral", "evento cerebrovascular"],
+    "definition": "Déficit neurológico agudo resultado de interrupción del suministro sanguíneo al tejido cerebral. Puede ser isquémico (arteria bloqueada) o hemorrágico (vaso roto). Causa principal de discapacidad y muerte. Síntomas incluyen debilidad, dificultad del habla, problemas visuales."
+  },
+  "13791008": {
+    "preferred_term": "Debilidad muscular",
+    "synonyms": ["debilidad", "astenia", "paresia", "déficit motor", "fuerza reducida", "debilidad de extremidad", "debilidad del brazo", "debilidad de la pierna"],
+    "definition": "Capacidad reducida para ejercer fuerza muscular. Síntoma común de ictus. Debilidad unilateral sugiere lesión del hemisferio cerebral. Evaluado usando escala Medical Research Council. Puede afectar cara, brazo o pierna."
+  },
+  "50582007": {
+    "preferred_term": "Hemiparesia",
+    "synonyms": ["debilidad de un lado", "déficit motor unilateral", "debilidad hemisférica", "parálisis parcial de un lado", "déficit motor del hemicuerpo"],
+    "definition": "Debilidad que afecta un lado del cuerpo. Presentación clásica de ictus. Sugiere lesión del hemisferio cerebral contralateral. Patrón cara-brazo-pierna. Evaluado con ítems motores del NIHSS. Patrón de neurona motora superior."
+  },
+  "8011004": {
+    "preferred_term": "Disartria",
+    "synonyms": ["habla arrastrada", "trastorno de articulación", "trastorno motor del habla", "alteración de la articulación", "habla pastosa"],
+    "definition": "Trastorno motor del habla con articulación alterada. Resultado de debilidad o incoordinación de músculos del habla. Sugiere lesión del tronco cerebral o cerebelo. Se distingue de la afasia. Ítem de disartria del NIHSS."
+  },
+  "50960005": {
+    "preferred_term": "Hemorragia",
+    "synonyms": ["sangrado", "hemorragia cerebral", "hemorragia intracraneal", "hemorragia intracerebral", "sangrado cerebral", "hematoma cerebral"],
+    "definition": "Escape de sangre de los vasos. Puede ser externa o interna. Causa principal de ictus hemorrágico. Gestionado con hemostasia y productos sanguíneos. Contraindicación para trombólisis."
+  },
+  "55342001": {
+    "preferred_term": "Infarto cerebral",
+    "synonyms": ["infarto", "infarto isquémico", "necrosis cerebral", "muerte de tejido cerebral", "daño cerebral permanente", "zona de infarto"],
+    "definition": "Muerte de tejido cerebral por falta de suministro sanguíneo. Resultado de ictus isquémico. Daño neurológico permanente. Visualizado en TC o RM como área hipodensa. Territorio de arteria cerebral media es más común."
+  },
+  "433112001": {
+    "preferred_term": "Trombectomía mecánica",
+    "synonyms": ["trombectomía", "terapia endovascular", "extracción del trombo", "recuperación del coágulo", "tratamiento endovascular del ictus agudo"],
+    "definition": "Procedimiento endovascular para extraer mecánicamente coágulo sanguíneo de arteria cerebral. Tratamiento para oclusión de vaso grande. Ventana temporal hasta 24 horas en pacientes seleccionados. Usa stent retrievers o catéteres de aspiración. Mejora resultados funcionales."
+  },
+  "77343006": {
+    "preferred_term": "Angiografía cerebral",
+    "synonyms": ["angiografía", "arteriografía cerebral", "angiograma cerebral", "angiografía por sustracción digital", "DSA", "angiografía diagnóstica"],
+    "definition": "Técnica de imagen usando contraste y rayos X para visualizar vasos sanguíneos cerebrales. Estándar de oro para detectar aneurismas, estenosis, oclusiones. Usado para diagnóstico y planificación del tratamiento del ictus. Procedimiento intervencionista."
+  },
+  "69930009": {
+    "preferred_term": "Arteria cerebral media",
+    "synonyms": ["ACM", "arteria silviana", "segmento M1", "segmento M2", "territorio de ACM", "circulación cerebral media"],
+    "definition": "Arteria cerebral más grande. Irriga hemisferio cerebral lateral. Sitio más común de ictus isquémico. Territorio incluye corteza motora y sensorial. Segmentos M1 y M2."
+  },
+  "26036001": {
+    "preferred_term": "Oclusión vascular",
+    "synonyms": ["oclusión", "obstrucción arterial", "bloqueo del vaso", "oclusión de vaso grande", "bloqueo arterial completo", "oclusión trombótica"],
+    "definition": "Bloqueo completo de vaso sanguíneo. Puede ser trombótico o embólico. Oclusión de vaso grande (OVG) requiere trombectomía. Causa principal de ictus isquémico. Oclusión de ACM, carótida o basilar."
+  },
+  "230691006": {
+    "preferred_term": "Penumbra isquémica",
+    "synonyms": ["penumbra", "tejido cerebral salvable", "tejido en riesgo", "tejido hipoperfundido", "tejido viable"],
+    "definition": "Tejido cerebral hipoperfundido pero viable rodeando el núcleo del infarto. Objetivo del tratamiento agudo. Identificado por mismatch perfusión-difusión en RM. Progresión temporal a infarto dependiente del tiempo. La reperfusión puede salvarlo."
+  },
+  "449894001": {
+    "preferred_term": "Recanalización",
+    "synonyms": ["revascularización", "apertura del vaso", "reapertura arterial", "restauración del flujo sanguíneo", "reperfusión", "permeabilidad del vaso"],
+    "definition": "Apertura del vaso sanguíneo ocluido. Restauración del flujo sanguíneo. Recanalización exitosa o completa. Recanalización parcial. Grado TICI de recanalización. Resultado de trombectomía o trombólisis."
+  },
+  "77477000": {
+    "preferred_term": "Tomografía computarizada",
+    "synonyms": ["TC", "TAC", "escáner cerebral", "TC de cráneo", "TC sin contraste", "TC cerebral", "imagen tomográfica"],
+    "definition": "Imagen de primera línea para ictus agudo. Distingue rápidamente ictus hemorrágico de isquémico. Identifica cambios isquémicos tempranos. Puntuación ASPECTS cuantifica extensión. TC sin contraste para evaluación inicial."
+  },
+  "450893003": {
+    "preferred_term": "Escala de ictus del NIH",
+    "synonyms": ["NIHSS", "National Institutes of Health Stroke Scale", "escala de gravedad del ictus", "escala clínica de ictus", "puntuación NIHSS", "evaluación neurológica del ictus", "ASPECTS", "Alberta Stroke Program Early CT Score", "puntuación TC temprana", "TICI", "Thrombolysis in Cerebral Infarction", "grado de recanalización", "escala de reperfusión"],
+    "definition": "Escala de evaluación neurológica estandarizada para cuantificar la gravedad del ictus. Puntuación de 0-42 puntos. Mayor puntuación indica mayor déficit. NIHSS basal, al ingreso y al alta. Predictor de pronóstico y resultado del ictus. ASPECTS cuantifica cambios isquémicos tempranos en TC. TICI evalúa grado de recanalización."
+  },
+  "387467008": {
+    "preferred_term": "Activador tisular del plasminógeno",
+    "synonyms": ["tPA", "alteplasa", "rtPA", "trombolítico", "trombólisis", "fibrinolítico", "activador de plasminógeno recombinante", "tPA intravenoso"],
+    "definition": "Agente trombolítico usado en tratamiento del ictus isquémico agudo. Activador tisular del plasminógeno recombinante que convierte plasminógeno en plasmina para disolver coágulos. Administrado intravenosamente dentro de 4.5 horas del inicio del ictus."
+  },
+  "38341003": {
+    "preferred_term": "Hipertensión arterial",
+    "synonyms": ["hipertensión", "presión arterial alta", "HTA", "tensión arterial elevada", "hipertensión sistólica", "hipertensión diastólica"],
+    "definition": "Presión arterial elevada por encima de 140/90 mmHg. Principal factor de riesgo modificable para ictus. Causa enfermedad de pequeño vaso y aterosclerosis. Control de presión reduce riesgo de ictus en 40%. Objetivo <120/80 para prevención de ictus."
+  },
+  "73211009": {
+    "preferred_term": "Diabetes mellitus",
+    "synonyms": ["diabetes", "DM", "hiperglucemia", "diabetes tipo 2", "diabetes tipo 1", "trastorno metabólico", "intolerancia a la glucosa"],
+    "definition": "Trastorno metabólico con hiperglucemia crónica. Factor de riesgo mayor para ictus. Duplica el riesgo de ictus. Causa aterosclerosis y enfermedad de pequeño vaso. Manejado con control de glucosa, modificación del estilo de vida."
+  },
+  "25064002": {
+    "preferred_term": "Cefalea",
+    "synonyms": ["dolor de cabeza", "cefalalgia", "dolor craneal", "cefalea severa", "cefalea súbita", "cefalea intensa"],
+    "definition": "Dolor en región de cabeza o cuello superior. Común en ictus hemorrágico. Cefalea severa súbita sugiere hemorragia subaracnoidea. Evaluado por calidad, localización, duración, síntomas asociados."
+  },
+  "422587007": {
+    "preferred_term": "Náusea",
+    "synonyms": ["náuseas", "sensación de malestar", "ganas de vomitar", "mareo nauseoso", "síntoma gastrointestinal"],
+    "definition": "Sensación de vómito inminente. Puede indicar ictus de circulación posterior. Asociado con vértigo en ictus cerebeloso o del tronco cerebral. Parte del síndrome vestibular."
+  },
+  "422400008": {
+    "preferred_term": "Vómito",
+    "synonyms": ["vómitos", "emesis", "expulsión gástrica", "síntoma gastrointestinal", "náuseas y vómitos"],
+    "definition": "Expulsión forzada del contenido gástrico. Puede indicar ictus de circulación posterior. Asociado con presión intracraneal aumentada. Común en ictus cerebeloso o hemorragia. Síntoma del tronco cerebral."
+  },
+  "52674009": {
+    "preferred_term": "Isquemia cerebral",
+    "synonyms": ["isquemia", "flujo sanguíneo reducido", "hipoperfusión cerebral", "isquemia aguda", "daño isquémico", "tejido isquémico"],
+    "definition": "Flujo sanguíneo reducido al cerebro. Isquemia cerebral aguda. Tejido isquémico reversible o irreversible. Daño isquémico. Hipoxia tisular. Deprivación de oxígeno. Hipoperfusión cerebral."
+  },
+  "432101006": {
+    "preferred_term": "Aneurisma cerebral",
+    "synonyms": ["aneurisma", "aneurisma intracraneal", "aneurisma sacular", "aneurisma roto", "malformación vascular", "dilatación arterial"],
+    "definition": "Dilatación anormal de arteria cerebral. Aneurisma cerebral intracraneal. Aneurisma sacular o fusiforme. Ruptura de aneurisma causa hemorragia subaracnoidea. Tratamiento incluye clipaje o coiling. Aneurisma del polígono de Willis."
+  },
+  "21454007": {
+    "preferred_term": "Hemorragia subaracnoidea",
+    "synonyms": ["HSA", "sangrado subaracnoideo", "hemorragia en espacio subaracnoideo", "sangre en LCR", "cefalea en trueno", "HSA aneurismática"],
+    "definition": "Sangrado en espacio subaracnoideo. Usualmente por ruptura de aneurisma. Cefalea severa súbita en trueno. Alta mortalidad y morbilidad. TC muestra sangre en cisternas basales. Angiografía para detección de aneurisma."
+  },
+  "266257000": {
+    "preferred_term": "Ataque isquémico transitorio",
+    "synonyms": ["AIT", "mini-ictus", "ictus temporal", "déficit neurológico transitorio", "isquemia cerebral transitoria"],
+    "definition": "Interrupción temporal del flujo sanguíneo al cerebro causando síntomas similares al ictus que duran menos de 24 horas. Señal de advertencia para ictus futuro. Sin daño cerebral permanente. Factor de riesgo para ictus mayor."
+  },
+  "49436004": {
+    "preferred_term": "Fibrilación auricular",
+    "synonyms": ["FA", "fibrilación atrial", "arritmia auricular", "ritmo cardíaco irregular", "arritmia cardíaca", "fuente cardioembólica"],
+    "definition": "Ritmo cardíaco irregular rápido. Factor de riesgo cardioembólico mayor para ictus. Aumenta riesgo de ictus 5 veces. Causa estasis y formación de trombo en aurícula izquierda. Manejado con anticoagulación."
+  },
+  "415582006": {
+    "preferred_term": "Estenosis arterial",
+    "synonyms": ["estenosis", "estrechamiento arterial", "estrechamiento del vaso", "estenosis carotídea", "estenosis vertebral", "estenosis intracraneal", "placa aterosclerótica"],
+    "definition": "Estrechamiento de arteria. Estenosis de vaso. Estrechamiento del lumen. Estenosis carotídea o vertebral. Estenosis intracraneal o extracraneal. Estenosis aterosclerótica. Placa estenótica. Estenosis limitante del flujo. Estenosis hemodinámicamente significativa."
+  },
+  "67889009": {
+    "preferred_term": "Ictus isquémico",
+    "synonyms": ["accidente cerebrovascular isquémico", "ACV isquémico", "ictus trombótico", "ictus embólico", "infarto cerebral isquémico"],
+    "definition": "Ictus causado por oclusión arterial bloqueando flujo sanguíneo al cerebro. 87% de todos los ictus. Origen trombótico o embólico. Tratado con trombólisis o trombectomía. Factores de riesgo incluyen hipertensión, diabetes, fibrilación auricular."
+  },
+  "69449002": {
+    "preferred_term": "Hemorragia cerebral",
+    "synonyms": ["hemorragia intracerebral", "HIC", "sangrado cerebral", "ictus hemorrágico", "hematoma cerebral", "hemorragia parenquimatosa"],
+    "definition": "Sangrado en parénquima cerebral. 13% de todos los ictus. Mayor mortalidad que ictus isquémico. Causado por hipertensión, angiopatía amiloide, anticoagulación. Contraindicación para trombólisis. Evacuación quirúrgica considerada para hematomas grandes."
+  },
+  "86547008": {
+    "preferred_term": "Arteria carótida interna",
+    "synonyms": ["ACI", "carótida interna", "carótida extracraneal", "carótida intracraneal", "bifurcación carotídea", "estenosis carotídea"],
+    "definition": "Principal arteria que irriga el cerebro. Carótida interna extracraneal e intracraneal. Bifurcación carotídea. Estenosis u oclusión carotídea. Aterosclerosis carotídea. Placa carotídea. Territorio carotídeo. Circulación anterior. Segmentos petro, cavernoso, supraclinoideo."
+  },
+  "87486003": {
+    "preferred_term": "Afasia",
+    "synonyms": ["trastorno del lenguaje", "disfasia", "alteración del lenguaje", "afasia de Broca", "afasia de Wernicke", "afasia expresiva", "afasia receptiva"],
+    "definition": "Alteración de la comprensión o producción del lenguaje. Resultado de lesión del hemisferio dominante. Afasia de Broca: déficit expresivo. Afasia de Wernicke: déficit receptivo. Evaluación del lenguaje del NIHSS."
+  },
+  "113091000": {
+    "preferred_term": "Resonancia magnética",
+    "synonyms": ["RM", "IRM", "imagen por resonancia magnética", "escáner de RM", "secuencias de RM", "difusión por RM", "perfusión por RM"],
+    "definition": "Imagen avanzada usando campos magnéticos y ondas de radio. Contraste superior de tejido blando. Detecta infarto agudo con imagen ponderada en difusión. Identifica penumbra con imagen de perfusión. Sin radiación ionizante."
+  },
+  "20262006": {
+    "preferred_term": "Ataxia",
+    "synonyms": ["incoordinación", "pérdida de coordinación", "ataxia de la marcha", "ataxia de extremidades", "ataxia truncal", "disfunción cerebelosa"],
+    "definition": "Coordinación y equilibrio alterados. Indica ictus cerebeloso. Ataxia de marcha, extremidades, truncal. Prueba cerebelosa del NIHSS. Puede causar caídas."
+  }
+}

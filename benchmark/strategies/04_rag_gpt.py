@@ -200,97 +200,97 @@ class RAGWithGPT4oStrategy:
         *** PROMPT DE CODIFICACIÓN (v5) ARREGLADO ***
         """
         
-        # --- PROMPT NER EN INGLÉS (OPTIMIZADO PARA SPANS CORTOS) ---
+        # --- PROMPT NER EN ESPAÑOL (OPTIMIZADO PARA SPANS CORTOS) ---
         self.ner_prompt_template = """
-<task>
-You are an expert clinical NER agent. Your task is to extract ALL relevant clinical entities from the English medical report.
+<tarea>
+Eres un agente experto en NER clínico. Tu tarea es extraer TODAS las entidades clínicas relevantes del informe médico en inglés.
 
-**CRITICAL: Extract the SHORTEST, MOST SPECIFIC span for each entity**
-- For "left-sided weakness" → extract just "weakness"  
-- For "NIHSS score of 12" → extract just "NIHSS"
-- For "mechanical thrombectomy" → extract just "thrombectomy"
-- Extract SINGLE WORDS or SHORT PHRASES, not full sentences
+**CRÍTICO: Extrae el SPAN MÁS CORTO y ESPECÍFICO para cada entidad**
+- Para "left-sided weakness" → extrae solo "weakness"  
+- Para "NIHSS score of 12" → extrae solo "NIHSS"
+- Para "mechanical thrombectomy" → extrae solo "thrombectomy"
+- Extrae PALABRAS INDIVIDUALES o FRASES CORTAS, no oraciones completas
 
-**Entities to Extract:**
-- Findings (e.g., hemorrhage, infarct, occlusion, stenosis)
-- Anatomy (e.g., MCA, M1, M2, caudate, internal capsule)
-- Scales (e.g., NIHSS, ASPECTS, TICI, GCS, mRS)
-- Symptoms (e.g., hemiparesis, aphasia, dysarthria, weakness)
-- Procedures (e.g., thrombectomy, thrombolysis, tPA, angiography)
-- Comorbidities (e.g., hypertension, diabetes)
+**Entidades a Extraer:**
+- Hallazgos (ej: hemorrhage, infarct, occlusion, stenosis)
+- Anatomía (ej: MCA, M1, M2, caudate, internal capsule)
+- Escalas (ej: NIHSS, ASPECTS, TICI, GCS, mRS)
+- Síntomas (ej: hemiparesis, aphasia, dysarthria, weakness)
+- Procedimientos (ej: thrombectomy, thrombolysis, tPA, angiography)
+- Comorbilidades (ej: hypertension, diabetes)
 
-**Rules:**
-- Extract EVERY instance - if "CT" appears 5 times, extract all 5
-- Use the SHORTEST span possible (usually 1-2 words)
-- For abbreviations, extract ONLY the abbreviation (e.g., "CT" not "computed tomography")
-- For scales with values, extract ONLY the scale name (e.g., "NIHSS" not "NIHSS score of 12")
-- For each entity, provide:
-  1. `span_text`: The SHORTEST, MOST SPECIFIC text from the report
-  2. `anatomical_location`: The location if mentioned, or 'Not specified'
-  3. `presence`: "present", "absent", or "uncertain"
-  4. `value`: The value if applicable (e.g., "18" for "NIHSS score was 18")
-</task>
+**Reglas:**
+- Extrae CADA instancia - si "CT" aparece 5 veces, extrae las 5
+- Usa el span MÁS CORTO posible (usualmente 1-2 palabras)
+- Para abreviaturas, extrae SOLO la abreviatura (ej: "CT" no "computed tomography")
+- Para escalas con valores, extrae SOLO el nombre de la escala (ej: "NIHSS" no "NIHSS score of 12")
+- Para cada entidad, proporciona:
+  1. `span_text`: El texto MÁS CORTO y ESPECÍFICO del informe
+  2. `anatomical_location`: La ubicación si se menciona, o 'No especificado'
+  3. `presence`: "presente", "ausente", o "incierto"
+  4. `value`: El valor si aplica (ej: "18" para "NIHSS score was 18")
+</tarea>
 
-<output_format>
+<formato_salida>
 {{
   "entities": [
     {{
-      "span_text": "shortest specific term",
-      "anatomical_location": "location or 'Not specified'",
-      "presence": "present | absent | uncertain",
-      "value": "value or null"
+      "span_text": "término específico más corto",
+      "anatomical_location": "ubicación o 'No especificado'",
+      "presence": "presente | ausente | incierto",
+      "value": "valor o null"
     }}
   ]
 }}
-</output_format>
+</formato_salida>
 
-<report>
+<informe>
 {informe}
-</report>
+</informe>
 
-Respond ONLY with the valid JSON:
+Responde SOLO con el JSON válido:
 """
         
-        # --- PROMPT DE CODIFICACIÓN (ULTRA-SIMPLIFICADO v7) ---
+        # --- PROMPT DE CODIFICACIÓN (ULTRA-SIMPLIFICADO v7 - EN ESPAÑOL) ---
         # Enfoque de selección múltiple forzada
         self.coding_prompt_template = """
-You are a SNOMED-CT coder. Your ONLY job is to select codes from the list below.
+Eres un codificador SNOMED-CT. Tu ÚNICA tarea es seleccionar códigos de la lista a continuación.
 
-**ENTITY TO CODE:** "{entity}"
-**ANATOMICAL LOCATION:** "{location}"
-**PRESENCE:** "{presence}"
+**ENTIDAD A CODIFICAR:** "{entity}"
+**UBICACIÓN ANATÓMICA:** "{location}"
+**PRESENCIA:** "{presence}"
 
-**AVAILABLE CODES (SELECT FROM THIS LIST ONLY):**
+**CÓDIGOS DISPONIBLES (SELECCIONA SOLO DE ESTA LISTA):**
 {contexto_ontologico}
 
-**CRITICAL RULES:**
-[ERROR] DO NOT use "404684003" or "12738006" if ANY other code in the list matches
-[ERROR] DO NOT invent codes - ONLY use codes from the list above
-[OK] COPY the exact CODE number (digits only) from the list
-[OK] Choose the MOST SPECIFIC match
+**REGLAS CRÍTICAS:**
+[ERROR] NO uses "404684003" o "12738006" si CUALQUIER otro código de la lista coincide
+[ERROR] NO inventes códigos - SOLO usa códigos de la lista anterior
+[OK] COPIA el número de CÓDIGO exacto (solo dígitos) de la lista
+[OK] Elige la coincidencia MÁS ESPECÍFICA
 
-**PRESENCE CODES (FIXED - DO NOT CHANGE):**
-- If presence is "present" → use "52101004"
-- If presence is "absent" → use "272519000"
-- Otherwise → use "261665006"
+**CÓDIGOS DE PRESENCIA (FIJOS - NO CAMBIAR):**
+- Si presencia es "presente" → usa "52101004"
+- Si presencia es "ausente" → usa "272519000"
+- De lo contrario → usa "261665006"
 
-**YOUR TASK:**
-1. Find the line in "AVAILABLE CODES" that best matches "{entity}"
-2. Copy ONLY the number after "CODE:"
-3. That number goes in "entity_code"
-4. Do the same for "{location}" → "anatomy_code"
+**TU TAREA:**
+1. Encuentra la línea en "CÓDIGOS DISPONIBLES" que mejor coincida con "{entity}"
+2. Copia SOLO el número después de "CÓDIGO:"
+3. Ese número va en "entity_code"
+4. Haz lo mismo para "{location}" → "anatomy_code"
 
-**OUTPUT (JSON only, no explanation):**
+**SALIDA (solo JSON, sin explicación):**
 {{
-  "entity_code": "NUMBER_FROM_LIST",
-  "anatomy_code": "NUMBER_FROM_LIST_OR_12738006_IF_NO_LOCATION",
-  "presence_code": "52101004_OR_272519000_OR_261665006"
+  "entity_code": "NUMERO_DE_LA_LISTA",
+  "anatomy_code": "NUMERO_DE_LA_LISTA_O_12738006_SI_NO_HAY_UBICACION",
+  "presence_code": "52101004_O_272519000_O_261665006"
 }}
 
-**EXAMPLE:**
-If list has: "CODE: 230690007 | DESCRIPTION: stroke ictus cerebrovascular accident"
-And entity is "ictus"
-Then output: {{"entity_code": "230690007", ...}}
+**EJEMPLO:**
+Si la lista tiene: "CÓDIGO: 230690007 | DESCRIPCIÓN: ictus accidente cerebrovascular ACV"
+Y la entidad es "ictus"
+Entonces salida: {{"entity_code": "230690007", ...}}
 """
 
     def _call_gpt4o(self, prompt: str, max_retries: int = 3) -> str:
@@ -306,7 +306,7 @@ Then output: {{"entity_code": "230690007", ...}}
                     messages=[
                         {
                             "role": "system", 
-                            "content": "You are a SNOMED-CT coding assistant. You ONLY select codes from the provided list. You NEVER invent codes. You ALWAYS respond with valid JSON containing only the requested fields. You are precise and deterministic."
+                            "content": "Eres un asistente de codificación SNOMED-CT. SOLO seleccionas códigos de la lista proporcionada. NUNCA inventas códigos. SIEMPRE respondes con JSON válido conteniendo solo los campos solicitados. Eres preciso y determinista."
                         },
                         {"role": "user", "content": prompt}
                     ],

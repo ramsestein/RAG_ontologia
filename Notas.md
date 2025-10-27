@@ -225,4 +225,12 @@ Strategy                       F1-Score   Precision  Recall     Pred   Match  Ti
 
 Es normal que obtenga peores resultados, hay más ruído.
 
+Aún así, lo estaba haciendo mal (conceptos repetidos). Ahora está bien, tengo un script que genera la ontología híbrida: los 32 ground truth concepts y 2468 conceptos más para añadir ruído. He hecho la prueba con una ontología solo con los 32 ground truth concepts y me ha dado 0.6 de F1. Vamos a seguir mejorando el modelo, de momento sin mirar del todo chunks, temperatura, prompt engineering ni embedding, tenemos estos resultados:
+
+Strategy                       F1-Score   Precision  Recall     Pred   Match  Time
+------------------------------------------------------------------------------------------------------------------------
+01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.033     s
+02_SNOBERT                     0.2857     0.2936     0.2783     109    32     4.604     s
+04_RAG_GPT                     0.2474     0.3038     0.2087     79     24     164.036   s
+
 
