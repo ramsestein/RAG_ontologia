@@ -58,26 +58,30 @@ def load_ontology_csv():
     print("STEP 1: Loading Ontology Data")
     print("="*80)
     
-    # UPDATED: Use custom stroke ontology (optimized for ground truth codes)
-    custom_path = os.path.join(ASSETS_DIR, 'custom_stroke_ontology.csv')
+    # UPDATED: Use hybrid ontology (26 missing + 6 existing + 30 noise concepts)
+    hybrid_path = os.path.join(PROJECT_ROOT, 'hybrid_ontology.csv')
     fallback_path = os.path.join(PROJECT_ROOT, 'conceptos_con_narrativas.csv')
     
-    # Try custom ontology first
-    if os.path.exists(custom_path):
-        print(f"[INFO] Loading CUSTOM STROKE ONTOLOGY from: {custom_path}")
-        df = pd.read_csv(custom_path)
-        print(f"[SUCCESS] Loaded {len(df)} concepts (optimized for stroke/NER task)")
+    # Try hybrid ontology first (preferred)
+    if os.path.exists(hybrid_path):
+        print(f"[INFO] Loading HYBRID ONTOLOGY from: {hybrid_path}")
+        df = pd.read_csv(hybrid_path)
+        print(f"[SUCCESS] Loaded {len(df)} concepts")
+        print(f"           - Contains all training concepts (32 total)")
+        print(f"           - Plus ~30 noise concepts for robustness testing")
         return df
     
-    # Fallback to original
+    # Fallback to original (incomplete for stroke task)
     if os.path.exists(fallback_path):
+        print(f"[WARNING] Hybrid ontology not found, using incomplete original")
         print(f"[INFO] Loading from: {fallback_path}")
         df = pd.read_csv(fallback_path)
         print(f"[SUCCESS] Loaded {len(df)} concepts")
+        print(f"[WARNING] This ontology is missing 26 critical stroke concepts!")
         return df
     
     raise FileNotFoundError(
-        f"Could not find ontology CSV at: {custom_path} or {fallback_path}"
+        f"Could not find ontology CSV at: {hybrid_path} or {fallback_path}"
     )
 
 
@@ -97,7 +101,7 @@ def generate_embeddings(narratives, model_name='all-MiniLM-L6-v2', batch_size=32
     print(f"[INFO] Using device: {device}")
     
     if 'cuda' in str(device):
-        print("[INFO] 🚀 GPU detected! Encoding will be faster.")
+        print("[INFO] [READY] GPU detected! Encoding will be faster.")
         batch_size = 128
     else:
         print("[INFO] Using CPU. This may take several minutes...")

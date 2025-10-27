@@ -78,19 +78,19 @@ class MetricsCalculator:
         report.append(f"RESULTS - {strategy_name}")
         report.append("="*80)
         
-        report.append("\n📊 METRICS:")
+        report.append("\n[METRICS] METRICS:")
         report.append(f"   Precision:  {metrics['precision']:.4f}")
         report.append(f"   Recall:     {metrics['recall']:.4f}")
         report.append(f"   F1-Score:   {metrics['f1']:.4f}")
         report.append(f"   Coverage:   {metrics['coverage']:.4f}")
         
-        report.append("\n📈 COUNTS:")
+        report.append("\n[CHART] COUNTS:")
         report.append(f"   Predictions:     {metrics['predictions']}")
         report.append(f"   Exact Matches:   {metrics['matches']}")
         report.append(f"   Partial Matches: {metrics['partial_matches']}")
         report.append(f"   Ground Truth:    {metrics['ground_truth']}")
         
-        report.append(f"\n⏱  EXECUTION TIME: {execution_time:.2f} seconds")
+        report.append(f"\n[TIME]  EXECUTION TIME: {execution_time:.2f} seconds")
         report.append("="*80)
         
         return "\n".join(report)

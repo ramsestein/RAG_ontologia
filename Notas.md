@@ -146,3 +146,83 @@ Aún mejor, ahora falta mejorar:
 2-Temperatura
 3-Prompt
 4-Embedding
+
+Antes de empezar, voy a organizar mejor el script 04_rag_gpt.py
+
+Me he dado cuenta que la ontología ``conceptos_con_narrativas.csv`` le faltan conceptos.
+
+He fusionado conceptos:
+
+Strategy                       F1-Score   Precision  Recall     Pred   Match  Time
+------------------------------------------------------------------------------------------------------------------------
+01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.032     s
+04_RAG_GPT                     0.3600     0.4235     0.3130     85     36     129.008   s
+02_SNOBERT                     0.3346     0.3028     0.3739     142    43     6.946     s
+
+
+Aún así, faltan conceptos, voy a hacer una ontología híbrida bien hecha...
+
+check_missing_concepts.py
+
+
+================================================================================
+MISSING CONCEPTS ANALYSIS
+================================================================================
+
+Total concepts in training data: 32
+Total concepts in ontology: 45440
+Missing concepts: 26
+Coverage: 18.75%
+
+================================================================================
+MISSING CONCEPT DETAILS (sorted by frequency)
+================================================================================
+
+Concept Code         Frequency  % of Total Annotations
+------------------------------------------------------------
+77477000             22         19.13%
+55342001             6          5.22%
+266257000            6          5.22%
+77343006             6          5.22%
+230690007            5          4.35%
+13791008             4          3.48%
+449894001            4          3.48%
+230691006            3          2.61%
+67889009             3          2.61%
+432101006            3          2.61%
+25064002             3          2.61%
+73211009             2          1.74%
+387467008            2          1.74%
+433112001            2          1.74%
+113091000            2          1.74%
+20262006             2          1.74%
+38341003             2          1.74%
+50582007             2          1.74%
+69449002             2          1.74%
+422400008            1          0.87%
+21454007             1          0.87%
+49436004             1          0.87%
+87486003             1          0.87%
+52674009             1          0.87%
+422587007            1          0.87%
+8011004              1          0.87%
+
+================================================================================
+IMPACT ANALYSIS
+================================================================================
+Total annotations affected by missing concepts: 88 / 115
+Percentage of annotations that cannot be matched: 76.52%
+
+
+He generado una ontología híbrida con las definiciones de los términos y +2400 conceptos de conceptos_con_narrativas.csv para un total de 2500 conceptos para añadir ruído. He obtenido estos resultdados:
+
+Strategy                       F1-Score   Precision  Recall     Pred   Match  Time
+------------------------------------------------------------------------------------------------------------------------
+01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.036     s
+02_SNOBERT                     0.6241     0.3591     2.3826     763    274    31.440    s
+04_RAG_GPT                     0.3116     0.3690     0.2696     84     31     127.081   s
+
+
+Es normal que obtenga peores resultados, hay más ruído.
+
+
