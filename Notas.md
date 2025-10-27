@@ -104,3 +104,45 @@ Además la carpeta assets debería ir dentro de 04_strategy.
 Focus en mejorar el rendimiento del GPT (no es muy importante tema API calls).
 Faltará volver a ejecutar el builder, ya aprovehcar y hacer lo de los chunks.
 Además problema de que el fichero ontology.index es 66.5MB y github maximo permite 50 MB, ponerlo en gitignore.
+
+
+---
+
+
+## Día 4: 27 Octubre 2025 (4h)
+
+Básiamente he empezado compilando la ontología de nuevo y he aplicado los cambios que `Ramses` decía, a ver que resultados obtengo.
+He hecho un par de cambios:
+Strategy                       F1-Score   Precision  Recall     Pred   Match  Time
+------------------------------------------------------------------------------------------------------------------------
+01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.033     s
+02_SNOBERT                     0.1203     0.4444     0.0696     18     8      1.632     s
+04_RAG_GPT                     0.0462     0.0690     0.0348     58     4      213.939   s
+
+
+Las predicciones son muy buenas aunque los match malísimos. Me he dado cuenta que estoy cometiendo un error.
+
+Aún no consigo arreglar el error pero ahora consigo predecir más valores (66), voy a ver.
+
+Problema:
+Strategy                       F1-Score   Precision  Recall     Pred   Match  Time
+------------------------------------------------------------------------------------------------------------------------
+01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.032     s
+02_SNOBERT                     0.5593     0.4142     0.8609     239    99     11.651    s
+04_RAG_GPT                     0.0000     0.0000     0.0000     67     0      112.725   s
+
+Estaba poniendo emojis en la respuesta chatGPT!
+
+Arreglado.
+
+Strategy                       F1-Score   Precision  Recall     Pred   Match  Time
+------------------------------------------------------------------------------------------------------------------------
+01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.036     s
+04_RAG_GPT                     0.4824     0.5714     0.4174     84     48     136.048   s
+02_SNOBERT                     0.2081     0.3103     0.1565     58     18     3.115     s
+
+Aún mejor, ahora falta mejorar:
+1-Chunks
+2-Temperatura
+3-Prompt
+4-Embedding
