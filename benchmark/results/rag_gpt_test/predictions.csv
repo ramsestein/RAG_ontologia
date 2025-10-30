@@ -1,84 +1,81 @@
 note_id,start,end,concept_id,span_text,confidence,entity_description,anatomy_code,presence_code,llm_used
 1,75,87,38341003,hypertension,0.85,hypertension,12738006,52101004,GPT-4o
-1,92,100,73211009,diabetes,0.85,diabetes,12738006,52101004,GPT-4o
-1,155,163,729933002,weakness,0.85,weakness,181201004,52101004,GPT-4o
+1,92,109,73211009,diabetes mellitus,0.85,diabetes mellitus,12738006,52101004,GPT-4o
+1,129,163,50960005,acute onset of left-sided weakness,0.85,acute onset of left-sided weakness,12738006,52101004,GPT-4o
 1,168,187,266257000,speech difficulties,0.85,speech difficulties,12738006,52101004,GPT-4o
 1,331,336,125437009,NIHSS,0.85,NIHSS,12738006,52101004,GPT-4o
-1,361,372,50582007,hemiparesis,0.85,hemiparesis,12738006,52101004,GPT-4o
-1,417,427,12738006,dysarthria,0.85,dysarthria,12738006,52101004,GPT-4o
-1,476,478,189899000,CT,0.85,CT,361284004,52101004,GPT-4o
-1,508,518,50960005,hemorrhage,0.85,hemorrhage,12738006,272519000,GPT-4o
-1,548,557,721986002,occlusion,0.85,occlusion,737604002,52101004,GPT-4o
-1,651,658,362620003,ASPECTS,0.85,ASPECTS,12738006,52101004,GPT-4o
-1,695,703,367739006,penumbra,0.85,penumbra,28852008,52101004,GPT-4o
-1,826,829,129789007,tPA,0.85,tPA,12738006,52101004,GPT-4o
-1,934,946,26036001,thrombectomy,0.85,thrombectomy,12738006,52101004,GPT-4o
-1,973,987,1297209000,recanalization,0.85,recanalization,12738006,52101004,GPT-4o
+1,356,372,50582007,left hemiparesis,0.85,left hemiparesis,12738006,52101004,GPT-4o
+1,389,406,726960008,left facial droop,0.85,left facial droop,12738006,52101004,GPT-4o
+1,412,427,985004,mild dysarthria,0.85,mild dysarthria,12738006,52101004,GPT-4o
+1,499,518,50960005,no acute hemorrhage,0.85,no acute hemorrhage,361284004,272519000,GPT-4o
+1,548,610,730651002,occlusion of the right middle cerebral artery (MCA) M1 segment,0.85,occlusion of the right middle cerebral artery (MCA) M1 segment,730651002,52101004,GPT-4o
+1,651,658,362352005,ASPECTS,0.85,ASPECTS,12738006,52101004,GPT-4o
+1,689,703,28852008,large penumbra,0.85,large penumbra,12738006,52101004,GPT-4o
+1,709,744,314166009,core-penumbra mismatch ratio of 2.4,0.85,core-penumbra mismatch ratio of 2.4,12738006,52101004,GPT-4o
+1,874,896,26036001,large vessel occlusion,0.85,large vessel occlusion,12738006,52101004,GPT-4o
+1,923,946,26036001,mechanical thrombectomy,0.85,mechanical thrombectomy,12738006,52101004,GPT-4o
+1,962,987,1297209000,Successful recanalization,0.85,successful recanalization,12738006,52101004,GPT-4o
 1,1043,1047,879811004,TICI,0.85,TICI,12738006,52101004,GPT-4o
-1,1139,1165,69449002,hemorrhagic transformation,0.85,hemorrhagic transformation,12738006,52101004,GPT-4o
-1,1235,1240,125437009,NIHSS,0.85,NIHSS,12738006,52101004,GPT-4o
+1,1131,1165,50960005,minimal hemorrhagic transformation,0.85,minimal hemorrhagic transformation,12738006,52101004,GPT-4o
 2,40,59,49436004,atrial fibrillation,0.85,atrial fibrillation,12738006,52101004,GPT-4o
-2,151,159,12738006,headache,0.85,headache,12738006,52101004,GPT-4o
+2,144,159,69449002,severe headache,0.85,severe headache,12738006,52101004,GPT-4o
 2,161,167,422587007,nausea,0.85,nausea,12738006,52101004,GPT-4o
 2,173,181,422400008,vomiting,0.85,vomiting,12738006,52101004,GPT-4o
 2,443,458,279316009,nuchal rigidity,0.85,nuchal rigidity,12738006,52101004,GPT-4o
 2,463,474,129789007,photophobia,0.85,photophobia,12738006,52101004,GPT-4o
-2,476,494,12738006,Glasgow Coma Scale,0.85,Glasgow Coma Scale,12738006,52101004,GPT-4o
-2,528,530,189899000,CT,0.85,CT,361284004,52101004,GPT-4o
+2,476,494,404684003,Glasgow Coma Scale,0.85,Glasgow Coma Scale,12738006,52101004,GPT-4o
 2,552,575,50960005,subarachnoid hemorrhage,0.85,subarachnoid hemorrhage,369389009,52101004,GPT-4o
-2,631,645,77477000,CT angiography,0.85,CT angiography,12738006,52101004,GPT-4o
-2,695,703,432101006,aneurysm,0.85,aneurysm,12738006,52101004,GPT-4o
+2,661,723,432101006,7mm anterior communicating artery aneurysm with a daughter sac,0.85,7mm anterior communicating artery aneurysm with a daughter sac,12738006,52101004,GPT-4o
 2,760,769,727450000,vasospasm,0.85,vasospasm,12738006,272519000,GPT-4o
-2,962,969,61548005,coiling,0.85,coiling,432101006,52101004,GPT-4o
-2,1089,1097,52674009,ischemia,0.85,ischemia,731130006,52101004,GPT-4o
-2,1129,1141,38341003,hypertension,0.85,hypertension,12738006,52101004,GPT-4o
-2,1154,1165,12738006,angioplasty,0.85,angioplasty,12738006,52101004,GPT-4o
-2,1196,1217,12738006,modified Rankin Scale,0.85,modified Rankin Scale,12738006,52101004,GPT-4o
-3,127,135,729933002,weakness,0.85,weakness,729742001,52101004,GPT-4o
+2,949,985,26036001,Endovascular coiling of the aneurysm,0.85,endovascular coiling of the aneurysm,12738006,52101004,GPT-4o
+2,1072,1097,52674009,delayed cerebral ischemia,0.85,delayed cerebral ischemia,12738006,52101004,GPT-4o
+2,1146,1165,189794002,balloon angioplasty,0.85,balloon angioplasty,12738006,52101004,GPT-4o
+2,1196,1217,273068001,modified Rankin Scale,0.85,modified Rankin Scale,12738006,52101004,GPT-4o
+3,115,135,729933002,right-sided weakness,0.85,right-sided weakness,12738006,52101004,GPT-4o
 3,140,159,266257000,speech difficulties,0.85,speech difficulties,12738006,52101004,GPT-4o
+3,336,355,147157007,unilateral weakness,0.85,unilateral weakness,12738006,52101004,GPT-4o
+3,360,378,50582007,speech disturbance,0.85,speech disturbance,12738006,52101004,GPT-4o
+3,450,498,86547008,70% stenosis of the left internal carotid artery,0.85,70% stenosis of the left internal carotid artery,86547008,52101004,GPT-4o
+3,567,613,193619006,small acute infarct in the left corona radiata,0.85,small acute infarct in the left corona radiata,193619006,52101004,GPT-4o
+3,640,684,86547008,severe left internal carotid artery stenosis,0.85,severe left internal carotid artery stenosis,86547008,52101004,GPT-4o
+3,710,742,91746003,normal left ventricular function,0.85,normal left ventricular function,730608001,52101004,GPT-4o
+3,799,830,67889009,Transient ischemic attack (TIA),0.85,Transient ischemic attack (TIA),12738006,52101004,GPT-4o
+3,846,866,28208008,small vessel infarct,0.85,small vessel infarct,12738006,52101004,GPT-4o
+3,886,933,26036001,artery-to-artery embolism from carotid stenosis,0.85,artery-to-artery embolism from carotid stenosis,86547008,52101004,GPT-4o
+3,949,974,230691006,Dual antiplatelet therapy,0.85,Dual antiplatelet therapy,12738006,52101004,GPT-4o
+3,1049,1071,86547008,carotid endarterectomy,0.85,carotid endarterectomy,86547008,52101004,GPT-4o
 3,251,256,725310003,ABCD2,0.85,ABCD2,12738006,52101004,GPT-4o
-3,454,462,279316009,stenosis,0.85,stenosis,86547008,52101004,GPT-4o
-3,579,586,55342001,infarct,0.85,infarct,193619006,52101004,GPT-4o
-3,676,684,279316009,stenosis,0.85,stenosis,86547008,52101004,GPT-4o
-3,826,829,12738006,TIA,0.85,TIA,12738006,52101004,GPT-4o
-3,859,866,55342001,infarct,0.85,infarct,12738006,52101004,GPT-4o
-3,903,911,86501000,embolism,0.85,embolism,12738006,52101004,GPT-4o
-3,917,933,86547008,carotid stenosis,0.85,carotid stenosis,12738006,52101004,GPT-4o
-3,1057,1071,730526009,endarterectomy,0.85,endarterectomy,86547008,52101004,GPT-4o
+3,52,59,193619006,smoking,0.85,smoking,12738006,52101004,GPT-4o
 3,64,78,12738006,hyperlipidemia,0.85,hyperlipidemia,12738006,52101004,GPT-4o
-4,0,12,26036001,THROMBECTOMY,0.85,thrombectomy,12738006,52101004,GPT-4o
-4,87,94,12738006,aphasia,0.85,aphasia,12738006,52101004,GPT-4o
-4,105,115,50582007,hemiplegia,0.85,hemiplegia,12738006,52101004,GPT-4o
+4,72,94,50960005,acute onset of aphasia,0.85,acute onset of aphasia,12738006,52101004,GPT-4o
+4,99,115,50582007,right hemiplegia,0.85,right hemiplegia,12738006,52101004,GPT-4o
 4,191,196,125437009,NIHSS,0.85,NIHSS,12738006,52101004,GPT-4o
-4,7,9,189899000,CT,0.85,CT,361284004,52101004,GPT-4o
-4,235,245,50960005,hemorrhage,0.85,hemorrhage,12738006,272519000,GPT-4o
-4,251,258,362620003,ASPECTS,0.85,ASPECTS,12738006,52101004,GPT-4o
-4,326,335,721986002,occlusion,0.85,occlusion,730651002,52101004,GPT-4o
-4,346,356,196913001,collateral,0.85,collateral,12738006,52101004,GPT-4o
-4,274,285,77343006,angiography,0.85,angiography,12738006,52101004,GPT-4o
-4,656,660,879811004,TICI,0.85,TICI,12738006,52101004,GPT-4o
-4,663,677,1297209000,recanalization,0.85,recanalization,12738006,52101004,GPT-4o
-4,211,213,189899000,CT,0.85,CT,12738006,52101004,GPT-4o
-4,809,820,50960005,hemorrhagic,0.85,hemorrhagic,12738006,272519000,GPT-4o
-4,836,841,125437009,NIHSS,0.85,NIHSS,12738006,52101004,GPT-4o
+4,226,245,50960005,no acute hemorrhage,0.85,no acute hemorrhage,361284004,272519000,GPT-4o
+4,251,258,362352005,ASPECTS,0.85,ASPECTS,12738006,52101004,GPT-4o
+4,295,335,730651002,left M1 middle cerebral artery occlusion,0.85,left M1 middle cerebral artery occlusion,730651002,52101004,GPT-4o
+4,341,368,730526009,good collateral circulation,0.85,good collateral circulation,12738006,52101004,GPT-4o
+4,455,475,31677005,right femoral artery,0.85,right femoral artery,31677005,52101004,GPT-4o
+4,519,547,86547008,left internal carotid artery,0.85,left internal carotid artery,86547008,52101004,GPT-4o
+4,656,677,879811004,TICI 3 recanalization,0.85,TICI 3 recanalization,12738006,52101004,GPT-4o
+4,775,800,1297209000,successful recanalization,0.85,successful recanalization,12738006,52101004,GPT-4o
+4,806,834,50960005,no hemorrhagic complications,0.85,no hemorrhagic complications,12738006,272519000,GPT-4o
 4,917,937,279316009,patent foramen ovale,0.85,patent foramen ovale,12738006,52101004,GPT-4o
-4,943,965,12738006,atrial septal aneurysm,0.85,atrial septal aneurysm,12738006,52101004,GPT-4o
-4,995,1003,86501000,embolism,0.85,embolism,12738006,52101004,GPT-4o
-4,1005,1020,12738006,Anticoagulation,0.85,anticoagulation,12738006,52101004,GPT-4o
-5,22,28,55342001,STROKE,0.85,stroke,12738006,52101004,GPT-4o
-5,114,121,1296550003,vertigo,0.85,vertigo,12738006,52101004,GPT-4o
-5,123,131,12738006,diplopia,0.85,diplopia,12738006,52101004,GPT-4o
+4,943,965,730583004,atrial septal aneurysm,0.85,atrial septal aneurysm,12738006,52101004,GPT-4o
+4,983,1003,86501000,paradoxical embolism,0.85,paradoxical embolism,12738006,52101004,GPT-4o
+4,1005,1020,730526009,Anticoagulation,0.85,anticoagulation,12738006,52101004,GPT-4o
+5,0,28,369301009,POSTERIOR CIRCULATION STROKE,0.85,posterior circulation stroke,12738006,52101004,GPT-4o
+5,54,83,243903002,vertebrobasilar insufficiency,0.85,vertebrobasilar insufficiency,263296002,52101004,GPT-4o
+5,99,121,50960005,acute onset of vertigo,0.85,acute onset of vertigo,12738006,52101004,GPT-4o
+5,123,131,18126004,diplopia,0.85,diplopia,12738006,52101004,GPT-4o
 5,137,143,20262006,ataxia,0.85,ataxia,12738006,52101004,GPT-4o
-5,246,255,12738006,nystagmus,0.85,nystagmus,12738006,52101004,GPT-4o
-5,280,295,726675003,ophthalmoplegia,0.85,ophthalmoplegia,12738006,52101004,GPT-4o
-5,309,315,20262006,ataxia,0.85,ataxia,818982008,52101004,GPT-4o
-5,354,363,12738006,dysmetria,0.85,dysmetria,12738006,52101004,GPT-4o
+5,246,255,739020002,nystagmus,0.85,nystagmus,12738006,52101004,GPT-4o
+5,257,295,726675003,bilateral internuclear ophthalmoplegia,0.85,bilateral internuclear ophthalmoplegia,12738006,52101004,GPT-4o
+5,301,315,20262006,truncal ataxia,0.85,truncal ataxia,818982008,52101004,GPT-4o
+5,354,363,103676007,dysmetria,0.85,dysmetria,12738006,52101004,GPT-4o
 5,368,386,35714009,dysdiadochokinesia,0.85,dysdiadochokinesia,12738006,52101004,GPT-4o
-5,396,404,729933002,weakness,0.85,weakness,699991006,272519000,GPT-4o
-5,456,464,28208008,infarcts,0.85,infarcts,67701001,52101004,GPT-4o
-5,576,584,279316009,stenosis,0.85,stenosis,871539007,52101004,GPT-4o
-5,695,703,279316009,stenosis,0.85,stenosis,54247002,52101004,GPT-4o
-5,794,803,26036001,occlusion,0.85,occlusion,360537008,52101004,GPT-4o
-5,876,888,12738006,Antiplatelet,0.85,antiplatelet,12738006,52101004,GPT-4o
-5,1003,1014,54247002,angioplasty,0.85,angioplasty,12738006,261665006,GPT-4o
-5,1019,1027,727323009,stenting,0.85,stenting,12738006,261665006,GPT-4o
+5,450,511,55342001,acute infarcts in the bilateral medial longitudinal fasciculi,0.85,acute infarcts in the bilateral medial longitudinal fasciculi,72067004,52101004,GPT-4o
+5,569,606,26036001,severe stenosis of the basilar artery,0.85,severe stenosis of the basilar artery,871539007,52101004,GPT-4o
+5,612,650,26036001,poor posterior circulation collaterals,0.85,poor posterior circulation collaterals,12738006,52101004,GPT-4o
+5,772,803,26036001,basilar artery branch occlusion,0.85,basilar artery branch occlusion,360537008,52101004,GPT-4o
+5,876,896,12738006,Antiplatelet therapy,0.85,antiplatelet therapy,12738006,52101004,GPT-4o
+5,964,1027,19952003,endovascular intervention with balloon angioplasty and stenting,0.85,endovascular intervention with balloon angioplasty and stenting,12738006,261665006,GPT-4o

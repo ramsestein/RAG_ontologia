@@ -67,7 +67,7 @@ class NERExtractor:
                     messages=[
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=self.model_config.get("temperature", 0.1),
+                    temperature=0.0,  # Forzar determinismo completo (no creatividad en NER extractivo)
                     max_tokens=self.model_config.get("max_tokens", 4000),
                     response_format={"type": "json_object"}
                 )

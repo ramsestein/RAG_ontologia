@@ -69,12 +69,78 @@ class RAGGPTPipeline:
             print("[OK] Pipeline inicializado correctamente")
             print("="*80)
     
+    def _chunk_text(self, text: str, chunk_size: int = 3000, overlap: int = 300) -> List[str]:
+        """
+        Divide el texto en chunks con overlap para evitar perder entidades en los bordes
+        
+        Args:
+            text: Texto completo a dividir
+            chunk_size: Tamaño de cada chunk en caracteres
+            overlap: Número de caracteres de solapamiento entre chunks
+            
+        Returns:
+            Lista de chunks de texto
+        """
+        if len(text) <= chunk_size:
+            return [text]
+        
+        chunks = []
+        start = 0
+        
+        while start < len(text):
+            end = min(start + chunk_size, len(text))
+            chunk = text[start:end]
+            chunks.append(chunk)
+            
+            # Si llegamos al final, terminamos
+            if end >= len(text):
+                break
+            
+            # Siguiente chunk empieza con overlap
+            start = end - overlap
+        
+        if self.verbose:
+            print(f"[CHUNKING] Texto dividido en {len(chunks)} chunks (size={chunk_size}, overlap={overlap})")
+        
+        return chunks
+    
+    def _deduplicate_entities(self, entities: List[Dict]) -> List[Dict]:
+        """
+        Elimina entidades duplicadas generadas por chunks con overlap
+        
+        Args:
+            entities: Lista de entidades que puede contener duplicados
+            
+        Returns:
+            Lista de entidades únicas
+        """
+        seen = set()
+        unique_entities = []
+        
+        for entity in entities:
+            # Crear clave única basada en propiedades de la entidad
+            key = (
+                entity['span_text'],
+                entity.get('anatomical_location', ''),
+                entity.get('presence', '')
+            )
+            
+            if key not in seen:
+                seen.add(key)
+                unique_entities.append(entity)
+        
+        if self.verbose and len(entities) > len(unique_entities):
+            duplicates = len(entities) - len(unique_entities)
+            print(f"[DEDUP] Eliminados {duplicates} duplicados ({len(entities)} -> {len(unique_entities)} entidades)")
+        
+        return unique_entities
+    
     def process_note(self, text: str, note_id: int = None) -> List[Dict]:
         """
         Procesa una nota médica completa
         
         Pipeline:
-            text -> NER -> entities -> RAG+Coding -> coded_entities
+            text -> Chunking -> NER (por chunk) -> Dedup -> RAG+Coding -> coded_entities
         
         Args:
             text: Texto de la nota médica
@@ -88,13 +154,25 @@ class RAGGPTPipeline:
             print(f"Procesando nota {note_id}")
             print(f"{'='*80}")
         
-        # Paso 1: NER - Extraer entidades
-        entities = self.ner.extract_entities(text)
+        # Paso 0: Chunking - Dividir texto en chunks con overlap
+        chunks = self._chunk_text(text)
         
-        if not entities:
+        # Paso 1: NER - Extraer entidades de cada chunk
+        all_entities = []
+        for i, chunk in enumerate(chunks):
+            if self.verbose and len(chunks) > 1:
+                print(f"\n[NER] Procesando chunk {i+1}/{len(chunks)}...")
+            
+            chunk_entities = self.ner.extract_entities(chunk)
+            all_entities.extend(chunk_entities)
+        
+        if not all_entities:
             if self.verbose:
                 print("[WARNING] No se detectaron entidades")
             return []
+        
+        # Paso 1.5: Deduplicación - Eliminar entidades duplicadas del overlap
+        entities = self._deduplicate_entities(all_entities)
         
         # Paso 2: RAG + Coding - Codificar entidades
         coded_entities = self.coder.code_entities(entities, verbose=self.verbose)

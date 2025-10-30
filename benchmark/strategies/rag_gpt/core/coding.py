@@ -78,17 +78,20 @@ class SNOMEDCoder:
         if location and location != "No especificado":
             contexto_anatomy = self._build_context(location, "ANATOMY", verbose)
         
-        # 3. Combinar contextos
-        contexto_ontologico = contexto_entity + contexto_anatomy
-        if not contexto_ontologico.strip():
-            contexto_ontologico = "--- NO SPECIFIC CODES AVAILABLE ---\nUse default codes."
+        # 3. NO combinar contextos - mantenerlos separados para evitar confusión
+        # Asegurar que ambos contextos existan (aunque sea vacío)
+        if not contexto_entity.strip():
+            contexto_entity = "--- NO SPECIFIC ENTITY CODES AVAILABLE ---\nUse default entity code."
+        if not contexto_anatomy.strip():
+            contexto_anatomy = "--- NO SPECIFIC ANATOMY CODES AVAILABLE ---\nUse default anatomy code (12738006)."
         
-        # 4. Preparar prompt
+        # 4. Preparar prompt con contextos SEPARADOS
         prompt = self.prompt_template.format(
             entity=span_text,
             location=location,
             presence=presence,
-            contexto_ontologico=contexto_ontologico
+            contexto_entity=contexto_entity,
+            contexto_anatomy=contexto_anatomy
         )
         
         # 5. Llamar a GPT-4o

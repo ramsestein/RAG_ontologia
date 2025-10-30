@@ -69,7 +69,7 @@ def main():
     print("RESULTADOS - RAG+GPT Strategy")
     print("="*80)
     
-    print(f"\n[MÉTRICAS]")
+    print(f"\n[METRICAS]")
     print(f"   Precision:  {metrics['precision']:.4f}")
     print(f"   Recall:     {metrics['recall']:.4f}")
     print(f"   F1-Score:   {metrics['f1']:.4f}")
@@ -96,10 +96,10 @@ def main():
     print(f"\n[OK] Predicciones guardadas en: {predictions_path}")
     
     # 7. Análisis de códigos usados
-    print("\n[ANÁLISIS DE CÓDIGOS]")
+    print("\n[ANALISIS DE CÓDIGOS]")
     code_counts = predictions_df['concept_id'].value_counts()
-    print(f"   Códigos únicos usados: {len(code_counts)}")
-    print(f"\n   Top 10 códigos más frecuentes:")
+    print(f"   Codigos unicos usados: {len(code_counts)}")
+    print(f"\n   Top 10 codigos más frecuentes:")
     for code, count in code_counts.head(10).items():
         print(f"      {code}: {count} veces")
     
@@ -107,9 +107,9 @@ def main():
     fallback_codes = ['404684003', 'LINKING_FAILED']
     fallback_count = sum(predictions_df['concept_id'].isin(fallback_codes))
     if fallback_count > 0:
-        print(f"\n   [WARNING] ADVERTENCIA: {fallback_count} predicciones con códigos fallback")
+        print(f"\n   [WARNING] ADVERTENCIA: {fallback_count} predicciones con codigos fallback")
     else:
-        print(f"\n   [OK] No se usaron códigos fallback")
+        print(f"\n   [OK] No se usaron codigos fallback")
     
     print("\n" + "="*80)
     print("Test completado")
