@@ -1,9 +1,7 @@
-"""
-Módulo de Codificación SNOMED-CT usando RAG + GPT-4o
-"""
+"""Codificación SNOMED-CT usando RAG + GPT-4o"""
 
 import json
-import re
+import os
 from typing import List, Dict
 from openai import OpenAI
 from .rag import RAGRetriever
@@ -12,196 +10,130 @@ from .rag import RAGRetriever
 class SNOMEDCoder:
     """Codificador de entidades médicas usando SNOMED-CT"""
     
-    def __init__(self, client: OpenAI, rag_retriever: RAGRetriever, 
-                 prompt_config: Dict, system_prompt: str, model_config: Dict):
-        """
-        Args:
-            client: Cliente de OpenAI
-            rag_retriever: Sistema RAG para recuperación de conceptos
-            prompt_config: Configuración del prompt de codificación
-            system_prompt: Prompt de sistema
-            model_config: Configuración del modelo GPT
-        """
-        self.client = client
+    FALLBACK_CODE = "404684003"
+    DEFAULT_ANATOMY = "12738006"
+    PRESENCE_MAP = {
+        "presente": "52101004",
+        "ausente": "272519000",
+        "incierto": "261665006"
+    }
+    
+    def __init__(self, rag_retriever, openai_client):
         self.rag = rag_retriever
-        self.prompt_template = prompt_config['template']
-        self.system_prompt = system_prompt
-        self.model_config = model_config
+        self.client = openai_client
         
-        # Mapeo de presencia a código SNOMED
-        self.presence_map = {
-            "presente": "52101004",
-            "ausente": "272519000",
-            "incierto": "261665006"
-        }
+        prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "coding_prompt.json")
+        with open(prompt_path, 'r', encoding='utf-8') as f:
+            self.prompt_config = json.load(f)
+        
+        filter_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "filter_prompt.json")
+        with open(filter_path, 'r', encoding='utf-8') as f:
+            self.filter_config = json.load(f)
     
     def code_entities(self, entities: List[Dict], verbose: bool = True) -> List[Dict]:
-        """
-        Codifica entidades usando SNOMED-CT con contexto RAG
-        
-        Args:
-            entities: Lista de entidades del NER
-            verbose: Si True, imprime logs detallados
-            
-        Returns:
-            Lista de entidades codificadas con códigos SNOMED
-        """
+        """Codifica entidades usando SNOMED-CT con contexto RAG"""
         if verbose:
             print(f"[CODING] Codificando {len(entities)} entidades...")
         
         coded_entities = []
-        
-        for idx, entity in enumerate(entities):
-            if verbose:
-                print(f"\n[CODING] Entidad {idx+1}/{len(entities)}: '{entity['span_text']}'")
+        for entity in entities:
+            codes = self.assign_codes(
+                entity=entity['full_span'],
+                location=entity.get('anatomical_location', 'No especificado'),
+                presence=entity.get('presence', 'presente'),
+                verbose=verbose
+            )
             
-            coded = self._code_single_entity(entity, verbose)
-            coded_entities.append(coded)
-        
-        if verbose:
-            print(f"\n[CODING] [OK] Codificación completada: {len(coded_entities)} entidades")
+            coded_entity = {**entity, **codes}
+            coded_entities.append(coded_entity)
         
         return coded_entities
     
-    def _code_single_entity(self, entity: Dict, verbose: bool) -> Dict:
-        """Codifica una sola entidad"""
+    def assign_codes(self, entity: str, location: str, presence: str, verbose: bool = False) -> dict:
+        """RAG + GPT single-phase"""
+        contexto_entity = self._build_context(entity, "ENTITY", verbose)
+        contexto_anatomy = "--- ANATOMY NOT SPECIFIED ---\n"
         
-        span_text = entity['span_text']
-        location = entity['anatomical_location']
-        presence = entity['presence']
-        
-        # 1. Recuperar contexto RAG para la entidad
-        contexto_entity = self._build_context(span_text, "ENTITY", verbose)
-        
-        # 2. Recuperar contexto RAG para la ubicación anatómica
-        contexto_anatomy = ""
         if location and location != "No especificado":
             contexto_anatomy = self._build_context(location, "ANATOMY", verbose)
         
-        # 3. NO combinar contextos - mantenerlos separados para evitar confusión
-        # Asegurar que ambos contextos existan (aunque sea vacío)
-        if not contexto_entity.strip():
-            contexto_entity = "--- NO SPECIFIC ENTITY CODES AVAILABLE ---\nUse default entity code."
-        if not contexto_anatomy.strip():
-            contexto_anatomy = "--- NO SPECIFIC ANATOMY CODES AVAILABLE ---\nUse default anatomy code (12738006)."
+        if verbose:
+            print(f"[CODING]   -> Consultando GPT-4o...")
         
-        # 4. Preparar prompt con contextos SEPARADOS
-        prompt = self.prompt_template.format(
-            entity=span_text,
+        prompt = self.prompt_config["template"].format(
+            entity=entity,
             location=location,
             presence=presence,
             contexto_entity=contexto_entity,
             contexto_anatomy=contexto_anatomy
         )
         
-        # 5. Llamar a GPT-4o
+        response = self.client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            response_format={"type": "json_object"}
+        )
+        
+        result = json.loads(response.choices[0].message.content)
+        
+        entity_code = result.get("entity_code", self.FALLBACK_CODE)
+        anatomy_code = result.get("anatomy_code", self.DEFAULT_ANATOMY)
+        presence_code = result.get("presence_code", self.PRESENCE_MAP.get(presence, self.PRESENCE_MAP["presente"]))
+        
+        if not str(entity_code).isdigit():
+            if verbose:
+                print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando fallback")
+            entity_code = self.FALLBACK_CODE
+            
+        if not str(anatomy_code).isdigit():
+            if verbose:
+                print(f"[CODING]   [WARNING] anatomy_code no numérico: '{anatomy_code}', usando default")
+            anatomy_code = self.DEFAULT_ANATOMY
+            
+        if not str(presence_code).isdigit():
+            if verbose:
+                print(f"[CODING]   [WARNING] presence_code no numérico: '{presence_code}', usando default")
+            presence_code = self.PRESENCE_MAP["presente"]
+        
         if verbose:
-            print(f"[CODING]   -> Consultando GPT-4o...")
+            print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
         
-        response = self._call_gpt4o(prompt)
-        
-        # 6. Parsear respuesta
-        codes = self._parse_coding_response(response, presence, verbose)
-        
-        # 7. Construir entidad codificada
-        coded_entity = {
-            **entity,  # Mantener datos originales
-            'entity_code': codes['entity_code'],
-            'anatomy_code': codes['anatomy_code'],
-            'presence_code': codes['presence_code'],
-            'entity_description': span_text,
-            'anatomy_description': location
+        return {
+            "entity_code": str(entity_code),
+            "anatomy_code": str(anatomy_code),
+            "presence_code": str(presence_code)
         }
-        
-        return coded_entity
     
     def _build_context(self, query: str, context_type: str, verbose: bool) -> str:
-        """Construye contexto ontológico usando RAG"""
+        """RAG con threshold bajo y más opciones"""
+        TOP_K = 20
+        THRESHOLD = 1.65
         
-        results = self.rag.retrieve(query, k=5)
+        results = self.rag.retrieve(query, k=TOP_K)
         
         if not results:
-            return ""
+            return "--- NO CODES FOUND ---\n"
         
+        # Filtrar y ordenar por distancia
+        filtered_results = [(concepto, narrativa, dist) for concepto, narrativa, dist in results if dist <= THRESHOLD]
+        
+        if not filtered_results:
+            if verbose:
+                print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist > {THRESHOLD})")
+            return "--- NO CODES FOUND ---\n"
+        
+        # Ordenar por mejor match (menor distancia)
+        filtered_results = sorted(filtered_results, key=lambda x: x[2])
+            
         if verbose:
-            best_code, _, best_dist = results[0]
-            print(f"[CODING]   -> RAG {context_type}: {len(results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f})")
-        
+            best_code, _, best_dist = filtered_results[0]
+            print(f"[CODING]   -> RAG {context_type}: {len(filtered_results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f})")
+
+        # Contexto con top resultados
         context = f"\n--- {context_type} CODES for '{query}' ---\n"
-        for idx, (concepto, narrativa, dist) in enumerate(results, 1):
-            context += f"{idx}. CÓDIGO: {concepto} | DESCRIPCIÓN: {narrativa[:150]}\n"
-        
+        for idx, (concepto, narrativa, dist) in enumerate(filtered_results[:12], 1):
+            context += f"OPCIÓN {idx}: CÓDIGO: {concepto} | {narrativa[:120]}\n"
+            
         return context
-    
-    def _call_gpt4o(self, prompt: str, max_retries: int = 3) -> str:
-        """Llama a GPT-4o para codificación"""
-        
-        for attempt in range(max_retries):
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model_config["model"],
-                    messages=[
-                        {"role": "system", "content": self.system_prompt},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.0,
-                    max_tokens=self.model_config.get("max_tokens", 1000),
-                    response_format={"type": "json_object"}
-                )
-                
-                return response.choices[0].message.content.strip()
-                
-            except Exception as e:
-                print(f"[CODING] [ERROR] Error GPT-4o (intento {attempt+1}/{max_retries}): {e}")
-                if attempt == max_retries - 1:
-                    return '{"entity_code": "404684003", "anatomy_code": "12738006", "presence_code": "261665006"}'
-        
-        return '{"entity_code": "404684003", "anatomy_code": "12738006", "presence_code": "261665006"}'
-    
-    def _parse_coding_response(self, response: str, presence: str, verbose: bool) -> Dict:
-        """Parsea la respuesta de codificación"""
-        
-        try:
-            # Buscar JSON en la respuesta
-            json_match = re.search(r'\{.*\}', response, re.DOTALL)
-            if not json_match:
-                raise ValueError("No JSON encontrado")
-            
-            data = json.loads(json_match.group(0))
-            
-            # Extraer códigos
-            entity_code = str(data.get("entity_code", "404684003"))
-            anatomy_code = str(data.get("anatomy_code", "12738006"))
-            
-            # Validar que son numéricos
-            if not entity_code.isdigit():
-                if verbose:
-                    print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando default")
-                entity_code = "404684003"
-            
-            if not anatomy_code.isdigit():
-                if verbose:
-                    print(f"[CODING]   [WARNING] anatomy_code no numérico: '{anatomy_code}', usando default")
-                anatomy_code = "12738006"
-            
-            # Código de presencia (fijo según mapeo)
-            presence_code = self.presence_map.get(presence.lower(), "261665006")
-            
-            if verbose:
-                print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
-            
-            return {
-                'entity_code': entity_code,
-                'anatomy_code': anatomy_code,
-                'presence_code': presence_code
-            }
-            
-        except Exception as e:
-            if verbose:
-                print(f"[CODING]   [ERROR] Error parseando: {e}")
-            
-            return {
-                'entity_code': "404684003",
-                'anatomy_code': "12738006",
-                'presence_code': self.presence_map.get(presence.lower(), "261665006")
-            }
+

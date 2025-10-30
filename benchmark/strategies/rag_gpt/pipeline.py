@@ -57,30 +57,18 @@ class RAGGPTPipeline:
         # 3. Inicializar componentes
         self.rag = RAGRetriever(assets_dir)
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config)
-        self.coder = SNOMEDCoder(
-            self.client, 
-            self.rag, 
-            coding_prompt, 
-            system_prompt,
-            self.model_config
-        )
+        self.coder = SNOMEDCoder(self.rag, self.client)
         
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("="*80)
     
-    def _chunk_text(self, text: str, chunk_size: int = 3000, overlap: int = 300) -> List[str]:
-        """
-        Divide el texto en chunks con overlap para evitar perder entidades en los bordes
-        
-        Args:
-            text: Texto completo a dividir
-            chunk_size: Tamaño de cada chunk en caracteres
-            overlap: Número de caracteres de solapamiento entre chunks
-            
-        Returns:
-            Lista de chunks de texto
-        """
+    def _chunk_text(self, text: str) -> List[str]:
+        chunk_size = 2500
+        overlap = 400
+        chunks = []
+        start = 0
+        """Divide texto en chunks con overlap"""
         if len(text) <= chunk_size:
             return [text]
         
@@ -89,51 +77,38 @@ class RAGGPTPipeline:
         
         while start < len(text):
             end = min(start + chunk_size, len(text))
-            chunk = text[start:end]
-            chunks.append(chunk)
+            chunks.append(text[start:end])
             
-            # Si llegamos al final, terminamos
             if end >= len(text):
                 break
             
-            # Siguiente chunk empieza con overlap
             start = end - overlap
         
         if self.verbose:
-            print(f"[CHUNKING] Texto dividido en {len(chunks)} chunks (size={chunk_size}, overlap={overlap})")
+            print(f"[CHUNKING] {len(chunks)} chunks (size={chunk_size}, overlap={overlap})")
         
         return chunks
     
     def _deduplicate_entities(self, entities: List[Dict]) -> List[Dict]:
-        """
-        Elimina entidades duplicadas generadas por chunks con overlap
-        
-        Args:
-            entities: Lista de entidades que puede contener duplicados
-            
-        Returns:
-            Lista de entidades únicas
-        """
+        """Elimina duplicados usando full_span como clave"""
         seen = set()
-        unique_entities = []
+        unique = []
         
         for entity in entities:
-            # Crear clave única basada en propiedades de la entidad
             key = (
-                entity['span_text'],
+                entity.get('full_span', entity['span_text']),
                 entity.get('anatomical_location', ''),
                 entity.get('presence', '')
             )
             
             if key not in seen:
                 seen.add(key)
-                unique_entities.append(entity)
+                unique.append(entity)
         
-        if self.verbose and len(entities) > len(unique_entities):
-            duplicates = len(entities) - len(unique_entities)
-            print(f"[DEDUP] Eliminados {duplicates} duplicados ({len(entities)} -> {len(unique_entities)} entidades)")
+        if self.verbose and len(entities) > len(unique):
+            print(f"[DEDUP] {len(entities)} -> {len(unique)} entidades")
         
-        return unique_entities
+        return unique
     
     def process_note(self, text: str, note_id: int = None) -> List[Dict]:
         """
@@ -186,41 +161,58 @@ class RAGGPTPipeline:
         return final_entities
     
     def _locate_spans(self, entities: List[Dict], text: str) -> List[Dict]:
-        """
-        Localiza los spans en el texto original
-        
-        Args:
-            entities: Entidades codificadas
-            text: Texto original
-            
-        Returns:
-            Entidades con start/end positions
-        """
+        """Localiza los spans en el texto original"""
         located_entities = []
         last_search_idx = {}
         
         for entity in entities:
-            span_text = entity['span_text']
+            core_entity = entity['span_text']
+            full_span = entity.get('full_span', core_entity)
             
-            # Determinar desde dónde buscar
-            start_from = last_search_idx.get(span_text, 0)
+            search_key = full_span
+            start_from = last_search_idx.get(search_key, 0)
             
-            # Buscar span
-            result = find_span_in_text(span_text, text, start_from)
+            full_result = find_span_in_text(full_span, text, start_from)
             
-            if result:
-                start, end = result
-                last_search_idx[span_text] = end
+            if full_result:
+                start_full, end_full = full_result
+                text_segment = text[start_full:end_full]
+                core_in_full_result = find_span_in_text(core_entity, text_segment, 0)
                 
-                # Añadir posiciones
-                entity['start'] = start
-                entity['end'] = end
-                entity['span_text_real'] = text[start:end]
-                
-                located_entities.append(entity)
+                if core_in_full_result:
+                    start_rel, end_rel = core_in_full_result
+                    start_core = start_full + start_rel
+                    end_core = start_full + end_rel
+                    last_search_idx[search_key] = end_full
+                    
+                    entity['start'] = start_core
+                    entity['end'] = end_core
+                    entity['span_text_real'] = text[start_core:end_core]
+                    located_entities.append(entity)
+                elif core_entity.lower() == full_span.lower():
+                    last_search_idx[search_key] = end_full
+                    entity['start'] = start_full
+                    entity['end'] = end_full
+                    entity['span_text_real'] = text[start_full:end_full]
+                    located_entities.append(entity)
+                else:
+                    core_result = find_span_in_text(core_entity, text, start_from)
+                    if core_result:
+                        start_core, end_core = core_result
+                        last_search_idx[search_key] = end_core
+                        entity['start'] = start_core
+                        entity['end'] = end_core
+                        entity['span_text_real'] = text[start_core:end_core]
+                        located_entities.append(entity)
             else:
-                if self.verbose:
-                    print(f"[WARNING] No se encontró span: '{span_text[:50]}'")
+                core_result = find_span_in_text(core_entity, text, start_from)
+                if core_result:
+                    start_core, end_core = core_result
+                    last_search_idx[search_key] = end_core
+                    entity['start'] = start_core
+                    entity['end'] = end_core
+                    entity['span_text_real'] = text[start_core:end_core]
+                    located_entities.append(entity)
         
         return located_entities
     

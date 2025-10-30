@@ -240,3 +240,61 @@ Refactor hecho, para el próximo día: asegurar que todo funciona, y empezar a m
 
 
 ## Día 5: 30 Octubre 2025 (8h)
+
+### Mejoras version 1.1
+
+Después de preparar y analizar todo, me he decidido por aplicar los siguientes cambios:
+1-Chunks divide a chunks de 3000 chars, ahora probare distintos chunks
+2-Temperatura a 0 para evitar alucinaciones
+3-Mejorado el prompt
+
+RESULTADOS - RAG+GPT Strategy
+[METRICAS]
+   Precision:  0.3625
+   Recall:     0.2522
+   F1-Score:   0.2974
+   Coverage:   1.0000
+
+[CONTADORES]
+   Predicciones:     80
+   Exact Matches:    0
+   Partial Matches:  51
+   Ground Truth:     115
+
+[TIEMPO]
+   Tiempo de ejecución: 130.98 segundos
+   Tiempo por nota:     26.20 segundos
+
+
+Me he dado cuenta de 2 problemas, voy a solucionarlos:
+
+**Mejoras version 1.2**
+
+El prompt no es bueno  y aunque detecte bien la palabra acaba escojiendo el fallback, vo a mejorarlo.
+Esto da sobretodo 2 o 3 problemas... voy a ver si los puedo solucionar.
+
+
+Me he dado cuenta que le estaba pasando demasiado contexto al rag y le estaba añadiendo ruído. Hay muchos problemas que son del embedding, necesita más información con e SAPBERT, ahora lo aplicaré, pero antes voy a inentar mejorarlo aún más.
+
+Vale me he dado cuenta que estaba teniendo problemas y estaba navegando a un camino problematico. Haré commit, trato de arreglarlo, pero sino haré rllback y volvere al score de 0.29.
+
+RESULTADOS - RAG+GPT Strategy
+================================================================================
+
+[METRICAS]
+   Precision:  0.4107
+   Recall:     0.4000
+   F1-Score:   0.4053
+   Coverage:   1.0000
+
+[CONTADORES]
+   Predicciones:     112
+   Exact Matches:    0
+   Partial Matches:  66
+   Ground Truth:     115
+
+[TIEMPO]
+   Tiempo de ejecución: 599.83 segundos
+   Tiempo por nota:     119.97 segundos
+
+================================================================================

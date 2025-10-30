@@ -1,0 +1,10 @@
+{
+  "name": "Filtrado de relevancia",
+  "version": "1.0",
+  "description": "First-pass filter to determine if RAG results contain valid matches",
+  "language": "es",
+  "template": "You are a medical terminology expert. Review the RAG search results and determine if ANY of the options are medically valid matches for the entity.\n\nEntity: {entity}\nLocation: {location}\nPresence: {presence}\n\n{contexto_entity}\n\nQUESTION: Do any of these SNOMED codes accurately represent \"{entity}\"?\n\nReturn JSON:\n{{\n  \"has_valid_match\": true/false,\n  \"best_option_number\": <1-15 or null if false>,\n  \"reasoning\": \"<brief explanation>\"\n}}",
+  "input_variables": ["entity", "location", "presence", "contexto_entity"],
+  "output_format": "json",
+  "expected_fields": ["has_valid_match", "best_option_number", "reasoning"]
+}
