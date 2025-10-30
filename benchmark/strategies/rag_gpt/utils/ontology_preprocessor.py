@@ -60,8 +60,8 @@ def load_ontology_csv():
     print("="*80)
     
     # UPDATED: Use hybrid ontology
-    hybrid_path = os.path.join(PROJECT_ROOT, 'hybrid_ontology.csv')
-    fallback_path = os.path.join(PROJECT_ROOT, 'conceptos_con_narrativas.csv')
+    hybrid_path = os.path.join(PROJECT_ROOT, 'ontology', 'hybrid_ontology.csv')
+    fallback_path = os.path.join(PROJECT_ROOT, 'ontology', 'conceptos_con_narrativas.csv')
     
     # Try hybrid ontology first (preferred)
     if os.path.exists(hybrid_path):
@@ -86,7 +86,7 @@ def load_ontology_csv():
     )
 
 
-def generate_embeddings(narratives, model_name='all-MiniLM-L6-v2', batch_size=32, use_gpu=True):
+def generate_embeddings(narratives, model_name='cambridgeltl/SapBERT-from-PubMedBERT-fulltext', batch_size=32, use_gpu=True):
     """
     Generate embeddings for all narrative descriptions using SentenceTransformer.
     (1 narrative = 1 embedding)
@@ -110,13 +110,13 @@ def generate_embeddings(narratives, model_name='all-MiniLM-L6-v2', batch_size=32
     print(f"[INFO] Encoding {len(narratives)} narratives (1 embedding per narrative)")
     print("[INFO] This is a ONE-TIME operation. Subsequent runs will load pre-built index.")
     
-    # Generate embeddings
+    # Generate embeddings - NORMALIZED for cosine similarity
     embeddings = model.encode(
         narratives,
         batch_size=batch_size,
         show_progress_bar=True,
         convert_to_numpy=True,
-        normalize_embeddings=False
+        normalize_embeddings=True  # FIXED: Enable normalization for cosine similarity
     )
     
     print(f"[SUCCESS] Generated embeddings with shape: {embeddings.shape}")
@@ -128,6 +128,7 @@ def generate_embeddings(narratives, model_name='all-MiniLM-L6-v2', batch_size=32
 def build_faiss_index(embeddings):
     """
     Build a Faiss index from the embeddings.
+    Uses IndexFlatIP (inner product) for normalized embeddings = cosine similarity.
     """
     print("\n" + "="*80)
     print("STEP 3: Building Faiss Index")
@@ -136,10 +137,10 @@ def build_faiss_index(embeddings):
     dimension = embeddings.shape[1]
     n_concepts = embeddings.shape[0]
     
-    print(f"[INFO] Creating IndexFlatL2 with dimension={dimension}")
+    print(f"[INFO] Creating IndexFlatIP (cosine similarity) with dimension={dimension}")
     
-    # Create index (L2 distance)
-    index = faiss.IndexFlatL2(dimension)
+    # Create index (Inner Product for normalized embeddings = cosine similarity)
+    index = faiss.IndexFlatIP(dimension)
     
     # Add embeddings to index
     print(f"[INFO] Adding {n_concepts} vectors to index...")
@@ -179,7 +180,7 @@ def save_artifacts(index, concepts, narratives, embedding_dim):
     metadata = {
         'n_concepts': len(concepts),
         'embedding_dim': embedding_dim,
-        'model_name': 'all-MiniLM-L6-v2',
+        'model_name': 'cambridgeltl/SapBERT-from-PubMedBERT-fulltext',
         'created_at': datetime.now().isoformat(),
         'index_type': 'IndexFlatL2'
     }

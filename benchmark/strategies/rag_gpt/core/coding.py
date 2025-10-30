@@ -106,12 +106,12 @@ class SNOMEDCoder:
         }
     
     def _build_context(self, query: str, context_type: str, verbose: bool) -> str:
-        """Double-query RAG - OPTIMAL CONFIG"""
+        """Double-query RAG - SapBERT cosine similarity"""
         TOP_K = 15
-        THRESHOLD = 1.65  # OPTIMAL
+        THRESHOLD = 0.6  # Cosine similarity: higher threshold = more selective
         MAX_DISPLAY = 12
         
-        # Multi-query solo para ENTITY
+        # Double-query for entity codes
         if context_type == "ENTITY":
             # Query 1: Original
             results_main = self.rag.retrieve(query, k=TOP_K)
@@ -120,10 +120,10 @@ class SNOMEDCoder:
             query_clinical = f"{query} disorder finding"
             results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
             
-            # Combinar y deduplicar
+            # Combinar y deduplicar - KEEP HIGHER SIMILARITY (cosine)
             combined_results = {}
             for concepto, narrativa, dist in (results_main + results_clinical):
-                if concepto not in combined_results or dist < combined_results[concepto][1]:
+                if concepto not in combined_results or dist > combined_results[concepto][1]:  # FIXED: > for cosine
                     combined_results[concepto] = (narrativa, dist)
             
             results = [(concepto, narrativa, dist) for concepto, (narrativa, dist) in combined_results.items()]
@@ -133,15 +133,16 @@ class SNOMEDCoder:
         if not results:
             return "--- NO CODES FOUND ---\n"
         
-        # Filtrar y ordenar
-        filtered_results = [(concepto, narrativa, dist) for concepto, narrativa, dist in results if dist <= THRESHOLD]
+        # Filtrar y ordenar - FIXED: >= for cosine similarity
+        filtered_results = [(concepto, narrativa, dist) for concepto, narrativa, dist in results if dist >= THRESHOLD]
         
         if not filtered_results:
             if verbose:
-                print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist > {THRESHOLD})")
+                print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist < {THRESHOLD})")
             return "--- NO CODES FOUND ---\n"
         
-        filtered_results = sorted(filtered_results, key=lambda x: x[2])
+        # Ordenar DESCENDING (mayor score = mejor match con cosine)
+        filtered_results = sorted(filtered_results, key=lambda x: x[2], reverse=True)
             
         if verbose:
             best_code, _, best_dist = filtered_results[0]

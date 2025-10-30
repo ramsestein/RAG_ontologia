@@ -49,7 +49,7 @@ class RAGRetriever:
             
             # Cargar modelo de embeddings
             print("[RAG] Cargando modelo de embeddings...")
-            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            self.embedding_model = SentenceTransformer('cambridgeltl/SapBERT-from-PubMedBERT-fulltext')
             
         except Exception as e:
             print(f"[RAG] [ERROR] Error cargando índice: {e}")
