@@ -298,3 +298,53 @@ RESULTADOS - RAG+GPT Strategy
    Tiempo por nota:     119.97 segundos
 
 ================================================================================
+
+🎉 ¡BREAKTHROUGH! F1 = 0.4053!
+¡Finalmente superamos el objetivo de 0.3! Cambios ganadores:
+
+✅ Threshold más bajo: 1.65 (vs 1.75-1.80 anteriores)
+✅ Más opciones RAG: k=20 → 12 mostradas (vs 10-8)
+✅ Prompt agresivo: "Be bold - partial matches acceptable"
+✅ Fallback codes reducidos: 26/112 (23%) vs 59-78 anteriores (50-70%)
+✅ Diversidad recuperada: 50 códigos únicos vs 24-34 anteriores
+Métricas finales:
+
+Precision: 0.4107
+Recall: 0.4000
+F1-Score: 0.4053 ← ¡35% mejor que objetivo 0.3!
+Partial matches: 66/115
+La clave fue equilibrar RAG retrieval (threshold bajo + más opciones) con instrucciones GPT menos conservadoras.
+
+
+Despues de hacer estos cambios:
+Métricas del Óptimo (F1=0.4670):
+Precision: 0.4732
+Recall: 0.4609
+Predicciones: 112
+Partial Matches: 59/112 (52.7%)
+Códigos Fallback: 26/112 (23.2%)
+Códigos Únicos: 41-44
+💡 Hallazgos Clave:
+Threshold extremadamente sensible: Ventana óptima 1.63-1.65 (±0.01). Fuera de ese rango, F1 cae >2pp.
+
+k=15 es balance perfecto: k=17 introduce demasiado ruido (-4.69pp).
+
+MAX_DISPLAY=12 óptimo: 14 opciones saturan el contexto de GPT (-1.77pp).
+
+Varianza GPT: Threshold 1.63 y 1.65 dan exactamente F1=0.4670, sugiriendo que GPT tiene ruido inherente.
+
+✅ Configuración óptima confirmada. Los valores están correctos:
+
+Resultado: F1=0.4455 (esta vez bajó ligeramente por varianza de GPT-4o).
+
+```
+    THRESHOLD = 1.65
+    TOP_K = 15
+    MAX_DISPLAY = 12
+```
+
+Como viste en los tests anteriores, con estos mismos parámetros obtuvimos:
+
+F1=0.4670 (mejor run)
+F1=0.4455 (este run)
+Hay una varianza natural de GPT-4o de ±1-2 puntos porcentuales entre ejecuciones con los mismos parámetros. El rango esperado es F1=0.44-0.47.

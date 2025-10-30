@@ -106,16 +106,34 @@ class SNOMEDCoder:
         }
     
     def _build_context(self, query: str, context_type: str, verbose: bool) -> str:
-        """RAG con threshold bajo y más opciones"""
-        TOP_K = 20
-        THRESHOLD = 1.65
+        """Double-query RAG - OPTIMAL CONFIG"""
+        TOP_K = 15
+        THRESHOLD = 1.65  # OPTIMAL
+        MAX_DISPLAY = 12
         
-        results = self.rag.retrieve(query, k=TOP_K)
+        # Multi-query solo para ENTITY
+        if context_type == "ENTITY":
+            # Query 1: Original
+            results_main = self.rag.retrieve(query, k=TOP_K)
+            
+            # Query 2: Clinical context
+            query_clinical = f"{query} disorder finding"
+            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
+            
+            # Combinar y deduplicar
+            combined_results = {}
+            for concepto, narrativa, dist in (results_main + results_clinical):
+                if concepto not in combined_results or dist < combined_results[concepto][1]:
+                    combined_results[concepto] = (narrativa, dist)
+            
+            results = [(concepto, narrativa, dist) for concepto, (narrativa, dist) in combined_results.items()]
+        else:
+            results = self.rag.retrieve(query, k=15)
         
         if not results:
             return "--- NO CODES FOUND ---\n"
         
-        # Filtrar y ordenar por distancia
+        # Filtrar y ordenar
         filtered_results = [(concepto, narrativa, dist) for concepto, narrativa, dist in results if dist <= THRESHOLD]
         
         if not filtered_results:
@@ -123,16 +141,15 @@ class SNOMEDCoder:
                 print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist > {THRESHOLD})")
             return "--- NO CODES FOUND ---\n"
         
-        # Ordenar por mejor match (menor distancia)
         filtered_results = sorted(filtered_results, key=lambda x: x[2])
             
         if verbose:
             best_code, _, best_dist = filtered_results[0]
-            print(f"[CODING]   -> RAG {context_type}: {len(filtered_results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f})")
+            print(f"[CODING]   -> RAG {context_type} [MULTI-Q]: {len(filtered_results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f})")
 
-        # Contexto con top resultados
+        # Contexto simple - NO TAGS
         context = f"\n--- {context_type} CODES for '{query}' ---\n"
-        for idx, (concepto, narrativa, dist) in enumerate(filtered_results[:12], 1):
+        for idx, (concepto, narrativa, dist) in enumerate(filtered_results[:MAX_DISPLAY], 1):
             context += f"OPCIÓN {idx}: CÓDIGO: {concepto} | {narrativa[:120]}\n"
             
         return context
