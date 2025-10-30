@@ -62,7 +62,7 @@ def main():
     # 4. Evaluar métricas
     print("\n4. Calculando métricas...")
     calculator = MetricsCalculator()
-    metrics = calculator.calculate_metrics(predictions_df, ground_truth_df)
+    metrics = calculator.calculate_metrics(predictions_df, ground_truth_df, "RAG+GPT4o")
     
     # 5. Mostrar resultados
     print("\n" + "="*80)

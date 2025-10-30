@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 RAG+GPT4o Strategy - Wrapper for benchmark compatibility
 Maintains the original interface using the new modular architecture internally
