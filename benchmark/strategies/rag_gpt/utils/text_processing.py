@@ -144,3 +144,29 @@ def find_exact_span_near(span_text: str, text: str, approx_start: int, window: i
         return (idx2, idx2 + len(span_text))
 
     return None
+
+
+# =============================
+# NUEVO: Recorte de bordes
+# =============================
+
+_PUNCT_TO_TRIM = set(list(' \t\r\n.,;:!?"\'()[]{}／/\\'))
+
+def tighten_span_boundaries(text: str, start: int, end: int) -> Tuple[int, int]:
+    """
+    Recorta espacios y puntuación en los bordes de un span sin pasar del centro.
+    - Evita incluir whitespace/puntuación que los anotadores suelen excluir.
+    - Garantiza que end > start si había al menos 1 carácter no-espacio.
+    """
+    if not isinstance(start, int) or not isinstance(end, int):
+        return start, end
+    s, e = max(0, start), min(len(text), end)
+
+    # trim left
+    while s < e and (text[s].isspace() or text[s] in _PUNCT_TO_TRIM):
+        s += 1
+    # trim right
+    while e > s and (text[e - 1].isspace() or text[e - 1] in _PUNCT_TO_TRIM):
+        e -= 1
+
+    return s, e

@@ -348,3 +348,19 @@ Como viste en los tests anteriores, con estos mismos parámetros obtuvimos:
 F1=0.4670 (mejor run)
 F1=0.4455 (este run)
 Hay una varianza natural de GPT-4o de ±1-2 puntos porcentuales entre ejecuciones con los mismos parámetros. El rango esperado es F1=0.44-0.47.
+
+
+
+
+
+
+
+
+
+
+
+## Proximo dia
+
+1-Hacer refactor en la nueva pipeline buena (definirla bien tal cual).
+2-Comprobar que esta bien hecho el refactor.
+3-Empezar a probar cosas nuevas (incluso cambios arquitectura cuando máximo local).
