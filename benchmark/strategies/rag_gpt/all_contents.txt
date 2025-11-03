@@ -1,11 +1,11 @@
 --- Content of ./core/coding.py ---
-"""Codificación SNOMED-CT usando RAG + GPT-4o"""
+"""Codificación SNOMED-CT usando RAG + GPT-4o (selección determinista + validación opcional)"""
 
 import json
 import os
 import sys
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
 
 # Configurar imports absolutos
@@ -17,33 +17,57 @@ from strategies.rag_gpt.core.rag import RAGRetriever
 
 
 class SNOMEDCoder:
-    """Codificador de entidades médicas usando SNOMED-CT"""
-    
-    FALLBACK_CODE = "404684003"
-    DEFAULT_ANATOMY = "12738006"
+    """
+    Codificador de entidades médicas usando SNOMED-CT.
+
+    Cambios clave (solución robusta):
+      - Selección determinista del mejor código basada en similitud (SapBERT/FAISS) en Python.
+      - El LLM (GPT-4o) pasa a ser VALIDACIÓN opcional, y NUNCA puede forzar fallback si hay candidatos.
+      - Umbrales y parámetros configurables por variables de entorno (sin parchear ficheros).
+      - Uso real de system prompt en llamadas al LLM.
+    """
+
+    FALLBACK_CODE = "404684003"   # Clinical finding (genérico)
+    DEFAULT_ANATOMY = "12738006"  # Brain structure
     PRESENCE_MAP = {
-        "presente": "52101004",
-        "ausente": "272519000",
-        "incierto": "261665006"
+        "presente": "52101004",    # Present
+        "ausente": "272519000",    # Absent
+        "incierto": "261665006"    # Unknown
     }
-    
-    def __init__(self, rag_retriever, openai_client):
+
+    def __init__(self, rag_retriever: RAGRetriever, openai_client: OpenAI, system_prompt: Optional[str] = None):
         self.rag = rag_retriever
         self.client = openai_client
-        
+        self.system_prompt = system_prompt or "You are a precise SNOMED-CT coding assistant."
+
+        # Cargar prompts
         prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "coding_prompt.json")
         with open(prompt_path, 'r', encoding='utf-8') as f:
             self.prompt_config = json.load(f)
-        
+
         filter_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "filter_prompt.json")
         with open(filter_path, 'r', encoding='utf-8') as f:
             self.filter_config = json.load(f)
-    
+
+        # Config runtime por ENV (robusto para optimización)
+        self.cfg = {
+            "TOP_K": int(os.getenv("RAG_TOP_K", "30")),
+            "THRESHOLD": float(os.getenv("RAG_THRESHOLD", "0.35")),
+            "MAX_DISPLAY": int(os.getenv("RAG_MAX_DISPLAY", "12")),
+            "QUERY_SUFFIX": os.getenv("RAG_QUERY_SUFFIX", "disorder finding"),
+            "USE_LLM_VALIDATION": os.getenv("RAG_USE_LLM_VALIDATION", "false").lower() == "true",
+            "LLM_MODEL": os.getenv("RAG_LLM_MODEL", "gpt-4o"),
+            "LLM_TEMPERATURE": float(os.getenv("RAG_LLM_TEMPERATURE", "0.0")),
+        }
+
+    # --------------------------
+    # API pública
+    # --------------------------
     def code_entities(self, entities: List[Dict], verbose: bool = True) -> List[Dict]:
-        """Codifica entidades usando SNOMED-CT con contexto RAG"""
+        """Codifica entidades usando SNOMED-CT con selección determinista (+ validación opcional)."""
         if verbose:
             print(f"[CODING] Codificando {len(entities)} entidades...")
-        
+
         coded_entities = []
         for entity in entities:
             codes = self.assign_codes(
@@ -52,153 +76,212 @@ class SNOMEDCoder:
                 presence=entity.get('presence', 'presente'),
                 verbose=verbose
             )
-            
             coded_entity = {**entity, **codes}
             coded_entities.append(coded_entity)
-        
+
         return coded_entities
-    
+
     def assign_codes(self, entity: str, location: str, presence: str, verbose: bool = False) -> dict:
-        """RAG + GPT single-phase"""
-        contexto_entity = self._build_context(entity, "ENTITY", verbose)
-        contexto_anatomy = "--- ANATOMY NOT SPECIFIED ---\n"
-        
-        if location and location != "No especificado":
-            contexto_anatomy = self._build_context(location, "ANATOMY", verbose)
-        
-        if verbose:
-            print(f"[CODING]   -> Consultando GPT-4o...")
-        
-        prompt = self.prompt_config["template"].format(
-            entity=entity,
-            location=location,
-            presence=presence,
-            contexto_entity=contexto_entity,
-            contexto_anatomy=contexto_anatomy
-        )
-        
-        response = self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.0,
-            response_format={"type": "json_object"}
-        )
-        
-        result = json.loads(response.choices[0].message.content)
-        
-        entity_code = result.get("entity_code", self.FALLBACK_CODE)
-        anatomy_code = result.get("anatomy_code", self.DEFAULT_ANATOMY)
-        presence_code = result.get("presence_code", self.PRESENCE_MAP.get(presence, self.PRESENCE_MAP["presente"]))
-        
+        """
+        Selección determinista:
+          1) Recupera candidatos para ENTITY (double query) y ANATOMY.
+          2) Elige top-1 por similitud (ya filtrado por THRESHOLD).
+          3) (Opcional) Valida con LLM, restringido a los candidatos.
+        """
+        # 1) Recuperación de candidatos
+        ent_results = self._retrieve_candidates(query=entity, context_type="ENTITY", verbose=verbose)
+        anat_results = self._retrieve_candidates(query=location, context_type="ANATOMY", verbose=verbose) \
+            if location and location != "No especificado" else []
+
+        # 2) Selección determinista top-1 o fallback/default
+        entity_code = self._pick_top_code(ent_results, self.cfg["THRESHOLD"]) or self.FALLBACK_CODE
+        anatomy_code = self._pick_top_code(anat_results, self.cfg["THRESHOLD"]) or self.DEFAULT_ANATOMY
+        presence_code = self.PRESENCE_MAP.get(presence, self.PRESENCE_MAP["presente"])
+
+        # 3) Validación opcional con LLM (nunca puede forzar fallback si hay candidatos)
+        if self.cfg["USE_LLM_VALIDATION"]:
+            if verbose:
+                print(f"[CODING]   -> Validación con {self.cfg['LLM_MODEL']} (restringido a candidatos)...")
+
+            contexto_entity = self._format_context("ENTITY", entity, ent_results)
+            contexto_anatomy = self._format_context("ANATOMY", location, anat_results) if anat_results else "--- ANATOMY NOT SPECIFIED ---\n"
+            valid_entity_list = [c for c, _, _ in ent_results]
+            valid_anatomy_list = [c for c, _, _ in anat_results]
+
+            prompt = self.prompt_config["template"].format(
+                entity=entity,
+                location=location,
+                presence=presence,
+                contexto_entity=contexto_entity,
+                contexto_anatomy=contexto_anatomy,
+                valid_entity_codes=json.dumps(valid_entity_list, ensure_ascii=False),
+                valid_anatomy_codes=json.dumps(valid_anatomy_list, ensure_ascii=False)
+            )
+
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.cfg["LLM_MODEL"],
+                    messages=[
+                        {"role": "system", "content": self.system_prompt},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature=self.cfg["LLM_TEMPERATURE"],
+                    response_format={"type": "json_object"}
+                )
+                result = json.loads(response.choices[0].message.content)
+
+                # Post-procesado restrictivo (no permitir inventar/fallback si hay candidatos)
+                proposed_entity = str(result.get("entity_code", entity_code))
+                proposed_anatomy = str(result.get("anatomy_code", anatomy_code))
+                proposed_presence = str(result.get("presence_code", presence_code))
+
+                if valid_entity_list:
+                    if proposed_entity.isdigit() and proposed_entity in valid_entity_list:
+                        entity_code = proposed_entity
+                    else:
+                        # Mantener determinista si LLM se sale del conjunto o propone fallback
+                        pass
+                else:
+                    # No hay candidatos → aceptar fallback o lo que proponga (si es numérico)
+                    if proposed_entity.isdigit():
+                        entity_code = proposed_entity
+
+                if valid_anatomy_list:
+                    if proposed_anatomy.isdigit() and proposed_anatomy in valid_anatomy_list:
+                        anatomy_code = proposed_anatomy
+                    else:
+                        pass
+                else:
+                    if proposed_anatomy.isdigit():
+                        anatomy_code = proposed_anatomy
+
+                if proposed_presence.isdigit():
+                    presence_code = proposed_presence
+
+            except Exception as e:
+                if verbose:
+                    print(f"[CODING]   [WARNING] Error en validación LLM: {e}")
+
+        # Normalización final y logs
         if not str(entity_code).isdigit():
             if verbose:
                 print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando fallback")
             entity_code = self.FALLBACK_CODE
-            
+
         if not str(anatomy_code).isdigit():
             if verbose:
                 print(f"[CODING]   [WARNING] anatomy_code no numérico: '{anatomy_code}', usando default")
             anatomy_code = self.DEFAULT_ANATOMY
-            
+
         if not str(presence_code).isdigit():
             if verbose:
                 print(f"[CODING]   [WARNING] presence_code no numérico: '{presence_code}', usando default")
             presence_code = self.PRESENCE_MAP["presente"]
-        
+
         if verbose:
             print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
-        
+
         return {
             "entity_code": str(entity_code),
             "anatomy_code": str(anatomy_code),
             "presence_code": str(presence_code)
         }
-    
-    def _build_context(self, query: str, context_type: str, verbose: bool) -> str:
-        """Double-query RAG - SapBERT cosine similarity"""
-        TOP_K = 15
-        THRESHOLD = 0.3  # Cosine similarity: higher threshold = more selective
-        MAX_DISPLAY = 12
-        
-        # Double-query for entity codes
-        if context_type == "ENTITY":
-            # Query 1: Original
-            results_main = self.rag.retrieve(query, k=TOP_K)
-            
-            # Query 2: Clinical context
-            query_clinical = f"{query} disorder finding"
-            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
-            
-            # Combinar y deduplicar - KEEP HIGHER SIMILARITY (cosine)
-            combined_results = {}
-            for concepto, narrativa, dist in (results_main + results_clinical):
-                if concepto not in combined_results or dist > combined_results[concepto][1]:  # FIXED: > for cosine
-                    combined_results[concepto] = (narrativa, dist)
-            
-            results = [(concepto, narrativa, dist) for concepto, (narrativa, dist) in combined_results.items()]
-        else:
-            results = self.rag.retrieve(query, k=15)
-        
-        if not results:
-            return "--- NO CODES FOUND ---\n"
-        
-        # Filtrar y ordenar - FIXED: >= for cosine similarity
-        filtered_results = [(concepto, narrativa, dist) for concepto, narrativa, dist in results if dist >= THRESHOLD]
-        
-        if not filtered_results:
-            if verbose:
-                print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist < {THRESHOLD})")
-            return "--- NO CODES FOUND ---\n"
-        
-        # Ordenar DESCENDING (mayor score = mejor match con cosine)
-        filtered_results = sorted(filtered_results, key=lambda x: x[2], reverse=True)
-            
-        if verbose:
-            best_code, _, best_dist = filtered_results[0]
-            print(f"[CODING]   -> RAG {context_type} [MULTI-Q]: {len(filtered_results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f})")
 
-        # Contexto simple - NO TAGS
+    # --------------------------
+    # Helpers internos
+    # --------------------------
+    def _retrieve_candidates(self, query: str, context_type: str, verbose: bool) -> List[Tuple[str, str, float]]:
+        """
+        Recupera, deduplica y filtra candidatos por THRESHOLD.
+        Para ENTITY aplica double-query (query y query+suffix).
+        """
+        if not query or query == "No especificado":
+            return []
+
+        TOP_K = self.cfg["TOP_K"]
+        THRESHOLD = self.cfg["THRESHOLD"]
+
+        if context_type == "ENTITY":
+            results_main = self.rag.retrieve(query, k=TOP_K)
+            query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
+            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
+
+            combined = {}
+            for concepto, narrativa, sim in (results_main + results_clinical):
+                # Mantener la mayor similitud por concepto
+                if concepto not in combined or sim > combined[concepto][1]:
+                    combined[concepto] = (narrativa, sim)
+
+            results = [(c, n, s) for c, (n, s) in combined.items()]
+        else:
+            results = self.rag.retrieve(query, k=min(TOP_K, 15))
+
+        # Filtrado y orden
+        filtered = [(c, n, s) for c, n, s in results if s >= THRESHOLD]
+        filtered.sort(key=lambda x: x[2], reverse=True)
+
+        if verbose:
+            if filtered:
+                best_code, _, best_sim = filtered[0]
+                print(f"[CODING]   -> RAG {context_type} [MULTI-Q]: {len(filtered)} conceptos (mejor: {best_code}, dist: {best_sim:.3f})")
+            else:
+                print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist < {THRESHOLD})")
+
+        return filtered
+
+    def _pick_top_code(self, results: List[Tuple[str, str, float]], threshold: float) -> Optional[str]:
+        """Elige top-1 si existe y supera threshold. Si no, None."""
+        if not results:
+            return None
+        best_code, _, best_sim = results[0]
+        return best_code if best_sim >= threshold and str(best_code).isdigit() else None
+
+    def _format_context(self, context_type: str, query: str, results: List[Tuple[str, str, float]]) -> str:
+        """Construye el bloque de contexto para el LLM (solo informativo)."""
+        if not results:
+            return f"--- {context_type} CODES for '{query}' ---\n--- NO CODES FOUND ---\n"
+
+        MAX_DISPLAY = self.cfg["MAX_DISPLAY"]
         context = f"\n--- {context_type} CODES for '{query}' ---\n"
-        for idx, (concepto, narrativa, dist) in enumerate(filtered_results[:MAX_DISPLAY], 1):
-            context += f"OPCIÓN {idx} [SIM: {dist:.2f}]: CÓDIGO: {concepto} | {narrativa[:120]}\n"
-            
+        for idx, (concepto, narrativa, sim) in enumerate(results[:MAX_DISPLAY], 1):
+            context += f"OPCIÓN {idx} [SIM: {sim:.2f}]: CÓDIGO: {concepto} | {narrativa[:120]}\n"
         return context
 
 
-
 --- Content of ./core/ner.py ---
-"""Named Entity Recognition usando GPT-4o"""
+"""Named Entity Recognition usando GPT-4o (con system prompt y offsets de caracteres)"""
 
 import json
 import re
-from typing import List, Dict
+from typing import List, Dict, Optional, Any
 from openai import OpenAI
 
 
 class NERExtractor:
     """Extractor de entidades médicas usando GPT-4o"""
-    
-    def __init__(self, client: OpenAI, prompt_config: Dict, model_config: Dict):
+
+    def __init__(self, client: OpenAI, prompt_config: Dict, model_config: Dict, system_prompt: Optional[str] = None):
         self.client = client
         self.prompt_template = prompt_config['template']
         self.model_config = model_config
-        
+        self.system_prompt = system_prompt or "You are a precise clinical NER extractor. Respond ONLY with valid JSON."
+
     def extract_entities(self, texto: str) -> List[Dict]:
         """Extrae entidades médicas del texto usando GPT-4o"""
         print("[NER] Ejecutando extracción de entidades con GPT-4o...")
-        
+
         prompt = self.prompt_template.format(informe=texto)
         response = self._call_gpt4o(prompt)
         entities = self._parse_ner_response(response)
-        
+
         print(f"[NER] Entidades detectadas: {len(entities)}")
         for i, ent in enumerate(entities[:3]):
             print(f"  - Span: \"{ent['span_text']}\"")
         if len(entities) > 3:
             print(f"  ... y {len(entities) - 3} más")
-        
+
         return entities
-    
+
     def _call_gpt4o(self, prompt: str, max_retries: int = 3) -> str:
         """Llama a GPT-4o con manejo de errores"""
         for attempt in range(max_retries):
@@ -206,27 +289,27 @@ class NERExtractor:
                 response = self.client.chat.completions.create(
                     model=self.model_config["model"],
                     messages=[
+                        {"role": "system", "content": self.system_prompt},
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=0.05,
-                    max_tokens=4500,
+                    temperature=self.model_config.get("temperature", 0.1),
+                    max_tokens=self.model_config.get("max_tokens", 4000),
                     response_format={"type": "json_object"}
                 )
-                
                 return response.choices[0].message.content.strip()
-                
+
             except Exception as e:
                 print(f"[NER] Error en llamada GPT-4o (intento {attempt+1}/{max_retries}): {e}")
                 if attempt == max_retries - 1:
                     return '{"entities": []}'
-        
+
         return '{"entities": []}'
-    
+
     def _parse_ner_response(self, response: str) -> List[Dict]:
-        """Parsea la respuesta JSON del NER"""
+        """Parsea la respuesta JSON del NER y normaliza campos expected"""
         try:
             response_clean = response.strip()
-            
+
             if '```json' in response_clean:
                 json_start = response_clean.find('```json') + 7
                 json_end = response_clean.find('```', json_start)
@@ -235,44 +318,58 @@ class NERExtractor:
                 json_start = response_clean.find('```') + 3
                 json_end = response_clean.find('```', json_start)
                 response_clean = response_clean[json_start:json_end].strip()
-            
+
             response_clean = re.sub(r',(\s*[}\]])', r'\1', response_clean)
-            
+
             try:
                 data = json.loads(response_clean)
             except json.JSONDecodeError:
-                json_match = re.search(r'\{.*\}', response_clean, re.DOTALL)
+                import re as _re
+                json_match = _re.search(r'\{.*\}', response_clean, _re.DOTALL)
                 if json_match:
-                    json_str = re.sub(r',(\s*[}\]])', r'\1', json_match.group())
+                    json_str = _re.sub(r',(\s*[}\]])', r'\1', json_match.group())
                     data = json.loads(json_str)
                 else:
                     raise ValueError("No se pudo extraer JSON válido")
-            
-            entities = []
-            if "entities" in data:
-                for finding in data["entities"]:
-                    core_entity = finding.get("core_entity", "")
-                    full_span = finding.get("full_span", "")
-                    
-                    if not core_entity:
-                        if full_span:
-                            core_entity = full_span
-                        else:
-                            continue
 
+            entities: List[Dict[str, Any]] = []
+            if "entities" in data and isinstance(data["entities"], list):
+                for finding in data["entities"]:
+                    core_entity = finding.get("core_entity", "") or ""
+                    full_span = finding.get("full_span", "") or ""
+
+                    # Campos adicionales con defaults
+                    anatomical_location = finding.get("anatomical_location", "No especificado") or "No especificado"
+                    presence = finding.get("presence", "presente") or "presente"
+                    value = finding.get("value")
+                    start = finding.get("start", None)
+                    end = finding.get("end", None)
+
+                    # Si no hay core_entity pero sí full_span, usa full_span como core
+                    if not core_entity and full_span:
+                        core_entity = full_span
+                    # Si no hay full_span, cae al core (luego lo ubicaremos)
                     if not full_span:
                         full_span = core_entity
+                    if not full_span:
+                        continue
+
+                    # Normaliza start/end si son numéricos
+                    start_int = int(start) if isinstance(start, (int, float, str)) and str(start).isdigit() else None
+                    end_int = int(end) if isinstance(end, (int, float, str)) and str(end).isdigit() else None
 
                     entities.append({
                         "span_text": core_entity,
                         "full_span": full_span,
-                        "anatomical_location": finding.get("anatomical_location", "No especificado"),
-                        "presence": finding.get("presence", "presente"),
-                        "value": finding.get("value")
+                        "anatomical_location": anatomical_location,
+                        "presence": presence,
+                        "value": value,
+                        "start": start_int,
+                        "end": end_int
                     })
-            
+
             return entities
-            
+
         except Exception as e:
             print(f"[NER] Error parseando respuesta: {e}")
             print(f"[NER] Respuesta: {response[:500]}...")
@@ -384,9 +481,9 @@ class RAGRetriever:
             # Extraer [CLS] token
             cls_rep = self.model(**toks_on_device)[0][:, 0, :]
             
-            # Normalizar para similitud de coseno
+            # FIXED: Normalizar para similitud de coseno con axis=1 (igual que en ontology_preprocessor.py)
             emb = cls_rep.cpu().numpy()
-            norm = np.linalg.norm(emb)
+            norm = np.linalg.norm(emb, axis=1, keepdims=True)  # axis=1 para L2 norm del vector, NO Frobenius!
             normalized_emb = emb / norm
             
             return normalized_emb.astype('float32')
@@ -455,6 +552,80 @@ class RAGRetriever:
 
 --- Content of ./core/__init__.py ---
 # This file is required for Python to recognize this directory as a package
+
+
+--- Content of ./debug_embeddings.py ---
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Debug script para verificar que los embeddings se están generando correctamente
+"""
+
+import sys
+from pathlib import Path
+import numpy as np
+
+# Configurar path
+SCRIPT_DIR = Path(__file__).parent
+BENCHMARK_DIR = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(BENCHMARK_DIR))
+
+from strategies.rag_gpt.core.rag import RAGRetriever
+from strategies.rag_gpt.utils.config import get_assets_dir
+
+def main():
+    print("="*80)
+    print("DEBUG: Verificando normalización de embeddings")
+    print("="*80)
+    
+    # Inicializar RAG
+    assets_dir = get_assets_dir()
+    print(f"\n[DEBUG] Cargando RAG desde: {assets_dir}")
+    rag = RAGRetriever(str(assets_dir))
+    
+    # Test queries - términos médicos comunes que DEBEN estar en la ontología
+    test_queries = [
+        "hypertension",
+        "diabetes",
+        "headache",
+        "stroke",
+        "weakness",
+        "atrial fibrillation"
+    ]
+    
+    print("\n" + "="*80)
+    print("TEST: Buscando términos médicos comunes")
+    print("="*80)
+    
+    for query in test_queries:
+        print(f"\n[QUERY] '{query}'")
+        print("-" * 60)
+        
+        # Generar embedding
+        emb = rag._get_query_embedding(query)
+        print(f"  Shape: {emb.shape}")
+        print(f"  Norm: {np.linalg.norm(emb):.6f} (debe ser ~1.0)")
+        
+        # Buscar en FAISS
+        results = rag.retrieve(query, k=10)
+        
+        if not results:
+            print(f"  ⚠️  [WARNING] NO SE ENCONTRARON RESULTADOS!")
+        else:
+            print(f"  ✓ {len(results)} resultados encontrados:")
+            for i, (concepto, narrativa, sim) in enumerate(results[:5], 1):
+                print(f"    {i}. [SIM: {sim:.4f}] {concepto}: {narrativa[:80]}...")
+        
+        # Verificar si las similitudes son razonables
+        if results and results[0][2] < 0.5:
+            print(f"  ⚠️  [WARNING] Similitud muy baja! Puede haber un problema de normalización")
+    
+    print("\n" + "="*80)
+    print("Debug completado")
+    print("="*80)
+
+if __name__ == "__main__":
+    main()
 
 
 --- Content of ./debug_rag.py ---
@@ -586,6 +757,290 @@ if __name__ == "__main__":
     main()
 
 
+--- Content of ./optimize_configs.py ---
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Script de optimización automática - Prueba múltiples configuraciones
+Usa variables de entorno (ENV) para configurar el pipeline sin parchear archivos.
+"""
+
+import sys
+import os
+from pathlib import Path
+import pandas as pd
+import time
+import json
+from datetime import datetime
+
+# Configurar path
+SCRIPT_DIR = Path(__file__).parent.resolve()
+BENCHMARK_DIR = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(BENCHMARK_DIR))
+
+from strategies.rag_gpt.pipeline import RAGGPTPipeline
+from evaluation.metrics_calculator import MetricsCalculator
+
+
+# Configuraciones a probar (ahora via ENV)
+CONFIGURATIONS = [
+    {
+        "name": "Config 1: Threshold Bajo + Más Contexto",
+        "TOP_K": 30,
+        "THRESHOLD": 0.50,
+        "MAX_DISPLAY": 12,
+        "query_clinical_suffix": "disorder finding",
+        "use_llm_validation": False
+    },
+    {
+        "name": "Config 2: Threshold Medio + Contexto Optimizado",
+        "TOP_K": 25,
+        "THRESHOLD": 0.55,
+        "MAX_DISPLAY": 10,
+        "query_clinical_suffix": "disorder finding",
+        "use_llm_validation": False
+    },
+    {
+        "name": "Config 3: Threshold Medio-Alto + Contexto Moderado",
+        "TOP_K": 20,
+        "THRESHOLD": 0.58,
+        "MAX_DISPLAY": 8,
+        "query_clinical_suffix": "disorder finding",
+        "use_llm_validation": False
+    },
+    {
+        "name": "Config 4: Threshold Alto + Contexto Selectivo",
+        "TOP_K": 20,
+        "THRESHOLD": 0.65,
+        "MAX_DISPLAY": 6,
+        "query_clinical_suffix": "disorder finding",
+        "use_llm_validation": False
+    },
+    {
+        "name": "Config 5: Threshold Muy Bajo + Máximo Contexto",
+        "TOP_K": 40,
+        "THRESHOLD": 0.45,
+        "MAX_DISPLAY": 15,
+        "query_clinical_suffix": "disorder finding symptom",
+        "use_llm_validation": False
+    },
+    {
+        "name": "Config 6: Threshold Bajo + Más query enhancement",
+        "TOP_K": 30,
+        "THRESHOLD": 0.52,
+        "MAX_DISPLAY": 10,
+        "query_clinical_suffix": "disease disorder condition",
+        "use_llm_validation": False
+    },
+    {
+        "name": "Config 7: Balance Óptimo",
+        "TOP_K": 25,
+        "THRESHOLD": 0.53,
+        "MAX_DISPLAY": 9,
+        "query_clinical_suffix": "disorder finding",
+        "use_llm_validation": False
+    }
+]
+
+
+def load_training_data():
+    """Carga datos de entrenamiento"""
+    data_dir = BENCHMARK_DIR / "data"
+    notes_df = pd.read_csv(data_dir / "mimic-iv_notes_training_set.csv")
+    annotations_df = pd.read_csv(data_dir / "train_annotations.csv")
+    return notes_df, annotations_df
+
+
+def _set_env_from_config(config):
+    """Inyecta la configuración por variables de entorno para el pipeline."""
+    os.environ["RAG_TOP_K"] = str(config["TOP_K"])
+    os.environ["RAG_THRESHOLD"] = str(config["THRESHOLD"])
+    os.environ["RAG_MAX_DISPLAY"] = str(config["MAX_DISPLAY"])
+    os.environ["RAG_QUERY_SUFFIX"] = str(config["query_clinical_suffix"])
+    os.environ["RAG_USE_LLM_VALIDATION"] = "true" if config.get("use_llm_validation", False) else "false"
+    # Puedes fijar el modelo y temperatura si quieres variar:
+    # os.environ["RAG_LLM_MODEL"] = "gpt-4o"
+    # os.environ["RAG_LLM_TEMPERATURE"] = "0.0"
+
+
+def _clear_env():
+    """Limpia variables para evitar fugas entre runs."""
+    for k in ["RAG_TOP_K", "RAG_THRESHOLD", "RAG_MAX_DISPLAY", "RAG_QUERY_SUFFIX", "RAG_USE_LLM_VALIDATION", "RAG_LLM_MODEL", "RAG_LLM_TEMPERATURE"]:
+        if k in os.environ:
+            del os.environ[k]
+
+
+def test_configuration(config, notes_df, ground_truth_df):
+    """Prueba una configuración específica"""
+    print(f"\n{'='*80}")
+    print(f"Probando: {config['name']}")
+    print(f"{'='*80}")
+    print(f"Parámetros:")
+    print(f"  TOP_K: {config['TOP_K']}")
+    print(f"  THRESHOLD: {config['THRESHOLD']}")
+    print(f"  MAX_DISPLAY: {config['MAX_DISPLAY']}")
+    print(f"  Query Enhancement: '{config['query_clinical_suffix']}'")
+    print(f"  LLM Validation: {'ON' if config.get('use_llm_validation', False) else 'OFF'}")
+
+    # Aplicar configuración vía ENV
+    _clear_env()
+    _set_env_from_config(config)
+
+    try:
+        # Ejecutar pipeline
+        print("\nEjecutando pipeline...")
+        start_time = time.time()
+        pipeline = RAGGPTPipeline(verbose=False)
+        predictions_df = pipeline.predict(notes_df)
+        execution_time = time.time() - start_time
+
+        # Calcular métricas
+        calculator = MetricsCalculator()
+        metrics = calculator.calculate_metrics(predictions_df, ground_truth_df, "RAG+GPT4o")
+
+        # Análisis de fallbacks
+        fallback_codes = ['404684003', 'LINKING_FAILED']
+        fallback_count = sum(predictions_df['concept_id'].isin(fallback_codes))
+        fallback_rate = fallback_count / len(predictions_df) if len(predictions_df) > 0 else 0
+
+        results = {
+            "config": config,
+            "metrics": metrics,
+            "execution_time": execution_time,
+            "predictions_count": len(predictions_df),
+            "fallback_count": fallback_count,
+            "fallback_rate": fallback_rate
+        }
+
+        # Mostrar resultados
+        print(f"\n[RESULTADOS]")
+        print(f"  Precision:  {metrics['precision']:.4f}")
+        print(f"  Recall:     {metrics['recall']:.4f}")
+        print(f"  F1-Score:   {metrics['f1']:.4f} {'⭐' if metrics['f1'] >= 0.6 else ''}")
+        print(f"  Predictions: {len(predictions_df)}")
+        print(f"  Fallbacks:  {fallback_count} ({fallback_rate*100:.1f}%)")
+        print(f"  Tiempo:     {execution_time:.2f}s")
+
+        return results
+
+    except Exception as e:
+        print(f"\n[ERROR] Error ejecutando configuración: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+    finally:
+        _clear_env()
+
+
+def main():
+    print("="*80)
+    print("OPTIMIZACIÓN AUTOMÁTICA DE CONFIGURACIONES RAG+GPT (ENV-DRIVEN)")
+    print("="*80)
+
+    # Cargar datos
+    print("\nCargando datos de entrenamiento...")
+    notes_df, ground_truth_df = load_training_data()
+    print(f"[OK] {len(notes_df)} notas, {len(ground_truth_df)} anotaciones")
+
+    # Probar cada configuración
+    all_results = []
+
+    for i, config in enumerate(CONFIGURATIONS, 1):
+        print(f"\n\n{'#'*80}")
+        print(f"# Configuración {i}/{len(CONFIGURATIONS)}")
+        print(f"{'#'*80}")
+
+        result = test_configuration(config, notes_df, ground_truth_df)
+
+        if result:
+            all_results.append(result)
+
+    # Resumen final
+    print(f"\n\n{'='*80}")
+    print("RESUMEN DE TODAS LAS CONFIGURACIONES")
+    print(f"{'='*80}\n")
+
+    # Ordenar por F1
+    all_results.sort(key=lambda x: x['metrics']['f1'], reverse=True)
+
+    print(f"{'Rank':<6} {'Config':<45} {'F1':<8} {'Prec':<8} {'Rec':<8} {'Fall%':<8}")
+    print("-" * 95)
+
+    for rank, result in enumerate(all_results, 1):
+        config_name = result['config']['name'][:43]
+        f1 = result['metrics']['f1']
+        prec = result['metrics']['precision']
+        rec = result['metrics']['recall']
+        fall_pct = result['fallback_rate'] * 100
+
+        star = "⭐" if f1 >= 0.6 else ""
+        print(f"{rank:<6} {config_name:<45} {f1:<8.4f} {prec:<8.4f} {rec:<8.4f} {fall_pct:<7.1f}% {star}")
+
+    # Mejor configuración
+    if all_results:
+        best = all_results[0]
+        print(f"\n{'='*80}")
+        print(f"🏆 MEJOR CONFIGURACIÓN: {best['config']['name']}")
+        print(f"{'='*80}")
+        print(f"  F1-Score:   {best['metrics']['f1']:.4f}")
+        print(f"  Precision:  {best['metrics']['precision']:.4f}")
+        print(f"  Recall:     {best['metrics']['recall']:.4f}")
+        print(f"  Fallbacks:  {best['fallback_count']} ({best['fallback_rate']*100:.1f}%)")
+        print(f"\n  Parámetros:")
+        print(f"    TOP_K = {best['config']['TOP_K']}")
+        print(f"    THRESHOLD = {best['config']['THRESHOLD']}")
+        print(f"    MAX_DISPLAY = {best['config']['MAX_DISPLAY']}")
+        print(f"    Query enhancement = '{best['config']['query_clinical_suffix']}'")
+        print(f"    LLM Validation = {'ON' if best['config'].get('use_llm_validation', False) else 'OFF'}")
+
+        # Guardar resultados
+        output_dir = BENCHMARK_DIR / "results" / "optimization"
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        results_file = output_dir / f"optimization_results_{timestamp}.json"
+
+        # Preparar datos para JSON
+        json_results = []
+        for result in all_results:
+            json_results.append({
+                "config_name": result['config']['name'],
+                "parameters": {
+                    "TOP_K": result['config']['TOP_K'],
+                    "THRESHOLD": result['config']['THRESHOLD'],
+                    "MAX_DISPLAY": result['config']['MAX_DISPLAY'],
+                    "query_enhancement": result['config']['query_clinical_suffix'],
+                    "use_llm_validation": result['config'].get('use_llm_validation', False)
+                },
+                "metrics": {
+                    "f1": result['metrics']['f1'],
+                    "precision": result['metrics']['precision'],
+                    "recall": result['metrics']['recall']
+                },
+                "fallback_rate": result['fallback_rate'],
+                "execution_time": result['execution_time']
+            })
+
+        with open(results_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                "timestamp": timestamp,
+                "configurations_tested": len(CONFIGURATIONS),
+                "results": json_results,
+                "best_config": json_results[0]
+            }, f, indent=2, ensure_ascii=False)
+
+        print(f"\n[OK] Resultados guardados en: {results_file}")
+
+    print(f"\n{'='*80}")
+    print("Optimización completada")
+    print(f"{'='*80}")
+
+
+if __name__ == "__main__":
+    main()
+
+
 --- Content of ./pipeline.py ---
 """
 RAG+GPT Pipeline - Orquestador principal
@@ -611,112 +1066,118 @@ from strategies.rag_gpt.utils.config import (
     get_model_config,
     get_assets_dir
 )
-from strategies.rag_gpt.utils.text_processing import find_span_in_text
+from strategies.rag_gpt.utils.text_processing import find_span_in_text, find_all_spans_in_text
 
 
 class RAGGPTPipeline:
     """
     Pipeline modular para extracción y codificación de entidades médicas
-    
+
     Arquitectura:
-        1. NER: Extracción de entidades (GPT-4o)
+        1. NER: Extracción de entidades (GPT-4o) con spans VERBATIM + offsets
         2. RAG: Recuperación de conceptos SNOMED (FAISS)
-        3. Coding: Codificación SNOMED-CT (RAG + GPT-4o)
-        4. Span Matching: Localización de spans en texto
+        3. Coding: Codificación SNOMED-CT (selección determinista + validación opcional)
+        4. Span Matching: Uso de offsets del NER o expansión a TODAS las ocurrencias en el texto
     """
-    
+
     def __init__(self, verbose: bool = True):
         """
         Inicializa el pipeline completo
-        
+
         Args:
             verbose: Si True, imprime logs detallados
         """
         self.verbose = verbose
-        
+
         if verbose:
             print("="*80)
             print("RAG+GPT Pipeline - Inicialización")
             print("="*80)
-        
+
         # 1. Configuración
         self.client = setup_openai_client()
         self.model_config = get_model_config()
         assets_dir = get_assets_dir()
-        
+
         # 2. Cargar prompts
         ner_prompt = load_prompt("ner_prompt")
         coding_prompt = load_prompt("coding_prompt")
         system_prompt_data = load_prompt("system_prompt")
         system_prompt = system_prompt_data['content']
-        
+
         # 3. Inicializar componentes
         self.rag = RAGRetriever(assets_dir)
-        self.ner = NERExtractor(self.client, ner_prompt, self.model_config)
-        self.coder = SNOMEDCoder(self.rag, self.client)
-        
+        self.ner = NERExtractor(self.client, ner_prompt, self.model_config, system_prompt=system_prompt)
+        self.coder = SNOMEDCoder(self.rag, self.client, system_prompt=system_prompt)
+
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("="*80)
-    
+
     def _chunk_text(self, text: str) -> List[str]:
-        chunk_size = 2500
-        overlap = 400
-        chunks = []
-        start = 0
         """Divide texto en chunks con overlap"""
+        chunk_size = 3000
+        overlap = 300
+
         if len(text) <= chunk_size:
             return [text]
-        
+
         chunks = []
         start = 0
-        
+
         while start < len(text):
             end = min(start + chunk_size, len(text))
             chunks.append(text[start:end])
-            
+
             if end >= len(text):
                 break
-            
+
             start = end - overlap
-        
+
         if self.verbose:
             print(f"[CHUNKING] {len(chunks)} chunks (size={chunk_size}, overlap={overlap})")
-        
+
         return chunks
-    
+
     def _deduplicate_entities(self, entities: List[Dict]) -> List[Dict]:
-        """Elimina duplicados usando full_span como clave"""
+        """
+        Elimina duplicados SOLO si son la misma ocurrencia (mismo start/end).
+        Antes se deduplicaba por (full_span, location, presence) y esto destruía coincidencias exactas
+        cuando había múltiples ocurrencias del mismo texto en posiciones distintas.
+        """
         seen = set()
-        unique = []
-        
-        for entity in entities:
+        unique: List[Dict] = []
+
+        for e in entities:
+            start = e.get("start")
+            end = e.get("end")
             key = (
-                entity.get('full_span', entity['span_text']),
-                entity.get('anatomical_location', ''),
-                entity.get('presence', '')
+                e.get('full_span', e['span_text']),
+                e.get('anatomical_location', ''),
+                e.get('presence', ''),
+                start if isinstance(start, int) else None,
+                end if isinstance(end, int) else None
             )
-            
             if key not in seen:
                 seen.add(key)
-                unique.append(entity)
-        
+                unique.append(e)
+
         if self.verbose and len(entities) > len(unique):
-            print(f"[DEDUP] {len(entities)} -> {len(unique)} entidades")
-        
+            print(f"[DEDUP] {len(entities)} -> {len(unique)} entidades (por ocurrencia)")
+
         return unique
-    
+
     def process_note(self, text: str, note_id: int = None) -> List[Dict]:
         """
         Procesa una nota médica completa
-        
+
         Pipeline:
-            text -> Chunking -> NER (por chunk) -> Dedup -> RAG+Coding -> coded_entities
-        
+            text -> Chunking -> NER (por chunk) -> Dedup -> RAG+Coding -> Span Matching
+
         Args:
             text: Texto de la nota médica
             note_id: ID de la nota (opcional, para logging)
-            
+
         Returns:
             Lista de entidades codificadas con spans localizados
         """
@@ -724,115 +1185,124 @@ class RAGGPTPipeline:
             print(f"\n{'='*80}")
             print(f"Procesando nota {note_id}")
             print(f"{'='*80}")
-        
+
         # Paso 0: Chunking - Dividir texto en chunks con overlap
         chunks = self._chunk_text(text)
-        
+
         # Paso 1: NER - Extraer entidades de cada chunk
         all_entities = []
         for i, chunk in enumerate(chunks):
             if self.verbose and len(chunks) > 1:
                 print(f"\n[NER] Procesando chunk {i+1}/{len(chunks)}...")
-            
+
             chunk_entities = self.ner.extract_entities(chunk)
             all_entities.extend(chunk_entities)
-        
+
         if not all_entities:
             if self.verbose:
                 print("[WARNING] No se detectaron entidades")
             return []
-        
-        # Paso 1.5: Deduplicación - Eliminar entidades duplicadas del overlap
+
+        # Paso 1.5: Deduplicación - por ocurrencia (mantiene instancias con distintos offsets)
         entities = self._deduplicate_entities(all_entities)
-        
-        # Paso 2: RAG + Coding - Codificar entidades
+
+        # Paso 2: RAG + Coding - Codificar entidades (determinista + validación opcional)
         coded_entities = self.coder.code_entities(entities, verbose=self.verbose)
-        
-        # Paso 3: Span Matching - Localizar en texto
+
+        # Paso 3: Span Matching - Usar offsets del NER o expandir a TODAS las ocurrencias
         final_entities = self._locate_spans(coded_entities, text)
-        
+
         if self.verbose:
             print(f"\n[OK] Procesamiento completado: {len(final_entities)} entidades")
-        
+
         return final_entities
-    
+
     def _locate_spans(self, entities: List[Dict], text: str) -> List[Dict]:
-        """Localiza los spans en el texto original"""
-        located_entities = []
-        last_search_idx = {}
-        
+        """
+        Localiza spans:
+          1) Si la entidad trae start/end válidos, los valida y usa.
+          2) Si no trae offsets, busca TODAS las ocurrencias del full_span (o span_text) y
+             genera una predicción por cada match (esto maximiza coincidencias exactas con el benchmark).
+        """
+        located_entities: List[Dict] = []
+
         for entity in entities:
             core_entity = entity['span_text']
-            full_span = entity.get('full_span', core_entity)
-            
-            search_key = full_span
-            start_from = last_search_idx.get(search_key, 0)
-            
-            full_result = find_span_in_text(full_span, text, start_from)
-            
-            if full_result:
-                start_full, end_full = full_result
-                text_segment = text[start_full:end_full]
-                core_in_full_result = find_span_in_text(core_entity, text_segment, 0)
-                
-                if core_in_full_result:
-                    start_rel, end_rel = core_in_full_result
-                    start_core = start_full + start_rel
-                    end_core = start_full + end_rel
-                    last_search_idx[search_key] = end_full
-                    
-                    entity['start'] = start_core
-                    entity['end'] = end_core
-                    entity['span_text_real'] = text[start_core:end_core]
-                    located_entities.append(entity)
-                elif core_entity.lower() == full_span.lower():
-                    last_search_idx[search_key] = end_full
-                    entity['start'] = start_full
-                    entity['end'] = end_full
-                    entity['span_text_real'] = text[start_full:end_full]
-                    located_entities.append(entity)
-                else:
-                    core_result = find_span_in_text(core_entity, text, start_from)
-                    if core_result:
-                        start_core, end_core = core_result
-                        last_search_idx[search_key] = end_core
-                        entity['start'] = start_core
-                        entity['end'] = end_core
-                        entity['span_text_real'] = text[start_core:end_core]
-                        located_entities.append(entity)
-            else:
-                core_result = find_span_in_text(core_entity, text, start_from)
-                if core_result:
-                    start_core, end_core = core_result
-                    last_search_idx[search_key] = end_core
-                    entity['start'] = start_core
-                    entity['end'] = end_core
-                    entity['span_text_real'] = text[start_core:end_core]
-                    located_entities.append(entity)
-        
+            full_span = entity.get('full_span', core_entity) or core_entity
+
+            start = entity.get("start")
+            end = entity.get("end")
+
+            # (1) Usar offsets proporcionados si son válidos
+            if isinstance(start, int) and isinstance(end, int) and 0 <= start < end <= len(text):
+                snippet = text[start:end]
+                # Aceptar si coincide (case-insensitive) con el full_span o el core
+                if snippet.lower() == full_span.lower() or snippet.lower() == core_entity.lower():
+                    ent = dict(entity)
+                    ent['start'] = start
+                    ent['end'] = end
+                    ent['span_text_real'] = snippet
+                    located_entities.append(ent)
+                    continue
+                # Si no coincide, intentar corregir buscando cerca
+                nearby = find_span_in_text(full_span, text, max(0, start - 50))
+                if nearby:
+                    s2, e2 = nearby
+                    ent = dict(entity)
+                    ent['start'] = s2
+                    ent['end'] = e2
+                    ent['span_text_real'] = text[s2:e2]
+                    located_entities.append(ent)
+                    continue
+                # Último recurso: buscar por core
+                nearby2 = find_span_in_text(core_entity, text, max(0, start - 50))
+                if nearby2:
+                    s3, e3 = nearby2
+                    ent = dict(entity)
+                    ent['start'] = s3
+                    ent['end'] = e3
+                    ent['span_text_real'] = text[s3:e3]
+                    located_entities.append(ent)
+                    continue
+                # Si ni así, caer a expansión completa abajo
+
+            # (2) Sin offsets válidos → expandir a TODAS las ocurrencias en el texto
+            matches = find_all_spans_in_text(full_span, text)
+            if not matches:
+                matches = find_all_spans_in_text(core_entity, text)
+
+            if matches:
+                for s, e in matches:
+                    ent = dict(entity)
+                    ent['start'] = s
+                    ent['end'] = e
+                    ent['span_text_real'] = text[s:e]
+                    located_entities.append(ent)
+            # Si no hay matches en absoluto, se omite la entidad (no generamos posiciones inválidas)
+
         return located_entities
-    
+
     def predict(self, notes_df: pd.DataFrame) -> pd.DataFrame:
         """
         Procesa múltiples notas y genera predicciones
-        
+
         Args:
             notes_df: DataFrame con columnas 'note_id' y 'text'
-            
+
         Returns:
             DataFrame con predicciones en formato de benchmark
         """
         print(f"[Pipeline] Procesando {len(notes_df)} notas...")
-        
+
         predictions = []
-        
+
         for idx, row in notes_df.iterrows():
             note_id = row['note_id']
             text = row['text']
-            
+
             # Procesar nota
             entities = self.process_note(text, note_id)
-            
+
             # Convertir a formato de predicción
             for entity in entities:
                 predictions.append({
@@ -847,19 +1317,19 @@ class RAGGPTPipeline:
                     'presence_code': entity.get('presence_code', ''),
                     'llm_used': 'GPT-4o'
                 })
-        
+
         print(f"[Pipeline] [OK] Completado: {len(predictions)} predicciones generadas")
-        
+
         return pd.DataFrame(predictions)
 
 
 --- Content of ./prompts/coding_prompt.json ---
 {
   "name": "Codificación SNOMED-CT",
-  "version": "8.0 - Confidence maximization",
-  "description": "Ultra-confident prompt - strongly prefer top options over fallback",
+  "version": "11.0 - Deterministic First, LLM-Validation Restricted",
+  "description": "Selección determinista (SapBERT/FAISS) + validación opcional con LLM restringida a candidatos",
   "language": "es",
-  "template": "You are an elite SNOMED-CT medical coder using advanced semantic similarity (SapBERT medical embeddings). Your context list is RANKED by similarity score [SIM: X.XX].\n\nEntity: {entity}\nLocation: {location}\nPresence: {presence}\n\n{contexto_entity}\n\n{contexto_anatomy}\n\nSIMILARITY SCORING (Cosine Similarity, 0.0 to 1.0):\n- [SIM: 0.85 - 1.00] = EXCELLENT match. SELECT this.\n- [SIM: 0.70 - 0.84] = GOOD match. Select if clinically appropriate.\n- [SIM: 0.55 - 0.69] = MODERATE match. Review carefully.\n- [SIM: < 0.55] = WEAK match. Use fallback \"404684003\".\n\nDECISION RULES:\n1. entity_code:\n   - Find the option with the HIGHEST [SIM] score.\n   - If the highest SIM is ≥ 0.65, SELECT that code. It's semantically validated.\n   - If ALL options have SIM < 0.60, use fallback \"404684003\".\n\n2. anatomy_code:\n   - location=\"No especificado\" → \"12738006\".\n   - Otherwise, SELECT the code with the highest SIM from anatomy codes.\n   - \"--- NO CODES FOUND ---\" → \"12738006\".\n\n3. presence_code: \"presente\"→\"52101004\", \"ausente\"→\"272519000\", \"incierto\"→\"261665006\".\n\nCONFIDENCE: High SIM scores are medical semantic validation. Trust them.\n\nReturn JSON:\n{{\n  \"entity_code\": \"<code>\",\n  \"anatomy_code\": \"<code>\",\n  \"presence_code\": \"<code>\"\n}}",
+  "template": "Eres un codificador SNOMED-CT muy estricto. SOLO puedes elegir códigos de las listas de candidatos proporcionadas. No inventes códigos. No uses el código fallback si existen candidatos.\n\n🎯 ENTITY TO CODE: \"{entity}\"\n📍 ANATOMICAL LOCATION: \"{location}\"\n✅ PRESENCE STATUS: \"{presence}\"\n\n{contexto_entity}\n\n{contexto_anatomy}\n\nREGLAS OBLIGATORIAS:\n1) entity_code:\n   - SIEMPRE elige uno de los códigos listados en las OPCIONES del bloque ENTITY.\n   - Si el bloque ENTITY muestra \"--- NO CODES FOUND ---\", entonces y solo entonces puedes usar \"404684003\".\n   - Si hay múltiples opciones, elige la que sea más específica para la entidad dada (pero SIEMPRE dentro de la lista).\n\n2) anatomy_code:\n   - Si Location = \"No especificado\" o no hay candidatos en ANATOMY → usa \"12738006\" (Brain structure).\n   - En caso contrario, elige SIEMPRE uno de los códigos listados en ANATOMY (el más apropiado).\n\n3) presence_code (mapeo exacto):\n   - \"presente\" → \"52101004\"\n   - \"ausente\"  → \"272519000\"\n   - \"incierto\" → \"261665006\"\n\n4) PROHIBIDO:\n   - Elegir códigos fuera de las listas.\n   - Usar fallback si hay candidatos en ENTITY.\n   - Cambiar el tipo de salida.\n\nDevuelve SOLO este JSON:\n{\n  \"entity_code\": \"<SNOMED_CODE>\",\n  \"anatomy_code\": \"<SNOMED_CODE>\",\n  \"presence_code\": \"<SNOMED_CODE>\"\n}",
   "input_variables": ["entity", "location", "presence", "contexto_entity", "contexto_anatomy"],
   "output_format": "json",
   "expected_fields": ["entity_code", "anatomy_code", "presence_code"]
@@ -882,10 +1352,10 @@ class RAGGPTPipeline:
 --- Content of ./prompts/ner_prompt.json ---
 {
   "name": "NER Extractivo Clínico",
-  "version": "2.1",
-  "description": "Prompt agresivo para máxima extracción de entidades",
+  "version": "3.0 - Verbatim spans with offsets",
+  "description": "Extrae entidades como copias exactas del texto con offsets de caracteres y múltiples ocurrencias",
   "language": "es",
-  "template": "Extract EVERY medical entity from this clinical note. Be EXHAUSTIVE. For each entity:\n\n1. **core_entity**: Nuclear term (e.g., \"stenosis\", \"weakness\", \"hemorrhage\")\n2. **full_span**: Complete descriptive text (e.g., \"70% stenosis of left ICA\")\n3. **anatomical_location**: Specific location or \"No especificado\"\n4. **presence**: \"presente\", \"ausente\", or \"incierto\"\n5. **value**: Numeric value if applicable, otherwise null\n\nEXTRACT EVERYTHING:\n- ALL findings/pathology (hemorrhage, infarct, occlusion, stenosis, lesion, edema, mass)\n- ALL anatomy (arteries, brain regions, vessels)\n- ALL scales/scores (NIHSS, ASPECTS, TICI, GCS, mRS, etc.)\n- ALL symptoms (weakness, aphasia, numbness, paresis, paralysis)\n- ALL procedures (thrombectomy, thrombolysis, tPA, angiography, surgery)\n- ALL comorbidities (AFib, hypertension, diabetes, etc.)\n- ALL measurements and values\n\nBe AGGRESSIVE. Extract MULTIPLE times if entity appears multiple times. Extract OVERLAPPING entities if they exist.\n\nJSON output:\n{{\n  \"entities\": [\n    {{\n      \"core_entity\": \"term\",\n      \"full_span\": \"full descriptive text\",\n      \"anatomical_location\": \"location or No especificado\",\n      \"presence\": \"presente|ausente|incierto\",\n      \"value\": \"value or null\"\n    }}\n  ]\n}}\n\nClinical note:\n{informe}\n\nRespond with JSON only:",
+  "template": "Extrae TODAS las entidades médicas de esta nota clínica. Debes ser EXHAUSTIVO.\n\nREQUISITOS CRÍTICOS:\n- \"full_span\" debe ser una COPIA-PEGA EXACTA de la nota (mismos caracteres).\n- Proporciona índices de caracteres 0-based: \"start\" inclusivo, \"end\" exclusivo.\n- Si una entidad aparece VARIAS veces, crea una entrada por CADA OCURRENCIA con sus propios start/end.\n- No normalices el texto: copia exactamente lo que aparece (mayúsculas, signos, abreviaturas, etc.).\n\nPara cada entidad incluye:\n1. **core_entity**: término nuclear (p.ej., \"stenosis\", \"weakness\", \"hemorrhage\").\n2. **full_span**: TEXTO EXACTO tomado de la nota para esa ocurrencia.\n3. **anatomical_location**: localización específica o \"No especificado\".\n4. **presence**: \"presente\", \"ausente\" o \"incierto\".\n5. **value**: valor numérico si aplica, si no null.\n6. **start**: índice de carácter (0-based, inclusive) donde inicia \"full_span\".\n7. **end**: índice de carácter (0-based, exclusivo) donde termina \"full_span\".\n\nEXTRAER:\n- Hallazgos/patologías (hemorrhage, infarct, occlusion, stenosis, lesion, edema, mass...)\n- Anatomía (arterias, regiones cerebrales, vasos)\n- Escalas/scores (NIHSS, ASPECTS, TICI, GCS, mRS, etc.)\n- Síntomas (weakness, aphasia, numbness, paresis, paralysis)\n- Procedimientos (thrombectomy, thrombolysis, tPA, angiography, surgery)\n- Comorbilidades (AFib, hypertension, diabetes, etc.)\n- Mediciones y valores\n\nFORMATO JSON ESTRICTO:\n{\n  \"entities\": [\n    {\n      \"core_entity\": \"term\",\n      \"full_span\": \"TEXTO EXACTO COPIADO\",\n      \"anatomical_location\": \"location or No especificado\",\n      \"presence\": \"presente|ausente|incierto\",\n      \"value\": \"value or null\",\n      \"start\": 0,\n      \"end\": 0\n    }\n  ]\n}\n\nNota clínica:\n{informe}\n\nResponde SOLO con JSON válido:",
   "input_variables": ["informe"],
   "output_format": "json",
   "expected_fields": ["entities"]
@@ -1346,49 +1816,78 @@ Utilidades para procesamiento de texto y span matching
 """
 
 import re
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
+
+
+def _make_flexible_regex(span_text: str) -> str:
+    """
+    Construye un patrón regex flexible que ignore múltiples espacios/saltos de línea entre palabras,
+    escapando caracteres especiales del span.
+    """
+    palabras = re.split(r'\s+', span_text.strip())
+    palabras_escapadas = [re.escape(palabra) for palabra in palabras if palabra]
+    if not palabras_escapadas:
+        return r''
+    return r'\s+'.join(palabras_escapadas)
 
 
 def find_span_in_text(span_text: str, text: str, start_from: int = 0) -> Optional[Tuple[int, int]]:
     """
-    Encuentra la posición de un span en el texto usando regex flexible
-    
+    Encuentra la primera posición de un span en el texto usando regex flexible (case-insensitive).
+
     Args:
         span_text: Texto del span a buscar
         text: Texto completo donde buscar
         start_from: Índice desde donde comenzar la búsqueda
-        
+
     Returns:
         Tupla (start, end) si se encuentra, None si no
     """
-    # Crear patrón regex flexible que ignore múltiples espacios/saltos de línea
-    palabras = re.split(r'\s+', span_text)
-    palabras_escapadas = [re.escape(palabra) for palabra in palabras if palabra]
-    regex_pattern = r'\s+'.join(palabras_escapadas)
-    
-    # Buscar desde start_from
-    match = re.search(regex_pattern, text[start_from:], re.IGNORECASE)
-    
+    pattern = _make_flexible_regex(span_text)
+    if not pattern:
+        return None
+
+    match = re.search(pattern, text[start_from:], re.IGNORECASE)
     if match:
         start = match.start() + start_from
         end = match.end() + start_from
         return (start, end)
-    
     return None
+
+
+def find_all_spans_in_text(span_text: str, text: str) -> List[Tuple[int, int]]:
+    """
+    Encuentra TODAS las ocurrencias de un span en el texto con regex flexible (case-insensitive).
+
+    Args:
+        span_text: Texto del span a buscar
+        text: Texto completo
+
+    Returns:
+        Lista de tuplas (start, end) para cada coincidencia encontrada
+    """
+    pattern = _make_flexible_regex(span_text)
+    if not pattern:
+        return []
+
+    matches = []
+    for m in re.finditer(pattern, text, re.IGNORECASE):
+        matches.append((m.start(), m.end()))
+    return matches
 
 
 def clean_json_response(response: str) -> str:
     """
     Limpia una respuesta JSON de markdown y trailing commas
-    
+
     Args:
         response: Respuesta cruda del LLM
-        
+
     Returns:
         JSON limpio como string
     """
     response_clean = response.strip()
-    
+
     # Remover markdown
     if '```json' in response_clean:
         json_start = response_clean.find('```json') + 7
@@ -1398,10 +1897,10 @@ def clean_json_response(response: str) -> str:
         json_start = response_clean.find('```') + 3
         json_end = response_clean.find('```', json_start)
         response_clean = response_clean[json_start:json_end].strip()
-    
+
     # Limpiar trailing commas
     response_clean = re.sub(r',(\s*[}\]])', r'\1', response_clean)
-    
+
     return response_clean
 
 

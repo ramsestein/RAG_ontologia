@@ -1,0 +1,134 @@
+{
+  "timestamp": "20251103_110608",
+  "configurations_tested": 7,
+  "results": [
+    {
+      "config_name": "Config 4: Threshold Alto + Contexto Selectivo",
+      "parameters": {
+        "TOP_K": 20,
+        "THRESHOLD": 0.65,
+        "MAX_DISPLAY": 6,
+        "query_enhancement": "disorder finding"
+      },
+      "metrics": {
+        "f1": 0.10958904109589042,
+        "precision": 0.11538461538461539,
+        "recall": 0.10434782608695652
+      },
+      "fallback_rate": 0.5865384615384616,
+      "execution_time": 199.07078289985657
+    },
+    {
+      "config_name": "Config 1: Threshold Bajo + Más Contexto",
+      "parameters": {
+        "TOP_K": 30,
+        "THRESHOLD": 0.5,
+        "MAX_DISPLAY": 12,
+        "query_enhancement": "disorder finding"
+      },
+      "metrics": {
+        "f1": 0.1081081081081081,
+        "precision": 0.11214953271028037,
+        "recall": 0.10434782608695652
+      },
+      "fallback_rate": 0.6542056074766355,
+      "execution_time": 254.5640516281128
+    },
+    {
+      "config_name": "Config 6: Threshold Bajo + Más query enhancement",
+      "parameters": {
+        "TOP_K": 30,
+        "THRESHOLD": 0.52,
+        "MAX_DISPLAY": 10,
+        "query_enhancement": "disease disorder condition"
+      },
+      "metrics": {
+        "f1": 0.10045662100456619,
+        "precision": 0.10576923076923077,
+        "recall": 0.09565217391304348
+      },
+      "fallback_rate": 0.6442307692307693,
+      "execution_time": 219.68795156478882
+    },
+    {
+      "config_name": "Config 7: Balance Óptimo",
+      "parameters": {
+        "TOP_K": 25,
+        "THRESHOLD": 0.53,
+        "MAX_DISPLAY": 9,
+        "query_enhancement": "disorder finding"
+      },
+      "metrics": {
+        "f1": 0.09865470852017935,
+        "precision": 0.10185185185185185,
+        "recall": 0.09565217391304348
+      },
+      "fallback_rate": 0.6296296296296297,
+      "execution_time": 231.07792711257935
+    },
+    {
+      "config_name": "Config 5: Threshold Muy Bajo + Máximo Contexto",
+      "parameters": {
+        "TOP_K": 40,
+        "THRESHOLD": 0.45,
+        "MAX_DISPLAY": 15,
+        "query_enhancement": "disorder finding symptom"
+      },
+      "metrics": {
+        "f1": 0.09734513274336283,
+        "precision": 0.0990990990990991,
+        "recall": 0.09565217391304348
+      },
+      "fallback_rate": 0.6666666666666666,
+      "execution_time": 194.8637673854828
+    },
+    {
+      "config_name": "Config 2: Threshold Medio + Contexto Optimizado",
+      "parameters": {
+        "TOP_K": 25,
+        "THRESHOLD": 0.55,
+        "MAX_DISPLAY": 10,
+        "query_enhancement": "disorder finding"
+      },
+      "metrics": {
+        "f1": 0.08968609865470852,
+        "precision": 0.09259259259259259,
+        "recall": 0.08695652173913043
+      },
+      "fallback_rate": 0.6203703703703703,
+      "execution_time": 224.69507884979248
+    },
+    {
+      "config_name": "Config 3: Threshold Medio-Alto + Contexto Moderado",
+      "parameters": {
+        "TOP_K": 20,
+        "THRESHOLD": 0.58,
+        "MAX_DISPLAY": 8,
+        "query_enhancement": "disorder finding"
+      },
+      "metrics": {
+        "f1": 0.08071748878923768,
+        "precision": 0.08333333333333333,
+        "recall": 0.0782608695652174
+      },
+      "fallback_rate": 0.6481481481481481,
+      "execution_time": 226.70204949378967
+    }
+  ],
+  "best_config": {
+    "config_name": "Config 4: Threshold Alto + Contexto Selectivo",
+    "parameters": {
+      "TOP_K": 20,
+      "THRESHOLD": 0.65,
+      "MAX_DISPLAY": 6,
+      "query_enhancement": "disorder finding"
+    },
+    "metrics": {
+      "f1": 0.10958904109589042,
+      "precision": 0.11538461538461539,
+      "recall": 0.10434782608695652
+    },
+    "fallback_rate": 0.5865384615384616,
+    "execution_time": 199.07078289985657
+  }
+}
