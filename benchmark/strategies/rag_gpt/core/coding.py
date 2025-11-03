@@ -2,9 +2,17 @@
 
 import json
 import os
+import sys
+from pathlib import Path
 from typing import List, Dict
 from openai import OpenAI
-from .rag import RAGRetriever
+
+# Configurar imports absolutos
+SCRIPT_DIR = Path(__file__).parent.resolve()
+BENCHMARK_DIR = SCRIPT_DIR.parent.parent.parent
+sys.path.insert(0, str(BENCHMARK_DIR))
+
+from strategies.rag_gpt.core.rag import RAGRetriever
 
 
 class SNOMEDCoder:
@@ -38,7 +46,7 @@ class SNOMEDCoder:
         coded_entities = []
         for entity in entities:
             codes = self.assign_codes(
-                entity=entity['full_span'],
+                entity=entity['span_text'],
                 location=entity.get('anatomical_location', 'No especificado'),
                 presence=entity.get('presence', 'presente'),
                 verbose=verbose
@@ -108,7 +116,7 @@ class SNOMEDCoder:
     def _build_context(self, query: str, context_type: str, verbose: bool) -> str:
         """Double-query RAG - SapBERT cosine similarity"""
         TOP_K = 15
-        THRESHOLD = 0.6  # Cosine similarity: higher threshold = more selective
+        THRESHOLD = 0.3  # Cosine similarity: higher threshold = more selective
         MAX_DISPLAY = 12
         
         # Double-query for entity codes
@@ -151,7 +159,7 @@ class SNOMEDCoder:
         # Contexto simple - NO TAGS
         context = f"\n--- {context_type} CODES for '{query}' ---\n"
         for idx, (concepto, narrativa, dist) in enumerate(filtered_results[:MAX_DISPLAY], 1):
-            context += f"OPCIÓN {idx}: CÓDIGO: {concepto} | {narrativa[:120]}\n"
+            context += f"OPCIÓN {idx} [SIM: {dist:.2f}]: CÓDIGO: {concepto} | {narrativa[:120]}\n"
             
         return context
 

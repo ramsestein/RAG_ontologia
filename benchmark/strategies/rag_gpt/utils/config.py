@@ -90,4 +90,4 @@ def get_assets_dir() -> Path:
         Path absoluto al directorio de assets
     """
     script_dir = Path(__file__).parent.parent
-    return script_dir / "04_utils" / "assets"
+    return script_dir / "utils" / "assets"

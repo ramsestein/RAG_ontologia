@@ -1,255 +1,173 @@
 --- Content of ./core/coding.py ---
-"""
-Módulo de Codificación SNOMED-CT usando RAG + GPT-4o
-"""
+"""Codificación SNOMED-CT usando RAG + GPT-4o"""
 
 import json
-import re
+import os
+import sys
+from pathlib import Path
 from typing import List, Dict
 from openai import OpenAI
-from .rag import RAGRetriever
+
+# Configurar imports absolutos
+SCRIPT_DIR = Path(__file__).parent.resolve()
+BENCHMARK_DIR = SCRIPT_DIR.parent.parent.parent
+sys.path.insert(0, str(BENCHMARK_DIR))
+
+from strategies.rag_gpt.core.rag import RAGRetriever
 
 
 class SNOMEDCoder:
     """Codificador de entidades médicas usando SNOMED-CT"""
     
-    def __init__(self, client: OpenAI, rag_retriever: RAGRetriever, 
-                 prompt_config: Dict, system_prompt: str, model_config: Dict):
-        """
-        Args:
-            client: Cliente de OpenAI
-            rag_retriever: Sistema RAG para recuperación de conceptos
-            prompt_config: Configuración del prompt de codificación
-            system_prompt: Prompt de sistema
-            model_config: Configuración del modelo GPT
-        """
-        self.client = client
+    FALLBACK_CODE = "404684003"
+    DEFAULT_ANATOMY = "12738006"
+    PRESENCE_MAP = {
+        "presente": "52101004",
+        "ausente": "272519000",
+        "incierto": "261665006"
+    }
+    
+    def __init__(self, rag_retriever, openai_client):
         self.rag = rag_retriever
-        self.prompt_template = prompt_config['template']
-        self.system_prompt = system_prompt
-        self.model_config = model_config
+        self.client = openai_client
         
-        # Mapeo de presencia a código SNOMED
-        self.presence_map = {
-            "presente": "52101004",
-            "ausente": "272519000",
-            "incierto": "261665006"
-        }
+        prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "coding_prompt.json")
+        with open(prompt_path, 'r', encoding='utf-8') as f:
+            self.prompt_config = json.load(f)
+        
+        filter_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "filter_prompt.json")
+        with open(filter_path, 'r', encoding='utf-8') as f:
+            self.filter_config = json.load(f)
     
     def code_entities(self, entities: List[Dict], verbose: bool = True) -> List[Dict]:
-        """
-        Codifica entidades usando SNOMED-CT con contexto RAG
-        
-        Args:
-            entities: Lista de entidades del NER
-            verbose: Si True, imprime logs detallados
-            
-        Returns:
-            Lista de entidades codificadas con códigos SNOMED
-        """
+        """Codifica entidades usando SNOMED-CT con contexto RAG"""
         if verbose:
             print(f"[CODING] Codificando {len(entities)} entidades...")
         
         coded_entities = []
-        
-        for idx, entity in enumerate(entities):
-            if verbose:
-                print(f"\n[CODING] Entidad {idx+1}/{len(entities)}: '{entity['span_text']}'")
+        for entity in entities:
+            codes = self.assign_codes(
+                entity=entity['span_text'],
+                location=entity.get('anatomical_location', 'No especificado'),
+                presence=entity.get('presence', 'presente'),
+                verbose=verbose
+            )
             
-            coded = self._code_single_entity(entity, verbose)
-            coded_entities.append(coded)
-        
-        if verbose:
-            print(f"\n[CODING] [OK] Codificación completada: {len(coded_entities)} entidades")
+            coded_entity = {**entity, **codes}
+            coded_entities.append(coded_entity)
         
         return coded_entities
     
-    def _code_single_entity(self, entity: Dict, verbose: bool) -> Dict:
-        """
-        Codifica una sola entidad (v1.2 - búsqueda RAG limpia con core_entity)
+    def assign_codes(self, entity: str, location: str, presence: str, verbose: bool = False) -> dict:
+        """RAG + GPT single-phase"""
+        contexto_entity = self._build_context(entity, "ENTITY", verbose)
+        contexto_anatomy = "--- ANATOMY NOT SPECIFIED ---\n"
         
-        Args:
-            entity: Entidad con span_text (core_entity) y full_span
-            verbose: Si True, imprime logs
-            
-        Returns:
-            Entidad codificada con códigos SNOMED
-        """
-        # v1.3: Recuperar contexto RAG para la entidad
-        span_text = entity['span_text']
-        location = entity['anatomical_location']
-        presence = entity['presence']
-        
-        # 1. Recuperar contexto RAG para la entidad
-        contexto_entity = self._build_context(span_text, "ENTITY", verbose)
-        
-        # 2. Recuperar contexto RAG para la ubicación anatómica
-        contexto_anatomy = "--- NO CODES FOUND ---\n"
         if location and location != "No especificado":
             contexto_anatomy = self._build_context(location, "ANATOMY", verbose)
         
-        # 3. Preparar prompt con contextos SEPARADOS
-        prompt = self.prompt_template.format(
-            entity=span_text,
+        if verbose:
+            print(f"[CODING]   -> Consultando GPT-4o...")
+        
+        prompt = self.prompt_config["template"].format(
+            entity=entity,
             location=location,
             presence=presence,
             contexto_entity=contexto_entity,
             contexto_anatomy=contexto_anatomy
         )
         
-        # 5. Llamar a GPT-4o
+        response = self.client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            response_format={"type": "json_object"}
+        )
+        
+        result = json.loads(response.choices[0].message.content)
+        
+        entity_code = result.get("entity_code", self.FALLBACK_CODE)
+        anatomy_code = result.get("anatomy_code", self.DEFAULT_ANATOMY)
+        presence_code = result.get("presence_code", self.PRESENCE_MAP.get(presence, self.PRESENCE_MAP["presente"]))
+        
+        if not str(entity_code).isdigit():
+            if verbose:
+                print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando fallback")
+            entity_code = self.FALLBACK_CODE
+            
+        if not str(anatomy_code).isdigit():
+            if verbose:
+                print(f"[CODING]   [WARNING] anatomy_code no numérico: '{anatomy_code}', usando default")
+            anatomy_code = self.DEFAULT_ANATOMY
+            
+        if not str(presence_code).isdigit():
+            if verbose:
+                print(f"[CODING]   [WARNING] presence_code no numérico: '{presence_code}', usando default")
+            presence_code = self.PRESENCE_MAP["presente"]
+        
         if verbose:
-            print(f"[CODING]   -> Consultando GPT-4o...")
+            print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
         
-        response = self._call_gpt4o(prompt)
-        
-        # 6. Parsear respuesta
-        codes = self._parse_coding_response(response, presence, verbose)
-        
-        # 7. Construir entidad codificada (mantener full_span para localización posterior)
-        coded_entity = {
-            **entity,  # Mantener datos originales (incluyendo full_span)
-            'entity_code': codes['entity_code'],
-            'anatomy_code': codes['anatomy_code'],
-            'presence_code': codes['presence_code'],
-            'entity_description': span_text,
-            'anatomy_description': location
+        return {
+            "entity_code": str(entity_code),
+            "anatomy_code": str(anatomy_code),
+            "presence_code": str(presence_code)
         }
-        
-        return coded_entity
     
     def _build_context(self, query: str, context_type: str, verbose: bool) -> str:
-        """
-        Construye contexto ontológico usando RAG (v1.3 - Formato "Top-1")
+        """Double-query RAG - SapBERT cosine similarity"""
+        TOP_K = 15
+        THRESHOLD = 0.3  # Cosine similarity: higher threshold = more selective
+        MAX_DISPLAY = 12
         
-        Formatea los resultados como una lista de opciones claras, 
-        identificando la "OPCIÓN 1 (MEJOR COINCIDENCIA)" para que
-        el Coder (LLM) solo tenga que extraerla mecánicamente.
-        
-        Args:
-            query: Texto de consulta (entidad o anatomía)
-            context_type: Tipo de contexto ("ENTITY" o "ANATOMY")
-            verbose: Si True, imprime logs
+        # Double-query for entity codes
+        if context_type == "ENTITY":
+            # Query 1: Original
+            results_main = self.rag.retrieve(query, k=TOP_K)
             
-        Returns:
-            String con contexto RAG en formato "OPCIÓN 1"
-        """
-        # v1.3: Relajamos el umbral para obtener más candidatos
-        THRESHOLD = 1.55
-        
-        results = self.rag.retrieve(query, k=5)
+            # Query 2: Clinical context
+            query_clinical = f"{query} disorder finding"
+            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
+            
+            # Combinar y deduplicar - KEEP HIGHER SIMILARITY (cosine)
+            combined_results = {}
+            for concepto, narrativa, dist in (results_main + results_clinical):
+                if concepto not in combined_results or dist > combined_results[concepto][1]:  # FIXED: > for cosine
+                    combined_results[concepto] = (narrativa, dist)
+            
+            results = [(concepto, narrativa, dist) for concepto, (narrativa, dist) in combined_results.items()]
+        else:
+            results = self.rag.retrieve(query, k=15)
         
         if not results:
             return "--- NO CODES FOUND ---\n"
         
-        # Filtrar resultados por umbral
-        filtered_results = []
-        for concepto, narrativa, dist in results:
-            if dist <= THRESHOLD:
-                filtered_results.append((concepto, narrativa, dist))
+        # Filtrar y ordenar - FIXED: >= for cosine similarity
+        filtered_results = [(concepto, narrativa, dist) for concepto, narrativa, dist in results if dist >= THRESHOLD]
         
-        # Si todos los resultados fueron descartados
         if not filtered_results:
             if verbose:
-                print(f"[CODING]   -> RAG {context_type}: Todos los resultados descartados (dist > {THRESHOLD})")
+                print(f"[CODING]   -> RAG {context_type}: 0 resultados (dist < {THRESHOLD})")
             return "--- NO CODES FOUND ---\n"
+        
+        # Ordenar DESCENDING (mayor score = mejor match con cosine)
+        filtered_results = sorted(filtered_results, key=lambda x: x[2], reverse=True)
             
         if verbose:
             best_code, _, best_dist = filtered_results[0]
-            discarded = len(results) - len(filtered_results)
-            print(f"[CODING]   -> RAG {context_type}: {len(filtered_results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f}, descartados: {discarded})")
+            print(f"[CODING]   -> RAG {context_type} [MULTI-Q]: {len(filtered_results)} conceptos (mejor: {best_code}, dist: {best_dist:.3f})")
 
-        # v1.3: Construir contexto en formato "OPCIÓN 1"
+        # Contexto simple - NO TAGS
         context = f"\n--- {context_type} CODES for '{query}' ---\n"
-        
-        # La primera y mejor opción
-        best_concepto, best_narrativa, _ = filtered_results[0]
-        context += f"OPCIÓN 1 (MEJOR COINCIDENCIA): CÓDIGO: {best_concepto} | DESCRIPCIÓN: {best_narrativa[:150]}\n"
-        
-        # Opciones alternativas
-        for idx, (concepto, narrativa, dist) in enumerate(filtered_results[1:], 2):
-            context += f"OPCIÓN {idx} (ALTERNATIVA): CÓDIGO: {concepto} | DESCRIPCIÓN: {narrativa[:150]}\n"
+        for idx, (concepto, narrativa, dist) in enumerate(filtered_results[:MAX_DISPLAY], 1):
+            context += f"OPCIÓN {idx} [SIM: {dist:.2f}]: CÓDIGO: {concepto} | {narrativa[:120]}\n"
             
         return context
-    
-    def _call_gpt4o(self, prompt: str, max_retries: int = 3) -> str:
-        """Llama a GPT-4o para codificación"""
-        
-        for attempt in range(max_retries):
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model_config["model"],
-                    messages=[
-                        {"role": "system", "content": self.system_prompt},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.0,
-                    max_tokens=self.model_config.get("max_tokens", 1000),
-                    response_format={"type": "json_object"}
-                )
-                
-                return response.choices[0].message.content.strip()
-                
-            except Exception as e:
-                print(f"[CODING] [ERROR] Error GPT-4o (intento {attempt+1}/{max_retries}): {e}")
-                if attempt == max_retries - 1:
-                    return '{"entity_code": "404684003", "anatomy_code": "12738006", "presence_code": "261665006"}'
-        
-        return '{"entity_code": "404684003", "anatomy_code": "12738006", "presence_code": "261665006"}'
-    
-    def _parse_coding_response(self, response: str, presence: str, verbose: bool) -> Dict:
-        """Parsea la respuesta de codificación"""
-        
-        try:
-            # Buscar JSON en la respuesta
-            json_match = re.search(r'\{.*\}', response, re.DOTALL)
-            if not json_match:
-                raise ValueError("No JSON encontrado")
-            
-            data = json.loads(json_match.group(0))
-            
-            # Extraer códigos
-            entity_code = str(data.get("entity_code", "404684003"))
-            anatomy_code = str(data.get("anatomy_code", "12738006"))
-            
-            # Validar que son numéricos
-            if not entity_code.isdigit():
-                if verbose:
-                    print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando default")
-                entity_code = "404684003"
-            
-            if not anatomy_code.isdigit():
-                if verbose:
-                    print(f"[CODING]   [WARNING] anatomy_code no numérico: '{anatomy_code}', usando default")
-                anatomy_code = "12738006"
-            
-            # Código de presencia (fijo según mapeo)
-            presence_code = self.presence_map.get(presence.lower(), "261665006")
-            
-            if verbose:
-                print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
-            
-            return {
-                'entity_code': entity_code,
-                'anatomy_code': anatomy_code,
-                'presence_code': presence_code
-            }
-            
-        except Exception as e:
-            if verbose:
-                print(f"[CODING]   [ERROR] Error parseando: {e}")
-            
-            return {
-                'entity_code': "404684003",
-                'anatomy_code': "12738006",
-                'presence_code': self.presence_map.get(presence.lower(), "261665006")
-            }
+
 
 
 --- Content of ./core/ner.py ---
-"""
-Módulo de NER (Named Entity Recognition) usando GPT-4o
-"""
+"""Named Entity Recognition usando GPT-4o"""
 
 import json
 import re
@@ -261,41 +179,16 @@ class NERExtractor:
     """Extractor de entidades médicas usando GPT-4o"""
     
     def __init__(self, client: OpenAI, prompt_config: Dict, model_config: Dict):
-        """
-        Args:
-            client: Cliente de OpenAI configurado
-            prompt_config: Configuración del prompt NER (cargado desde JSON)
-            model_config: Configuración del modelo GPT
-        """
         self.client = client
         self.prompt_template = prompt_config['template']
         self.model_config = model_config
         
     def extract_entities(self, texto: str) -> List[Dict]:
-        """
-        Extrae entidades médicas del texto usando GPT-4o
-        
-        Args:
-            texto: Texto del informe médico
-            
-        Returns:
-            Lista de entidades detectadas con formato:
-            {
-                'span_text': str,
-                'anatomical_location': str,
-                'presence': str,
-                'value': str|None
-            }
-        """
+        """Extrae entidades médicas del texto usando GPT-4o"""
         print("[NER] Ejecutando extracción de entidades con GPT-4o...")
         
-        # Preparar prompt
         prompt = self.prompt_template.format(informe=texto)
-        
-        # Llamar a GPT-4o
         response = self._call_gpt4o(prompt)
-        
-        # Parsear respuesta JSON
         entities = self._parse_ner_response(response)
         
         print(f"[NER] Entidades detectadas: {len(entities)}")
@@ -308,7 +201,6 @@ class NERExtractor:
     
     def _call_gpt4o(self, prompt: str, max_retries: int = 3) -> str:
         """Llama a GPT-4o con manejo de errores"""
-        
         for attempt in range(max_retries):
             try:
                 response = self.client.chat.completions.create(
@@ -316,8 +208,8 @@ class NERExtractor:
                     messages=[
                         {"role": "user", "content": prompt}
                     ],
-                    temperature=0.0,  # Forzar determinismo completo (no creatividad en NER extractivo)
-                    max_tokens=self.model_config.get("max_tokens", 4000),
+                    temperature=0.05,
+                    max_tokens=4500,
                     response_format={"type": "json_object"}
                 )
                 
@@ -332,12 +224,9 @@ class NERExtractor:
     
     def _parse_ner_response(self, response: str) -> List[Dict]:
         """Parsea la respuesta JSON del NER"""
-        
         try:
-            # Limpiar respuesta
             response_clean = response.strip()
             
-            # Buscar JSON si está envuelto en markdown
             if '```json' in response_clean:
                 json_start = response_clean.find('```json') + 7
                 json_end = response_clean.find('```', json_start)
@@ -347,14 +236,11 @@ class NERExtractor:
                 json_end = response_clean.find('```', json_start)
                 response_clean = response_clean[json_start:json_end].strip()
             
-            # Limpiar trailing commas
             response_clean = re.sub(r',(\s*[}\]])', r'\1', response_clean)
             
-            # Parsear JSON
             try:
                 data = json.loads(response_clean)
             except json.JSONDecodeError:
-                # Intentar extraer con regex
                 json_match = re.search(r'\{.*\}', response_clean, re.DOTALL)
                 if json_match:
                     json_str = re.sub(r',(\s*[}\]])', r'\1', json_match.group())
@@ -362,18 +248,28 @@ class NERExtractor:
                 else:
                     raise ValueError("No se pudo extraer JSON válido")
             
-            # Extraer entidades
             entities = []
             if "entities" in data:
                 for finding in data["entities"]:
-                    span = finding.get("span_text", "")
-                    if span:
-                        entities.append({
-                            "span_text": span,
-                            "anatomical_location": finding.get("anatomical_location", "No especificado"),
-                            "presence": finding.get("presence", "presente"),
-                            "value": finding.get("value")
-                        })
+                    core_entity = finding.get("core_entity", "")
+                    full_span = finding.get("full_span", "")
+                    
+                    if not core_entity:
+                        if full_span:
+                            core_entity = full_span
+                        else:
+                            continue
+
+                    if not full_span:
+                        full_span = core_entity
+
+                    entities.append({
+                        "span_text": core_entity,
+                        "full_span": full_span,
+                        "anatomical_location": finding.get("anatomical_location", "No especificado"),
+                        "presence": finding.get("presence", "presente"),
+                        "value": finding.get("value")
+                    })
             
             return entities
             
@@ -386,17 +282,23 @@ class NERExtractor:
 --- Content of ./core/rag.py ---
 """
 Módulo RAG (Retrieval-Augmented Generation) usando FAISS
+FIXED: Usa AutoModel + [CLS] token (SapBERT-style) y normaliza la query.
 """
 
 import os
 import pickle
 import faiss
 from typing import List, Tuple
-from sentence_transformers import SentenceTransformer
+import torch
+import numpy as np
+from transformers import AutoTokenizer, AutoModel
+
+# --- MODELO CORRECTO (del README) ---
+MODEL_NAME = 'cambridgeltl/SapBERT-from-PubMedBERT-fulltext'
 
 
 class RAGRetriever:
-    """Sistema de recuperación semántica usando FAISS"""
+    """Sistema de recuperación semántica usando FAISS (SapBERT [CLS] mode)"""
     
     def __init__(self, assets_dir: str):
         """
@@ -405,101 +307,132 @@ class RAGRetriever:
         """
         self.assets_dir = assets_dir
         self.faiss_index = None
-        self.embedding_model = None
         self.conceptos = []
         self.narrativas = []
         
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.tokenizer = None
+        self.model = None
+        
+        self._load_model_and_tokenizer()
         self._load_index()
         self._load_ontology()
+
+    def _load_model_and_tokenizer(self):
+        """Carga el modelo y tokenizador de HuggingFace (SapBERT-style)"""
+        try:
+            print(f"[RAG] Cargando modelo y tokenizador: {MODEL_NAME}...")
+            self.tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+            self.model = AutoModel.from_pretrained(MODEL_NAME).to(self.device)
+            self.model.eval()
+            print(f"[RAG] [OK] Modelo cargado en {self.device}")
+        except Exception as e:
+            print(f"[RAG] [ERROR] No se pudo cargar el modelo de HuggingFace: {e}")
+
     
     def _load_index(self):
         """Carga el índice FAISS pre-construido"""
-        
         index_path = os.path.join(self.assets_dir, 'ontology.index')
-        
         if not os.path.exists(index_path):
             print(f"[RAG] [WARNING] Índice FAISS no encontrado en {index_path}")
-            print("[RAG] Ejecuta: python strategies/04_utils/ontology_preprocessor.py")
             return
         
         try:
             print(f"[RAG] Cargando índice FAISS...")
             self.faiss_index = faiss.read_index(index_path)
             
-            # Cargar metadata
             metadata_path = os.path.join(self.assets_dir, 'ontology_metadata.pkl')
             if os.path.exists(metadata_path):
                 with open(metadata_path, 'rb') as f:
                     metadata = pickle.load(f)
-                print(f"[RAG] [OK] Índice cargado: {metadata['n_concepts']} conceptos")
-            
-            # Cargar modelo de embeddings
-            print("[RAG] Cargando modelo de embeddings...")
-            self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-            
+                print(f"[RAG] [OK] Índice cargado: {metadata['n_concepts']} conceptos (Modelo: {metadata.get('model_name', '??')})")
+                
+                # Validar que el índice se hizo con el mismo modelo
+                if metadata.get('model_name') != MODEL_NAME:
+                    print(f"[RAG] [WARNING] ¡El índice fue construido con un modelo diferente ({metadata.get('model_name')})!")
+                    print(f"[RAG] [WARNING] Por favor, borra los assets y re-ejecuta ontology_preprocessor.py")
+
         except Exception as e:
             print(f"[RAG] [ERROR] Error cargando índice: {e}")
     
     def _load_ontology(self):
         """Carga conceptos y narrativas desde pickle"""
-        
         concepts_path = os.path.join(self.assets_dir, 'ontology_concepts.pkl')
         narratives_path = os.path.join(self.assets_dir, 'ontology_narratives.pkl')
         
         try:
             with open(concepts_path, 'rb') as f:
                 self.conceptos = pickle.load(f)
-            
             with open(narratives_path, 'rb') as f:
                 self.narrativas = pickle.load(f)
-            
             print(f"[RAG] [OK] Ontología cargada: {len(self.conceptos)} conceptos")
-            
         except Exception as e:
             print(f"[RAG] [ERROR] Error cargando ontología: {e}")
+
+    def _get_query_embedding(self, query: str) -> np.ndarray:
+        """Genera un embedding normalizado para una sola query (SapBERT-style)"""
+        with torch.no_grad():
+            toks = self.tokenizer.encode_plus(
+                query, 
+                padding="max_length", 
+                max_length=25, 
+                truncation=True,
+                return_tensors="pt"
+            )
+            toks_on_device = {k: v.to(self.device) for k, v in toks.items()}
+            
+            # Extraer [CLS] token
+            cls_rep = self.model(**toks_on_device)[0][:, 0, :]
+            
+            # Normalizar para similitud de coseno
+            emb = cls_rep.cpu().numpy()
+            norm = np.linalg.norm(emb)
+            normalized_emb = emb / norm
+            
+            return normalized_emb.astype('float32')
+
     
     def retrieve(self, query: str, k: int = 5) -> List[Tuple[str, str, float]]:
-        """
-        Recupera conceptos similares usando búsqueda semántica
+        """Recupera conceptos similares usando búsqueda semántica"""
         
-        Args:
-            query: Texto de consulta
-            k: Número de resultados a devolver
-            
-        Returns:
-            Lista de tuplas (concepto_id, narrativa, distancia)
-        """
-        if self.faiss_index is None or self.embedding_model is None:
-            print("[RAG] [WARNING] Sistema RAG no disponible, usando búsqueda simple")
-            return self._simple_search(query, k)
+        if self.faiss_index is None or self.model is None:
+            print("[RAG] [WARNING] Sistema RAG no disponible. Faltan índice o modelo.")
+            return []
         
         try:
-            # Generar embedding
-            query_embedding = self.embedding_model.encode([query])
+            # 1. Generar embedding de la query (normalizado, estilo [CLS])
+            query_embedding = self._get_query_embedding(query)
             
-            # Buscar en FAISS
-            distances, indices = self.faiss_index.search(
-                query_embedding.astype('float32'), k
-            )
+            # 2. Buscar en FAISS
+            # k tiene que ser un int, aseguramos
+            k = int(k)
+            distances, indices = self.faiss_index.search(query_embedding, k)
             
-            # Formatear resultados
+            # 3. Formatear resultados
             results = []
             for i, idx in enumerate(indices[0]):
+                if idx < 0: # FAISS puede devolver -1 si no encuentra nada
+                    continue
                 if idx < len(self.conceptos):
                     concepto = self.conceptos[idx]
                     narrativa = self.narrativas[idx]
-                    distancia = distances[0][i]
                     
-                    # Filtrar solo códigos numéricos
+                    # 'distances' con IndexFlatIP son Similitud de Coseno (ya 0.0-1.0)
+                    # ¡No multiplicamos por -1! El preprocesador ya normalizó
+                    # y FAISS/IP devuelve el producto punto, que ES la similitud.
+                    similarity = float(distances[0][i]) 
+                    
                     if str(concepto).isdigit():
-                        results.append((concepto, narrativa, distancia))
-            
+                        results.append((concepto, narrativa, similarity))
+
             return results
             
         except Exception as e:
             print(f"[RAG] [ERROR] Error en búsqueda: {e}")
-            return self._simple_search(query, k)
-    
+            import traceback
+            traceback.print_exc()
+            return []
+        
     def _simple_search(self, query: str, k: int) -> List[Tuple[str, str, float]]:
         """Búsqueda simple de texto como fallback"""
         
@@ -661,17 +594,24 @@ Implementa el pipeline completo de NER -> RAG -> Coding
 
 import pandas as pd
 from typing import List, Dict
+import sys
+from pathlib import Path
 
-from .core.ner import NERExtractor
-from .core.rag import RAGRetriever
-from .core.coding import SNOMEDCoder
-from .utils.config import (
+# Configurar imports absolutos
+SCRIPT_DIR = Path(__file__).parent.resolve()
+BENCHMARK_DIR = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(BENCHMARK_DIR))
+
+from strategies.rag_gpt.core.ner import NERExtractor
+from strategies.rag_gpt.core.rag import RAGRetriever
+from strategies.rag_gpt.core.coding import SNOMEDCoder
+from strategies.rag_gpt.utils.config import (
     load_prompt,
     setup_openai_client,
     get_model_config,
     get_assets_dir
 )
-from .utils.text_processing import find_span_in_text
+from strategies.rag_gpt.utils.text_processing import find_span_in_text
 
 
 class RAGGPTPipeline:
@@ -713,30 +653,18 @@ class RAGGPTPipeline:
         # 3. Inicializar componentes
         self.rag = RAGRetriever(assets_dir)
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config)
-        self.coder = SNOMEDCoder(
-            self.client, 
-            self.rag, 
-            coding_prompt, 
-            system_prompt,
-            self.model_config
-        )
+        self.coder = SNOMEDCoder(self.rag, self.client)
         
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("="*80)
     
-    def _chunk_text(self, text: str, chunk_size: int = 3000, overlap: int = 300) -> List[str]:
-        """
-        Divide el texto en chunks con overlap para evitar perder entidades en los bordes
-        
-        Args:
-            text: Texto completo a dividir
-            chunk_size: Tamaño de cada chunk en caracteres
-            overlap: Número de caracteres de solapamiento entre chunks
-            
-        Returns:
-            Lista de chunks de texto
-        """
+    def _chunk_text(self, text: str) -> List[str]:
+        chunk_size = 2500
+        overlap = 400
+        chunks = []
+        start = 0
+        """Divide texto en chunks con overlap"""
         if len(text) <= chunk_size:
             return [text]
         
@@ -745,51 +673,38 @@ class RAGGPTPipeline:
         
         while start < len(text):
             end = min(start + chunk_size, len(text))
-            chunk = text[start:end]
-            chunks.append(chunk)
+            chunks.append(text[start:end])
             
-            # Si llegamos al final, terminamos
             if end >= len(text):
                 break
             
-            # Siguiente chunk empieza con overlap
             start = end - overlap
         
         if self.verbose:
-            print(f"[CHUNKING] Texto dividido en {len(chunks)} chunks (size={chunk_size}, overlap={overlap})")
+            print(f"[CHUNKING] {len(chunks)} chunks (size={chunk_size}, overlap={overlap})")
         
         return chunks
     
     def _deduplicate_entities(self, entities: List[Dict]) -> List[Dict]:
-        """
-        Elimina entidades duplicadas generadas por chunks con overlap
-        
-        Args:
-            entities: Lista de entidades que puede contener duplicados
-            
-        Returns:
-            Lista de entidades únicas
-        """
+        """Elimina duplicados usando full_span como clave"""
         seen = set()
-        unique_entities = []
+        unique = []
         
         for entity in entities:
-            # Crear clave única basada en propiedades de la entidad
             key = (
-                entity['span_text'],
+                entity.get('full_span', entity['span_text']),
                 entity.get('anatomical_location', ''),
                 entity.get('presence', '')
             )
             
             if key not in seen:
                 seen.add(key)
-                unique_entities.append(entity)
+                unique.append(entity)
         
-        if self.verbose and len(entities) > len(unique_entities):
-            duplicates = len(entities) - len(unique_entities)
-            print(f"[DEDUP] Eliminados {duplicates} duplicados ({len(entities)} -> {len(unique_entities)} entidades)")
+        if self.verbose and len(entities) > len(unique):
+            print(f"[DEDUP] {len(entities)} -> {len(unique)} entidades")
         
-        return unique_entities
+        return unique
     
     def process_note(self, text: str, note_id: int = None) -> List[Dict]:
         """
@@ -842,41 +757,58 @@ class RAGGPTPipeline:
         return final_entities
     
     def _locate_spans(self, entities: List[Dict], text: str) -> List[Dict]:
-        """
-        Localiza los spans en el texto original
-        
-        Args:
-            entities: Entidades codificadas
-            text: Texto original
-            
-        Returns:
-            Entidades con start/end positions
-        """
+        """Localiza los spans en el texto original"""
         located_entities = []
         last_search_idx = {}
         
         for entity in entities:
-            span_text = entity['span_text']
+            core_entity = entity['span_text']
+            full_span = entity.get('full_span', core_entity)
             
-            # Determinar desde dónde buscar
-            start_from = last_search_idx.get(span_text, 0)
+            search_key = full_span
+            start_from = last_search_idx.get(search_key, 0)
             
-            # Buscar span
-            result = find_span_in_text(span_text, text, start_from)
+            full_result = find_span_in_text(full_span, text, start_from)
             
-            if result:
-                start, end = result
-                last_search_idx[span_text] = end
+            if full_result:
+                start_full, end_full = full_result
+                text_segment = text[start_full:end_full]
+                core_in_full_result = find_span_in_text(core_entity, text_segment, 0)
                 
-                # Añadir posiciones
-                entity['start'] = start
-                entity['end'] = end
-                entity['span_text_real'] = text[start:end]
-                
-                located_entities.append(entity)
+                if core_in_full_result:
+                    start_rel, end_rel = core_in_full_result
+                    start_core = start_full + start_rel
+                    end_core = start_full + end_rel
+                    last_search_idx[search_key] = end_full
+                    
+                    entity['start'] = start_core
+                    entity['end'] = end_core
+                    entity['span_text_real'] = text[start_core:end_core]
+                    located_entities.append(entity)
+                elif core_entity.lower() == full_span.lower():
+                    last_search_idx[search_key] = end_full
+                    entity['start'] = start_full
+                    entity['end'] = end_full
+                    entity['span_text_real'] = text[start_full:end_full]
+                    located_entities.append(entity)
+                else:
+                    core_result = find_span_in_text(core_entity, text, start_from)
+                    if core_result:
+                        start_core, end_core = core_result
+                        last_search_idx[search_key] = end_core
+                        entity['start'] = start_core
+                        entity['end'] = end_core
+                        entity['span_text_real'] = text[start_core:end_core]
+                        located_entities.append(entity)
             else:
-                if self.verbose:
-                    print(f"[WARNING] No se encontró span: '{span_text[:50]}'")
+                core_result = find_span_in_text(core_entity, text, start_from)
+                if core_result:
+                    start_core, end_core = core_result
+                    last_search_idx[search_key] = end_core
+                    entity['start'] = start_core
+                    entity['end'] = end_core
+                    entity['span_text_real'] = text[start_core:end_core]
+                    located_entities.append(entity)
         
         return located_entities
     
@@ -923,24 +855,37 @@ class RAGGPTPipeline:
 
 --- Content of ./prompts/coding_prompt.json ---
 {
-  "name": "Codificación SNOMED-CT (Top-1)",
-  "version": "1.3",
-  "description": "Prompt ultra-simple que fuerza al LLM a copiar la OPCIÓN 1 del RAG.",
+  "name": "Codificación SNOMED-CT",
+  "version": "8.0 - Confidence maximization",
+  "description": "Ultra-confident prompt - strongly prefer top options over fallback",
   "language": "es",
-  "template": "<instruccion>\nEres un autómata de formato JSON. Tu única tarea es COPIAR el código de la OPCIÓN 1.\nNO uses tu conocimiento externo. NO juzgues las opciones. Tu tarea es mecánica.\n</instruccion>\n\n<entrada>\n  <entidad_a_codificar>{entity}</entidad_a_codificar>\n  <ubicacion_a_codificar>{location}</ubicacion_a_codificar>\n  <presencia_detectada>{presence}</presencia_detectada>\n</entrada>\n\n<contexto_entidad>\n\n{contexto_entity}\n</contexto_entidad>\n\n<contexto_anatomia>\n\n{contexto_anatomy}\n</contexto_anatomia>\n\n<reglas_fatales>\n\n\n  <regla_1_entidad>\n    1.1. Mira en `<contexto_entidad>`. Busca la línea que dice \"OPCIÓN 1 (MEJOR COINCIDENCIA):\"\n    1.2. COPIA el número de CÓDIGO de esa línea.\n    1.3. (FALLBACK) Si `<contexto_entidad>` contiene \"--- NO CODES FOUND ---\", DEBES USAR el código **\"404684003\"**.\n    1.4. NO uses tu juicio. Confía en la OPCIÓN 1.\n  </regla_1_entidad>\n\n  <regla_2_anatomia>\n    2.1. Si `<ubicacion_a_codificar>` es \"No especificado\", DEBES USAR el código **\"12738006\"**.\n    2.2. Si `<ubicacion_a_codificar>` SÍ existe, mira en `<contexto_anatomia>`. Busca la línea \"OPCIÓN 1 (MEJOR COINCIDENCIA):\"\n    2.3. COPIA el número de CÓDIGO de esa línea.\n    2.4. (FALLBACK) Si `<contexto_anatomia>` contiene \"--- NO CODES FOUND ---\", DEBES USAR el código **\"12738006\"**.\n  </regla_2_anatomia>\n\n  <regla_3_presencia>\n    \n    3.1. Si `<presencia_detectada>` es \"presente\", usa **\"52101004\"**.\n    3.2. Si `<presencia_detectada>` es \"ausente\", usa **\"272519000\"**.\n    3.3. Si `<presencia_detectada>` es \"incierto\", usa **\"261665006\"**.\n  </regla_3_presencia>\n\n</reglas_fatales>\n\n<salida_json_requerida>\n\n{{\n  \"entity_code\": \"CODIGO_DE_REGLA_1\",\n  \"anatomy_code\": \"CODIGO_DE_REGLA_2\",\n  \"presence_code\": \"CODIGO_DE_REGLA_3\"\n}}\n</salida_json_requerida>",
+  "template": "You are an elite SNOMED-CT medical coder using advanced semantic similarity (SapBERT medical embeddings). Your context list is RANKED by similarity score [SIM: X.XX].\n\nEntity: {entity}\nLocation: {location}\nPresence: {presence}\n\n{contexto_entity}\n\n{contexto_anatomy}\n\nSIMILARITY SCORING (Cosine Similarity, 0.0 to 1.0):\n- [SIM: 0.85 - 1.00] = EXCELLENT match. SELECT this.\n- [SIM: 0.70 - 0.84] = GOOD match. Select if clinically appropriate.\n- [SIM: 0.55 - 0.69] = MODERATE match. Review carefully.\n- [SIM: < 0.55] = WEAK match. Use fallback \"404684003\".\n\nDECISION RULES:\n1. entity_code:\n   - Find the option with the HIGHEST [SIM] score.\n   - If the highest SIM is ≥ 0.65, SELECT that code. It's semantically validated.\n   - If ALL options have SIM < 0.60, use fallback \"404684003\".\n\n2. anatomy_code:\n   - location=\"No especificado\" → \"12738006\".\n   - Otherwise, SELECT the code with the highest SIM from anatomy codes.\n   - \"--- NO CODES FOUND ---\" → \"12738006\".\n\n3. presence_code: \"presente\"→\"52101004\", \"ausente\"→\"272519000\", \"incierto\"→\"261665006\".\n\nCONFIDENCE: High SIM scores are medical semantic validation. Trust them.\n\nReturn JSON:\n{{\n  \"entity_code\": \"<code>\",\n  \"anatomy_code\": \"<code>\",\n  \"presence_code\": \"<code>\"\n}}",
   "input_variables": ["entity", "location", "presence", "contexto_entity", "contexto_anatomy"],
   "output_format": "json",
   "expected_fields": ["entity_code", "anatomy_code", "presence_code"]
 }
 
 
+--- Content of ./prompts/filter_prompt.json ---
+{
+  "name": "Filtrado de relevancia",
+  "version": "1.0",
+  "description": "First-pass filter to determine if RAG results contain valid matches",
+  "language": "es",
+  "template": "You are a medical terminology expert. Review the RAG search results and determine if ANY of the options are medically valid matches for the entity.\n\nEntity: {entity}\nLocation: {location}\nPresence: {presence}\n\n{contexto_entity}\n\nQUESTION: Do any of these SNOMED codes accurately represent \"{entity}\"?\n\nReturn JSON:\n{{\n  \"has_valid_match\": true/false,\n  \"best_option_number\": <1-15 or null if false>,\n  \"reasoning\": \"<brief explanation>\"\n}}",
+  "input_variables": ["entity", "location", "presence", "contexto_entity"],
+  "output_format": "json",
+  "expected_fields": ["has_valid_match", "best_option_number", "reasoning"]
+}
+
+
 --- Content of ./prompts/ner_prompt.json ---
 {
   "name": "NER Extractivo Clínico",
-  "version": "1.1",
-  "description": "Prompt para extracción de entidades médicas (NER) usando GPT-4o - Spans descriptivos para RAG",
+  "version": "2.1",
+  "description": "Prompt agresivo para máxima extracción de entidades",
   "language": "es",
-  "template": "<tarea>\nEres un agente experto en NER clínico. Tu tarea es extraer TODAS las entidades clínicas relevantes del informe médico en inglés.\n\n**CRÍTICO: Extrae el SPAN MÁS DESCRIPTIVO y COMPLETO para cada entidad**\n- Para \"left-sided weakness\" → extrae \"left-sided weakness\" (NO solo \"weakness\")\n- Para \"acute right MCA occlusion\" → extrae \"acute right MCA occlusion\" (NO solo \"occlusion\")\n- Para \"mechanical thrombectomy\" → extrae \"mechanical thrombectomy\" (completo)\n- Para \"NIHSS score of 12\" → extrae \"NIHSS\" (el nombre de la escala)\n- Extrae FRASES DESCRIPTIVAS que incluyan modificadores (lateralidad, localización, cualidades)\n\n**¿Por qué spans completos?**\nEste sistema usa búsqueda semántica (RAG). Un span descriptivo como \"left-sided hemiparesis\" tiene un embedding mucho más preciso que solo \"hemiparesis\", permitiendo encontrar el código SNOMED correcto.\n\n**Entidades a Extraer:**\n- Hallazgos (ej: acute hemorrhage, large infarct, complete occlusion, severe stenosis)\n- Anatomía (ej: right MCA, left M1 segment, caudate nucleus, internal capsule)\n- Escalas (ej: NIHSS, ASPECTS, TICI, GCS, mRS) - solo el nombre\n- Síntomas (ej: left-sided hemiparesis, expressive aphasia, severe dysarthria, right-sided weakness)\n- Procedimientos (ej: mechanical thrombectomy, IV thrombolysis, tPA administration, cerebral angiography)\n- Comorbilidades (ej: atrial fibrillation, arterial hypertension, diabetes mellitus)\n\n**Reglas:**\n- Extrae CADA instancia - si \"infarct\" aparece 5 veces, extrae las 5\n- Incluye modificadores importantes: lateralidad (left/right), tamaño (large/small), cualidad (acute/chronic)\n- Para anatomía, incluye lateralidad y detalles (ej: \"right MCA M1 segment\" no solo \"MCA\")\n- Para escalas con valores, extrae SOLO el nombre de la escala (ej: \"NIHSS\" no \"NIHSS score of 12\")\n- Para cada entidad, proporciona:\n  1. `span_text`: El texto DESCRIPTIVO y COMPLETO del informe\n  2. `anatomical_location`: La ubicación específica si se menciona, o 'No especificado'\n  3. `presence`: \"presente\", \"ausente\", o \"incierto\"\n  4. `value`: El valor si aplica (ej: \"18\" para \"NIHSS score was 18\")\n</tarea>\n\n<formato_salida>\n{{\n  \"entities\": [\n    {{\n      \"span_text\": \"término descriptivo completo con modificadores\",\n      \"anatomical_location\": \"ubicación específica o 'No especificado'\",\n      \"presence\": \"presente | ausente | incierto\",\n      \"value\": \"valor o null\"\n    }}\n  ]\n}}\n</formato_salida>\n\n<informe>\n{informe}\n</informe>\n\nResponde SOLO con el JSON válido:",
+  "template": "Extract EVERY medical entity from this clinical note. Be EXHAUSTIVE. For each entity:\n\n1. **core_entity**: Nuclear term (e.g., \"stenosis\", \"weakness\", \"hemorrhage\")\n2. **full_span**: Complete descriptive text (e.g., \"70% stenosis of left ICA\")\n3. **anatomical_location**: Specific location or \"No especificado\"\n4. **presence**: \"presente\", \"ausente\", or \"incierto\"\n5. **value**: Numeric value if applicable, otherwise null\n\nEXTRACT EVERYTHING:\n- ALL findings/pathology (hemorrhage, infarct, occlusion, stenosis, lesion, edema, mass)\n- ALL anatomy (arteries, brain regions, vessels)\n- ALL scales/scores (NIHSS, ASPECTS, TICI, GCS, mRS, etc.)\n- ALL symptoms (weakness, aphasia, numbness, paresis, paralysis)\n- ALL procedures (thrombectomy, thrombolysis, tPA, angiography, surgery)\n- ALL comorbidities (AFib, hypertension, diabetes, etc.)\n- ALL measurements and values\n\nBe AGGRESSIVE. Extract MULTIPLE times if entity appears multiple times. Extract OVERLAPPING entities if they exist.\n\nJSON output:\n{{\n  \"entities\": [\n    {{\n      \"core_entity\": \"term\",\n      \"full_span\": \"full descriptive text\",\n      \"anatomical_location\": \"location or No especificado\",\n      \"presence\": \"presente|ausente|incierto\",\n      \"value\": \"value or null\"\n    }}\n  ]\n}}\n\nClinical note:\n{informe}\n\nRespond with JSON only:",
   "input_variables": ["informe"],
   "output_format": "json",
   "expected_fields": ["entities"]
@@ -950,10 +895,10 @@ class RAGGPTPipeline:
 --- Content of ./prompts/system_prompt.json ---
 {
   "name": "System Prompt SNOMED-CT",
-  "version": "1.0",
-  "description": "Mensaje de sistema para GPT-4o en tareas de codificación médica",
+  "version": "2.0",
+  "description": "System prompt optimizado para codificación SNOMED-CT",
   "language": "es",
-  "content": "Eres un asistente de codificación SNOMED-CT. SOLO seleccionas códigos de la lista proporcionada. NUNCA inventas códigos. SIEMPRE respondes con JSON válido conteniendo solo los campos solicitados. Eres preciso y determinista."
+  "content": "You are a precise SNOMED-CT coding assistant. ALWAYS select codes from the provided list. NEVER invent codes. When in doubt, choose the most specific code available. Respond ONLY with valid JSON."
 }
 
 
@@ -971,12 +916,21 @@ from pathlib import Path
 import pandas as pd
 import time
 
-# Configurar path
-SCRIPT_DIR = Path(__file__).parent
+# Configurar path - FIXED: soporta ejecución desde cualquier directorio
+SCRIPT_DIR = Path(__file__).parent.resolve()
 BENCHMARK_DIR = SCRIPT_DIR.parent.parent
+PROJECT_ROOT = BENCHMARK_DIR.parent
+
+# Añadir BENCHMARK_DIR al path para imports absolutos
 sys.path.insert(0, str(BENCHMARK_DIR))
 
-from strategies.rag_gpt.pipeline import RAGGPTPipeline
+# Imports locales (cuando se ejecuta desde rag_gpt/)
+try:
+    from pipeline import RAGGPTPipeline
+except ImportError:
+    # Import absoluto (cuando se ejecuta desde benchmark/ o project root)
+    from strategies.rag_gpt.pipeline import RAGGPTPipeline
+
 from evaluation.metrics_calculator import MetricsCalculator
 
 
@@ -1173,22 +1127,14 @@ def get_assets_dir() -> Path:
         Path absoluto al directorio de assets
     """
     script_dir = Path(__file__).parent.parent
-    return script_dir / "04_utils" / "assets"
+    return script_dir / "utils" / "assets"
 
 
 --- Content of ./utils/ontology_preprocessor.py ---
 #!/usr/bin/env python3
 """
 Offline Index Builder for RAG Strategy (Ontology Pre-processor)
-
-This script pre-computes the embeddings and Faiss index for the RAG+GPT4o strategy.
-It is now located inside the strategy-specific assets folder.
-
-Responsibilities:
-  - Load ontology data
-  - Generate embeddings using SentenceTransformer (1 embedding per narrative)
-  - Build Faiss index
-  - Save artifacts to disk for fast loading at runtime
+FIXED: Uses AutoModel + [CLS] token extraction per SapBERT README
 """
 
 import pandas as pd
@@ -1197,117 +1143,109 @@ import pickle
 import os
 import sys
 from pathlib import Path
-from sentence_transformers import SentenceTransformer
 import faiss
 from datetime import datetime
+import torch
+from tqdm.auto import tqdm
+from transformers import AutoTokenizer, AutoModel
 
-# --- START: Robust Path Setup (Updated for new location) ---
-
-# Get the absolute path to THIS script's directory (.../strategies/rag_gpt/utils)
+# --- START: Robust Path Setup ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Get the absolute path to the project root (.../RAG_ontologia)
-# We need to go up FOUR levels ('..' to rag_gpt, '..' to strategies, '..' to benchmark, '..' to root)
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..', '..', '..'))
-
-# Path to assets directory (sibling to this script, under rag_gpt/04_utils/assets)
-ASSETS_DIR = os.path.join(SCRIPT_DIR, '..', '04_utils', 'assets')
+ASSETS_DIR = os.path.join(SCRIPT_DIR, 'assets')
 ASSETS_DIR = os.path.abspath(ASSETS_DIR)
-
 # --- END: Robust Path Setup ---
 
 
 # Ensure assets directory exists
 os.makedirs(ASSETS_DIR, exist_ok=True)
 
-# Output paths (now relative to ASSETS_DIR)
+# Output paths
 INDEX_PATH = os.path.join(ASSETS_DIR, 'ontology.index')
 CONCEPTS_PATH = os.path.join(ASSETS_DIR, 'ontology_concepts.pkl')
 NARRATIVES_PATH = os.path.join(ASSETS_DIR, 'ontology_narratives.pkl')
 METADATA_PATH = os.path.join(ASSETS_DIR, 'ontology_metadata.pkl')
 
+# --- MODELO CORRECTO (del README) ---
+MODEL_NAME = 'cambridgeltl/SapBERT-from-PubMedBERT-fulltext'
+
 
 def load_ontology_csv():
-    """
-    Load the ontology CSV file containing concepts and their narrative descriptions.
-    
-    Returns:
-        pd.DataFrame: Ontology data with 'concepto' and 'narrativa' columns
-    """
+    """Carga la ontología híbrida"""
     print("\n" + "="*80)
     print("STEP 1: Loading Ontology Data")
     print("="*80)
     
-    # UPDATED: Use hybrid ontology
-    hybrid_path = os.path.join(PROJECT_ROOT, 'hybrid_ontology.csv')
-    fallback_path = os.path.join(PROJECT_ROOT, 'conceptos_con_narrativas.csv')
+    hybrid_path = os.path.join(PROJECT_ROOT, 'ontology', 'hybrid_ontology.csv')
     
-    # Try hybrid ontology first (preferred)
     if os.path.exists(hybrid_path):
         print(f"[INFO] Loading HYBRID ONTOLOGY from: {hybrid_path}")
         df = pd.read_csv(hybrid_path)
         print(f"[SUCCESS] Loaded {len(df)} concepts")
-        print(f"           - Contains all training concepts (32 total)")
-        print(f"           - Plus 2468 noise concepts for robustness testing")
         return df
     
-    # Fallback to original (incomplete for stroke task)
-    if os.path.exists(fallback_path):
-        print(f"[WARNING] Hybrid ontology not found, using incomplete original")
-        print(f"[INFO] Loading from: {fallback_path}")
-        df = pd.read_csv(fallback_path)
-        print(f"[SUCCESS] Loaded {len(df)} concepts")
-        print(f"[WARNING] This ontology is missing 26 critical stroke concepts!")
-        return df
-    
-    raise FileNotFoundError(
-        f"Could not find ontology CSV at: {hybrid_path} or {fallback_path}"
-    )
+    raise FileNotFoundError(f"Could not find ontology CSV at: {hybrid_path}")
 
 
-def generate_embeddings(narratives, model_name='all-MiniLM-L6-v2', batch_size=32, use_gpu=True):
+def generate_embeddings(narratives, model_name=MODEL_NAME, batch_size=64):
     """
-    Generate embeddings for all narrative descriptions using SentenceTransformer.
-    (1 narrative = 1 embedding)
+    Genera embeddings usando AutoModel y [CLS] token (SapBERT-style).
+    Normaliza los embeddings para la búsqueda de similitud de coseno (IndexFlatIP).
     """
     print("\n" + "="*80)
-    print("STEP 2: Generating Embeddings")
+    print("STEP 2: Generating Embeddings (SapBERT [CLS] Token Mode)")
     print("="*80)
     
-    print(f"[INFO] Loading SentenceTransformer model: {model_name}")
+    print(f"[INFO] Loading HuggingFace model: {model_name}")
     
-    model = SentenceTransformer(model_name)
-    device = model.device
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"[INFO] Using device: {device}")
     
-    if 'cuda' in str(device):
-        print("[INFO] [READY] GPU detected! Encoding will be faster.")
-        batch_size = 128
-    else:
-        print("[INFO] Using CPU. This may take several minutes...")
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModel.from_pretrained(model_name).to(device)
+    model.eval()
+
+    print(f"[INFO] Encoding {len(narratives)} narratives in batches of {batch_size}")
     
-    print(f"[INFO] Encoding {len(narratives)} narratives (1 embedding per narrative)")
-    print("[INFO] This is a ONE-TIME operation. Subsequent runs will load pre-built index.")
+    all_embs_list = []
     
-    # Generate embeddings
-    embeddings = model.encode(
-        narratives,
-        batch_size=batch_size,
-        show_progress_bar=True,
-        convert_to_numpy=True,
-        normalize_embeddings=False
-    )
+    with torch.no_grad():
+        for i in tqdm(np.arange(0, len(narratives), batch_size)):
+            batch_names = narratives[i:i+batch_size]
+            
+            toks = tokenizer.batch_encode_plus(
+                batch_names, 
+                padding="max_length", 
+                max_length=25,  # Max length de 25 como en el README
+                truncation=True,
+                return_tensors="pt"
+            )
+            
+            toks_on_device = {k: v.to(device) for k, v in toks.items()}
+            
+            # --- ¡LA LÓGICA CLAVE DEL README! ---
+            # Extraer la representación del token [CLS]
+            # model(...)[0] son las 'last_hidden_state'
+            # [:, 0, :] selecciona el token [CLS] (índice 0) para cada ítem del batch
+            cls_rep = model(**toks_on_device)[0][:, 0, :]
+            
+            all_embs_list.append(cls_rep.cpu().numpy())
+
+    all_embs = np.concatenate(all_embs_list, axis=0)
     
-    print(f"[SUCCESS] Generated embeddings with shape: {embeddings.shape}")
-    print(f"[INFO] Embedding dimension: {embeddings.shape[1]}")
+    print(f"[SUCCESS] Generated embeddings with shape: {all_embs.shape}")
     
-    return embeddings, model
+    # --- ¡PASO CRUCIAL PARA IndexFlatIP! ---
+    print("[INFO] Normalizing embeddings for Cosine Similarity (L2 normalization)...")
+    norms = np.linalg.norm(all_embs, axis=1, keepdims=True)
+    normalized_embs = all_embs / norms
+    
+    print("[SUCCESS] Embeddings normalized.")
+    return normalized_embs, all_embs.shape[1]
 
 
 def build_faiss_index(embeddings):
-    """
-    Build a Faiss index from the embeddings.
-    """
+    """Construye el índice FAISS (IndexFlatIP para Coseno)"""
     print("\n" + "="*80)
     print("STEP 3: Building Faiss Index")
     print("="*80)
@@ -1315,113 +1253,78 @@ def build_faiss_index(embeddings):
     dimension = embeddings.shape[1]
     n_concepts = embeddings.shape[0]
     
-    print(f"[INFO] Creating IndexFlatL2 with dimension={dimension}")
+    print(f"[INFO] Creating IndexFlatIP (cosine similarity) with dimension={dimension}")
+    index = faiss.IndexFlatIP(dimension)
     
-    # Create index (L2 distance)
-    index = faiss.IndexFlatL2(dimension)
-    
-    # Add embeddings to index
     print(f"[INFO] Adding {n_concepts} vectors to index...")
     index.add(embeddings.astype('float32'))
     
     print(f"[SUCCESS] Faiss index built with {index.ntotal} vectors")
-    
     return index
 
 
 def save_artifacts(index, concepts, narratives, embedding_dim):
-    """
-    Save all artifacts to disk for fast loading at runtime.
-    """
+    """Guarda los artefactos en disco"""
     print("\n" + "="*80)
     print("STEP 4: Saving Artifacts")
     print("="*80)
     
-    # Save Faiss index
+    # Guardar índice
     print(f"[INFO] Saving Faiss index to: {INDEX_PATH}")
     faiss.write_index(index, INDEX_PATH)
     print(f"[SUCCESS] Index saved ({os.path.getsize(INDEX_PATH) / 1024 / 1024:.2f} MB)")
     
-    # Save concepts list (for retrieval mapping)
-    print(f"[INFO] Saving concepts list to: {CONCEPTS_PATH}")
+    # Guardar listas
     with open(CONCEPTS_PATH, 'wb') as f:
         pickle.dump(concepts, f)
     print(f"[SUCCESS] Concepts saved ({len(concepts)} items)")
-    
-    # Save narratives list (for context generation)
-    print(f"[INFO] Saving narratives list to: {NARRATIVES_PATH}")
+        
     with open(NARRATIVES_PATH, 'wb') as f:
         pickle.dump(narratives, f)
     print(f"[SUCCESS] Narratives saved ({len(narratives)} items)")
     
-    # Save metadata
+    # Guardar metadata
     metadata = {
         'n_concepts': len(concepts),
         'embedding_dim': embedding_dim,
-        'model_name': 'all-MiniLM-L6-v2',
+        'model_name': MODEL_NAME,
         'created_at': datetime.now().isoformat(),
-        'index_type': 'IndexFlatL2'
+        'index_type': 'IndexFlatIP' # ¡Correcto!
     }
     
-    print(f"[INFO] Saving metadata to: {METADATA_PATH}")
     with open(METADATA_PATH, 'wb') as f:
         pickle.dump(metadata, f)
     print(f"[SUCCESS] Metadata saved")
-    
-    print("\n" + "="*80)
-    print("[OK] ALL ARTIFACTS SAVED SUCCESSFULLY")
-    print("="*80)
-    print(f"\nArtifacts location: {ASSETS_DIR}")
-    print(f"  - {os.path.basename(INDEX_PATH)}")
-    print(f"  - {os.path.basename(CONCEPTS_PATH)}")
-    print(f"  - {os.path.basename(NARRATIVES_PATH)}")
-    print(f"  - {os.path.basename(METADATA_PATH)}")
 
 
 def main():
-    """
-    Main execution flow for building the RAG index offline.
-    """
+    """Flujo principal de ejecución"""
     print("\n" + "="*80)
     print("RAG INDEX BUILDER - Offline Pre-computation")
-    print("="*80)
-    print("\nThis script will:")
-    print("  1. Load ontology data (conceptos_con_narrativas.csv)")
-    print("  2. Generate embeddings (1 per narrative)")
-    print("  3. Build Faiss index")
-    print("  4. Save all artifacts to disk")
-    print("\n[WARNING]  This is a ONE-TIME operation (unless ontology data changes)")
     print("="*80)
     
     import time
     start_time = time.time()
     
     try:
-        # Step 1: Load ontology
+        # 1. Cargar
         df_ontology = load_ontology_csv()
-        
-        # Extract concepts and narratives
         concepts = df_ontology['concepto'].tolist()
         narratives = df_ontology['narrativa'].tolist()
         
-        # Step 2: Generate embeddings
-        embeddings, model = generate_embeddings(narratives)
+        # 2. Generar Embeddings
+        embeddings, dim = generate_embeddings(narratives)
         
-        # Step 3: Build Faiss index
+        # 3. Construir Índice
         faiss_index = build_faiss_index(embeddings)
         
-        # Step 4: Save artifacts
-        save_artifacts(faiss_index, concepts, narratives, embeddings.shape[1])
+        # 4. Guardar
+        save_artifacts(faiss_index, concepts, narratives, dim)
         
-        # Summary
         elapsed_time = time.time() - start_time
         print("\n" + "="*80)
         print("[SUCCESS] INDEX BUILD COMPLETED SUCCESSFULLY")
-        print("="*80)
         print(f"[TIME]  Total time: {elapsed_time:.2f} seconds ({elapsed_time/60:.2f} minutes)")
-        print(f"[INFO] Indexed: {len(concepts)} concepts")
-        print(f"[INFO] Embedding dimension: {embeddings.shape[1]}")
-        print("\n[OK] The RAG strategy will now load instantly!")
         print("="*80 + "\n")
         
     except Exception as e:

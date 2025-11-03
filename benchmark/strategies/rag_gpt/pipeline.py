@@ -5,17 +5,24 @@ Implementa el pipeline completo de NER -> RAG -> Coding
 
 import pandas as pd
 from typing import List, Dict
+import sys
+from pathlib import Path
 
-from .core.ner import NERExtractor
-from .core.rag import RAGRetriever
-from .core.coding import SNOMEDCoder
-from .utils.config import (
+# Configurar imports absolutos
+SCRIPT_DIR = Path(__file__).parent.resolve()
+BENCHMARK_DIR = SCRIPT_DIR.parent.parent
+sys.path.insert(0, str(BENCHMARK_DIR))
+
+from strategies.rag_gpt.core.ner import NERExtractor
+from strategies.rag_gpt.core.rag import RAGRetriever
+from strategies.rag_gpt.core.coding import SNOMEDCoder
+from strategies.rag_gpt.utils.config import (
     load_prompt,
     setup_openai_client,
     get_model_config,
     get_assets_dir
 )
-from .utils.text_processing import find_span_in_text
+from strategies.rag_gpt.utils.text_processing import find_span_in_text
 
 
 class RAGGPTPipeline:

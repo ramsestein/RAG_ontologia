@@ -11,12 +11,21 @@ from pathlib import Path
 import pandas as pd
 import time
 
-# Configurar path
-SCRIPT_DIR = Path(__file__).parent
+# Configurar path - FIXED: soporta ejecución desde cualquier directorio
+SCRIPT_DIR = Path(__file__).parent.resolve()
 BENCHMARK_DIR = SCRIPT_DIR.parent.parent
+PROJECT_ROOT = BENCHMARK_DIR.parent
+
+# Añadir BENCHMARK_DIR al path para imports absolutos
 sys.path.insert(0, str(BENCHMARK_DIR))
 
-from strategies.rag_gpt.pipeline import RAGGPTPipeline
+# Imports locales (cuando se ejecuta desde rag_gpt/)
+try:
+    from pipeline import RAGGPTPipeline
+except ImportError:
+    # Import absoluto (cuando se ejecuta desde benchmark/ o project root)
+    from strategies.rag_gpt.pipeline import RAGGPTPipeline
+
 from evaluation.metrics_calculator import MetricsCalculator
 
 
