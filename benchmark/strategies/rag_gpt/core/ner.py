@@ -2,8 +2,8 @@
 Robusto:
 - Limpieza centralizada del JSON (markdown/trailing commas).
 - Extracción del PRIMER objeto JSON balanceando llaves (tolerante a texto extra).
-- Reparación de separadores '}{' → '}, {' dentro de arrays.
-- Cierre de arreglos y conversión segura de offsets.
+- Fallback: parseo por-objeto dentro de "entities" (equilibra llaves y repara separadores).
+- Saneado de caracteres de control y conversión segura de offsets.
 """
 
 import json
@@ -67,13 +67,17 @@ class NERExtractor:
     # -------------------------------
     # Parsing y reparación de JSON
     # -------------------------------
+    def _strip_control_chars(self, s: str) -> str:
+        """Elimina caracteres de control no imprimibles que rompen JSON."""
+        return ''.join(ch for ch in s if ch == '\t' or ch == '\n' or ch == '\r' or ord(ch) >= 32)
+
     def _extract_top_level_json(self, s: str) -> Optional[str]:
         """
         Devuelve el primer objeto JSON balanceando llaves, ignorando texto extra.
         Soporta respuestas con prólogo/epílogo.
         """
-        # limpiar markdown + trailing commas
-        s = clean_json_response(s)
+        # limpiar markdown + trailing commas + control chars
+        s = clean_json_response(self._strip_control_chars(s))
         # quitar elipsis sueltas al final
         s = s.rstrip('.… \n\r\t')
 
@@ -117,7 +121,6 @@ class NERExtractor:
 
         # si abre "entities": [ pero falta ']' antes de cerrar objeto raíz,
         # insertamos un ']' justo antes del último '}'.
-        # Heurística segura: solo si aparece '"entities": [' y NO hay ']' después.
         ent_open = text.find('"entities"')
         if ent_open != -1:
             arr_open = text.find('[', ent_open)
@@ -130,6 +133,87 @@ class NERExtractor:
                         text = text[:last_brace] + ']' + text[last_brace:]
         return text
 
+    def _iter_objects_in_entities(self, text: str) -> List[str]:
+        """
+        Extrae cada objeto del array "entities" balanceando llaves.
+        Útil como Fallback cuando el JSON completo no parsea.
+        """
+        text = self._strip_control_chars(text)
+        m = re.search(r'"entities"\s*:\s*\[', text)
+        if not m:
+            return []
+        i = text.find('[', m.end() - 1)
+        if i == -1:
+            return []
+
+        objs = []
+        depth = 0
+        in_str = False
+        escape = False
+        start_obj = None
+
+        # recorremos desde el primer carácter dentro del array
+        for j in range(i + 1, len(text)):
+            ch = text[j]
+            if in_str:
+                if escape:
+                    escape = False
+                elif ch == '\\':
+                    escape = True
+                elif ch == '"':
+                    in_str = False
+            else:
+                if ch == '"':
+                    in_str = True
+                elif ch == '{':
+                    if depth == 0:
+                        start_obj = j
+                    depth += 1
+                elif ch == '}':
+                    depth -= 1
+                    if depth == 0 and start_obj is not None:
+                        objs.append(text[start_obj:j+1])
+                        start_obj = None
+                elif ch == ']':
+                    if depth == 0:
+                        break  # fin del array
+
+        return objs
+
+    def _safe_int(self, x):
+        if x is None:
+            return None
+        try:
+            if isinstance(x, str):
+                x = x.strip()
+                if not re.match(r'^-?\d+(\.0+)?$', x):
+                    return None
+            return int(float(x))
+        except Exception:
+            return None
+
+    def _normalize_entity(self, finding: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        if not isinstance(finding, dict):
+            return None
+        core_entity = (finding.get("core_entity") or finding.get("entity") or "").strip()
+        full_span = (finding.get("full_span") or core_entity or "").strip()
+        if not full_span:
+            return None
+        anatomical_location = (finding.get("anatomical_location") or "No especificado") or "No especificado"
+        presence = (finding.get("presence") or "presente") or "presente"
+        value = finding.get("value", None)
+        start_int = self._safe_int(finding.get("start", None))
+        end_int = self._safe_int(finding.get("end", None))
+        return {
+            "span_text": core_entity if core_entity else full_span,
+            "full_span": full_span,
+            "anatomical_location": anatomical_location,
+            "presence": presence,
+            "value": value,
+            "start": start_int,
+            "end": end_int
+        }
+
     def _parse_ner_response(self, response: str) -> List[Dict]:
         """Parsea la respuesta JSON del NER y normaliza campos expected (tolerante a errores)"""
         try:
@@ -139,81 +223,60 @@ class NERExtractor:
 
             candidate = self._repair_entities_array(candidate)
 
-            # Intento 1: parse directo
+            # Intento 1: parse completo
             try:
                 data = json.loads(candidate)
+                entities_raw = data.get("entities", [])
+                if not isinstance(entities_raw, list):
+                    # buscar en cualquier clave una lista de dicts
+                    for v in data.values():
+                        if isinstance(v, list) and any(isinstance(x, dict) for x in v):
+                            entities_raw = v
+                            break
+                entities: List[Dict[str, Any]] = []
+                for finding in entities_raw:
+                    ent = self._normalize_entity(finding)
+                    if ent:
+                        entities.append(ent)
+                return entities
+
             except json.JSONDecodeError:
-                # Intento 2: reparar comas finales y parsear de nuevo
+                # Intento 2: arreglos simples y reintento
                 candidate2 = re.sub(r',(\s*[}\]])', r'\1', candidate)
+                candidate2 = re.sub(r'}\s*{', '}, {', candidate2)
                 try:
                     data = json.loads(candidate2)
+                    entities_raw = data.get("entities", [])
+                    if not isinstance(entities_raw, list):
+                        for v in data.values():
+                            if isinstance(v, list) and any(isinstance(x, dict) for x in v):
+                                entities_raw = v
+                                break
+                    entities = []
+                    for finding in entities_raw:
+                        ent = self._normalize_entity(finding)
+                        if ent:
+                            entities.append(ent)
+                    return entities
                 except json.JSONDecodeError:
-                    # Intento 3: extraer solo el array si vino como lista en bruto
-                    m_list = re.search(r'\[\s*\{.*\}\s*\]', candidate2, re.DOTALL)
-                    if m_list:
-                        data = {"entities": json.loads(m_list.group(0))}
-                    else:
-                        # Intento 4: forzar comas entre objetos y reintentar
-                        candidate3 = re.sub(r'}\s*{', '}, {', candidate2)
-                        data = json.loads(candidate3)
+                    # Fallback definitivo: parsear cada objeto del array "entities" por separado
+                    objs = self._iter_objects_in_entities(candidate2)
+                    entities = []
+                    for obj_str in objs:
+                        obj_str = re.sub(r',(\s*[}\]])', r'\1', obj_str)
+                        try:
+                            finding = json.loads(obj_str)
+                            ent = self._normalize_entity(finding)
+                            if ent:
+                                entities.append(ent)
+                        except Exception:
+                            # ignorar objetos irrecuperables
+                            continue
 
-            entities_raw = data.get("entities", [])
-            if not isinstance(entities_raw, list):
-                # fallback: buscar en cualquier clave un array de dicts con 'core_entity' o 'full_span'
-                found = None
-                for v in data.values():
-                    if isinstance(v, list) and any(isinstance(x, dict) for x in v):
-                        found = v
-                        break
-                entities_raw = found if found is not None else []
-
-            entities: List[Dict[str, Any]] = []
-            for finding in entities_raw:
-                if not isinstance(finding, dict):
-                    continue
-
-                core_entity = (finding.get("core_entity") or finding.get("entity") or "").strip()
-                full_span = (finding.get("full_span") or core_entity or "").strip()
-
-                anatomical_location = (finding.get("anatomical_location") or "No especificado") or "No especificado"
-                presence = (finding.get("presence") or "presente") or "presente"
-                value = finding.get("value", None)
-
-                # offsets tolerantes
-                start_raw = finding.get("start", None)
-                end_raw = finding.get("end", None)
-
-                def _to_int(x):
-                    if x is None:
-                        return None
-                    try:
-                        # soporta strings numéricas, floats representando enteros, etc.
-                        if isinstance(x, str):
-                            x = x.strip()
-                            # descarta no numérico
-                            if not re.match(r'^-?\d+(\.0+)?$', x):
-                                return None
-                        return int(float(x))
-                    except Exception:
-                        return None
-
-                start_int = _to_int(start_raw)
-                end_int = _to_int(end_raw)
-
-                if not full_span:
-                    continue
-
-                entities.append({
-                    "span_text": core_entity if core_entity else full_span,
-                    "full_span": full_span,
-                    "anatomical_location": anatomical_location,
-                    "presence": presence,
-                    "value": value,
-                    "start": start_int,
-                    "end": end_int
-                })
-
-            return entities
+                    if entities:
+                        return entities
+                    # si no se pudo recuperar nada:
+                    raise
 
         except Exception as e:
             print(f"[NER] Error parseando respuesta: {e}")
