@@ -1303,8 +1303,14 @@ except Exception:
 # ---------------------------------------------------------------------------------
 EVAL_OFFSETS = {
     "base": int(os.getenv("EVAL_OFFSET_BASE", "0")),  # 0-based or 1-based
-    "end_inclusive": os.getenv("EVAL_END_INCLUSIVE", "true").lower() == "true",
+    # Most clinical benchmarks expect end to be EXCLUSIVE. Flip default to false.
+    "end_inclusive": os.getenv("EVAL_END_INCLUSIVE", "false").lower() == "true",
 }
+
+
+# (Optional) tiny log helps verify at runtime
+print(f"[CONFIG] EVAL_OFFSETS base={EVAL_OFFSETS['base']} end_inclusive={EVAL_OFFSETS['end_inclusive']}")
+
 
 # ---------------------------------------------------------------------------------
 # Prompt utilities

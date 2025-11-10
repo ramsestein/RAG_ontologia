@@ -372,6 +372,15 @@ class RAGGPTPipeline:
 
             # Convertir a formato de predicción con política de offsets del benchmark
             for entity in entities:
+                # ---- FAST WIN: filtrar entidades negadas/inciertas y fallback genérico ----
+                pres_text = str(entity.get("presence", "")).strip().lower()
+                if pres_text in {"ausente", "incierto"}:
+                    continue  # sube precisión
+
+                concept_id = str(entity.get("entity_code", "")).strip()
+                if not concept_id or concept_id == "404684003":
+                    continue  # evita fallback genérico
+
                 start_out = int(entity["start"])
                 end_out = int(entity["end"])
 
@@ -389,7 +398,7 @@ class RAGGPTPipeline:
                     "note_id": note_id,
                     "start": start_out,
                     "end": end_out,
-                    "concept_id": str(entity["entity_code"]),
+                    "concept_id": concept_id,
                     "span_text": entity.get("span_text_real", entity["span_text"]),
                     "confidence": 0.85,
                     "entity_description": entity.get("entity_description", ""),

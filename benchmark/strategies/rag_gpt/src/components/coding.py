@@ -49,12 +49,15 @@ class SNOMEDCoder:
         # Config runtime por ENV (robusto para optimización)
         self.cfg = {
             "TOP_K": int(os.getenv("RAG_TOP_K", "30")),
-            "THRESHOLD": float(os.getenv("RAG_THRESHOLD", "0.35")),
+            # Stricter similarity by default to improve precision
+            "THRESHOLD": float(os.getenv("RAG_THRESHOLD", "0.50")),
             "MAX_DISPLAY": int(os.getenv("RAG_MAX_DISPLAY", "12")),
             "QUERY_SUFFIX": os.getenv("RAG_QUERY_SUFFIX", "disorder finding"),
             "USE_LLM_VALIDATION": os.getenv("RAG_USE_LLM_VALIDATION", "false").lower() == "true",
             "LLM_MODEL": os.getenv("RAG_LLM_MODEL", "gpt-4o"),
             "LLM_TEMPERATURE": float(os.getenv("RAG_LLM_TEMPERATURE", "0.0")),
+            # NEW: disable generic fallback by default
+            "ALLOW_FALLBACK": os.getenv("RAG_ALLOW_FALLBACK", "false").lower() == "true",
         }
 
     # --------------------------
@@ -91,9 +94,11 @@ class SNOMEDCoder:
             if location and location != "No especificado" else []
 
         # 2) Selección determinista top-1 o fallback/default
-        entity_code = self._pick_top_code(ent_results, self.cfg["THRESHOLD"]) or self.FALLBACK_CODE
+        entity_code = self._pick_top_code(ent_results, self.cfg["THRESHOLD"])
+        if entity_code is None and self.cfg["ALLOW_FALLBACK"]:
+            entity_code = self.FALLBACK_CODE  # solo si se permite
         anatomy_code = self._pick_top_code(anat_results, self.cfg["THRESHOLD"]) or self.DEFAULT_ANATOMY
-        presence_code = self.PRESENCE_MAP.get(presence, self.PRESENCE_MAP["presente"])
+        presence_code = self.PRESENCE_MAP.get(str(presence).lower(), self.PRESENCE_MAP["presente"])
 
         # 3) Validación opcional con LLM (nunca puede forzar fallback si hay candidatos)
         if self.cfg["USE_LLM_VALIDATION"]:
@@ -132,9 +137,9 @@ class SNOMEDCoder:
                 result = json.loads(response.choices[0].message.content)
 
                 # Post-procesado restrictivo (no permitir inventar/fallback si hay candidatos)
-                proposed_entity = str(result.get("entity_code", entity_code))
-                proposed_anatomy = str(result.get("anatomy_code", anatomy_code))
-                proposed_presence = str(result.get("presence_code", presence_code))
+                proposed_entity = str(result.get("entity_code", entity_code or "")).strip()
+                proposed_anatomy = str(result.get("anatomy_code", anatomy_code)).strip()
+                proposed_presence = str(result.get("presence_code", presence_code)).strip()
 
                 if valid_entity_list:
                     if proposed_entity.isdigit() and proposed_entity in valid_entity_list:
@@ -143,15 +148,13 @@ class SNOMEDCoder:
                         # Mantener determinista si LLM se sale del conjunto o propone fallback
                         pass
                 else:
-                    # No hay candidatos → aceptar fallback o lo que proponga (si es numérico)
+                    # No hay candidatos → aceptar lo que proponga si es numérico
                     if proposed_entity.isdigit():
                         entity_code = proposed_entity
 
                 if valid_anatomy_list:
                     if proposed_anatomy.isdigit() and proposed_anatomy in valid_anatomy_list:
                         anatomy_code = proposed_anatomy
-                    else:
-                        pass
                 else:
                     if proposed_anatomy.isdigit():
                         anatomy_code = proposed_anatomy
@@ -163,11 +166,11 @@ class SNOMEDCoder:
                 if verbose:
                     print(f"[CODING]   [WARNING] Error en validación LLM: {e}")
 
-        # Normalización final y logs
-        if not str(entity_code).isdigit():
+        # Normalización final y logs (no forzar fallback por defecto)
+        if entity_code is not None and not str(entity_code).isdigit():
             if verbose:
-                print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando fallback")
-            entity_code = self.FALLBACK_CODE
+                print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', descartando")
+            entity_code = None
 
         if not str(anatomy_code).isdigit():
             if verbose:
@@ -180,10 +183,10 @@ class SNOMEDCoder:
             presence_code = self.PRESENCE_MAP["presente"]
 
         if verbose:
-            print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
+            print(f"[CODING]   [OK] Códigos: entity={entity_code if entity_code else '∅'}, anatomy={anatomy_code}, presence={presence_code}")
 
         return {
-            "entity_code": str(entity_code),
+            "entity_code": str(entity_code) if entity_code else "",
             "anatomy_code": str(anatomy_code),
             "presence_code": str(presence_code)
         }
