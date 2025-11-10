@@ -11,136 +11,45 @@ In my machine, I get the following results
     ------------------------------------------------------------------------------------------------------------------------
 
     01_KIRIs                       0.8000     0.8381     0.7652     105    88     0.035     s
-    04_RAG_GPT                     0.5983     0.6604     0.5469    
+    04_RAG_GPT                     0.6        0.6        0.6    
 
 
 My benchmark are clinical sentences, which should give me 32 concepts. I am testing the RAG_GPT with a ontology of those 32 concepts + 2470 extra medical concepts to add sound to the model. I should be able to get at least 0.65-0.7 with the RAG_GPT approach.
 
 
-This is the output of my last execution:
-[OK] Procesamiento completado: 27 entidades
-[Pipeline] [OK] Completado: 72 predicciones generadas
+To further push this F1 score to the 0.8 approximately my senior engineer told me this:
 
-=== RAG+GPT Predictions ===
- note_id  start  end concept_id                                                      span_text  confidence anatomy_code presence_code
-       1     75   87   38341003                                                   hypertension        0.85     12738006      52101004
-       1     92  109   73211009                                              diabetes mellitus        0.85     12738006      52101004
-       1    144  163   13791008                                            left-sided weakness        0.85     12738006      52101004
-       1    287  349  450893003 National Institutes of Health Stroke Scale (NIHSS) score of 12        0.85     12738006      52101004
-       1    356  386   50582007                                 left hemiparesis (4/5 strength        0.85     12738006      52101004
-       1    412  427  103676007                                                mild dysarthria        0.85     12738006      52101004
-       1    548  610   26036001 occlusion of the right middle cerebral artery (MCA) M1 segment        0.85     69930009      52101004
-       1    612  665  450893003          Alberta Stroke Program Early CT Score (ASPECTS) was 8        0.85     12738006      52101004
-       1    689  703  230691006                                                 large penumbra        0.85     12738006      52101004
-       1    709  744  103668005                            core-penumbra mismatch ratio of 2.4        0.85     12738006      52101004
-       1    784  829  387467008                  intravenous tissue plasminogen activator (tPA        0.85     12738006      52101004
-       1    874  896   26036001                                         large vessel occlusion        0.85     12738006      52101004
-       1    695  703  230691006                                                       penumbra        0.85     12738006      52101004
-       1    923  946  433112001                                        mechanical thrombectomy        0.85     12738006      52101004
-       1   1006 1056  450893003             Thrombolysis in Cerebral Infarction (TICI) 2B flow        0.85     12738006      52101004
-       1    962  987  449894001                                      Successful recanalization        0.85     12738006      52101004
-       1   1131 1165   69449002                             minimal hemorrhagic transformation        0.85     12738006      52101004
-       1   1235 1256  450893003                                          NIHSS decreasing to 4        0.85     12738006      52101004
-       2     40   59   49436004                                            atrial fibrillation        0.85    732006008      52101004
-       2    144  159   25064002                                                severe headache        0.85    182326009      52101004
-       2    161  167  422587007                                                         nausea        0.85     12738006      52101004
-       2    173  181  422400008                                                       vomiting        0.85     12738006      52101004
-       2    151  159   25064002                                                       headache        0.85    182326009      52101004
-       2    443  458  182368009                                                nuchal rigidity        0.85    182326009      52101004
-       2    476  501  450893003                                      Glasgow Coma Scale was 14        0.85     12738006      52101004
-       2    552  575   50960005                                        subarachnoid hemorrhage        0.85    263353005      52101004
-       2    581  629     464005               blood in the basal cisterns and sylvian fissures        0.85    369389009      52101004
-       2    661  723  432101006 7mm anterior communicating artery aneurysm with a daughter sac        0.85     69930009      52101004
-       2    949  985  433112001                           Endovascular coiling of the aneurysm        0.85    432101006      52101004
-       2   1072 1097  230690007                                      delayed cerebral ischemia        0.85    263353005      52101004
-       2   1121 1141   38341003                                           induced hypertension        0.85     12738006      52101004
-       2   1146 1165   26036001                                            balloon angioplasty        0.85     12738006      52101004
-       2   1196 1228  450893003                               modified Rankin Scale score of 2        0.85     12738006      52101004
-       3     64   78    4647008                                                 hyperlipidemia        0.85     12738006      52101004
-       3    115  135   13791008                                           right-sided weakness        0.85     12738006      52101004
-       3    336  355   50582007                                            unilateral weakness        0.85     12738006      52101004
-       3    567  613   55342001                 small acute infarct in the left corona radiata        0.85    727323009      52101004
-       3    799  829  230690007                                 Transient ischemic attack (TIA        0.85     12738006      52101004
-       3    836  866   55342001                                 completed small vessel infarct        0.85    279605007      52101004
-       3    886  911   86501000                                      artery-to-artery embolism        0.85     12738006      52101004
-       3   1049 1071   86547008                                         carotid endarterectomy        0.85     86547008      52101004
-       4      0   19  433112001                                            THROMBECTOMY REPORT        0.85     12738006      52101004
-       4     87   94   87486003                                                        aphasia        0.85     12738006      52101004
-       4     99  115   50582007                                               right hemiplegia        0.85     12738006      52101004
-       4    191  209  450893003                                             NIHSS score was 18        0.85     12738006      52101004
-       4    251  269  370640001                                             ASPECTS score of 9        0.85    182326009      52101004
-       4    295  335   26036001                       left M1 middle cerebral artery occlusion        0.85     69930009      52101004
-       4    341  368  449894001                                    good collateral circulation        0.85     12738006      52101004
-       4    370  388  450893003                                             collateral score 3        0.85     12738006      52101004
-       4    455  475  314355009                                           right femoral artery        0.85     12738006      52101004
-       4    519  547   86547008                                   left internal carotid artery        0.85     12738006      52101004
-       4    557  582  449894001                                      stent retriever technique        0.85     12738006      52101004
-       4    588  592   88611005                                                           clot        0.85     12738006      52101004
-       4    274  285   77343006                                                    angiography        0.85     12738006      52101004
-       4    656  677  266257000                                          TICI 3 recanalization        0.85     12738006      52101004
-       4    731  755  450893003                                       neurointensive care unit        0.85     12738006      52101004
-       4    663  677  449894001                                                 recanalization        0.85     12738006      52101004
-       4    836  855  450893003                                            NIHSS improved to 8        0.85     12738006      52101004
-       5      0   28  230690007                                   POSTERIOR CIRCULATION STROKE        0.85    361284004      52101004
-       5     54   83   26036001                                  vertebrobasilar insufficiency        0.85     26036001      52101004
-       5    114  121  245647007                                                        vertigo        0.85     12738006      52101004
-       5    137  143   20262006                                                         ataxia        0.85     12738006      52101004
-       5    257  295   57516003                         bilateral internuclear ophthalmoplegia        0.85    730424005      52101004
-       5    301  315   20262006                                                 truncal ataxia        0.85    361295005      52101004
-       5    317  333   20262006                                               Cerebellar signs        0.85    314166009      52101004
-       5    354  363   20262006                                                      dysmetria        0.85     12738006      52101004
-       5    368  386   20262006                                             dysdiadochokinesia        0.85     12738006      52101004
-       5    450  464   55342001                                                 acute infarcts        0.85     28390009      52101004
-       5    612  650  727323009                         poor posterior circulation collaterals        0.85    361284004      52101004
-       5    730  751   67889009                                          pattern of infarction        0.85     12738006      52101004
-       5    772  803   26036001                                basilar artery branch occlusion        0.85    360537008      52101004
-       5   1086 1106   55342001                                           small infarct volume        0.85     12738006      52101004
-
-[run_rag_gpt] Total predictions: 72
-
-================================================================================
-RESULTS - RAG+GPT
-================================================================================
-
-[METRICS] METRICS:
-   Precision:  0.6604
-   Recall:     0.5469
-   F1-Score:   0.5983
-   Coverage:   1.0000
-
-[CHART] COUNTS:
-   Predictions:     53
-   Exact Matches:   35
-   Partial Matches: 18
-   Ground Truth:    64
-
-[TIME]  EXECUTION TIME: 159.70 seconds
-================================================================================
+We should be able to boost the recall. A recall of roughly 0.6 means we are missing 40% of the components, this is very bad. My senior gave me this insights: Why Your Recall Is Low (The Problem) Your low recall (0.5469) means you are missing ~45% of the concepts. This can happen in two places: Your NER is the problem: Your NER model fails to even find the entity in the sentence. If the NER never highlights "CVA," your embedding model and RAG never even get a chance to code it. The entity is missed completely. Your RAG is the problem: Your NER finds "CVA," but your embedding model creates a bad vector, or your ontology is bad, so the RAG retrieves the wrong concept (e.g., "Carotid Venous Angiography" instead of "Stroke"). This is why you must test your NER model first and by itself. You need to know which of these two steps is failing. My recommendation is to check your NER model's recall first. How often does it successfully find the 32 target concepts in your benchmark sentences (forget about the code, just does it find the text)?
 
 
-This is all my code:
+After diving deeper I found out the following problems:
 
-.env:
-# RAG Configuration
-RAG_TOP_K=30
-RAG_THRESHOLD=0.50
-RAG_MAX_DISPLAY=12
-RAG_QUERY_SUFFIX=disorder finding
-RAG_ALLOW_FALLBACK=false
+Based on the diagnostics, here's the complete picture:
 
-# LLM Configuration
-RAG_USE_LLM_VALIDATION=false
-RAG_LLM_MODEL=gpt-4o
-RAG_LLM_TEMPERATURE=0.0
+1. NER Performance (Text Matching)
+Text-Based Recall: 13.04% - NER finds the right medical concepts in only 13% of cases
+Span-Based Recall: 6.09% - Even worse when considering exact character positions
+2. What This Means
+NER is finding some medical concepts (stroke, hemorrhage, hemiparesis)
+But it's finding DIFFERENT occurrences than the ground truth expects
+Example: Ground truth wants hemiparesis at position [361-372], but NER found it at [292-322]
+3. The Real Problem
+Your NER prompt is too generic and finds:
 
-# Span Processing
-RAG_SPAN_TIGHTEN=true
+✅ Common terms like "stroke", "diabetes", "hypertension"
+❌ Misses specific clinical entities like "NIHSS", "ASPECTS", "TICI", "CT", "tPA", "recanalization"
+❌ Finds broader phrases when ground truth expects specific short spans
+💡 Solution: Improve the NER Prompt
+Your NER needs to be more aggressive at finding:
 
-# Evaluation Offsets (for benchmark compatibility)
-EVAL_OFFSET_BASE=0
-EVAL_END_INCLUSIVE=false
+Clinical abbreviations: NIHSS, ASPECTS, TICI, CT, tPA, MRI
+Procedure names: thrombectomy, recanalization, angiography
+Anatomical terms: middle cerebral artery, internal carotid artery
+Clinical scores and measurements: specific mentions, not just the general condition
 
 
+
+My whole code:
 --- Content of ./scripts/build_index.py ---
 #!/usr/bin/env python3
 """
@@ -161,6 +70,722 @@ from indexer.build_index import main
 
 if __name__ == "__main__":
     main()
+
+
+--- Content of ./scripts/diagnose_ner_recall.py ---
+#!/usr/bin/env python3
+"""
+Diagnostic tool to measure NER recall independently from RAG coding performance.
+
+This script helps identify whether low recall is due to:
+1. NER failure (not detecting entities)
+2. RAG failure (detecting entities but coding them wrong)
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+from typing import Dict, List, Set, Tuple
+import pandas as pd
+import argparse
+
+# Add src to path
+ROOT = Path(__file__).resolve().parent.parent
+SRC_DIR = ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+# Add evaluation to path
+EVAL_DIR = ROOT.parent.parent / "evaluation"
+if str(EVAL_DIR) not in sys.path:
+    sys.path.insert(0, str(EVAL_DIR))
+
+from pipeline import RAGGPTPipeline
+
+
+def normalize_text(text: str) -> str:
+    """Normalize text for comparison."""
+    return text.lower().strip()
+
+
+def check_span_overlap(
+    gt_start: int, 
+    gt_end: int, 
+    pred_start: int, 
+    pred_end: int,
+    overlap_threshold: float = 0.5
+) -> bool:
+    """
+    Check if two spans overlap significantly.
+    
+    Args:
+        gt_start: Ground truth start position
+        gt_end: Ground truth end position
+        pred_start: Predicted start position
+        pred_end: Predicted end position
+        overlap_threshold: Minimum overlap ratio (IoU-style)
+    
+    Returns:
+        True if spans overlap sufficiently
+    """
+    # Calculate overlap
+    overlap_start = max(gt_start, pred_start)
+    overlap_end = min(gt_end, pred_end)
+    
+    if overlap_start >= overlap_end:
+        return False  # No overlap
+    
+    overlap_length = overlap_end - overlap_start
+    gt_length = gt_end - gt_start
+    pred_length = pred_end - pred_start
+    
+    # Calculate IoU (Intersection over Union)
+    union_length = gt_length + pred_length - overlap_length
+    iou = overlap_length / union_length if union_length > 0 else 0
+    
+    return iou >= overlap_threshold
+
+
+def load_ground_truth(truth_path: Path) -> pd.DataFrame:
+    """Load and normalize ground truth annotations."""
+    df = pd.read_csv(truth_path)
+    
+    # Standardize column names
+    if "note_id" not in df.columns and "id" in df.columns:
+        df = df.rename(columns={"id": "note_id"})
+    
+    # Ensure we have required columns
+    required = ["note_id", "start", "end"]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        raise ValueError(f"Ground truth missing columns: {missing}")
+    
+    # Add span_text if it exists
+    if "span_text" in df.columns:
+        df["gt_span_text"] = df["span_text"]
+    
+    return df
+
+
+def load_input_notes(input_path: Path) -> pd.DataFrame:
+    """Load input notes."""
+    df = pd.read_csv(input_path)
+    
+    if "note_id" not in df.columns and "id" in df.columns:
+        df = df.rename(columns={"id": "note_id"})
+    
+    if not {"note_id", "text"}.issubset(df.columns):
+        raise ValueError(f"Input must have 'note_id' and 'text' columns")
+    
+    return df
+
+
+def extract_ner_only(pipeline: RAGGPTPipeline, notes_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Run only the NER step of the pipeline (no coding).
+    
+    Returns:
+        DataFrame with columns: note_id, start, end, span_text
+    """
+    all_entities = []
+    
+    for _, row in notes_df.iterrows():
+        note_id = row["note_id"]
+        text = row["text"]
+        
+        print(f"[NER] Processing note {note_id}...")
+        
+        # Run only NER
+        entities = pipeline.ner.extract_entities(text)
+        
+        print(f"[NER] Found {len(entities)} entities in note {note_id}")
+        
+        for ent in entities:
+            all_entities.append({
+                "note_id": note_id,
+                "start": ent["start"],
+                "end": ent["end"],
+                "span_text": ent["span_text"]
+            })
+    
+    return pd.DataFrame(all_entities)
+
+
+def calculate_ner_metrics(
+    ground_truth: pd.DataFrame,
+    ner_predictions: pd.DataFrame,
+    overlap_threshold: float = 0.5
+) -> Dict:
+    """
+    Calculate NER-only metrics (precision, recall, F1).
+    
+    This measures whether NER detected the entities, regardless of coding.
+    """
+    results = {
+        "total_gt_entities": 0,
+        "total_ner_entities": 0,
+        "matched_entities": 0,
+        "by_note": {},
+        "unmatched_gt": [],
+        "unmatched_ner": []
+    }
+    
+    # Group by note_id
+    gt_by_note = ground_truth.groupby("note_id")
+    ner_by_note = ner_predictions.groupby("note_id")
+    
+    all_note_ids = set(ground_truth["note_id"].unique()) | set(ner_predictions["note_id"].unique())
+    
+    for note_id in sorted(all_note_ids):
+        gt_entities = gt_by_note.get_group(note_id) if note_id in gt_by_note.groups else pd.DataFrame()
+        ner_entities = ner_by_note.get_group(note_id) if note_id in ner_by_note.groups else pd.DataFrame()
+        
+        gt_count = len(gt_entities)
+        ner_count = len(ner_entities)
+        
+        results["total_gt_entities"] += gt_count
+        results["total_ner_entities"] += ner_count
+        
+        # Match entities using span overlap
+        matched_gt = set()
+        matched_ner = set()
+        
+        for gt_idx, gt_row in gt_entities.iterrows():
+            gt_start = gt_row["start"]
+            gt_end = gt_row["end"]
+            gt_text = gt_row.get("gt_span_text", "")
+            
+            best_match = None
+            best_iou = 0
+            
+            for ner_idx, ner_row in ner_entities.iterrows():
+                if ner_idx in matched_ner:
+                    continue
+                
+                ner_start = ner_row["start"]
+                ner_end = ner_row["end"]
+                
+                if check_span_overlap(gt_start, gt_end, ner_start, ner_end, overlap_threshold):
+                    # Calculate exact IoU for best match
+                    overlap_start = max(gt_start, ner_start)
+                    overlap_end = min(gt_end, ner_end)
+                    overlap_length = overlap_end - overlap_start
+                    union_length = (gt_end - gt_start) + (ner_end - ner_start) - overlap_length
+                    iou = overlap_length / union_length if union_length > 0 else 0
+                    
+                    if iou > best_iou:
+                        best_iou = iou
+                        best_match = ner_idx
+            
+            if best_match is not None:
+                matched_gt.add(gt_idx)
+                matched_ner.add(best_match)
+            else:
+                # Record unmatched ground truth entity
+                results["unmatched_gt"].append({
+                    "note_id": note_id,
+                    "start": gt_start,
+                    "end": gt_end,
+                    "text": gt_text
+                })
+        
+        # Record unmatched NER predictions (false positives)
+        for ner_idx, ner_row in ner_entities.iterrows():
+            if ner_idx not in matched_ner:
+                results["unmatched_ner"].append({
+                    "note_id": note_id,
+                    "start": ner_row["start"],
+                    "end": ner_row["end"],
+                    "text": ner_row["span_text"]
+                })
+        
+        matched_count = len(matched_gt)
+        results["matched_entities"] += matched_count
+        
+        # Store per-note results
+        note_recall = matched_count / gt_count if gt_count > 0 else 0
+        note_precision = matched_count / ner_count if ner_count > 0 else 0
+        note_f1 = 2 * note_precision * note_recall / (note_precision + note_recall) if (note_precision + note_recall) > 0 else 0
+        
+        results["by_note"][note_id] = {
+            "gt_count": gt_count,
+            "ner_count": ner_count,
+            "matched": matched_count,
+            "recall": note_recall,
+            "precision": note_precision,
+            "f1": note_f1
+        }
+    
+    # Overall metrics
+    total_gt = results["total_gt_entities"]
+    total_ner = results["total_ner_entities"]
+    total_matched = results["matched_entities"]
+    
+    results["overall_recall"] = total_matched / total_gt if total_gt > 0 else 0
+    results["overall_precision"] = total_matched / total_ner if total_ner > 0 else 0
+    results["overall_f1"] = (
+        2 * results["overall_precision"] * results["overall_recall"] / 
+        (results["overall_precision"] + results["overall_recall"])
+        if (results["overall_precision"] + results["overall_recall"]) > 0 else 0
+    )
+    
+    return results
+
+
+def print_diagnostic_report(results: Dict, verbose: bool = False):
+    """Print a detailed diagnostic report."""
+    print("\n" + "=" * 80)
+    print("NER RECALL DIAGNOSTIC REPORT")
+    print("=" * 80)
+    
+    print("\n[OVERALL METRICS]")
+    print(f"  Ground Truth Entities: {results['total_gt_entities']}")
+    print(f"  NER Detected Entities: {results['total_ner_entities']}")
+    print(f"  Matched Entities:      {results['matched_entities']}")
+    print()
+    print(f"  NER Recall:     {results['overall_recall']:.4f} ({results['overall_recall']*100:.2f}%)")
+    print(f"  NER Precision:  {results['overall_precision']:.4f} ({results['overall_precision']*100:.2f}%)")
+    print(f"  NER F1-Score:   {results['overall_f1']:.4f}")
+    
+    # Diagnosis
+    print("\n[DIAGNOSIS]")
+    recall = results['overall_recall']
+    precision = results['overall_precision']
+    
+    if recall < 0.7:
+        print(f"  ⚠️  LOW RECALL ({recall:.2%})")
+        print(f"     → NER is MISSING ~{(1-recall)*100:.1f}% of entities!")
+        print(f"     → This is your PRIMARY problem.")
+        print(f"     → Ground truth entities not detected: {results['total_gt_entities'] - results['matched_entities']}")
+    else:
+        print(f"  ✓  GOOD RECALL ({recall:.2%})")
+        print(f"     → NER is finding most entities.")
+    
+    if precision < 0.7:
+        print(f"  ⚠️  LOW PRECISION ({precision:.2%})")
+        print(f"     → NER is creating too many false positives.")
+        print(f"     → Extra entities detected: {results['total_ner_entities'] - results['matched_entities']}")
+    else:
+        print(f"  ✓  GOOD PRECISION ({precision:.2%})")
+    
+    # Per-note breakdown
+    if verbose:
+        print("\n[PER-NOTE BREAKDOWN]")
+        print(f"{'Note ID':<10} {'GT':<6} {'NER':<6} {'Match':<6} {'Recall':<8} {'Precision':<10} {'F1':<8}")
+        print("-" * 70)
+        for note_id in sorted(results["by_note"].keys()):
+            note_data = results["by_note"][note_id]
+            print(
+                f"{note_id:<10} "
+                f"{note_data['gt_count']:<6} "
+                f"{note_data['ner_count']:<6} "
+                f"{note_data['matched']:<6} "
+                f"{note_data['recall']:<8.4f} "
+                f"{note_data['precision']:<10.4f} "
+                f"{note_data['f1']:<8.4f}"
+            )
+    
+    # Show missed entities
+    print("\n[MISSED ENTITIES - NER Failed to Detect]")
+    if results["unmatched_gt"]:
+        print(f"  Total missed: {len(results['unmatched_gt'])}")
+        print(f"\n  Sample of missed entities (first 20):")
+        for i, entity in enumerate(results["unmatched_gt"][:20], 1):
+            print(f"    {i}. Note {entity['note_id']}: '{entity['text']}' [{entity['start']}-{entity['end']}]")
+        if len(results["unmatched_gt"]) > 20:
+            print(f"    ... and {len(results['unmatched_gt']) - 20} more")
+    else:
+        print("  ✓ No missed entities!")
+    
+    # Show false positives
+    if verbose and results["unmatched_ner"]:
+        print("\n[FALSE POSITIVES - NER Detected but Not in Ground Truth]")
+        print(f"  Total false positives: {len(results['unmatched_ner'])}")
+        print(f"\n  Sample (first 10):")
+        for i, entity in enumerate(results["unmatched_ner"][:10], 1):
+            print(f"    {i}. Note {entity['note_id']}: '{entity['text']}' [{entity['start']}-{entity['end']}]")
+    
+    print("\n" + "=" * 80)
+    print()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Diagnose NER recall issues")
+    parser.add_argument(
+        "--input",
+        type=Path,
+        help="Input notes CSV (defaults to ../../data/mimic-iv_notes_training_set.csv)"
+    )
+    parser.add_argument(
+        "--truth",
+        type=Path,
+        help="Ground truth CSV (defaults to ../../data/train_annotations.csv)"
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Save detailed results to CSV"
+    )
+    parser.add_argument(
+        "--overlap",
+        type=float,
+        default=0.5,
+        help="Overlap threshold for matching (default: 0.5)"
+    )
+    parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Show detailed per-note breakdown"
+    )
+    
+    args = parser.parse_args()
+    
+    # Default paths
+    input_path = args.input or ROOT.parent.parent / "data" / "mimic-iv_notes_training_set.csv"
+    truth_path = args.truth or ROOT.parent.parent / "data" / "train_annotations.csv"
+    
+    if not input_path.exists():
+        print(f"Error: Input file not found: {input_path}")
+        return 1
+    
+    if not truth_path.exists():
+        print(f"Error: Ground truth file not found: {truth_path}")
+        return 1
+    
+    print(f"[SETUP] Loading data...")
+    print(f"  Input:  {input_path}")
+    print(f"  Truth:  {truth_path}")
+    
+    # Load data
+    notes_df = load_input_notes(input_path)
+    gt_df = load_ground_truth(truth_path)
+    
+    print(f"\n[DATA] Loaded {len(notes_df)} notes with {len(gt_df)} ground truth entities")
+    
+    # Initialize pipeline (NER only)
+    print(f"\n[PIPELINE] Initializing NER system...")
+    pipeline = RAGGPTPipeline(verbose=False)
+    
+    # Extract entities using NER only
+    print(f"\n[NER] Running entity extraction...")
+    ner_df = extract_ner_only(pipeline, notes_df)
+    
+    print(f"[NER] Extracted {len(ner_df)} entities total")
+    
+    # Calculate metrics
+    print(f"\n[EVAL] Calculating NER metrics...")
+    results = calculate_ner_metrics(gt_df, ner_df, overlap_threshold=args.overlap)
+    
+    # Print report
+    print_diagnostic_report(results, verbose=args.verbose)
+    
+    # Save detailed results if requested
+    if args.output:
+        output_data = {
+            "metric": ["recall", "precision", "f1", "total_gt", "total_ner", "matched"],
+            "value": [
+                results["overall_recall"],
+                results["overall_precision"],
+                results["overall_f1"],
+                results["total_gt_entities"],
+                results["total_ner_entities"],
+                results["matched_entities"]
+            ]
+        }
+        pd.DataFrame(output_data).to_csv(args.output, index=False)
+        print(f"[OUTPUT] Saved results to {args.output}")
+    
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+
+--- Content of ./scripts/diagnose_ner_text_match.py ---
+#!/usr/bin/env python3
+"""
+Alternative NER diagnostic that matches by text content rather than just spans.
+This helps identify if NER is finding the right concepts but at wrong positions.
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+from typing import Dict, List, Set
+import pandas as pd
+import argparse
+
+# Add src to path
+ROOT = Path(__file__).resolve().parent.parent
+SRC_DIR = ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+EVAL_DIR = ROOT.parent.parent / "evaluation"
+if str(EVAL_DIR) not in sys.path:
+    sys.path.insert(0, str(EVAL_DIR))
+
+from pipeline import RAGGPTPipeline
+
+
+def normalize_text(text: str) -> str:
+    """Normalize text for comparison."""
+    return text.lower().strip()
+
+
+def load_ground_truth_with_text(truth_path: Path, notes_df: pd.DataFrame) -> pd.DataFrame:
+    """Load ground truth and extract actual text from notes."""
+    df = pd.read_csv(truth_path)
+    
+    if "note_id" not in df.columns and "id" in df.columns:
+        df = df.rename(columns={"id": "note_id"})
+    
+    # Create a mapping of note_id to text
+    note_texts = dict(zip(notes_df["note_id"], notes_df["text"]))
+    
+    # Extract actual text for each annotation
+    gt_texts = []
+    for _, row in df.iterrows():
+        note_id = row["note_id"]
+        start = row["start"]
+        end = row["end"]
+        
+        if note_id in note_texts:
+            text = note_texts[note_id][start:end]
+            gt_texts.append(text)
+        else:
+            gt_texts.append("")
+    
+    df["extracted_text"] = gt_texts
+    
+    return df
+
+
+def calculate_text_based_metrics(
+    ground_truth: pd.DataFrame,
+    ner_predictions: pd.DataFrame
+) -> Dict:
+    """
+    Calculate metrics based on text matching rather than span overlap.
+    """
+    results = {
+        "total_gt_entities": len(ground_truth),
+        "total_ner_entities": len(ner_predictions),
+        "matched_by_text": 0,
+        "matched_by_text_and_span": 0,
+        "by_note": {},
+        "missing_concepts": {},
+        "extra_concepts": {}
+    }
+    
+    gt_by_note = ground_truth.groupby("note_id")
+    ner_by_note = ner_predictions.groupby("note_id")
+    
+    all_note_ids = set(ground_truth["note_id"].unique()) | set(ner_predictions["note_id"].unique())
+    
+    for note_id in sorted(all_note_ids):
+        gt_entities = gt_by_note.get_group(note_id) if note_id in gt_by_note.groups else pd.DataFrame()
+        ner_entities = ner_by_note.get_group(note_id) if note_id in ner_by_note.groups else pd.DataFrame()
+        
+        # Normalize texts for comparison
+        gt_texts = set(normalize_text(t) for t in gt_entities["extracted_text"])
+        ner_texts = set(normalize_text(t) for t in ner_entities["span_text"])
+        
+        # Count matches
+        matched_texts = gt_texts & ner_texts
+        results["matched_by_text"] += len(matched_texts)
+        
+        # Missing concepts (in GT but not in NER)
+        missing = gt_texts - ner_texts
+        if missing:
+            results["missing_concepts"][note_id] = list(missing)
+        
+        # Extra concepts (in NER but not in GT)
+        extra = ner_texts - gt_texts
+        if extra:
+            results["extra_concepts"][note_id] = list(extra)
+        
+        # Per-note stats
+        gt_count = len(gt_texts)
+        ner_count = len(ner_texts)
+        matched_count = len(matched_texts)
+        
+        note_recall = matched_count / gt_count if gt_count > 0 else 0
+        note_precision = matched_count / ner_count if ner_count > 0 else 0
+        note_f1 = 2 * note_precision * note_recall / (note_precision + note_recall) if (note_precision + note_recall) > 0 else 0
+        
+        results["by_note"][note_id] = {
+            "gt_count": gt_count,
+            "ner_count": ner_count,
+            "matched": matched_count,
+            "recall": note_recall,
+            "precision": note_precision,
+            "f1": note_f1
+        }
+    
+    # Overall metrics
+    total_gt = results["total_gt_entities"]
+    total_ner = results["total_ner_entities"]
+    total_matched = results["matched_by_text"]
+    
+    results["text_recall"] = total_matched / total_gt if total_gt > 0 else 0
+    results["text_precision"] = total_matched / total_ner if total_ner > 0 else 0
+    results["text_f1"] = (
+        2 * results["text_precision"] * results["text_recall"] / 
+        (results["text_precision"] + results["text_recall"])
+        if (results["text_precision"] + results["text_recall"]) > 0 else 0
+    )
+    
+    return results
+
+
+def print_text_match_report(results: Dict, verbose: bool = False):
+    """Print diagnostic report for text-based matching."""
+    print("\n" + "=" * 80)
+    print("NER TEXT-BASED MATCHING DIAGNOSTIC")
+    print("=" * 80)
+    
+    print("\n[OVERALL METRICS - Text Content Matching]")
+    print(f"  Ground Truth Entities: {results['total_gt_entities']}")
+    print(f"  NER Detected Entities: {results['total_ner_entities']}")
+    print(f"  Matched by Text:       {results['matched_by_text']}")
+    print()
+    print(f"  Text-Based Recall:     {results['text_recall']:.4f} ({results['text_recall']*100:.2f}%)")
+    print(f"  Text-Based Precision:  {results['text_precision']:.4f} ({results['text_precision']*100:.2f}%)")
+    print(f"  Text-Based F1:         {results['text_f1']:.4f}")
+    
+    print("\n[INTERPRETATION]")
+    text_recall = results['text_recall']
+    
+    if text_recall < 0.6:
+        print(f"  ❌ NER is MISSING concepts ({(1-text_recall)*100:.1f}% not found)")
+        print(f"     → The NER model is not detecting the medical concepts")
+        print(f"     → You need to improve the NER prompts or use a better NER model")
+    elif text_recall >= 0.6 and text_recall < 0.9:
+        print(f"  ⚠️  NER finds MOST concepts but misses some ({(1-text_recall)*100:.1f}% missing)")
+        print(f"     → Consider refining NER prompts to catch edge cases")
+    else:
+        print(f"  ✅ NER finds almost ALL concepts ({text_recall*100:.1f}%)")
+        print(f"     → The problem is likely in span boundaries or RAG coding")
+    
+    # Per-note breakdown
+    if verbose:
+        print("\n[PER-NOTE BREAKDOWN - Text Matching]")
+        print(f"{'Note ID':<10} {'GT':<6} {'NER':<6} {'Match':<6} {'Recall':<8} {'Precision':<10} {'F1':<8}")
+        print("-" * 70)
+        for note_id in sorted(results["by_note"].keys()):
+            note_data = results["by_note"][note_id]
+            print(
+                f"{note_id:<10} "
+                f"{note_data['gt_count']:<6} "
+                f"{note_data['ner_count']:<6} "
+                f"{note_data['matched']:<6} "
+                f"{note_data['recall']:<8.4f} "
+                f"{note_data['precision']:<10.4f} "
+                f"{note_data['f1']:<8.4f}"
+            )
+    
+    # Show missing concepts
+    print("\n[MISSING CONCEPTS - Not Found by NER]")
+    missing_total = sum(len(v) for v in results["missing_concepts"].values())
+    if missing_total > 0:
+        print(f"  Total unique missing concepts: {missing_total}")
+        for note_id in sorted(results["missing_concepts"].keys()):
+            concepts = results["missing_concepts"][note_id]
+            print(f"\n  Note {note_id} ({len(concepts)} missing):")
+            for concept in sorted(concepts)[:10]:
+                print(f"    - '{concept}'")
+            if len(concepts) > 10:
+                print(f"    ... and {len(concepts) - 10} more")
+    else:
+        print("  ✓ No missing concepts!")
+    
+    if verbose and results["extra_concepts"]:
+        print("\n[EXTRA CONCEPTS - Detected but Not in Ground Truth]")
+        extra_total = sum(len(v) for v in results["extra_concepts"].values())
+        print(f"  Total unique extra concepts: {extra_total}")
+        for note_id in sorted(list(results["extra_concepts"].keys())[:3]):
+            concepts = results["extra_concepts"][note_id]
+            print(f"\n  Note {note_id} ({len(concepts)} extra):")
+            for concept in sorted(concepts)[:5]:
+                print(f"    - '{concept}'")
+    
+    print("\n" + "=" * 80)
+    print()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Text-based NER diagnostic")
+    parser.add_argument("--input", type=Path)
+    parser.add_argument("--truth", type=Path)
+    parser.add_argument("--verbose", action="store_true")
+    
+    args = parser.parse_args()
+    
+    input_path = args.input or ROOT.parent.parent / "data" / "mimic-iv_notes_training_set.csv"
+    truth_path = args.truth or ROOT.parent.parent / "data" / "train_annotations.csv"
+    
+    if not input_path.exists():
+        print(f"Error: Input file not found: {input_path}")
+        return 1
+    
+    if not truth_path.exists():
+        print(f"Error: Ground truth file not found: {truth_path}")
+        return 1
+    
+    print(f"[SETUP] Loading data...")
+    
+    # Load notes
+    notes_df = pd.read_csv(input_path)
+    if "note_id" not in notes_df.columns and "id" in notes_df.columns:
+        notes_df = notes_df.rename(columns={"id": "note_id"})
+    
+    # Load ground truth with extracted text
+    gt_df = load_ground_truth_with_text(truth_path, notes_df)
+    
+    print(f"\n[DATA] Loaded {len(notes_df)} notes with {len(gt_df)} ground truth entities")
+    
+    # Initialize pipeline
+    print(f"\n[PIPELINE] Initializing NER...")
+    pipeline = RAGGPTPipeline(verbose=False)
+    
+    # Extract NER entities
+    print(f"\n[NER] Running entity extraction...")
+    all_entities = []
+    
+    for _, row in notes_df.iterrows():
+        note_id = row["note_id"]
+        text = row["text"]
+        
+        print(f"[NER] Processing note {note_id}...")
+        entities = pipeline.ner.extract_entities(text)
+        
+        for ent in entities:
+            all_entities.append({
+                "note_id": note_id,
+                "start": ent["start"],
+                "end": ent["end"],
+                "span_text": ent["span_text"]
+            })
+    
+    ner_df = pd.DataFrame(all_entities)
+    print(f"[NER] Extracted {len(ner_df)} entities")
+    
+    # Calculate text-based metrics
+    print(f"\n[EVAL] Calculating text-based metrics...")
+    results = calculate_text_based_metrics(gt_df, ner_df)
+    
+    # Print report
+    print_text_match_report(results, verbose=args.verbose)
+    
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
 
 
 --- Content of ./scripts/run_rag_gpt.py ---
@@ -401,6 +1026,7 @@ if __name__ == "__main__":
 import json
 import os
 import sys
+import re
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
@@ -595,7 +1221,8 @@ class SNOMEDCoder:
     def _retrieve_candidates(self, query: str, context_type: str, verbose: bool) -> List[Tuple[str, str, float]]:
         """
         Recupera, deduplica y filtra candidatos por THRESHOLD.
-        Para ENTITY aplica double-query (query y query+suffix).
+        Para ENTITY aplica double-query (query y query+suffix); pero evita el sufijo
+        en procedimientos y escalas para no arrastrar códigos de enfermedad genéricos.
         """
         if not query or query == "No especificado":
             return []
@@ -604,9 +1231,18 @@ class SNOMEDCoder:
         THRESHOLD = self.cfg["THRESHOLD"]
 
         if context_type == "ENTITY":
+            # Heurística: NO añadir sufijo clínico para procedimientos/escalas/scores
+            q = (query or "").lower()
+            looks_like_proc_or_score = bool(re.search(
+                r'\b(angiograph|thrombect|coiling|endarterect|angioplast|stent|tici|nihss|aspects|gcs|mrs|rankin|score|scale)\b',
+                q
+            ))
+
             results_main = self.rag.retrieve(query, k=TOP_K)
-            query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
-            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
+            results_clinical = []
+            if self.cfg.get("QUERY_SUFFIX") and not looks_like_proc_or_score:
+                query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
+                results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
 
             combined = {}
             for concepto, narrativa, sim in (results_main + results_clinical):
@@ -1013,6 +1649,25 @@ class QueryAugmenter:
             "ischemic penumbra": ["penumbra isquémica", "penumbra"],
             "hemorrhage": ["hemorragia", "hemorragia intracerebral", "hemorragia intracraneal"],
             "infarct": ["infarto cerebral", "infarto isquémico"],
+            "nihss": ["escala de ictus nihssis", "escala nihss", "escala de ictus del nih"],
+            "aspects": ["escala aspects", "puntuación aspects", "escala de aspectos"],
+            "tici": ["escala tici", "grado tici"],
+            "gcs": ["escala glasgow", "glasgow coma scale"],
+            "mrs": ["escala de rankin modificada", "modified rankin scale"],
+            "mca": ["arteria cerebral media", "acm", "m1", "m2"],
+            "ica": ["arteria carótida interna", "aci"],
+            "basilar": ["arteria basilar"],
+            "pica": ["arteria cerebelosa posteroinferior"],
+            "aica": ["arteria cerebelosa anteroinferior"],
+            "sca": ["arteria cerebelosa superior"],
+            "thrombectomy": ["trombectomía", "tratamiento endovascular"],
+            "coiling": ["embolización con coils", "coils endovasculares"],
+            "angioplasty": ["angioplastia"],
+            "endarterectomy": ["endarterectomía"],
+            "occlusion": ["oclusión"],
+            "stenosis": ["estenosis"],
+            "hemorrhage": ["hemorragia", "sangrado"],
+            "infarct": ["infarto cerebral", "infarto isquémico"]
         }
         path = os.path.join(self.assets_dir, "bilingual_hints.json")
         try:
@@ -1800,6 +2455,8 @@ import sys
 import pandas as pd
 from typing import List, Dict, Tuple
 from pathlib import Path
+import re
+
 
 # Setup paths for absolute imports
 SRC_DIR = Path(__file__).parent.resolve()
@@ -1870,9 +2527,33 @@ class RAGGPTPipeline:
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config, system_prompt=system_prompt)
         self.coder = SNOMEDCoder(self.rag, self.client, system_prompt=system_prompt)
 
+        # Regex de exclusión para ruido (scores, unidades, encabezados, etc.)
+        # Se puede ajustar vía env RAG_EXCLUDE_REGEX
+        self.exclude_re = os.getenv(
+            "RAG_EXCLUDE_REGEX",
+            r"(?i)\b("
+            r"nihss|aspects|tici|gcs|mrs|modified\s+rankin|"
+            r"score|scale|report|unit|neurointensive|"
+            r"pattern of infarction|small infarct volume|"
+            r"collateral score|collateral circulation"
+            r")\b"
+        )
+        self.exclude_re = re.compile(self.exclude_re)
+
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("=" * 80)
+
+    def _is_excluded(self, ent: dict) -> bool:
+        """
+        Determina si una entidad debe ser excluida del output final por ser ruido
+        (p.ej. encabezados, escalas, unidades genéricas, etc.).
+        """
+        txt = (
+            str(ent.get("full_span") or "") + " " +
+            str(ent.get("span_text") or "")
+        )
+        return bool(self.exclude_re.search(txt))
 
     # ----------------------------------------------------------------------------------
     # Normalización con mapeo de offsets (CRLF -> LF) SIN desalinear respecto al original
@@ -2172,6 +2853,10 @@ class RAGGPTPipeline:
                 concept_id = str(entity.get("entity_code", "")).strip()
                 if not concept_id or concept_id == "404684003":
                     continue  # evita fallback genérico
+
+                # Exclusión de ruido (scores, encabezados, etc.)
+                if self._is_excluded(entity):
+                    continue
 
                 start_out = int(entity["start"])
                 end_out = int(entity["end"])
@@ -2649,4 +3334,4 @@ def tighten_span_boundaries(text: str, start: int, end: int) -> Tuple[int, int]:
 --- Content of ./src/__init__.py ---
 # This file marks 'src' as a package
 
-
+Give me the actual implementation to solve this:

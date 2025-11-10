@@ -198,7 +198,8 @@ class SNOMEDCoder:
     def _retrieve_candidates(self, query: str, context_type: str, verbose: bool) -> List[Tuple[str, str, float]]:
         """
         Recupera, deduplica y filtra candidatos por THRESHOLD.
-        Para ENTITY aplica double-query (query y query+suffix).
+        Para ENTITY aplica double-query (query y query+suffix); pero evita el sufijo
+        en procedimientos y escalas para no arrastrar códigos de enfermedad genéricos.
         """
         if not query or query == "No especificado":
             return []
@@ -207,7 +208,7 @@ class SNOMEDCoder:
         THRESHOLD = self.cfg["THRESHOLD"]
 
         if context_type == "ENTITY":
-            # Heuristic: only add the clinical suffix for disease/finding-like terms.
+            # Heurística: NO añadir sufijo clínico para procedimientos/escalas/scores
             q = (query or "").lower()
             looks_like_proc_or_score = bool(re.search(
                 r'\b(angiograph|thrombect|coiling|endarterect|angioplast|stent|tici|nihss|aspects|gcs|mrs|rankin|score|scale)\b',
@@ -222,13 +223,13 @@ class SNOMEDCoder:
 
             combined = {}
             for concepto, narrativa, sim in (results_main + results_clinical):
+                # Mantener la mayor similitud por concepto
                 if concepto not in combined or sim > combined[concepto][1]:
                     combined[concepto] = (narrativa, sim)
 
             results = [(c, n, s) for c, (n, s) in combined.items()]
         else:
             results = self.rag.retrieve(query, k=min(TOP_K, 15))
-
 
         # Filtrado y orden
         filtered = [(c, n, s) for c, n, s in results if s >= THRESHOLD]

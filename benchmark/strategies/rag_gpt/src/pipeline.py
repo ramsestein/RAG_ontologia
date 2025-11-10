@@ -80,24 +80,33 @@ class RAGGPTPipeline:
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config, system_prompt=system_prompt)
         self.coder = SNOMEDCoder(self.rag, self.client, system_prompt=system_prompt)
 
+        # Regex de exclusión para ruido (scores, unidades, encabezados, etc.)
+        # Se puede ajustar vía env RAG_EXCLUDE_REGEX
         self.exclude_re = os.getenv(
             "RAG_EXCLUDE_REGEX",
-            r"(?i)\b(nihss|aspects|tici|gcs|mrs|modified\s+rankin|score|scale|report|unit|neurointensive|pattern of infarction|small infarct volume|collateral score|collateral circulation)\b"
+            r"(?i)\b("
+            r"nihss|aspects|tici|gcs|mrs|modified\s+rankin|"
+            r"score|scale|report|unit|neurointensive|"
+            r"pattern of infarction|small infarct volume|"
+            r"collateral score|collateral circulation"
+            r")\b"
         )
         self.exclude_re = re.compile(self.exclude_re)
 
-        
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("=" * 80)
 
     def _is_excluded(self, ent: dict) -> bool:
+        """
+        Determina si una entidad debe ser excluida del output final por ser ruido
+        (p.ej. encabezados, escalas, unidades genéricas, etc.).
+        """
         txt = (
             str(ent.get("full_span") or "") + " " +
             str(ent.get("span_text") or "")
         )
         return bool(self.exclude_re.search(txt))
-
 
     # ----------------------------------------------------------------------------------
     # Normalización con mapeo de offsets (CRLF -> LF) SIN desalinear respecto al original
@@ -398,6 +407,7 @@ class RAGGPTPipeline:
                 if not concept_id or concept_id == "404684003":
                     continue  # evita fallback genérico
 
+                # Exclusión de ruido (scores, encabezados, etc.)
                 if self._is_excluded(entity):
                     continue
 
