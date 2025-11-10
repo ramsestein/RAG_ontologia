@@ -20,21 +20,20 @@ from tqdm.auto import tqdm
 from transformers import AutoTokenizer, AutoModel
 import re
 
-# --- START: Robust Path Setup ---
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..', '..', '..'))
-ASSETS_DIR = os.path.join(SCRIPT_DIR, 'assets')
-ASSETS_DIR = os.path.abspath(ASSETS_DIR)
-# --- END: Robust Path Setup ---
+# --- PATH SETUP ---
+SCRIPT_DIR = Path(__file__).parent.resolve()
+SRC_DIR = SCRIPT_DIR.parent
+PROJECT_ROOT = SRC_DIR.parent
 
-# Ensure assets directory exists
-os.makedirs(ASSETS_DIR, exist_ok=True)
+# Assets directory (nueva ubicación)
+ASSETS_DIR = PROJECT_ROOT / "assets" / "ontology"
+ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Output paths
-INDEX_PATH = os.path.join(ASSETS_DIR, 'ontology.index')
-CONCEPTS_PATH = os.path.join(ASSETS_DIR, 'ontology_concepts.pkl')
-NARRATIVES_PATH = os.path.join(ASSETS_DIR, 'ontology_narratives.pkl')
-METADATA_PATH = os.path.join(ASSETS_DIR, 'ontology_metadata.pkl')
+INDEX_PATH = ASSETS_DIR / 'ontology.index'
+CONCEPTS_PATH = ASSETS_DIR / 'ontology_concepts.pkl'
+NARRATIVES_PATH = ASSETS_DIR / 'ontology_narratives.pkl'
+METADATA_PATH = ASSETS_DIR / 'ontology_metadata.pkl'
 
 # --- MODELO CORRECTO (del README) ---
 MODEL_NAME = 'cambridgeltl/SapBERT-from-PubMedBERT-fulltext'
@@ -94,9 +93,9 @@ def load_ontology_csv():
     print("STEP 1: Loading Ontology Data")
     print("="*80)
     
-    hybrid_path = os.path.join(PROJECT_ROOT, 'ontology', 'hybrid_ontology.csv')
+    hybrid_path = PROJECT_ROOT / 'ontology' / 'hybrid_ontology.csv'
     
-    if os.path.exists(hybrid_path):
+    if hybrid_path.exists():
         print(f"[INFO] Loading HYBRID ONTOLOGY from: {hybrid_path}")
         df = pd.read_csv(hybrid_path)
         print(f"[SUCCESS] Loaded {len(df)} concepts")
@@ -192,7 +191,7 @@ def save_artifacts(index, concepts, narratives, embedding_dim):
     
     # Guardar índice
     print(f"[INFO] Saving Faiss index to: {INDEX_PATH}")
-    faiss.write_index(index, INDEX_PATH)
+    faiss.write_index(index, str(INDEX_PATH))
     print(f"[SUCCESS] Index saved ({os.path.getsize(INDEX_PATH) / 1024 / 1024:.2f} MB)")
     
     # Guardar listas (narrativas originales para mostrar contexto)
@@ -210,7 +209,7 @@ def save_artifacts(index, concepts, narratives, embedding_dim):
         'embedding_dim': embedding_dim,
         'model_name': MODEL_NAME,
         'created_at': datetime.now().isoformat(),
-        'index_type': 'IndexFlatIP' # ¡Correcto!
+        'index_type': 'IndexFlatIP'
     }
     
     with open(METADATA_PATH, 'wb') as f:

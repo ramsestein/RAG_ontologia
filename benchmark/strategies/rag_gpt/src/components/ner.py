@@ -8,11 +8,19 @@ Robusto:
 
 import json
 import re
+import sys
+from pathlib import Path
 from typing import List, Dict, Optional, Any
 from openai import OpenAI
 
+# Setup paths for absolute imports
+COMPONENTS_DIR = Path(__file__).parent.resolve()
+SRC_DIR = COMPONENTS_DIR.parent
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
 # reutilizamos limpieza común
-from strategies.rag_gpt.utils.text_processing import clean_json_response
+from utils.text import clean_json_response
 
 
 class NERExtractor:

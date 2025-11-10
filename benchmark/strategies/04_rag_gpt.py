@@ -10,9 +10,15 @@ import pandas as pd
 
 # Setup path to allow imports
 SCRIPT_DIR = Path(__file__).parent
-sys.path.insert(0, str(SCRIPT_DIR))
+RAG_GPT_DIR = SCRIPT_DIR / "rag_gpt"
+SRC_DIR = RAG_GPT_DIR / "src"
 
-from rag_gpt.pipeline import RAGGPTPipeline
+# Add src to path
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+# Import after path setup
+from pipeline import RAGGPTPipeline
 
 
 class RAGWithGPT4oStrategy:

@@ -7,11 +7,12 @@ class MetricsCalculator:
         """Initialize the MetricsCalculator."""
         pass
     
-    def calculate_metrics(self, 
-                         predictions: pd.DataFrame, 
-                         ground_truth: pd.DataFrame, 
-                         strategy_name: str) -> Dict:
-        if len(predictions) == 0:
+    def calculate_metrics(self,
+                        predictions: pd.DataFrame,
+                        ground_truth: pd.DataFrame,
+                        strategy_name: str) -> Dict:
+        # Empty guard
+        if predictions is None or len(predictions) == 0:
             return {
                 "precision": 0.0,
                 "recall": 0.0,
@@ -19,55 +20,48 @@ class MetricsCalculator:
                 "predictions": 0,
                 "matches": 0,
                 "partial_matches": 0,
-                "ground_truth": len(ground_truth),
+                "ground_truth": int(len(ground_truth) if ground_truth is not None else 0),
                 "coverage": 0.0
             }
-        
-        # Count exact matches
-        exact_matches = 0
-        partial_matches = 0
-        
-        for _, pred in predictions.iterrows():
-            pred_concept = str(pred['concept_id'])
-            pred_note = pred['note_id']
-            
-            # Look for exact matches (same note_id and concept_id)
-            exact_match_found = False
-            for _, true in ground_truth.iterrows():
-                if (pred_note == true['note_id'] and 
-                    pred_concept == str(true['concept_id'])):
-                    exact_matches += 1
-                    exact_match_found = True
-                    break
-            
-            # If no exact match, look for partial (same note_id only)
-            if not exact_match_found:
-                for _, true in ground_truth.iterrows():
-                    if pred_note == true['note_id']:
-                        partial_matches += 1
-                        break
-        
-        # Calculate metrics
-        precision = exact_matches / len(predictions) if len(predictions) > 0 else 0
-        recall = exact_matches / len(ground_truth) if len(ground_truth) > 0 else 0
-        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0
-        
-        # Calculate coverage (how many notes have at least one prediction)
-        pred_notes = len(predictions.groupby('note_id'))
-        truth_notes = len(ground_truth.groupby('note_id'))
-        coverage = pred_notes / truth_notes if truth_notes > 0 else 0
-        
+
+        # Build sets of unique (note_id, concept_id)
+        preds_df = predictions.copy()
+        preds_df["concept_id"] = preds_df["concept_id"].astype(str)
+        pred_pairs = set(zip(preds_df["note_id"], preds_df["concept_id"]))
+
+        gt_df = ground_truth.copy()
+        gt_df["concept_id"] = gt_df["concept_id"].astype(str)
+        gt_pairs = set(zip(gt_df["note_id"], gt_df["concept_id"]))
+
+        # True Positives / False Positives / False Negatives
+        tp = len(pred_pairs & gt_pairs)
+        fp = len(pred_pairs - gt_pairs)
+        fn = len(gt_pairs - pred_pairs)
+
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        recall    = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        f1        = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+
+        # Partial matches = prediction has correct note_id but wrong/missing concept in GT
+        gt_notes = set(gt_df["note_id"].tolist())
+        partial_matches = sum(1 for (n, c) in pred_pairs if (n in gt_notes) and ((n, c) not in gt_pairs))
+
+        # Coverage = fraction of GT notes for which we produced at least one prediction
+        pred_notes = set(preds_df["note_id"].tolist())
+        truth_notes = set(gt_df["note_id"].tolist())
+        coverage = len(pred_notes & truth_notes) / len(truth_notes) if len(truth_notes) > 0 else 0.0
+
         return {
             "precision": precision,
             "recall": recall,
             "f1": f1,
-            "predictions": len(predictions),
-            "matches": exact_matches,
+            "predictions": len(pred_pairs),   # count unique predictions
+            "matches": tp,
             "partial_matches": partial_matches,
-            "ground_truth": len(ground_truth),
+            "ground_truth": len(gt_pairs),    # count unique gold pairs
             "coverage": coverage
         }
-    
+        
     def format_single_report(self, 
                             metrics: Dict, 
                             execution_time: float, 

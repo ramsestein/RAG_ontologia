@@ -4,27 +4,27 @@ Implementa el pipeline completo de NER -> RAG -> Coding
 """
 
 import os
+import sys
 import pandas as pd
 from typing import List, Dict, Tuple
-import sys
 from pathlib import Path
 
-# Configurar imports absolutos
-SCRIPT_DIR = Path(__file__).parent.resolve()
-BENCHMARK_DIR = SCRIPT_DIR.parent.parent
-sys.path.insert(0, str(BENCHMARK_DIR))
+# Setup paths for absolute imports
+SRC_DIR = Path(__file__).parent.resolve()
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 
-from strategies.rag_gpt.core.ner import NERExtractor
-from strategies.rag_gpt.core.rag import RAGRetriever
-from strategies.rag_gpt.core.coding import SNOMEDCoder
-from strategies.rag_gpt.utils.config import (
+from components.ner import NERExtractor
+from components.rag import RAGRetriever
+from components.coding import SNOMEDCoder
+from config import (
     load_prompt,
     setup_openai_client,
     get_model_config,
     get_assets_dir,
-    EVAL_OFFSETS,  # <— NUEVO
+    EVAL_OFFSETS,
 )
-from strategies.rag_gpt.utils.text_processing import (
+from utils.text import (
     find_span_in_text,
     find_all_spans_in_text,
     find_exact_span,
@@ -68,13 +68,13 @@ class RAGGPTPipeline:
         self.span_tighten = os.getenv("RAG_SPAN_TIGHTEN", "true").lower() == "true"
 
         # 2. Cargar prompts
-        ner_prompt = load_prompt("ner_prompt")
-        coding_prompt = load_prompt("coding_prompt")
-        system_prompt_data = load_prompt("system_prompt")
+        ner_prompt = load_prompt("ner")
+        coding_prompt = load_prompt("coding")
+        system_prompt_data = load_prompt("system")
         system_prompt = system_prompt_data["content"]
 
         # 3. Inicializar componentes
-        self.rag = RAGRetriever(assets_dir)
+        self.rag = RAGRetriever(str(assets_dir))
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config, system_prompt=system_prompt)
         self.coder = SNOMEDCoder(self.rag, self.client, system_prompt=system_prompt)
 

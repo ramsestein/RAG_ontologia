@@ -7,12 +7,13 @@ from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
 
-# Configurar imports absolutos
-SCRIPT_DIR = Path(__file__).parent.resolve()
-BENCHMARK_DIR = SCRIPT_DIR.parent.parent.parent
-sys.path.insert(0, str(BENCHMARK_DIR))
+# Setup paths for absolute imports
+COMPONENTS_DIR = Path(__file__).parent.resolve()
+SRC_DIR = COMPONENTS_DIR.parent
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 
-from strategies.rag_gpt.core.rag import RAGRetriever
+from components.rag import RAGRetriever
 
 
 class SNOMEDCoder:
@@ -40,14 +41,10 @@ class SNOMEDCoder:
         self.client = openai_client
         self.system_prompt = system_prompt or "You are a precise SNOMED-CT coding assistant."
 
-        # Cargar prompts
-        prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "coding_prompt.json")
-        with open(prompt_path, 'r', encoding='utf-8') as f:
-            self.prompt_config = json.load(f)
-
-        filter_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "filter_prompt.json")
-        with open(filter_path, 'r', encoding='utf-8') as f:
-            self.filter_config = json.load(f)
+        # Cargar prompts desde la nueva ubicación
+        from config import load_prompt
+        self.prompt_config = load_prompt("coding")
+        self.filter_config = load_prompt("filter")
 
         # Config runtime por ENV (robusto para optimización)
         self.cfg = {
