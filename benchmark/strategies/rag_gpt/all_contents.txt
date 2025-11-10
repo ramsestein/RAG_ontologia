@@ -258,6 +258,7 @@ if __name__ == "__main__":
 import json
 import os
 import sys
+import re
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
@@ -304,12 +305,15 @@ class SNOMEDCoder:
         # Config runtime por ENV (robusto para optimización)
         self.cfg = {
             "TOP_K": int(os.getenv("RAG_TOP_K", "30")),
-            "THRESHOLD": float(os.getenv("RAG_THRESHOLD", "0.35")),
+            # Stricter similarity by default to improve precision
+            "THRESHOLD": float(os.getenv("RAG_THRESHOLD", "0.50")),
             "MAX_DISPLAY": int(os.getenv("RAG_MAX_DISPLAY", "12")),
             "QUERY_SUFFIX": os.getenv("RAG_QUERY_SUFFIX", "disorder finding"),
             "USE_LLM_VALIDATION": os.getenv("RAG_USE_LLM_VALIDATION", "false").lower() == "true",
             "LLM_MODEL": os.getenv("RAG_LLM_MODEL", "gpt-4o"),
             "LLM_TEMPERATURE": float(os.getenv("RAG_LLM_TEMPERATURE", "0.0")),
+            # NEW: disable generic fallback by default
+            "ALLOW_FALLBACK": os.getenv("RAG_ALLOW_FALLBACK", "false").lower() == "true",
         }
 
     # --------------------------
@@ -346,9 +350,11 @@ class SNOMEDCoder:
             if location and location != "No especificado" else []
 
         # 2) Selección determinista top-1 o fallback/default
-        entity_code = self._pick_top_code(ent_results, self.cfg["THRESHOLD"]) or self.FALLBACK_CODE
+        entity_code = self._pick_top_code(ent_results, self.cfg["THRESHOLD"])
+        if entity_code is None and self.cfg["ALLOW_FALLBACK"]:
+            entity_code = self.FALLBACK_CODE  # solo si se permite
         anatomy_code = self._pick_top_code(anat_results, self.cfg["THRESHOLD"]) or self.DEFAULT_ANATOMY
-        presence_code = self.PRESENCE_MAP.get(presence, self.PRESENCE_MAP["presente"])
+        presence_code = self.PRESENCE_MAP.get(str(presence).lower(), self.PRESENCE_MAP["presente"])
 
         # 3) Validación opcional con LLM (nunca puede forzar fallback si hay candidatos)
         if self.cfg["USE_LLM_VALIDATION"]:
@@ -387,9 +393,9 @@ class SNOMEDCoder:
                 result = json.loads(response.choices[0].message.content)
 
                 # Post-procesado restrictivo (no permitir inventar/fallback si hay candidatos)
-                proposed_entity = str(result.get("entity_code", entity_code))
-                proposed_anatomy = str(result.get("anatomy_code", anatomy_code))
-                proposed_presence = str(result.get("presence_code", presence_code))
+                proposed_entity = str(result.get("entity_code", entity_code or "")).strip()
+                proposed_anatomy = str(result.get("anatomy_code", anatomy_code)).strip()
+                proposed_presence = str(result.get("presence_code", presence_code)).strip()
 
                 if valid_entity_list:
                     if proposed_entity.isdigit() and proposed_entity in valid_entity_list:
@@ -398,15 +404,13 @@ class SNOMEDCoder:
                         # Mantener determinista si LLM se sale del conjunto o propone fallback
                         pass
                 else:
-                    # No hay candidatos → aceptar fallback o lo que proponga (si es numérico)
+                    # No hay candidatos → aceptar lo que proponga si es numérico
                     if proposed_entity.isdigit():
                         entity_code = proposed_entity
 
                 if valid_anatomy_list:
                     if proposed_anatomy.isdigit() and proposed_anatomy in valid_anatomy_list:
                         anatomy_code = proposed_anatomy
-                    else:
-                        pass
                 else:
                     if proposed_anatomy.isdigit():
                         anatomy_code = proposed_anatomy
@@ -418,11 +422,11 @@ class SNOMEDCoder:
                 if verbose:
                     print(f"[CODING]   [WARNING] Error en validación LLM: {e}")
 
-        # Normalización final y logs
-        if not str(entity_code).isdigit():
+        # Normalización final y logs (no forzar fallback por defecto)
+        if entity_code is not None and not str(entity_code).isdigit():
             if verbose:
-                print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', usando fallback")
-            entity_code = self.FALLBACK_CODE
+                print(f"[CODING]   [WARNING] entity_code no numérico: '{entity_code}', descartando")
+            entity_code = None
 
         if not str(anatomy_code).isdigit():
             if verbose:
@@ -435,10 +439,10 @@ class SNOMEDCoder:
             presence_code = self.PRESENCE_MAP["presente"]
 
         if verbose:
-            print(f"[CODING]   [OK] Códigos: entity={entity_code}, anatomy={anatomy_code}, presence={presence_code}")
+            print(f"[CODING]   [OK] Códigos: entity={entity_code if entity_code else '∅'}, anatomy={anatomy_code}, presence={presence_code}")
 
         return {
-            "entity_code": str(entity_code),
+            "entity_code": str(entity_code) if entity_code else "",
             "anatomy_code": str(anatomy_code),
             "presence_code": str(presence_code)
         }
@@ -458,19 +462,28 @@ class SNOMEDCoder:
         THRESHOLD = self.cfg["THRESHOLD"]
 
         if context_type == "ENTITY":
+            # Heuristic: only add the clinical suffix for disease/finding-like terms.
+            q = (query or "").lower()
+            looks_like_proc_or_score = bool(re.search(
+                r'\b(angiograph|thrombect|coiling|endarterect|angioplast|stent|tici|nihss|aspects|gcs|mrs|rankin|score|scale)\b',
+                q
+            ))
+
             results_main = self.rag.retrieve(query, k=TOP_K)
-            query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
-            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
+            results_clinical = []
+            if self.cfg.get("QUERY_SUFFIX") and not looks_like_proc_or_score:
+                query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
+                results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
 
             combined = {}
             for concepto, narrativa, sim in (results_main + results_clinical):
-                # Mantener la mayor similitud por concepto
                 if concepto not in combined or sim > combined[concepto][1]:
                     combined[concepto] = (narrativa, sim)
 
             results = [(c, n, s) for c, (n, s) in combined.items()]
         else:
             results = self.rag.retrieve(query, k=min(TOP_K, 15))
+
 
         # Filtrado y orden
         filtered = [(c, n, s) for c, n, s in results if s >= THRESHOLD]
@@ -867,6 +880,25 @@ class QueryAugmenter:
             "ischemic penumbra": ["penumbra isquémica", "penumbra"],
             "hemorrhage": ["hemorragia", "hemorragia intracerebral", "hemorragia intracraneal"],
             "infarct": ["infarto cerebral", "infarto isquémico"],
+            "nihss": ["escala de ictus nihssis", "escala nihss", "escala de ictus del nih"],
+            "aspects": ["escala aspects", "puntuación aspects", "escala de aspectos"],
+            "tici": ["escala tici", "grado tici"],
+            "gcs": ["escala glasgow", "glasgow coma scale"],
+            "mrs": ["escala de rankin modificada", "modified rankin scale"],
+            "mca": ["arteria cerebral media", "acm", "m1", "m2"],
+            "ica": ["arteria carótida interna", "aci"],
+            "basilar": ["arteria basilar"],
+            "pica": ["arteria cerebelosa posteroinferior"],
+            "aica": ["arteria cerebelosa anteroinferior"],
+            "sca": ["arteria cerebelosa superior"],
+            "thrombectomy": ["trombectomía", "tratamiento endovascular"],
+            "coiling": ["embolización con coils", "coils endovasculares"],
+            "angioplasty": ["angioplastia"],
+            "endarterectomy": ["endarterectomía"],
+            "occlusion": ["oclusión"],
+            "stenosis": ["estenosis"],
+            "hemorrhage": ["hemorragia", "sangrado"],
+            "infarct": ["infarto cerebral", "infarto isquémico"]
         }
         path = os.path.join(self.assets_dir, "bilingual_hints.json")
         try:
@@ -1654,6 +1686,8 @@ import sys
 import pandas as pd
 from typing import List, Dict, Tuple
 from pathlib import Path
+import re
+
 
 # Setup paths for absolute imports
 SRC_DIR = Path(__file__).parent.resolve()
@@ -1724,9 +1758,24 @@ class RAGGPTPipeline:
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config, system_prompt=system_prompt)
         self.coder = SNOMEDCoder(self.rag, self.client, system_prompt=system_prompt)
 
+        self.exclude_re = os.getenv(
+            "RAG_EXCLUDE_REGEX",
+            r"(?i)\b(nihss|aspects|tici|gcs|mrs|modified\s+rankin|score|scale|report|unit|neurointensive|pattern of infarction|small infarct volume|collateral score|collateral circulation)\b"
+        )
+        self.exclude_re = re.compile(self.exclude_re)
+
+        
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("=" * 80)
+
+    def _is_excluded(self, ent: dict) -> bool:
+        txt = (
+            str(ent.get("full_span") or "") + " " +
+            str(ent.get("span_text") or "")
+        )
+        return bool(self.exclude_re.search(txt))
+
 
     # ----------------------------------------------------------------------------------
     # Normalización con mapeo de offsets (CRLF -> LF) SIN desalinear respecto al original
@@ -2018,6 +2067,18 @@ class RAGGPTPipeline:
 
             # Convertir a formato de predicción con política de offsets del benchmark
             for entity in entities:
+                # ---- FAST WIN: filtrar entidades negadas/inciertas y fallback genérico ----
+                pres_text = str(entity.get("presence", "")).strip().lower()
+                if pres_text in {"ausente", "incierto"}:
+                    continue  # sube precisión
+
+                concept_id = str(entity.get("entity_code", "")).strip()
+                if not concept_id or concept_id == "404684003":
+                    continue  # evita fallback genérico
+
+                if self._is_excluded(entity):
+                    continue
+
                 start_out = int(entity["start"])
                 end_out = int(entity["end"])
 
@@ -2035,7 +2096,7 @@ class RAGGPTPipeline:
                     "note_id": note_id,
                     "start": start_out,
                     "end": end_out,
-                    "concept_id": str(entity["entity_code"]),
+                    "concept_id": concept_id,
                     "span_text": entity.get("span_text_real", entity["span_text"]),
                     "confidence": 0.85,
                     "entity_description": entity.get("entity_description", ""),

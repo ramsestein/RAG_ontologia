@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+import re
 from pathlib import Path
 from typing import List, Dict, Tuple, Optional
 from openai import OpenAI
@@ -206,19 +207,28 @@ class SNOMEDCoder:
         THRESHOLD = self.cfg["THRESHOLD"]
 
         if context_type == "ENTITY":
+            # Heuristic: only add the clinical suffix for disease/finding-like terms.
+            q = (query or "").lower()
+            looks_like_proc_or_score = bool(re.search(
+                r'\b(angiograph|thrombect|coiling|endarterect|angioplast|stent|tici|nihss|aspects|gcs|mrs|rankin|score|scale)\b',
+                q
+            ))
+
             results_main = self.rag.retrieve(query, k=TOP_K)
-            query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
-            results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
+            results_clinical = []
+            if self.cfg.get("QUERY_SUFFIX") and not looks_like_proc_or_score:
+                query_clinical = f"{query} {self.cfg['QUERY_SUFFIX']}".strip()
+                results_clinical = self.rag.retrieve(query_clinical, k=TOP_K)
 
             combined = {}
             for concepto, narrativa, sim in (results_main + results_clinical):
-                # Mantener la mayor similitud por concepto
                 if concepto not in combined or sim > combined[concepto][1]:
                     combined[concepto] = (narrativa, sim)
 
             results = [(c, n, s) for c, (n, s) in combined.items()]
         else:
             results = self.rag.retrieve(query, k=min(TOP_K, 15))
+
 
         # Filtrado y orden
         filtered = [(c, n, s) for c, n, s in results if s >= THRESHOLD]

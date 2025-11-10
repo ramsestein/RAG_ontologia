@@ -45,6 +45,25 @@ class QueryAugmenter:
             "ischemic penumbra": ["penumbra isquémica", "penumbra"],
             "hemorrhage": ["hemorragia", "hemorragia intracerebral", "hemorragia intracraneal"],
             "infarct": ["infarto cerebral", "infarto isquémico"],
+            "nihss": ["escala de ictus nihssis", "escala nihss", "escala de ictus del nih"],
+            "aspects": ["escala aspects", "puntuación aspects", "escala de aspectos"],
+            "tici": ["escala tici", "grado tici"],
+            "gcs": ["escala glasgow", "glasgow coma scale"],
+            "mrs": ["escala de rankin modificada", "modified rankin scale"],
+            "mca": ["arteria cerebral media", "acm", "m1", "m2"],
+            "ica": ["arteria carótida interna", "aci"],
+            "basilar": ["arteria basilar"],
+            "pica": ["arteria cerebelosa posteroinferior"],
+            "aica": ["arteria cerebelosa anteroinferior"],
+            "sca": ["arteria cerebelosa superior"],
+            "thrombectomy": ["trombectomía", "tratamiento endovascular"],
+            "coiling": ["embolización con coils", "coils endovasculares"],
+            "angioplasty": ["angioplastia"],
+            "endarterectomy": ["endarterectomía"],
+            "occlusion": ["oclusión"],
+            "stenosis": ["estenosis"],
+            "hemorrhage": ["hemorragia", "sangrado"],
+            "infarct": ["infarto cerebral", "infarto isquémico"]
         }
         path = os.path.join(self.assets_dir, "bilingual_hints.json")
         try:

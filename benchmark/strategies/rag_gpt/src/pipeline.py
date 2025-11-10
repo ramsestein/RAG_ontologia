@@ -8,6 +8,8 @@ import sys
 import pandas as pd
 from typing import List, Dict, Tuple
 from pathlib import Path
+import re
+
 
 # Setup paths for absolute imports
 SRC_DIR = Path(__file__).parent.resolve()
@@ -78,9 +80,24 @@ class RAGGPTPipeline:
         self.ner = NERExtractor(self.client, ner_prompt, self.model_config, system_prompt=system_prompt)
         self.coder = SNOMEDCoder(self.rag, self.client, system_prompt=system_prompt)
 
+        self.exclude_re = os.getenv(
+            "RAG_EXCLUDE_REGEX",
+            r"(?i)\b(nihss|aspects|tici|gcs|mrs|modified\s+rankin|score|scale|report|unit|neurointensive|pattern of infarction|small infarct volume|collateral score|collateral circulation)\b"
+        )
+        self.exclude_re = re.compile(self.exclude_re)
+
+        
         if verbose:
             print("[OK] Pipeline inicializado correctamente")
             print("=" * 80)
+
+    def _is_excluded(self, ent: dict) -> bool:
+        txt = (
+            str(ent.get("full_span") or "") + " " +
+            str(ent.get("span_text") or "")
+        )
+        return bool(self.exclude_re.search(txt))
+
 
     # ----------------------------------------------------------------------------------
     # Normalización con mapeo de offsets (CRLF -> LF) SIN desalinear respecto al original
@@ -380,6 +397,9 @@ class RAGGPTPipeline:
                 concept_id = str(entity.get("entity_code", "")).strip()
                 if not concept_id or concept_id == "404684003":
                     continue  # evita fallback genérico
+
+                if self._is_excluded(entity):
+                    continue
 
                 start_out = int(entity["start"])
                 end_out = int(entity["end"])
