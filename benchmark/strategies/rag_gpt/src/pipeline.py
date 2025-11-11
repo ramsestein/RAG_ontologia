@@ -70,7 +70,8 @@ class RAGGPTPipeline:
         self.span_tighten = os.getenv("RAG_SPAN_TIGHTEN", "true").lower() == "true"
 
         # 2. Cargar prompts
-        ner_prompt = load_prompt("ner")
+        # Using v5 prompt with benchmark-pattern-based extraction
+        ner_prompt = load_prompt("ner_v5")
         coding_prompt = load_prompt("coding")
         system_prompt_data = load_prompt("system")
         system_prompt = system_prompt_data["content"]

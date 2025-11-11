@@ -40,6 +40,9 @@ class NERExtractor:
         prompt = self._render(self.prompt_template, {"informe": texto})
         response = self._call_gpt4o(prompt)
         entities = self._parse_ner_response(response)
+        
+        # NOTE: Offset fixing disabled - metrics don't use spans, only concept_ids
+        # entities = self._fix_offsets(entities, texto)
 
         print(f"[NER] Entidades detectadas: {len(entities)}")
         for i, ent in enumerate(entities[:3]):
@@ -300,3 +303,74 @@ class NERExtractor:
         for k, v in variables.items():
             s = s.replace("{" + k + "}", str(v))
         return s
+    
+    def _fix_offsets(self, entities: List[Dict], texto: str) -> List[Dict]:
+        """
+        Fix character offsets by finding the actual position of span_text in the document.
+        GPT-4o often returns incorrect character positions, so we search for the text.
+        Uses fuzzy matching for partial matches.
+        """
+        fixed_entities = []
+        used_positions = set()  # Track used positions to handle duplicates
+        
+        for ent in entities:
+            span_text = ent.get("span_text", "")
+            if not span_text or len(span_text) < 2:
+                continue
+            
+            # Try exact match first
+            best_match = None
+            search_start = 0
+            
+            while True:
+                pos = texto.find(span_text, search_start)
+                if pos == -1:
+                    # Try case-insensitive search
+                    lower_text = texto.lower()
+                    lower_span = span_text.lower()
+                    pos = lower_text.find(lower_span, search_start)
+                    if pos == -1:
+                        # Try to find a partial match (at least 80% of the span)
+                        min_len = max(3, int(len(span_text) * 0.8))
+                        if len(span_text) >= min_len:
+                            # Try searching for the first part of the span
+                            partial_span = span_text[:min_len]
+                            pos = lower_text.find(partial_span.lower(), search_start)
+                            if pos != -1:
+                                # Extend to full word if possible
+                                end_pos = pos + len(span_text)
+                                if end_pos > len(texto):
+                                    end_pos = len(texto)
+                                # Find word boundary
+                                while end_pos < len(texto) and texto[end_pos].isalnum():
+                                    end_pos += 1
+                                if pos not in used_positions:
+                                    best_match = (pos, end_pos)
+                                    used_positions.add(pos)
+                                    break
+                        break
+                
+                # Check if this position is already used
+                if pos not in used_positions:
+                    best_match = (pos, pos + len(span_text))
+                    used_positions.add(pos)
+                    break
+                
+                # Try next occurrence
+                search_start = pos + 1
+            
+            if best_match:
+                ent["start"] = best_match[0]
+                ent["end"] = best_match[1]
+                # Update full_span and span_text with actual text from document
+                actual_text = texto[best_match[0]:best_match[1]]
+                ent["full_span"] = actual_text
+                ent["span_text"] = actual_text
+                fixed_entities.append(ent)
+            # Don't skip entities - just use original offsets if we can't fix them
+            elif ent.get("start") is not None and ent.get("end") is not None:
+                # Validate original offsets are within document bounds
+                if 0 <= ent["start"] < len(texto) and ent["start"] < ent["end"] <= len(texto):
+                    fixed_entities.append(ent)
+        
+        return fixed_entities

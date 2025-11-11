@@ -372,3 +372,16 @@ Hay una varianza natural de GPT-4o de ±1-2 puntos porcentuales entre ejecucione
 2-Mirar recall
 3-Mirar ontologia: hacer ontologia sola y luegohacer ontologia sola+conceptos solamente de stroke.
 
+Datos actuales:
+
+RESULTS - KIRIS
+   Precision:  0.8
+   Recall:     0.8
+   F1-Score:   0.8
+   Coverage:   1.0000
+
+RESULTS - RAG+GPT
+   Precision:  0.7407
+   Recall:     0.6250
+   F1-Score:   0.6780
+   Coverage:   1.0000

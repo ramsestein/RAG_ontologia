@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 CLI: end-to-end pipeline (NER -> RAG -> Coding)
 
