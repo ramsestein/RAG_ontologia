@@ -364,3 +364,11 @@ Hay una varianza natural de GPT-4o de ±1-2 puntos porcentuales entre ejecucione
 1-Hacer refactor en la nueva pipeline buena (definirla bien tal cual).
 2-Comprobar que esta bien hecho el refactor.
 3-Empezar a probar cosas nuevas (incluso cambios arquitectura cuando máximo local).
+
+
+## proximo dia
+
+1-seguir mirando lo del NER
+2-Mirar recall
+3-Mirar ontologia: hacer ontologia sola y luegohacer ontologia sola+conceptos solamente de stroke.
+
