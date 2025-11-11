@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\OFARRES\Desktop\RAG_ontologia\original\benchmark\scripts\compare_strategies_sota.py", line 24, in <module>
+    from rag_gpt.scripts.benchmark_sota import calculate_macro_f1
+ModuleNotFoundError: No module named 'rag_gpt'

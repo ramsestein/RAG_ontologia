@@ -218,11 +218,65 @@ def main():
         print(f"[EVAL] Error leyendo ground truth: {e}")
         return
 
+    # -----------------------------------------------------------------
+    # 1. BENCHMARK ANTIGUO (Permisivo - Solo (note_id, concept_id) pairs)
+    # -----------------------------------------------------------------
+    print("\n" + "="*80)
+    print("[1] BENCHMARK ANTIGUO (Permisivo - Unique Pairs)")
+    print("="*80)
+    
     # La clase suministrada compara por (note_id, concept_id).
     calc = MetricsCalculator()
     metrics = calc.calculate_metrics(predictions=preds, ground_truth=gt, strategy_name="RAG+GPT")
     report = calc.format_single_report(metrics, execution_time=exec_time, strategy_name="RAG+GPT")
     print(report)
+    
+    # -----------------------------------------------------------------
+    # 2. BENCHMARK SOTA (Estricto - IoU > 0.5 + Macro-Average F1)
+    # -----------------------------------------------------------------
+    print("\n\n" + "="*80)
+    print("[2] BENCHMARK SOTA (Estricto - Span Matching + Macro-Average F1)")
+    print("="*80)
+    print("Evaluacion estricta contra las 115 anotaciones completas")
+    print("Requiere: (1) mismo note_id, (2) mismo concept_id, (3) IoU > 0.5")
+    print("="*80)
+    
+    try:
+        # Import SOTA benchmark function
+        benchmark_sota_path = ROOT / "scripts" / "benchmark_sota.py"
+        if benchmark_sota_path.exists():
+            # Import the calculate_macro_f1 function
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("benchmark_sota", benchmark_sota_path)
+            benchmark_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(benchmark_module)
+            
+            # Run SOTA evaluation
+            sota_results = benchmark_module.calculate_macro_f1(
+                predictions=preds,
+                ground_truth=gt,
+                iou_threshold=0.5,
+                verbose=True
+            )
+            
+            print("\n" + "="*80)
+            print("COMPARACION DE BENCHMARKS")
+            print("="*80)
+            print(f"\n{'Metrica':<30} {'Antiguo (Permisivo)':<20} {'SOTA (Estricto)':<20}")
+            print("-" * 70)
+            print(f"{'F1-Score':<30} {metrics['f1']:<20.4f} {sota_results['macro_f1']:<20.4f}")
+            print(f"{'Precision':<30} {metrics['precision']:<20.4f} {sota_results['micro_precision']:<20.4f}")
+            print(f"{'Recall':<30} {metrics['recall']:<20.4f} {sota_results['micro_recall']:<20.4f}")
+            print(f"{'Total Annotations':<30} {metrics['ground_truth']:<20} {len(gt):<20}")
+            print("\n" + "="*80)
+            
+        else:
+            print(f"\n[WARNING] benchmark_sota.py no encontrado en {benchmark_sota_path}")
+            print("   Saltando evaluacion SOTA...")
+            
+    except Exception as e:
+        print(f"\n[WARNING] Error ejecutando benchmark SOTA: {e}")
+        print("   Continuando solo con benchmark antiguo...")
 
 
 if __name__ == "__main__":

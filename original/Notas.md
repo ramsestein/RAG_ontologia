@@ -385,3 +385,44 @@ RESULTS - RAG+GPT
    Recall:     0.6250
    F1-Score:   0.6780
    Coverage:   1.0000
+
+
+
+## proximo dia
+
+El Diagnóstico Completo
+Tu nuevo benchmark SOTA (F1 Estricto) es brillante porque ha expuesto la verdad que el F1 "permisivo" (el de 0.7788) estaba ocultando:
+
+Fallo de NER (Causa tus 92 FN): Tu prompt ner_v5.json (que se enfoca en "diversidad") está haciendo que tu NER no encuentre la mayoría de los 115 spans. Para el benchmark estricto, debes encontrar todas las repeticiones. Tienes que volver a un prompt "agresivo" (como tu ner.json v4.1) que intente encontrar las 115.
+
+Fallo de CODING (Causa tus 39 FP): Cuando tu NER sí encuentra un span (ej: [CT angiography]), tu "Juez" (Etapa 3) le está asignando el concept_id incorrecto. Tu lógica actual de "coger el Top-1 de RAG" es demasiado simple y está fallando.
+
+Es casi seguro que está cogiendo "CT" (77477000) en lugar de "angiography" (77343006).
+
+En el benchmark permisivo, esto contaba como un "acierto" (porque "CT" existía en otra parte).
+
+En el benchmark estricto, esto es un Falso Positivo (para "CT") y un Falso Negativo (para "angiography").
+
+
+
+
+`python scripts/compare_strategies_sota.py` es un buen código ara comparar rag_gpt con kiris:
+
+====================================================================================================
+COMPARATIVE RESULTS - BENCHMARK SOTA (Strict Evaluation)
+====================================================================================================
+
+Metric                         RAG-GPT              KIRIS                Difference
+------------------------------------------------------------------------------------------
+Macro-Average F1               0.2302               0.3798               +0.1496
+Micro Precision                0.3279               0.4000               +0.0721
+Micro Recall                   0.1739               0.3652               +0.1913
+Micro F1                       0.2273               0.3818               +0.1545
+
+------------------------------------------------------------------------------------------
+True Positives (TP)            20                   42                   +22
+False Positives (FP)           41                   63                   +22
+False Negatives (FN)           95                   73                   -22
+
+------------------------------------------------------------------------------------------
+Execution Time (s)             189.13               0.03                 -189.11
