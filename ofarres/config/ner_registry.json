@@ -1,0 +1,12 @@
+{
+  "SBc5": {
+    "module": "src.NER.spacy_ner",
+    "class": "ScispaCyNER",
+    "model_name": "en_ner_bc5cdr_md"
+  },
+  "SBert": {
+    "module": "src.NER.spacy_ner",
+    "class": "ScispaCyNER",
+    "model_name": "en_core_sci_scibert"
+  }
+}
