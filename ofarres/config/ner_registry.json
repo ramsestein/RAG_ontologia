@@ -8,5 +8,10 @@
     "module": "src.NER.spacy_ner",
     "class": "ScispaCyNER",
     "model_name": "en_core_sci_scibert"
+  },
+    "SBioBert": {
+    "module": "src.NER.spacy_ner",
+    "class": "ScispaCyNER",
+    "model_name": "en_ner_bionlp13cg_md"
   }
 }
