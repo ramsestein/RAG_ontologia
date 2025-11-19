@@ -3,3 +3,6 @@
 __pycache__/
 
 api_keys
+
+ofarres/__pycache__/
+ofarres/.env

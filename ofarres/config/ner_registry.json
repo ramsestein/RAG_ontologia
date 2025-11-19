@@ -13,5 +13,11 @@
     "module": "src.NER.spacy_ner",
     "class": "ScispaCyNER",
     "model_name": "en_ner_bionlp13cg_md"
+  },
+  "OntologyExact": {
+    "module": "src.NER.ontology_ner",
+    "class": "OntologyNER",
+    "ontology_path": "ontology/hybrid_ontology.csv", 
+    "min_length": 2
   }
 }

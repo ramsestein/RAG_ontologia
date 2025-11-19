@@ -1,0 +1,4959 @@
+[
+  {
+    "concept_id": "230690007",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Accidente cerebrovascular",
+          "infarto cerebral",
+          "ataque cerebral",
+          "apoplejía",
+          "ACV",
+          "ictus",
+          "derrame cerebral",
+          "evento cerebrovascular"
+        ],
+        "definition": "Déficit neurológico agudo resultado de interrupción del suministro sanguíneo al tejido cerebral. Puede ser isquémico (arteria bloqueada) o hemorrágico (vaso roto). Causa principal de discapacidad y muerte. Síntomas incluyen debilidad, dificultad del habla, problemas visuales."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "13791008",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Debilidad muscular",
+          "debilidad de extremidad",
+          "fuerza reducida",
+          "debilidad de la pierna",
+          "déficit motor",
+          "astenia",
+          "debilidad",
+          "debilidad del brazo",
+          "paresia"
+        ],
+        "definition": "Capacidad reducida para ejercer fuerza muscular. Síntoma común de ictus. Debilidad unilateral sugiere lesión del hemisferio cerebral. Evaluado usando escala Medical Research Council. Puede afectar cara, brazo o pierna."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "50582007",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hemiparesia",
+          "debilidad hemisférica",
+          "déficit motor del hemicuerpo",
+          "déficit motor unilateral",
+          "debilidad de un lado",
+          "parálisis parcial de un lado"
+        ],
+        "definition": "Debilidad que afecta un lado del cuerpo. Presentación clásica de ictus. Sugiere lesión del hemisferio cerebral contralateral. Patrón cara-brazo-pierna. Evaluado con ítems motores del NIHSS. Patrón de neurona motora superior."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "8011004",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Disartria",
+          "habla arrastrada",
+          "habla pastosa",
+          "alteración de la articulación",
+          "trastorno de articulación",
+          "trastorno motor del habla"
+        ],
+        "definition": "Trastorno motor del habla con articulación alterada. Resultado de debilidad o incoordinación de músculos del habla. Sugiere lesión del tronco cerebral o cerebelo. Se distingue de la afasia. Ítem de disartria del NIHSS."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "50960005",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hemorragia",
+          "hemorragia intracerebral",
+          "sangrado cerebral",
+          "hemorragia intracraneal",
+          "sangrado",
+          "hemorragia cerebral",
+          "hematoma cerebral"
+        ],
+        "definition": "Escape de sangre de los vasos. Puede ser externa o interna. Causa principal de ictus hemorrágico. Gestionado con hemostasia y productos sanguíneos. Contraindicación para trombólisis."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "55342001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Infarto cerebral",
+          "necrosis cerebral",
+          "daño cerebral permanente",
+          "infarto",
+          "muerte de tejido cerebral",
+          "infarto isquémico",
+          "zona de infarto"
+        ],
+        "definition": "Muerte de tejido cerebral por falta de suministro sanguíneo. Resultado de ictus isquémico. Daño neurológico permanente. Visualizado en TC o RM como área hipodensa. Territorio de arteria cerebral media es más común."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "433112001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Trombectomía mecánica",
+          "tratamiento endovascular del ictus agudo",
+          "terapia endovascular",
+          "extracción del trombo",
+          "recuperación del coágulo",
+          "trombectomía"
+        ],
+        "definition": "Procedimiento endovascular para extraer mecánicamente coágulo sanguíneo de arteria cerebral. Tratamiento para oclusión de vaso grande. Ventana temporal hasta 24 horas en pacientes seleccionados. Usa stent retrievers o catéteres de aspiración. Mejora resultados funcionales."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "77343006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Angiografía cerebral",
+          "angiograma cerebral",
+          "angiografía diagnóstica",
+          "angiografía",
+          "DSA",
+          "arteriografía cerebral",
+          "angiografía por sustracción digital"
+        ],
+        "definition": "Técnica de imagen usando contraste y rayos X para visualizar vasos sanguíneos cerebrales. Estándar de oro para detectar aneurismas, estenosis, oclusiones. Usado para diagnóstico y planificación del tratamiento del ictus. Procedimiento intervencionista."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "69930009",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Arteria cerebral media",
+          "ACM",
+          "territorio de ACM",
+          "arteria silviana",
+          "circulación cerebral media"
+        ],
+        "definition": "Arteria cerebral más grande. Irriga hemisferio cerebral lateral. Sitio más común de ictus isquémico. Territorio incluye corteza motora y sensorial. Segmentos M1 y M2."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "26036001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Oclusión vascular",
+          "bloqueo del vaso",
+          "bloqueo arterial completo",
+          "oclusión de vaso grande",
+          "obstrucción arterial",
+          "oclusión",
+          "oclusión trombótica"
+        ],
+        "definition": "Bloqueo completo de vaso sanguíneo. Puede ser trombótico o embólico. Oclusión de vaso grande (OVG) requiere trombectomía. Causa principal de ictus isquémico. Oclusión de ACM, carótida o basilar."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "230691006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Penumbra isquémica",
+          "tejido hipoperfundido",
+          "tejido viable",
+          "penumbra",
+          "tejido cerebral salvable",
+          "tejido en riesgo"
+        ],
+        "definition": "Tejido cerebral hipoperfundido pero viable rodeando el núcleo del infarto. Objetivo del tratamiento agudo. Identificado por mismatch perfusión-difusión en RM. Progresión temporal a infarto dependiente del tiempo. La reperfusión puede salvarlo."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "449894001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Recanalización",
+          "apertura del vaso",
+          "reperfusión",
+          "permeabilidad del vaso",
+          "restauración del flujo sanguíneo",
+          "reapertura arterial",
+          "revascularización"
+        ],
+        "definition": "Apertura del vaso sanguíneo ocluido. Restauración del flujo sanguíneo. Recanalización exitosa o completa. Recanalización parcial. Grado TICI de recanalización. Resultado de trombectomía o trombólisis."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "77477000",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Tomografía computarizada",
+          "imagen tomográfica",
+          "TC de cráneo",
+          "TC",
+          "TC cerebral",
+          "escáner cerebral",
+          "TAC",
+          "TC sin contraste"
+        ],
+        "definition": "Imagen de primera línea para ictus agudo. Distingue rápidamente ictus hemorrágico de isquémico. Identifica cambios isquémicos tempranos. Puntuación ASPECTS cuantifica extensión. TC sin contraste para evaluación inicial."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "450893003",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Escala de ictus del NIH",
+          "Thrombolysis in Cerebral Infarction",
+          "escala clínica de ictus",
+          "evaluación neurológica del ictus",
+          "grado de recanalización",
+          "NIHSS",
+          "ASPECTS",
+          "escala de gravedad del ictus",
+          "National Institutes of Health Stroke Scale",
+          "puntuación NIHSS",
+          "TICI",
+          "puntuación TC temprana",
+          "escala de reperfusión",
+          "Alberta Stroke Program Early CT Score"
+        ],
+        "definition": "Escala de evaluación neurológica estandarizada para cuantificar la gravedad del ictus. Puntuación de 0-42 puntos. Mayor puntuación indica mayor déficit. NIHSS basal, al ingreso y al alta. Predictor de pronóstico y resultado del ictus. ASPECTS cuantifica cambios isquémicos tempranos en TC. TICI evalúa grado de recanalización."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "387467008",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Activador tisular del plasminógeno",
+          "tPA",
+          "activador de plasminógeno recombinante",
+          "rtPA",
+          "tPA intravenoso",
+          "trombólisis",
+          "alteplasa",
+          "trombolítico",
+          "fibrinolítico"
+        ],
+        "definition": "Agente trombolítico usado en tratamiento del ictus isquémico agudo. Activador tisular del plasminógeno recombinante que convierte plasminógeno en plasmina para disolver coágulos. Administrado intravenosamente dentro de 4.5 horas del inicio del ictus."
+      },
+      "en": {
+        "terms": [],
+        "definition": null
+      },
+      "ca": {
+        "terms": [],
+        "definition": null
+      }
+    }
+  },
+  {
+    "concept_id": "230690007",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Accidente cerebrovascular",
+          "infarto cerebral",
+          "ataque cerebral",
+          "apoplejía",
+          "ACV",
+          "ictus",
+          "derrame cerebral",
+          "evento cerebrovascular"
+        ],
+        "definition": "Déficit neurológico agudo resultado de interrupción del suministro sanguíneo al tejido cerebral. Puede ser isquémico (arteria bloqueada) o hemorrágico (vaso roto). Causa principal de discapacidad y muerte. Síntomas incluyen debilidad, dificultad del habla, problemas visuales."
+      },
+      "en": {
+        "terms": [
+          "Cerebrovascular accident",
+          "Stroke",
+          "CVA",
+          "Brain attack"
+        ],
+        "definition": "Acute neurological deficit resulting from interruption of blood supply to brain tissue. It can be ischemic (blocked artery) or hemorrhagic (ruptured vessel). A leading cause of disability and death. Symptoms include weakness, speech difficulty, visual problems."
+      },
+      "ca": {
+        "terms": [
+          "Accident vascular cerebral",
+          "Ictus",
+          "AVC",
+          "Feridura"
+        ],
+        "definition": "Dèficit neurològic agut resultat de la interrupció del subministrament sanguini al teixit cerebral. Pot ser isquèmic (artèria bloquejada) o hemorràgic (vas trencat). Causa principal de discapacitat i mort. Els símptomes inclouen debilitat, dificultat de la parla, problemes visuals."
+      }
+    }
+  },
+  {
+    "concept_id": "13791008",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Debilidad muscular",
+          "debilidad de extremidad",
+          "fuerza reducida",
+          "debilidad de la pierna",
+          "déficit motor",
+          "astenia",
+          "debilidad",
+          "debilidad del brazo",
+          "paresia"
+        ],
+        "definition": "Capacidad reducida para ejercer fuerza muscular. Síntoma común de ictus. Debilidad unilateral sugiere lesión del hemisferio cerebral. Evaluado usando escala Medical Research Council. Puede afectar cara, brazo o pierna."
+      },
+      "en": {
+        "terms": [
+          "Muscle weakness",
+          "Muscular weakness",
+          "Paresis"
+        ],
+        "definition": "Reduced ability to exert muscular force. A common symptom of stroke. Unilateral weakness suggests cerebral hemisphere lesion. Evaluated using the Medical Research Council scale. Can affect the face, arm, or leg."
+      },
+      "ca": {
+        "terms": [
+          "Debilitat muscular",
+          "Feblea muscular"
+        ],
+        "definition": "Capacitat reduïda per exercir força muscular. Símptoma comú d'ictus. La debilitat unilateral suggereix lesió de l'hemisferi cerebral. Avaluat utilitzant l'escala Medical Research Council. Pot afectar la cara, el braç o la cama."
+      }
+    }
+  },
+  {
+    "concept_id": "50582007",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hemiparesia",
+          "debilidad hemisférica",
+          "déficit motor del hemicuerpo",
+          "déficit motor unilateral",
+          "debilidad de un lado",
+          "parálisis parcial de un lado"
+        ],
+        "definition": "Debilidad que afecta un lado del cuerpo. Presentación clásica de ictus. Sugiere lesión del hemisferio cerebral contralateral. Patrón cara-brazo-pierna. Evaluado con ítems motores del NIHSS. Patrón de neurona motora superior."
+      },
+      "en": {
+        "terms": [
+          "Hemiparesis",
+          "Unilateral weakness"
+        ],
+        "definition": "Weakness affecting one side of the body. A classic presentation of stroke. Suggests contralateral cerebral hemisphere lesion. Face-arm-leg pattern. Evaluated with NIHSS motor items. Upper motor neuron pattern."
+      },
+      "ca": {
+        "terms": [
+          "Hemiparèsia",
+          "Debilitat unilateral"
+        ],
+        "definition": "Debilitat que afecta un costat del cos. Presentació clàssica d'ictus. Suggereix lesió de l'hemisferi cerebral contralateral. Patró cara-braç-cama. Avaluat amb ítems motors del NIHSS. Patró de neurona motora superior."
+      }
+    }
+  },
+  {
+    "concept_id": "8011004",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Disartria",
+          "habla arrastrada",
+          "habla pastosa",
+          "alteración de la articulación",
+          "trastorno de articulación",
+          "trastorno motor del habla"
+        ],
+        "definition": "Trastorno motor del habla con articulación alterada. Resultado de debilidad o incoordinación de músculos del habla. Sugiere lesión del tronco cerebral o cerebelo. Se distingue de la afasia. Ítem de disartria del NIHSS."
+      },
+      "en": {
+        "terms": [
+          "Dysarthria",
+          "Slurred speech"
+        ],
+        "definition": "A motor speech disorder with impaired articulation. Results from weakness or incoordination of speech muscles. Suggests brainstem or cerebellar lesion. Distinguished from aphasia. NIHSS dysarthria item."
+      },
+      "ca": {
+        "terms": [
+          "Disàrtria",
+          "Parla arrossegada"
+        ],
+        "definition": "Trastorn motor de la parla amb articulació alterada. Resultat de debilitat o descoordinació dels músculs de la parla. Suggereix lesió del tronc cerebral o cerebel. Es distingeix de l'afàsia. Ítem de disàrtria del NIHSS."
+      }
+    }
+  },
+  {
+    "concept_id": "50960005",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hemorragia",
+          "hemorragia intracerebral",
+          "sangrado cerebral",
+          "hemorragia intracraneal",
+          "sangrado",
+          "hemorragia cerebral",
+          "hematoma cerebral"
+        ],
+        "definition": "Escape de sangre de los vasos. Puede ser externa o interna. Causa principal de ictus hemorrágico. Gestionado con hemostasia y productos sanguíneos. Contraindicación para trombólisis."
+      },
+      "en": {
+        "terms": [
+          "Hemorrhage",
+          "Bleeding",
+          "Haemorrhage"
+        ],
+        "definition": "Escape of blood from vessels. Can be external or internal. A major cause of hemorrhagic stroke. Managed with hemostasis and blood products. Contraindication for thrombolysis."
+      },
+      "ca": {
+        "terms": [
+          "Hemorràgia",
+          "Sagnat"
+        ],
+        "definition": "Escapament de sang dels vasos. Pot ser extern o intern. Causa principal d'ictus hemorràgic. Gestionat amb hemostàsia i productes sanguinis. Contraindicació per a la trombòlisi."
+      }
+    }
+  },
+  {
+    "concept_id": "55342001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Infarto cerebral",
+          "necrosis cerebral",
+          "daño cerebral permanente",
+          "infarto",
+          "muerte de tejido cerebral",
+          "infarto isquémico",
+          "zona de infarto"
+        ],
+        "definition": "Muerte de tejido cerebral por falta de suministro sanguíneo. Resultado de ictus isquémico. Daño neurológico permanente. Visualizado en TC o RM como área hipodensa. Territorio de arteria cerebral media es más común."
+      },
+      "en": {
+        "terms": [
+          "Cerebral infarction",
+          "Brain infarction",
+          "Ischemic stroke"
+        ],
+        "definition": "Death of brain tissue due to lack of blood supply. Result of ischemic stroke. Permanent neurological damage. Visualized on CT or MRI as a hypodense area. Middle cerebral artery territory is most common."
+      },
+      "ca": {
+        "terms": [
+          "Infart cerebral",
+          "Infart isquèmic cerebral"
+        ],
+        "definition": "Mort de teixit cerebral per manca de subministrament sanguini. Resultat d'ictus isquèmic. Dany neurològic permanent. Visualitzat en TC o RM com a àrea hipodensa. El territori de l'artèria cerebral mitjana és el més comú."
+      }
+    }
+  },
+  {
+    "concept_id": "433112001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Trombectomía mecánica",
+          "tratamiento endovascular del ictus agudo",
+          "terapia endovascular",
+          "extracción del trombo",
+          "recuperación del coágulo",
+          "trombectomía"
+        ],
+        "definition": "Procedimiento endovascular para extraer mecánicamente coágulo sanguíneo de arteria cerebral. Tratamiento para oclusión de vaso grande. Ventana temporal hasta 24 horas en pacientes seleccionados. Usa stent retrievers o catéteres de aspiración. Mejora resultados funcionales."
+      },
+      "en": {
+        "terms": [
+          "Mechanical thrombectomy",
+          "Endovascular thrombectomy"
+        ],
+        "definition": "Endovascular procedure to mechanically remove a blood clot from a cerebral artery. Treatment for large vessel occlusion. Time window up to 24 hours in selected patients. Uses stent retrievers or aspiration catheters. Improves functional outcomes."
+      },
+      "ca": {
+        "terms": [
+          "Trombectomia mecànica",
+          "Trombectomia endovascular"
+        ],
+        "definition": "Procediment endovascular per extreure mecànicament un coàgul sanguini d'una artèria cerebral. Tractament per a l'oclusió de gran vas. Finestra temporal de fins a 24 hores en pacients seleccionats. Utilitza stent retrievers o catèters d'aspiració. Millora els resultats funcionals."
+      }
+    }
+  },
+  {
+    "concept_id": "77343006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Angiografía cerebral",
+          "angiograma cerebral",
+          "angiografía diagnóstica",
+          "angiografía",
+          "DSA",
+          "arteriografía cerebral",
+          "angiografía por sustracción digital"
+        ],
+        "definition": "Técnica de imagen usando contraste y rayos X para visualizar vasos sanguíneos cerebrales. Estándar de oro para detectar aneurismas, estenosis, oclusiones. Usado para diagnóstico y planificación del tratamiento del ictus. Procedimiento intervencionista."
+      },
+      "en": {
+        "terms": [
+          "Cerebral angiography",
+          "Brain angiography"
+        ],
+        "definition": "Imaging technique using contrast and X-rays to visualize cerebral blood vessels. Gold standard for detecting aneurysms, stenoses, occlusions. Used for diagnosis and treatment planning of stroke. Interventional procedure."
+      },
+      "ca": {
+        "terms": [
+          "Angiografia cerebral",
+          "Arteriografia cerebral"
+        ],
+        "definition": "Tècnica d'imatge que utilitza contrast i raigs X per visualitzar els vasos sanguinis cerebrals. Estàndard d'or per detectar aneurismes, estenosis, oclusions. Utilitzat per al diagnòstic i la planificació del tractament de l'ictus. Procediment intervencionista."
+      }
+    }
+  },
+  {
+    "concept_id": "69930009",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Arteria cerebral media",
+          "ACM",
+          "territorio de ACM",
+          "arteria silviana",
+          "circulación cerebral media"
+        ],
+        "definition": "Arteria cerebral más grande. Irriga hemisferio cerebral lateral. Sitio más común de ictus isquémico. Territorio incluye corteza motora y sensorial. Segmentos M1 y M2."
+      },
+      "en": {
+        "terms": [
+          "Middle cerebral artery",
+          "MCA"
+        ],
+        "definition": "Largest cerebral artery. Supplies the lateral cerebral hemisphere. Most common site of ischemic stroke. Territory includes motor and sensory cortex. M1 and M2 segments."
+      },
+      "ca": {
+        "terms": [
+          "Artèria cerebral mitjana",
+          "ACM"
+        ],
+        "definition": "Artèria cerebral més gran. Irriga l'hemisferi cerebral lateral. Lloc més comú d'ictus isquèmic. El territori inclou l'escorça motora i sensorial. Segments M1 i M2."
+      }
+    }
+  },
+  {
+    "concept_id": "26036001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Oclusión vascular",
+          "bloqueo del vaso",
+          "bloqueo arterial completo",
+          "oclusión de vaso grande",
+          "obstrucción arterial",
+          "oclusión",
+          "oclusión trombótica"
+        ],
+        "definition": "Bloqueo completo de vaso sanguíneo. Puede ser trombótico o embólico. Oclusión de vaso grande (OVG) requiere trombectomía. Causa principal de ictus isquémico. Oclusión de ACM, carótida o basilar."
+      },
+      "en": {
+        "terms": [
+          "Vascular occlusion",
+          "Blood vessel occlusion"
+        ],
+        "definition": "Complete blockage of a blood vessel. Can be thrombotic or embolic. Large vessel occlusion (LVO) requires thrombectomy. A major cause of ischemic stroke. MCA, carotid, or basilar occlusion."
+      },
+      "ca": {
+        "terms": [
+          "Oclusió vascular",
+          "Bloqueig vascular"
+        ],
+        "definition": "Bloqueig complet d'un vas sanguini. Pot ser trombòtic o embòlic. L'oclusió de gran vas (OGV) requereix trombectomia. Causa principal d'ictus isquèmic. Oclusió d'ACM, caròtida o basilar."
+      }
+    }
+  },
+  {
+    "concept_id": "230691006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Penumbra isquémica",
+          "tejido hipoperfundido",
+          "tejido viable",
+          "penumbra",
+          "tejido cerebral salvable",
+          "tejido en riesgo"
+        ],
+        "definition": "Tejido cerebral hipoperfundido pero viable rodeando el núcleo del infarto. Objetivo del tratamiento agudo. Identificado por mismatch perfusión-difusión en RM. Progresión temporal a infarto dependiente del tiempo. La reperfusión puede salvarlo."
+      },
+      "en": {
+        "terms": [
+          "Ischemic penumbra",
+          "Penumbra"
+        ],
+        "definition": "Hypoperfused but viable brain tissue surrounding the infarct core. Target of acute treatment. Identified by perfusion-diffusion mismatch on MRI. Time-dependent progression to infarction. Reperfusion can save it."
+      },
+      "ca": {
+        "terms": [
+          "Penombra isquèmica",
+          "Penombra"
+        ],
+        "definition": "Teixit cerebral hipoperfundit però viable que envolta el nucli de l'infart. Objectiu del tractament agut. Identificat per mismatch perfusió-difusió en RM. Progressió temporal a infart dependent del temps. La reperfusió pot salvar-lo."
+      }
+    }
+  },
+  {
+    "concept_id": "449894001",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Recanalización",
+          "apertura del vaso",
+          "reperfusión",
+          "permeabilidad del vaso",
+          "restauración del flujo sanguíneo",
+          "reapertura arterial",
+          "revascularización"
+        ],
+        "definition": "Apertura del vaso sanguíneo ocluido. Restauración del flujo sanguíneo. Recanalización exitosa o completa. Recanalización parcial. Grado TICI de recanalización. Resultado de trombectomía o trombólisis."
+      },
+      "en": {
+        "terms": [
+          "Recanalization",
+          "Vessel recanalization"
+        ],
+        "definition": "Opening of an occluded blood vessel. Restoration of blood flow. Successful or complete recanalization. Partial recanalization. TICI grade of recanalization. Result of thrombectomy or thrombolysis."
+      },
+      "ca": {
+        "terms": [
+          "Recanalització",
+          "Reobertura vascular"
+        ],
+        "definition": "Obertura del vas sanguini oclòs. Restauració del flux sanguini. Recanalització exitosa o completa. Recanalització parcial. Grau TICI de recanalització. Resultat de trombectomia o trombòlisi."
+      }
+    }
+  },
+  {
+    "concept_id": "77477000",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Tomografía computarizada",
+          "imagen tomográfica",
+          "TC de cráneo",
+          "TC",
+          "TC cerebral",
+          "escáner cerebral",
+          "TAC",
+          "TC sin contraste"
+        ],
+        "definition": "Imagen de primera línea para ictus agudo. Distingue rápidamente ictus hemorrágico de isquémico. Identifica cambios isquémicos tempranos. Puntuación ASPECTS cuantifica extensión. TC sin contraste para evaluación inicial."
+      },
+      "en": {
+        "terms": [
+          "Computed tomography",
+          "CT scan",
+          "CT"
+        ],
+        "definition": "First-line imaging for acute stroke. Rapidly distinguishes hemorrhagic from ischemic stroke. Identifies early ischemic changes. ASPECTS score quantifies extent. Non-contrast CT for initial evaluation."
+      },
+      "ca": {
+        "terms": [
+          "Tomografia computada",
+          "TC",
+          "Escàner"
+        ],
+        "definition": "Imatge de primera línia per a l'ictus agut. Distingeix ràpidament l'ictus hemorràgic de l'isquèmic. Identifica canvis isquèmics primerencs. La puntuació ASPECTS quantifica l'extensió. TC sense contrast per a l'avaluació inicial."
+      }
+    }
+  },
+  {
+    "concept_id": "450893003",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Escala de ictus del NIH",
+          "Thrombolysis in Cerebral Infarction",
+          "escala clínica de ictus",
+          "evaluación neurológica del ictus",
+          "grado de recanalización",
+          "NIHSS",
+          "ASPECTS",
+          "escala de gravedad del ictus",
+          "National Institutes of Health Stroke Scale",
+          "puntuación NIHSS",
+          "TICI",
+          "puntuación TC temprana",
+          "escala de reperfusión",
+          "Alberta Stroke Program Early CT Score"
+        ],
+        "definition": "Escala de evaluación neurológica estandarizada para cuantificar la gravedad del ictus. Puntuación de 0-42 puntos. Mayor puntuación indica mayor déficit. NIHSS basal, al ingreso y al alta. Predictor de pronóstico y resultado del ictus. ASPECTS cuantifica cambios isquémicos tempranos en TC. TICI evalúa grado de recanalización."
+      },
+      "en": {
+        "terms": [
+          "NIH Stroke Scale",
+          "NIHSS"
+        ],
+        "definition": "Standardized neurological assessment scale to quantify stroke severity. Score from 0-42 points. Higher score indicates greater deficit. Baseline, admission, and discharge NIHSS. Predictor of stroke prognosis and outcome. ASPECTS quantifies early ischemic changes on CT. TICI evaluates recanalization grade."
+      },
+      "ca": {
+        "terms": [
+          "Escala d'ictus del NIH",
+          "NIHSS"
+        ],
+        "definition": "Escala d'avaluació neurològica estandarditzada per quantificar la gravetat de l'ictus. Puntuació de 0-42 punts. Una puntuació més alta indica un dèficit més gran. NIHSS basal, a l'ingrés i a l'alta. Predictor de pronòstic i resultat de l'ictus. ASPECTS quantifica els canvis isquèmics primerencs en TC. TICI avalua el grau de recanalització."
+      }
+    }
+  },
+  {
+    "concept_id": "387467008",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Activador tisular del plasminógeno",
+          "tPA",
+          "activador de plasminógeno recombinante",
+          "rtPA",
+          "tPA intravenoso",
+          "trombólisis",
+          "alteplasa",
+          "trombolítico",
+          "fibrinolítico"
+        ],
+        "definition": "Agente trombolítico usado en tratamiento del ictus isquémico agudo. Activador tisular del plasminógeno recombinante que convierte plasminógeno en plasmina para disolver coágulos. Administrado intravenosamente dentro de 4.5 horas del inicio del ictus."
+      },
+      "en": {
+        "terms": [
+          "Tissue plasminogen activator",
+          "tPA",
+          "Alteplase"
+        ],
+        "definition": "Thrombolytic agent used in the treatment of acute ischemic stroke. Recombinant tissue plasminogen activator that converts plasminogen to plasmin to dissolve clots. Administered intravenously within 4.5 hours of stroke onset."
+      },
+      "ca": {
+        "terms": [
+          "Activador tissular del plasminogen",
+          "tPA",
+          "Alteplasa"
+        ],
+        "definition": "Agent trombolític utilitzat en el tractament de l'ictus isquèmic agut. Activador tissular del plasminogen recombinant que converteix el plasminogen en plasmina per dissoldre coàguls. Administra't intravenosament dins de les 4.5 hores de l'inici de l'ictus."
+      }
+    }
+  },
+  {
+    "concept_id": "38341003",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hipertensión arterial",
+          "presión arterial alta",
+          "hipertensión",
+          "hipertensión diastólica",
+          "hipertensión sistólica",
+          "tensión arterial elevada",
+          "HTA"
+        ],
+        "definition": "Presión arterial elevada por encima de 140/90 mmHg. Principal factor de riesgo modificable para ictus. Causa enfermedad de pequeño vaso y aterosclerosis. Control de presión reduce riesgo de ictus en 40%. Objetivo <120/80 para prevención de ictus."
+      },
+      "en": {
+        "terms": [
+          "Hypertensive disorder",
+          "Hypertension",
+          "HTN",
+          "High blood pressure",
+          "Arterial hypertension"
+        ],
+        "definition": "Elevated blood pressure above 140/90 mmHg. Main modifiable risk factor for stroke. Causes small vessel disease and atherosclerosis. Blood pressure control reduces stroke risk by 40%. Target <120/80 for stroke prevention."
+      },
+      "ca": {
+        "terms": [
+          "Hipertensió arterial",
+          "Hipertensió",
+          "HTA",
+          "Pressió arterial alta"
+        ],
+        "definition": "Pressió arterial elevada per sobre de 140/90 mmHg. Principal factor de risc modificable per a ictus. Causa malaltia de petit vas i aterosclerosi. El control de la pressió redueix el risc d'ictus en un 40%. Objectiu <120/80 per a la prevenció d'ictus."
+      }
+    }
+  },
+  {
+    "concept_id": "73211009",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Diabetes mellitus",
+          "DM",
+          "diabetes",
+          "trastorno metabólico",
+          "intolerancia a la glucosa",
+          "hiperglucemia"
+        ],
+        "definition": "Trastorno metabólico con hiperglucemia crónica. Factor de riesgo mayor para ictus. Duplica el riesgo de ictus. Causa aterosclerosis y enfermedad de pequeño vaso. Manejado con control de glucosa, modificación del estilo de vida."
+      },
+      "en": {
+        "terms": [
+          "Diabetes mellitus",
+          "Diabetes",
+          "DM"
+        ],
+        "definition": "Metabolic disorder with chronic hyperglycemia. Major risk factor for stroke. Doubles the risk of stroke. Causes atherosclerosis and small vessel disease. Managed with glucose control, lifestyle modification."
+      },
+      "ca": {
+        "terms": [
+          "Diabetis mellitus",
+          "Diabetis",
+          "DM"
+        ],
+        "definition": "Trastorn metabòlic amb hiperglucèmia crònica. Factor de risc major per a ictus. Duplica el risc d'ictus. Causa aterosclerosi i malaltia de petit vas. Manejat amb control de glucosa, modificació de l'estil de vida."
+      }
+    }
+  },
+  {
+    "concept_id": "25064002",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Cefalea",
+          "dolor craneal",
+          "dolor de cabeza",
+          "cefalalgia",
+          "cefalea intensa",
+          "cefalea severa",
+          "cefalea súbita"
+        ],
+        "definition": "Dolor en región de cabeza o cuello superior. Común en ictus hemorrágico. Cefalea severa súbita sugiere hemorragia subaracnoidea. Evaluado por calidad, localización, duración, síntomas asociados."
+      },
+      "en": {
+        "terms": [
+          "Headache",
+          "Cephalalgia"
+        ],
+        "definition": "Pain in the head or upper neck region. Common in hemorrhagic stroke. Sudden severe headache suggests subarachnoid hemorrhage. Evaluated by quality, location, duration, associated symptoms."
+      },
+      "ca": {
+        "terms": [
+          "Cefalea",
+          "Mal de cap"
+        ],
+        "definition": "Dolor a la regió del cap o coll superior. Comú en ictus hemorràgic. Cefalea severa sobtada suggereix hemorràgia subaracnoidea. Avaluat per qualitat, localització, durada, símptomes associats."
+      }
+    }
+  },
+  {
+    "concept_id": "422587007",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Náusea",
+          "náuseas",
+          "ganas de vomitar",
+          "mareo nauseoso",
+          "sensación de malestar",
+          "síntoma gastrointestinal"
+        ],
+        "definition": "Sensación de vómito inminente. Puede indicar ictus de circulación posterior. Asociado con vértigo en ictus cerebeloso o del tronco cerebral. Parte del síndrome vestibular."
+      },
+      "en": {
+        "terms": [
+          "Nausea"
+        ],
+        "definition": "Sensation of impending vomiting. May indicate posterior circulation stroke. Associated with vertigo in cerebellar or brainstem stroke. Part of the vestibular syndrome."
+      },
+      "ca": {
+        "terms": [
+          "Nàusea",
+          "Gana de vòmit"
+        ],
+        "definition": "Sensació de vòmit imminent. Pot indicar ictus de circulació posterior. Associat amb vertigen en ictus cerebel·lós o del tronc cerebral. Part de la síndrome vestibular."
+      }
+    }
+  },
+  {
+    "concept_id": "422400008",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Vómito",
+          "síntoma gastrointestinal",
+          "emesis",
+          "vómitos",
+          "náuseas y vómitos",
+          "expulsión gástrica"
+        ],
+        "definition": "Expulsión forzada del contenido gástrico. Puede indicar ictus de circulación posterior. Asociado con presión intracraneal aumentada. Común en ictus cerebeloso o hemorragia. Síntoma del tronco cerebral."
+      },
+      "en": {
+        "terms": [
+          "Vomiting",
+          "Emesis"
+        ],
+        "definition": "Forced expulsion of gastric contents. May indicate posterior circulation stroke. Associated with increased intracranial pressure. Common in cerebellar stroke or hemorrhage. Brainstem symptom."
+      },
+      "ca": {
+        "terms": [
+          "Vòmit",
+          "Èmesi"
+        ],
+        "definition": "Expulsió forçada del contingut gàstric. Pot indicar ictus de circulació posterior. Associat amb pressió intracranial augmentada. Comú en ictus cerebel·lós o hemorràgia. Símptoma del tronc cerebral."
+      }
+    }
+  },
+  {
+    "concept_id": "52674009",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Isquemia cerebral",
+          "daño isquémico",
+          "isquemia aguda",
+          "isquemia",
+          "flujo sanguíneo reducido",
+          "tejido isquémico",
+          "hipoperfusión cerebral"
+        ],
+        "definition": "Flujo sanguíneo reducido al cerebro. Isquemia cerebral aguda. Tejido isquémico reversible o irreversible. Daño isquémico. Hipoxia tisular. Deprivación de oxígeno. Hipoperfusión cerebral."
+      },
+      "en": {
+        "terms": [
+          "Cerebral ischemia",
+          "Brain ischemia",
+          "Ischemic brain injury"
+        ],
+        "definition": "Reduced blood flow to the brain. Acute cerebral ischemia. Reversible or irreversible ischemic tissue. Ischemic damage. Tissue hypoxia. Oxygen deprivation. Cerebral hypoperfusion."
+      },
+      "ca": {
+        "terms": [
+          "Isquèmia cerebral",
+          "Isquèmia del cervell"
+        ],
+        "definition": "Flux sanguini reduït al cervell. Isquèmia cerebral aguda. Teixit isquèmic reversible o irreversible. Dany isquèmic. Hipòxia tissular. Privació d'oxigen. Hipoperfusió cerebral."
+      }
+    }
+  },
+  {
+    "concept_id": "432101006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Aneurisma cerebral",
+          "aneurisma",
+          "malformación vascular",
+          "aneurisma sacular",
+          "dilatación arterial",
+          "aneurisma intracraneal",
+          "aneurisma roto"
+        ],
+        "definition": "Dilatación anormal de arteria cerebral. Aneurisma cerebral intracraneal. Aneurisma sacular o fusiforme. Ruptura de aneurisma causa hemorragia subaracnoidea. Tratamiento incluye clipaje o coiling. Aneurisma del polígono de Willis."
+      },
+      "en": {
+        "terms": [
+          "Cerebral aneurysm",
+          "Intracranial aneurysm",
+          "Brain aneurysm"
+        ],
+        "definition": "Abnormal dilation of a cerebral artery. Intracranial cerebral aneurysm. Saccular or fusiform aneurysm. Aneurysm rupture causes subarachnoid hemorrhage. Treatment includes clipping or coiling. Aneurysm of the Circle of Willis."
+      },
+      "ca": {
+        "terms": [
+          "Aneurisma cerebral",
+          "Aneurisma intracranial"
+        ],
+        "definition": "Dilatació anormal d'una artèria cerebral. Aneurisma cerebral intracranial. Aneurisma sacular o fusiforme. La ruptura de l'aneurisma causa hemorràgia subaracnoidea. El tractament inclou clipatge o coiling. Aneurisma del polígon de Willis."
+      }
+    }
+  },
+  {
+    "concept_id": "21454007",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hemorragia subaracnoidea",
+          "HSA",
+          "sangrado subaracnoideo",
+          "HSA aneurismática",
+          "cefalea en trueno",
+          "sangre en LCR",
+          "hemorragia en espacio subaracnoideo"
+        ],
+        "definition": "Sangrado en espacio subaracnoideo. Usualmente por ruptura de aneurisma. Cefalea severa súbita en trueno. Alta mortalidad y morbilidad. TC muestra sangre en cisternas basales. Angiografía para detección de aneurisma."
+      },
+      "en": {
+        "terms": [
+          "Subarachnoid hemorrhage",
+          "SAH"
+        ],
+        "definition": "Bleeding into the subarachnoid space. Usually due to aneurysm rupture. Sudden severe thunderclap headache. High mortality and morbidity. CT shows blood in basal cisterns. Angiography for aneurysm detection."
+      },
+      "ca": {
+        "terms": [
+          "Hemorràgia subaracnoidea",
+          "HSA"
+        ],
+        "definition": "Sagnat a l'espai subaracnoideo. Usualment per ruptura d'aneurisma. Cefalea severa sobtada en tro. Alta mortalitat i morbiditat. La TC mostra sang a les cisternes basals. Angiografia per a la detecció d'aneurisma."
+      }
+    }
+  },
+  {
+    "concept_id": "266257000",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Ataque isquémico transitorio",
+          "AIT",
+          "déficit neurológico transitorio",
+          "isquemia cerebral transitoria",
+          "ictus temporal",
+          "mini-ictus"
+        ],
+        "definition": "Interrupción temporal del flujo sanguíneo al cerebro causando síntomas similares al ictus que duran menos de 24 horas. Señal de advertencia para ictus futuro. Sin daño cerebral permanente. Factor de riesgo para ictus mayor."
+      },
+      "en": {
+        "terms": [
+          "Transient ischemic attack",
+          "TIA",
+          "Mini-stroke"
+        ],
+        "definition": "Temporary interruption of blood flow to the brain causing stroke-like symptoms that last less than 24 hours. Warning sign for future stroke. No permanent brain damage. Risk factor for major stroke."
+      },
+      "ca": {
+        "terms": [
+          "Atac isquèmic transitori",
+          "AIT",
+          "Mini-ictus"
+        ],
+        "definition": "Interrupció temporal del flux sanguini al cervell que causa símptomes similars a l'ictus que duren menys de 24 hores. Senyal d'advertència per a ictus futur. Sense dany cerebral permanent. Factor de risc per a ictus major."
+      }
+    }
+  },
+  {
+    "concept_id": "49436004",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Fibrilación auricular",
+          "ritmo cardíaco irregular",
+          "fuente cardioembólica",
+          "FA",
+          "arritmia cardíaca",
+          "fibrilación atrial",
+          "arritmia auricular"
+        ],
+        "definition": "Ritmo cardíaco irregular rápido. Factor de riesgo cardioembólico mayor para ictus. Aumenta riesgo de ictus 5 veces. Causa estasis y formación de trombo en aurícula izquierda. Manejado con anticoagulación."
+      },
+      "en": {
+        "terms": [
+          "Atrial fibrillation",
+          "AF",
+          "AFib"
+        ],
+        "definition": "Rapid irregular heart rhythm. Major cardioembolic risk factor for stroke. Increases stroke risk 5-fold. Causes stasis and thrombus formation in the left atrium. Managed with anticoagulation."
+      },
+      "ca": {
+        "terms": [
+          "Fibril·lació auricular",
+          "FA"
+        ],
+        "definition": "Ritme cardíac irregular ràpid. Factor de risc cardioembòlic major per a ictus. Augmenta el risc d'ictus 5 vegades. Causa estasi i formació de trombe a l'aurícula esquerra. Manejat amb anticoagulació."
+      }
+    }
+  },
+  {
+    "concept_id": "415582006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Estenosis arterial",
+          "estenosis carotídea",
+          "estenosis",
+          "estrechamiento del vaso",
+          "placa aterosclerótica",
+          "estenosis intracraneal",
+          "estrechamiento arterial",
+          "estenosis vertebral"
+        ],
+        "definition": "Estrechamiento de arteria. Estenosis de vaso. Estrechamiento del lumen. Estenosis carotídea o vertebral. Estenosis intracraneal o extracraneal. Estenosis aterosclerótica. Placa estenótica. Estenosis limitante del flujo. Estenosis hemodinámicamente significativa."
+      },
+      "en": {
+        "terms": [
+          "Arterial stenosis",
+          "Artery stenosis",
+          "Vessel stenosis",
+          "Stenosis of artery"
+        ],
+        "definition": "Narrowing of an artery. Vessel stenosis. Lumen narrowing. Carotid or vertebral stenosis. Intracranial or extracranial stenosis. Atherosclerotic stenosis. Stenotic plaque. Flow-limiting stenosis. Hemodynamically significant stenosis."
+      },
+      "ca": {
+        "terms": [
+          "Estenosi arterial",
+          "Estenosi d'artèria",
+          "Estenosi de vas"
+        ],
+        "definition": "Estrenyiment d'artèria. Estenosi de vas. Estrenyiment del lumen. Estenosi carotídia o vertebral. Estenosi intracranial o extracranial. Estenosi ateroscleròtica. Placa estenòtica. Estenosi limitant del flux. Estenosi hemodinàmicament significativa."
+      }
+    }
+  },
+  {
+    "concept_id": "67889009",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Ictus isquémico",
+          "ictus embólico",
+          "ACV isquémico",
+          "ictus trombótico",
+          "infarto cerebral isquémico",
+          "accidente cerebrovascular isquémico"
+        ],
+        "definition": "Ictus causado por oclusión arterial bloqueando flujo sanguíneo al cerebro. 87% de todos los ictus. Origen trombótico o embólico. Tratado con trombólisis o trombectomía. Factores de riesgo incluyen hipertensión, diabetes, fibrilación auricular."
+      },
+      "en": {
+        "terms": [
+          "Ischemic stroke",
+          "Cerebral infarction",
+          "Brain infarction"
+        ],
+        "definition": "Stroke caused by arterial occlusion blocking blood flow to the brain. 87% of all strokes. Thrombotic or embolic origin. Treated with thrombolysis or thrombectomy. Risk factors include hypertension, diabetes, atrial fibrillation."
+      },
+      "ca": {
+        "terms": [
+          "Ictus isquèmic",
+          "Infart cerebral"
+        ],
+        "definition": "Ictus causat per oclusió arterial que bloqueja el flux sanguini al cervell. 87% de tots els ictus. Origen trombòtic o embòlic. Tractat amb trombòlisi o trombectomia. Els factors de risc inclouen hipertensió, diabetis, fibril·lació auricular."
+      }
+    }
+  },
+  {
+    "concept_id": "69449002",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Hemorragia cerebral",
+          "sangrado cerebral",
+          "hemorragia parenquimatosa",
+          "ictus hemorrágico",
+          "HIC",
+          "hemorragia intracerebral",
+          "hematoma cerebral"
+        ],
+        "definition": "Sangrado en parénquima cerebral. 13% de todos los ictus. Mayor mortalidad que ictus isquémico. Causado por hipertensión, angiopatía amiloide, anticoagulación. Contraindicación para trombólisis. Evacuación quirúrgica considerada para hematomas grandes."
+      },
+      "en": {
+        "terms": [
+          "Cerebral hemorrhage",
+          "Intracerebral hemorrhage",
+          "ICH",
+          "Brain hemorrhage"
+        ],
+        "definition": "Bleeding into the brain parenchyma. 13% of all strokes. Higher mortality than ischemic stroke. Caused by hypertension, amyloid angiopathy, anticoagulation. Contraindication for thrombolysis. Surgical evacuation considered for large hematomas."
+      },
+      "ca": {
+        "terms": [
+          "Hemorràgia cerebral",
+          "Hemorràgia intracerebral",
+          "HIC"
+        ],
+        "definition": "Sagnat al parènquima cerebral. 13% de tots els ictus. Major mortalitat que l'ictus isquèmic. Causat per hipertensió, angiopatia amiloide, anticoagulació. Contraindicació per a trombòlisi. Evacuació quirúrgica considerada per a hematomes grans."
+      }
+    }
+  },
+  {
+    "concept_id": "86547008",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Arteria carótida interna",
+          "estenosis carotídea",
+          "carótida extracraneal",
+          "ACI",
+          "carótida intracraneal",
+          "carótida interna",
+          "bifurcación carotídea"
+        ],
+        "definition": "Principal arteria que irriga el cerebro. Carótida interna extracraneal e intracraneal. Bifurcación carotídea. Estenosis u oclusión carotídea. Aterosclerosis carotídea. Placa carotídea. Territorio carotídeo. Circulación anterior. Segmentos petro, cavernoso, supraclinoideo."
+      },
+      "en": {
+        "terms": [
+          "Internal carotid artery",
+          "ICA"
+        ],
+        "definition": "Main artery supplying the brain. Extracranial and intracranial internal carotid artery. Carotid bifurcation. Carotid stenosis or occlusion. Carotid atherosclerosis. Carotid plaque. Carotid territory. Anterior circulation. Petrous, cavernous, supraclinoid segments."
+      },
+      "ca": {
+        "terms": [
+          "Artèria caròtida interna",
+          "ACI"
+        ],
+        "definition": "Principal artèria que irriga el cervell. Caròtida interna extracranial i intracranial. Bifurcació carotídia. Estenosi o oclusió carotídia. Aterosclerosi carotídia. Placa carotídia. Territori carotidi. Circulació anterior. Segments petrós, cavernós, supraclinoide."
+      }
+    }
+  },
+  {
+    "concept_id": "87486003",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Afasia",
+          "afasia de Broca",
+          "afasia de Wernicke",
+          "afasia receptiva",
+          "alteración del lenguaje",
+          "disfasia",
+          "trastorno del lenguaje",
+          "afasia expresiva"
+        ],
+        "definition": "Alteración de la comprensión o producción del lenguaje. Resultado de lesión del hemisferio dominante. Afasia de Broca: déficit expresivo. Afasia de Wernicke: déficit receptivo. Evaluación del lenguaje del NIHSS."
+      },
+      "en": {
+        "terms": [
+          "Aphasia",
+          "Dysphasia"
+        ],
+        "definition": "Impairment of language comprehension or production. Result of dominant hemisphere lesion. Broca's aphasia: expressive deficit. Wernicke's aphasia: receptive deficit. NIHSS language evaluation."
+      },
+      "ca": {
+        "terms": [
+          "Afàsia",
+          "Disfàsia"
+        ],
+        "definition": "Alteració de la comprensió o producció del llenguatge. Resultat de lesió de l'hemisferi dominant. Afàsia de Broca: dèficit expressiu. Afàsia de Wernicke: dèficit receptiu. Avaluació del llenguatge del NIHSS."
+      }
+    }
+  },
+  {
+    "concept_id": "113091000",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Resonancia magnética",
+          "RM",
+          "escáner de RM",
+          "IRM",
+          "perfusión por RM",
+          "imagen por resonancia magnética",
+          "secuencias de RM",
+          "difusión por RM"
+        ],
+        "definition": "Imagen avanzada usando campos magnéticos y ondas de radio. Contraste superior de tejido blando. Detecta infarto agudo con imagen ponderada en difusión. Identifica penumbra con imagen de perfusión. Sin radiación ionizante."
+      },
+      "en": {
+        "terms": [
+          "Magnetic resonance imaging",
+          "MRI",
+          "MR imaging"
+        ],
+        "definition": "Advanced imaging using magnetic fields and radio waves. Superior soft tissue contrast. Detects acute infarction with diffusion-weighted imaging. Identifies penumbra with perfusion imaging. No ionizing radiation."
+      },
+      "ca": {
+        "terms": [
+          "Ressonància magnètica",
+          "RM"
+        ],
+        "definition": "Imatge avançada utilitzant camps magnètics i ones de ràdio. Contrast superior de teixit tou. Detecta infart agut amb imatge ponderada en difusió. Identifica penombra amb imatge de perfusió. Sense radiació ionitzant."
+      }
+    }
+  },
+  {
+    "concept_id": "20262006",
+    "semantic_type": "Clinical_Finding",
+    "languages": {
+      "es": {
+        "terms": [
+          "Ataxia",
+          "pérdida de coordinación",
+          "disfunción cerebelosa",
+          "ataxia truncal",
+          "ataxia de extremidades",
+          "incoordinación",
+          "ataxia de la marcha"
+        ],
+        "definition": "Coordinación y equilibrio alterados. Indica ictus cerebeloso. Ataxia de marcha, extremidades, truncal. Prueba cerebelosa del NIHSS. Puede causar caídas."
+      },
+      "en": {
+        "terms": [
+          "Ataxia",
+          "Ataxic disorder"
+        ],
+        "definition": "Impaired coordination and balance. Indicates cerebellar stroke. Gait, limb, truncal ataxia. NIHSS cerebellar test. Can cause falls."
+      },
+      "ca": {
+        "terms": [
+          "Atàxia"
+        ],
+        "definition": "Coordinació i equilibri alterats. Indica ictus cerebel·lós. Atàxia de la marxa, extremitats, troncal. Prova cerebel·losa del NIHSS. Pot causar caigudes."
+      }
+    }
+  },
+  {
+    "concept_id": "19601002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "la piel de la cara lateral del pulgar",
+          "piel de la superficie lateral del pollex",
+          "piel de la superficie lateral del primer dedo de la mano",
+          "piel de la cara lateral del dedo pulgar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Skin of lateral aspect of thumb",
+          "Skin of lateral side of thumb"
+        ],
+        "definition": "The integument covering the lateral surface of the thumb."
+      },
+      "ca": {
+        "terms": [
+          "Pell de la cara lateral del polze"
+        ],
+        "definition": "L'integument que cobreix la superfície lateral del polze."
+      }
+    }
+  },
+  {
+    "concept_id": "731443002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "pericráneo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Pericranium"
+        ],
+        "definition": "The periosteum covering the outer surface of the skull bones."
+      },
+      "ca": {
+        "terms": [
+          "Pericrani"
+        ],
+        "definition": "El periosti que cobreix la superfície externa dels ossos del crani."
+      }
+    }
+  },
+  {
+    "concept_id": "789702002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cóndilo occipital"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Occipital condyle"
+        ],
+        "definition": "One of two rounded protuberances on the inferior surface of the occipital bone, articulating with the atlas vertebra."
+      },
+      "ca": {
+        "terms": [
+          "Còndil occipital"
+        ],
+        "definition": "Una de les dues protuberàncies arrodonides a la superfície inferior de l'os occipital, que s'articula amb la vèrtebra atles."
+      }
+    }
+  },
+  {
+    "concept_id": "56693008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vaso linfático superficial de la extremidad inferior",
+          "linfáticos superficiales de la extremidad inferior",
+          "sistema linfático superficial de la extremidad inferior",
+          "sistema linfático superficial del miembro inferior"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Superficial lymphatic vessel of lower limb"
+        ],
+        "definition": "A lymphatic vessel located superficially in the lower extremity, responsible for draining lymph from the skin and subcutaneous tissues."
+      },
+      "ca": {
+        "terms": [
+          "Vas limfàtic superficial de l'extremitat inferior"
+        ],
+        "definition": "Un vas limfàtic situat superficialment a l'extremitat inferior, responsable de drenar la limfa de la pell i els teixits subcutanis."
+      }
+    }
+  },
+  {
+    "concept_id": "280888007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculo del iris"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Iris muscle"
+        ],
+        "definition": "Any of the smooth muscles within the iris, including the sphincter pupillae and dilator pupillae, which control pupil size."
+      },
+      "ca": {
+        "terms": [
+          "Múscul de l'iris"
+        ],
+        "definition": "Qualsevol dels músculs llisos dins de l'iris, incloent l'esfínter de la pupil·la i el dilatador de la pupil·la, que controlen la mida de la pupil·la."
+      }
+    }
+  },
+  {
+    "concept_id": "729075003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "divertículo de vesícula seminal"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Diverticulum of seminal vesicle"
+        ],
+        "definition": "An abnormal pouch or sac protruding from the wall of the seminal vesicle."
+      },
+      "ca": {
+        "terms": [
+          "Diverticle de vesícula seminal"
+        ],
+        "definition": "Una bossa o sac anormal que sobresurt de la paret de la vesícula seminal."
+      }
+    }
+  },
+  {
+    "concept_id": "263356002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "pared lateral de la vagina"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Lateral wall of vagina"
+        ],
+        "definition": "The side wall of the muscular tube extending from the cervix to the vulva."
+      },
+      "ca": {
+        "terms": [
+          "Paret lateral de la vagina"
+        ],
+        "definition": "La paret lateral del tub muscular que s'estén des del cèrvix fins a la vulva."
+      }
+    }
+  },
+  {
+    "concept_id": "272670002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cuadrante de la mama"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Quadrant of breast"
+        ],
+        "definition": "One of four anatomical regions used to describe the location of findings within the breast (upper outer, upper inner, lower outer, lower inner)."
+      },
+      "ca": {
+        "terms": [
+          "Quadrant de la mama"
+        ],
+        "definition": "Una de les quatre regions anatòmiques utilitzades per descriure la ubicació de les troballes dins de la mama (superior extern, superior intern, inferior extern, inferior intern)."
+      }
+    }
+  },
+  {
+    "concept_id": "279841009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "órgano espiral de corti"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Spiral organ of Corti",
+          "Organ of Corti"
+        ],
+        "definition": "The sensory organ of hearing located in the cochlea of the inner ear, containing hair cells that transduce sound vibrations into nerve impulses."
+      },
+      "ca": {
+        "terms": [
+          "Òrgan espiral de Corti",
+          "Òrgan de Corti"
+        ],
+        "definition": "L'òrgan sensorial de l'audició situat a la còclea de l'orella interna, que conté cèl·lules ciliades que transdueixen les vibracions sonores en impulsos nerviosos."
+      }
+    }
+  },
+  {
+    "concept_id": "23438002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "la vena femoral profunda",
+          "vena femoral profunda"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Deep femoral vein",
+          "Profunda femoris vein"
+        ],
+        "definition": "A large vein in the thigh that accompanies the deep femoral artery and drains blood from the deep muscles of the thigh."
+      },
+      "ca": {
+        "terms": [
+          "Vena femoral profunda"
+        ],
+        "definition": "Una vena gran a la cuixa que acompanya l'artèria femoral profunda i drena la sang dels músculs profunds de la cuixa."
+      }
+    }
+  },
+  {
+    "concept_id": "58159000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculos intertransversos anteriores del cuello",
+          "músculo intertransverso anterior del cuello"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Anterior intertransverse muscles of neck",
+          "Anterior intertransversarii cervicis muscles"
+        ],
+        "definition": "Small muscles located between the anterior tubercles of the transverse processes of cervical vertebrae, involved in neck flexion and lateral bending."
+      },
+      "ca": {
+        "terms": [
+          "Músculs intertransversos anteriors del coll"
+        ],
+        "definition": "Petits músculs situats entre els tubercles anteriors dels processos transversos de les vèrtebres cervicals, implicats en la flexió i la inclinació lateral del coll."
+      }
+    }
+  },
+  {
+    "concept_id": "72247002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cara no articular del tubérculo de la undécima costilla"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Non-articular part of tubercle of eleventh rib",
+          "Non-articular surface of tubercle of 11th rib"
+        ],
+        "definition": "The rough, non-smooth portion of the tubercle of the eleventh rib, which serves as an attachment point for ligaments."
+      },
+      "ca": {
+        "terms": [
+          "Cara no articular del tubercle de l'onzena costella"
+        ],
+        "definition": "La porció rugosa i no llisa del tubercle de l'onzena costella, que serveix com a punt d'unió per als lligaments."
+      }
+    }
+  },
+  {
+    "concept_id": "369027002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vía trigeminoespinal de la protuberancia"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Trigeminal spinal tract of pons",
+          "Trigeminal spinal pathway of pons"
+        ],
+        "definition": "A descending neural pathway within the pons that carries sensory information, particularly pain and temperature, from the trigeminal nerve to the spinal cord."
+      },
+      "ca": {
+        "terms": [
+          "Via trigeminoespinal de la protuberància"
+        ],
+        "definition": "Una via neural descendent dins de la protuberància que transporta informació sensorial, particularment dolor i temperatura, des del nervi trigemin fins a la medul·la espinal."
+      }
+    }
+  },
+  {
+    "concept_id": "729481002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "zona marginal de conjuntiva palpebral"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Marginal zone of palpebral conjunctiva",
+          "Palpebral conjunctival marginal zone"
+        ],
+        "definition": "The edge or border region of the conjunctiva lining the eyelids."
+      },
+      "ca": {
+        "terms": [
+          "Zona marginal de la conjuntiva palpebral",
+          "Vora marginal de la conjuntiva palpebral"
+        ],
+        "definition": "La vora o regió límit de la conjuntiva que recobreix les parpelles."
+      }
+    }
+  },
+  {
+    "concept_id": "22695001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "leucemia monocítica aleucémica"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Aleukemic monocytic leukemia",
+          "Monocytic aleukemic leukemia"
+        ],
+        "definition": "A type of monocytic leukemia characterized by the absence or very low number of leukemic cells in the peripheral blood, despite bone marrow involvement."
+      },
+      "ca": {
+        "terms": [
+          "Leucèmia monocítica aleucèmica",
+          "Leucèmia aleucèmica monocítica"
+        ],
+        "definition": "Un tipus de leucèmia monocítica caracteritzada per l'absència o un nombre molt baix de cèl·lules leucèmiques a la sang perifèrica, malgrat la implicació de la medul·la òssia."
+      }
+    }
+  },
+  {
+    "concept_id": "730757006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido óseo de hueso sesamoideo de muñeca"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Bone tissue of wrist sesamoid bone",
+          "Wrist sesamoid bone tissue"
+        ],
+        "definition": "The specialized connective tissue forming the sesamoid bones located in the wrist."
+      },
+      "ca": {
+        "terms": [
+          "Teixit ossi d'os sesamoide de canell",
+          "Teixit ossi del sesamoide del canell"
+        ],
+        "definition": "El teixit connectiu especialitzat que forma els ossos sesamoides situats al canell."
+      }
+    }
+  },
+  {
+    "concept_id": "360539006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "rama craneal de arteria vertebral",
+          "rama craneal de la arteria vertebral"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Cranial branch of vertebral artery",
+          "Vertebral artery cranial branch"
+        ],
+        "definition": "A branch of the vertebral artery that extends towards the cranial region."
+      },
+      "ca": {
+        "terms": [
+          "Branca cranial d'artèria vertebral",
+          "Branca cranial de l'artèria vertebral"
+        ],
+        "definition": "Una branca de l'artèria vertebral que s'estén cap a la regió cranial."
+      }
+    }
+  },
+  {
+    "concept_id": "714331005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculo que actúa sobre articulación de miembro superior"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Muscle acting on upper limb joint",
+          "Upper limb joint muscle"
+        ],
+        "definition": "Any muscle that produces movement or stabilizes a joint within the upper limb."
+      },
+      "ca": {
+        "terms": [
+          "Múscul que actua sobre articulació de membre superior",
+          "Múscul de l'articulació del membre superior"
+        ],
+        "definition": "Qualsevol múscul que produeix moviment o estabilitza una articulació dins del membre superior."
+      }
+    }
+  },
+  {
+    "concept_id": "1268616000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "nervio nasopalatino"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Nasopalatine nerve",
+          "Nerve, nasopalatine"
+        ],
+        "definition": "A branch of the maxillary nerve that supplies sensation to the nasal septum and the anterior hard palate."
+      },
+      "ca": {
+        "terms": [
+          "Nervi nasopalatí",
+          "Nervi, nasopalatí"
+        ],
+        "definition": "Una branca del nervi maxil·lar que proporciona sensació al septe nasal i a la part anterior del paladar dur."
+      }
+    }
+  },
+  {
+    "concept_id": "103612001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "herida penetrante"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Penetrating wound",
+          "Puncture wound"
+        ],
+        "definition": "A wound caused by an object piercing the skin and entering a body cavity or organ."
+      },
+      "ca": {
+        "terms": [
+          "Ferida penetrant",
+          "Ferida punxant"
+        ],
+        "definition": "Una ferida causada per un objecte que perfora la pell i entra en una cavitat corporal o òrgan."
+      }
+    }
+  },
+  {
+    "concept_id": "735388009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido conjuntivo fibroso de tuberosidad maxilar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Fibrous connective tissue of maxillary tuberosity",
+          "Maxillary tuberosity fibrous connective tissue"
+        ],
+        "definition": "The dense, fibrous connective tissue found in the region of the maxillary tuberosity."
+      },
+      "ca": {
+        "terms": [
+          "Teixit conjuntiu fibrós de tuberositat maxil·lar",
+          "Teixit conjuntiu fibrós de la tuberositat maxil·lar"
+        ],
+        "definition": "El teixit connectiu dens i fibrós que es troba a la regió de la tuberositat maxil·lar."
+      }
+    }
+  },
+  {
+    "concept_id": "11615002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "fascia bucofaríngea"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Buccopharyngeal fascia",
+          "Fascia, buccopharyngeal"
+        ],
+        "definition": "A fascial layer that covers the buccinator muscle and the superior constrictor muscle of the pharynx."
+      },
+      "ca": {
+        "terms": [
+          "Fàscia bucofaríngia",
+          "Fàscia, bucofaríngia"
+        ],
+        "definition": "Una capa fascial que cobreix el múscul buccinador i el múscul constrictor superior de la faringe."
+      }
+    }
+  },
+  {
+    "concept_id": "727804007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "asta posterior de menisco interno"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Posterior horn of medial meniscus",
+          "Medial meniscus posterior horn"
+        ],
+        "definition": "The posterior portion of the C-shaped medial meniscus in the knee joint."
+      },
+      "ca": {
+        "terms": [
+          "Banya posterior de menisc intern",
+          "Banya posterior del menisc medial"
+        ],
+        "definition": "La porció posterior del menisc medial en forma de C a l'articulació del genoll."
+      }
+    }
+  },
+  {
+    "concept_id": "725253001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "población de todos los espermatozoides con colas rotas en una porción de líquido"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Population of all spermatozoa with broken tails in a fluid portion",
+          "Spermatozoa with broken tails in fluid",
+          "Broken-tailed sperm population in fluid"
+        ],
+        "definition": "A group comprising all spermatozoa exhibiting broken tails within a given sample of fluid."
+      },
+      "ca": {
+        "terms": [
+          "Població de tots els espermatozoides amb cues trencades en una porció de líquid",
+          "Espermatozoides amb cues trencades en líquid"
+        ],
+        "definition": "Un grup que comprèn tots els espermatozoides que presenten cues trencades dins d'una mostra de líquid determinada."
+      }
+    }
+  },
+  {
+    "concept_id": "261150009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "región paraumbilical"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Paraumbilical region",
+          "Periumbilical region",
+          "Region, paraumbilical"
+        ],
+        "definition": "The anatomical area surrounding the umbilicus (navel)."
+      },
+      "ca": {
+        "terms": [
+          "Regió paraumbilical",
+          "Regió periumbilical"
+        ],
+        "definition": "L'àrea anatòmica que envolta l'ombligo."
+      }
+    }
+  },
+  {
+    "concept_id": "40810008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "lumen ileal",
+          "luz del íleon"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Ileal lumen",
+          "Lumen of ileum"
+        ],
+        "definition": "The inner space or cavity of the ileum, the final section of the small intestine."
+      },
+      "ca": {
+        "terms": [
+          "Llum ileal",
+          "Llum de l'íleon"
+        ],
+        "definition": "L'espai interior o cavitat de l'íleon, la secció final de l'intestí prim."
+      }
+    }
+  },
+  {
+    "concept_id": "123852005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "subregión de la cabeza",
+          "región de la cabeza"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Subregion of head",
+          "Head subregion"
+        ],
+        "definition": "A smaller, distinct anatomical area within the broader region of the head."
+      },
+      "ca": {
+        "terms": [
+          "Subregió del cap",
+          "Subregió de cap"
+        ],
+        "definition": "Una àrea anatòmica més petita i diferenciada dins de la regió més àmplia del cap."
+      }
+    }
+  },
+  {
+    "concept_id": "729438000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido areolar subcutáneo de párpado"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Subcutaneous areolar tissue of eyelid",
+          "Eyelid subcutaneous areolar tissue"
+        ],
+        "definition": "The loose connective tissue located beneath the skin of the eyelid."
+      },
+      "ca": {
+        "terms": [
+          "Teixit areolar subcutani de parpella",
+          "Teixit areolar subcutani de la parpella"
+        ],
+        "definition": "El teixit connectiu lax situat sota la pell de la parpella."
+      }
+    }
+  },
+  {
+    "concept_id": "54735007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ósea del sacro",
+          "hueso sacro"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Sacral bone",
+          "Bone of sacrum"
+        ],
+        "definition": "The large, triangular bone at the base of the spine, formed by the fusion of five sacral vertebrae."
+      },
+      "ca": {
+        "terms": [
+          "Os sacre",
+          "Os del sacre"
+        ],
+        "definition": "L'os gran i triangular a la base de la columna vertebral, format per la fusió de cinc vèrtebres sacres."
+      }
+    }
+  },
+  {
+    "concept_id": "39365008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido osteoide"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Osteoid tissue",
+          "Osteoid"
+        ],
+        "definition": "Unmineralized, organic matrix of bone, composed of collagen and other proteins, which later becomes mineralized to form mature bone."
+      },
+      "ca": {
+        "terms": [
+          "Teixit osteoide",
+          "Osteoide"
+        ],
+        "definition": "Matriu orgànica no mineralitzada de l'os, composta de col·lagen i altres proteïnes, que posteriorment es mineralitza per formar os madur."
+      }
+    }
+  },
+  {
+    "concept_id": "165664003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "apófisis articular de vértebra cervical"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Articular process of cervical vertebra",
+          "Zygapophysis of cervical vertebra",
+          "Cervical vertebral articular process"
+        ],
+        "definition": "A projection from the arch of a cervical vertebra that articulates with an adjacent vertebra."
+      },
+      "ca": {
+        "terms": [
+          "Apòfisi articular de vèrtebra cervical",
+          "Zigapòfisi de vèrtebra cervical"
+        ],
+        "definition": "Una projecció de l'arc d'una vèrtebra cervical que s'articula amb una vèrtebra adjacent."
+      }
+    }
+  },
+  {
+    "concept_id": "721907008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculo esquelético de pared anterior del tórax"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Skeletal muscle of anterior thoracic wall",
+          "Muscle of anterior chest wall",
+          "Anterior thoracic wall skeletal muscle"
+        ],
+        "definition": "Any of the voluntary muscles located in the front part of the chest, such as the pectoralis major and minor."
+      },
+      "ca": {
+        "terms": [
+          "Múscul esquelètic de la paret anterior del tòrax",
+          "Múscul de la paret toràcica anterior"
+        ],
+        "definition": "Qualsevol dels músculs voluntaris situats a la part frontal del pit, com el pectoral major i menor."
+      }
+    }
+  },
+  {
+    "concept_id": "360622004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vena tiroidea inferior y sus tributarias"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Inferior thyroid vein and its tributaries",
+          "Inferior thyroid veins and tributaries"
+        ],
+        "definition": "A vein that drains blood from the lower part of the thyroid gland and empties into the brachiocephalic vein, along with its contributing vessels."
+      },
+      "ca": {
+        "terms": [
+          "Vena tiroidea inferior i les seves tributàries",
+          "Venes tiroidees inferiors i tributàries"
+        ],
+        "definition": "Una vena que drena la sang de la part inferior de la glàndula tiroide i desemboca a la vena braquiocefàlica, juntament amb els seus vasos contribuents."
+      }
+    }
+  },
+  {
+    "concept_id": "729978004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cavidad del humor vítreo y retina"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vitreous cavity and retina",
+          "Vitreous body and retina",
+          "Vitreoretinal compartment"
+        ],
+        "definition": "The posterior segment of the eye comprising the vitreous humor-filled space and the light-sensitive neural tissue lining its posterior wall."
+      },
+      "ca": {
+        "terms": [
+          "Cavitat del cos vitri i retina",
+          "Cavitat vítria i retina",
+          "Compartiment vitreoretinià"
+        ],
+        "definition": "El segment posterior de l'ull que comprèn l'espai ple d'humor vitri i el teixit neural sensible a la llum que recobreix la seva paret posterior."
+      }
+    }
+  },
+  {
+    "concept_id": "781060004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "la bolsa serosa de la articulación escapulotorácica"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Scapulothoracic bursa",
+          "Serous bursa of scapulothoracic joint",
+          "Scapulothoracic joint bursa"
+        ],
+        "definition": "A fluid-filled sac located between the scapula and the thoracic wall, facilitating smooth movement of the scapula."
+      },
+      "ca": {
+        "terms": [
+          "Borsa serosa escapulotoràcica",
+          "Borsa de l'articulació escapulotoràcica"
+        ],
+        "definition": "Un sac ple de líquid situat entre l'escàpula i la paret toràcica, que facilita el moviment suau de l'escàpula."
+      }
+    }
+  },
+  {
+    "concept_id": "68878000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ganglio linfático del agujero epiploico",
+          "nódulo linfático del agujero epiploico",
+          "nódulo linfático del agujero omental"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Lymph node of epiploic foramen",
+          "Lymph node of foramen of Winslow",
+          "Epiploic foramen lymph node"
+        ],
+        "definition": "A lymph node located near the epiploic foramen (foramen of Winslow), which connects the greater and lesser sacs of the peritoneum."
+      },
+      "ca": {
+        "terms": [
+          "Gangli limfàtic del foramen epiploic",
+          "Gangli limfàtic del foramen de Winslow"
+        ],
+        "definition": "Un gangli limfàtic situat prop del foramen epiploic (foramen de Winslow), que connecta el sac major i menor del peritoneu."
+      }
+    }
+  },
+  {
+    "concept_id": "143723007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cripta amigdalina",
+          "cripta tonsilar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Tonsillar crypt",
+          "Crypt of tonsil"
+        ],
+        "definition": "An invagination or deep pit in the surface of a tonsil, lined with epithelium, which can harbor bacteria and debris."
+      },
+      "ca": {
+        "terms": [
+          "Cripta amigdalina",
+          "Cripta de l'amígdala"
+        ],
+        "definition": "Una invaginació o fossa profunda a la superfície d'una amígdala, revestida d'epiteli, que pot albergar bacteris i deixalles."
+      }
+    }
+  },
+  {
+    "concept_id": "5643001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "conducto gástrico",
+          "canal gástrico",
+          "ruta gástrica",
+          "canalis ventricularis",
+          "canalis gastricus"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Gastric canal",
+          "Magenstrasse",
+          "Gastric groove"
+        ],
+        "definition": "A temporary groove formed along the lesser curvature of the stomach, allowing liquids to pass directly to the pylorus."
+      },
+      "ca": {
+        "terms": [
+          "Conducte gàstric",
+          "Magenstrasse",
+          "Solc gàstric"
+        ],
+        "definition": "Un solc temporal format al llarg de la curvatura menor de l'estómac, que permet que els líquids passin directament al pílor."
+      }
+    }
+  },
+  {
+    "concept_id": "369090006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vía espinotalámica del mesencéfalo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Spinothalamic tract of mesencephalon",
+          "Mesencephalic spinothalamic tract"
+        ],
+        "definition": "A sensory pathway that transmits information about pain, temperature, and crude touch from the spinal cord through the midbrain (mesencephalon) to the thalamus."
+      },
+      "ca": {
+        "terms": [
+          "Via espinotalàmica del mesencèfal",
+          "Tracte espinotalàmic del mesencèfal"
+        ],
+        "definition": "Una via sensorial que transmet informació sobre el dolor, la temperatura i el tacte groller des de la medul·la espinal a través del mesencèfal fins al tàlem."
+      }
+    }
+  },
+  {
+    "concept_id": "731598005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "médula ósea de vértebra lumbar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Bone marrow of lumbar vertebra",
+          "Lumbar vertebral bone marrow"
+        ],
+        "definition": "The soft, spongy tissue found within the lumbar vertebrae, responsible for hematopoiesis (blood cell formation)."
+      },
+      "ca": {
+        "terms": [
+          "Medul·la òssia de vèrtebra lumbar",
+          "Medul·la òssia vertebral lumbar"
+        ],
+        "definition": "El teixit tou i esponjós que es troba dins de les vèrtebres lumbars, responsable de l'hematopoesi (formació de cèl·lules sanguínies)."
+      }
+    }
+  },
+  {
+    "concept_id": "360825000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ligamento escapular transverso"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Transverse scapular ligament",
+          "Superior transverse scapular ligament",
+          "Suprascapular ligament"
+        ],
+        "definition": "A ligament that bridges the suprascapular notch of the scapula, converting it into a foramen for the suprascapular nerve."
+      },
+      "ca": {
+        "terms": [
+          "Lligament escapular transvers",
+          "Lligament transvers superior de l'escàpula",
+          "Lligament supraescapular"
+        ],
+        "definition": "Un lligament que uneix l'escotadura supraescapular de l'escàpula, convertint-la en un foramen per al nervi supraescapular."
+      }
+    }
+  },
+  {
+    "concept_id": "58161009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "adenofibroma de células claras",
+          "cistoadenofibroma de células claras"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Clear cell adenofibroma",
+          "Adenofibroma, clear cell type"
+        ],
+        "definition": "A benign tumor characterized by both glandular and fibrous components, with the epithelial cells exhibiting clear cytoplasm."
+      },
+      "ca": {
+        "terms": [
+          "Adenofibroma de cèl·lules clares",
+          "Fibroadenoma de cèl·lules clares"
+        ],
+        "definition": "Un tumor benigne caracteritzat per components glandulars i fibrosos, amb les cèl·lules epitelials que presenten citoplasma clar."
+      }
+    }
+  },
+  {
+    "concept_id": "41110003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "lesión traumática por explosión",
+          "injuria por explosión"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Blast injury",
+          "Traumatic injury due to explosion",
+          "Explosion injury"
+        ],
+        "definition": "Injury resulting from exposure to the sudden pressure changes and other effects of an explosion."
+      },
+      "ca": {
+        "terms": [
+          "Lesió per explosió",
+          "Lesió traumàtica per explosió",
+          "Trauma per explosió"
+        ],
+        "definition": "Lesió resultant de l'exposició als canvis sobtats de pressió i altres efectes d'una explosió."
+      }
+    }
+  },
+  {
+    "concept_id": "243929002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "triángulo del cuello"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Neck triangle",
+          "Triangle of the neck"
+        ],
+        "definition": "Anatomical region of the neck, typically referring to the anterior or posterior triangles, bounded by specific muscles and bones."
+      },
+      "ca": {
+        "terms": [
+          "Triangle del coll",
+          "Triangle cervical"
+        ],
+        "definition": "Regió anatòmica del coll, que normalment es refereix als triangles anterior o posterior, delimitada per músculs i ossos específics."
+      }
+    }
+  },
+  {
+    "concept_id": "125240007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "quiste solitario de origen congénito",
+          "quiste solitario embrionario"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Solitary congenital cyst",
+          "Congenital solitary cyst"
+        ],
+        "definition": "A single, fluid-filled sac present at birth, resulting from developmental anomalies."
+      },
+      "ca": {
+        "terms": [
+          "Quist solitari d'origen congènit",
+          "Quist congènit solitari"
+        ],
+        "definition": "Un sac únic ple de líquid present al naixement, resultant d'anomalies del desenvolupament."
+      }
+    }
+  },
+  {
+    "concept_id": "729547005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "rama terminal profunda de nervio cubital"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Deep terminal branch of ulnar nerve",
+          "Deep branch of ulnar nerve"
+        ],
+        "definition": "The terminal division of the ulnar nerve that supplies deep muscles and structures in the hand."
+      },
+      "ca": {
+        "terms": [
+          "Branca terminal profunda del nervi cubital",
+          "Branca profunda del nervi cubital"
+        ],
+        "definition": "La divisió terminal del nervi cubital que innerva els músculs i estructures profundes de la mà."
+      }
+    }
+  },
+  {
+    "concept_id": "368478009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vena palmar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Palmar vein",
+          "Vein of palm"
+        ],
+        "definition": "Any of the veins located in the palm of the hand, draining blood from the hand."
+      },
+      "ca": {
+        "terms": [
+          "Vena palmar"
+        ],
+        "definition": "Qualsevol de les venes situades al palmell de la mà, que drenen la sang de la mà."
+      }
+    }
+  },
+  {
+    "concept_id": "51724001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido celular subcutáneo de monte púbico",
+          "tejido celular subcutáneo del mons pubis",
+          "tejido celular subcutáneo de la eminencia del pubis"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Subcutaneous cellular tissue of pubic mound",
+          "Subcutaneous tissue of mons pubis",
+          "Subcutaneous fat of mons pubis"
+        ],
+        "definition": "The layer of adipose and connective tissue located beneath the skin of the mons pubis."
+      },
+      "ca": {
+        "terms": [
+          "Teixit cel·lular subcutani de mont de Venus",
+          "Teixit subcutani del mont del pubis"
+        ],
+        "definition": "La capa de teixit adipós i connectiu situada sota la pell del mont del pubis."
+      }
+    }
+  },
+  {
+    "concept_id": "84854006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "núcleo del nervio vago",
+          "núcleo del décimo par craneano",
+          "núcleo del décimo par craneal",
+          "núcleo del décimo nervio craneal",
+          "núcleo del nervio neumogástrico",
+          "núcleo del X par craneal"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vagal nerve nucleus",
+          "Nucleus of vagus nerve"
+        ],
+        "definition": "Any of the several nuclei in the brainstem associated with the vagus nerve (cranial nerve X), involved in its motor and sensory functions."
+      },
+      "ca": {
+        "terms": [
+          "Nucli del nervi vague",
+          "Nucli vagal"
+        ],
+        "definition": "Qualsevol dels diversos nuclis del tronc de l'encèfal associats al nervi vague (nervi cranial X), implicats en les seves funcions motores i sensorials."
+      }
+    }
+  },
+  {
+    "concept_id": "427628001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido óseo de primera vértebra coccígea"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Bone tissue of first coccygeal vertebra",
+          "Bone of first coccygeal vertebra",
+          "First coccygeal bone"
+        ],
+        "definition": "The osseous material comprising the uppermost segment of the coccyx."
+      },
+      "ca": {
+        "terms": [
+          "Teixit ossi de primera vèrtebra coccígia",
+          "Os de la primera vèrtebra coccígia"
+        ],
+        "definition": "El material ossi que constitueix el segment superior del còccix."
+      }
+    }
+  },
+  {
+    "concept_id": "40476001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "membrana mucosa de uréter",
+          "membrana mucosa del uréter"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Mucous membrane of ureter",
+          "Ureteral mucosa"
+        ],
+        "definition": "The innermost lining of the ureter, composed of transitional epithelium, which protects and facilitates urine flow."
+      },
+      "ca": {
+        "terms": [
+          "Membrana mucosa de l'urèter",
+          "Mucosa ureteral"
+        ],
+        "definition": "El revestiment més intern de l'urèter, compost per epiteli de transició, que protegeix i facilita el flux d'orina."
+      }
+    }
+  },
+  {
+    "concept_id": "12191008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "fractura, seudoartrosis, estrellada"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Stellate fracture with pseudoarthrosis",
+          "Pseudoarthrosis of stellate fracture",
+          "Stellate nonunion fracture"
+        ],
+        "definition": "A fracture characterized by multiple lines radiating from a central point, complicated by the failure of bone ends to unite, forming a false joint."
+      },
+      "ca": {
+        "terms": [
+          "Fractura estel·lada amb pseudoartrosi",
+          "Pseudoartrosi de fractura estel·lada"
+        ],
+        "definition": "Una fractura caracteritzada per múltiples línies que irradien des d'un punt central, complicada per la manca d'unió dels extrems ossis, formant una falsa articulació."
+      }
+    }
+  },
+  {
+    "concept_id": "181014005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "nervio interóseo anterior"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Anterior interosseous nerve",
+          "AIN"
+        ],
+        "definition": "A branch of the median nerve that supplies deep muscles of the forearm and wrist joint."
+      },
+      "ca": {
+        "terms": [
+          "Nervi interossi anterior",
+          "NIA"
+        ],
+        "definition": "Una branca del nervi medià que innerva els músculs profunds de l'avantbraç i l'articulació del canell."
+      }
+    }
+  },
+  {
+    "concept_id": "729013003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "borde posterior de la laminilla tiroidea"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Posterior border of thyroid lamina",
+          "Posterior margin of thyroid cartilage lamina"
+        ],
+        "definition": "The rear edge of the plate-like component of the thyroid cartilage."
+      },
+      "ca": {
+        "terms": [
+          "Vora posterior de la lamineta tiroïdal",
+          "Vora posterior de la làmina del cartílag tiroide"
+        ],
+        "definition": "La vora posterior del component laminar del cartílag tiroide."
+      }
+    }
+  },
+  {
+    "concept_id": "1162499009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "articulación del hueso grande del carpo y el hueso semilunar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Articulation of capitate bone and lunate bone",
+          "Capitate-lunate joint",
+          "Intercarpal joint between capitate and lunate"
+        ],
+        "definition": "The joint formed between the capitate bone and the lunate bone within the carpus."
+      },
+      "ca": {
+        "terms": [
+          "Articulació de l'os gran del carp i l'os semilunar",
+          "Articulació capitosemilunar"
+        ],
+        "definition": "L'articulació formada entre l'os gran i l'os semilunar dins del carp."
+      }
+    }
+  },
+  {
+    "concept_id": "245425000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "región del colon"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Region of colon",
+          "Colonic region"
+        ],
+        "definition": "Any segment or area within the large intestine known as the colon."
+      },
+      "ca": {
+        "terms": [
+          "Regió del còlon",
+          "Regió colònica"
+        ],
+        "definition": "Qualsevol segment o àrea dins de l'intestí gros conegut com a còlon."
+      }
+    }
+  },
+  {
+    "concept_id": "46086003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "la ampolla del canalículo lagrimal",
+          "ampolla del canalículo lagrimal"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Ampulla of lacrimal canaliculus",
+          "Lacrimal ampulla"
+        ],
+        "definition": "A slight dilation at the junction of the lacrimal canaliculus and the lacrimal sac."
+      },
+      "ca": {
+        "terms": [
+          "L'ampolla del canalicle lacrimal",
+          "Ampolla lacrimal"
+        ],
+        "definition": "Una lleugera dilatació a la unió del canalicle lacrimal i el sac lacrimal."
+      }
+    }
+  },
+  {
+    "concept_id": "181803006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "complejo óseo del techo de la órbita"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Bony complex of orbital roof",
+          "Orbital roof bone complex",
+          "Roof of orbit bone"
+        ],
+        "definition": "The collection of bones forming the superior wall of the eye socket, primarily composed of the frontal bone and a small part of the lesser wing of the sphenoid bone."
+      },
+      "ca": {
+        "terms": [
+          "Complex ossi del sostre de l'òrbita",
+          "Sostre ossi de l'òrbita"
+        ],
+        "definition": "La col·lecció d'ossos que formen la paret superior de la cavitat ocular, composta principalment per l'os frontal i una petita part de l'ala menor de l'esfenoide."
+      }
+    }
+  },
+  {
+    "concept_id": "182237007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ligamento articular, no especificado"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Articular ligament, unspecified",
+          "Joint ligament, unspecified"
+        ],
+        "definition": "A band of fibrous connective tissue that connects bones or cartilages within a joint, without further specification."
+      },
+      "ca": {
+        "terms": [
+          "Lligament articular, no especificat",
+          "Lligament de l'articulació, no especificat"
+        ],
+        "definition": "Banda de teixit connectiu fibrós que connecta ossos o cartílags dins d'una articulació, sense especificació addicional."
+      }
+    }
+  },
+  {
+    "concept_id": "822951003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ganglioneuroblastoma entrelazado"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Intermixed ganglioneuroblastoma",
+          "Ganglioneuroblastoma, intermixed type"
+        ],
+        "definition": "A malignant tumor of the sympathetic nervous system characterized by a mixture of mature ganglion cells, immature neuroblasts, and Schwannian stroma, with an intermixed pattern."
+      },
+      "ca": {
+        "terms": [
+          "Ganglioneuroblastoma entrellaçat",
+          "Ganglioneuroblastoma de tipus entrellaçat"
+        ],
+        "definition": "Tumor maligne del sistema nerviós simpàtic caracteritzat per una barreja de cèl·lules ganglionars madures, neuroblasts immadurs i estroma de Schwann, amb un patró entrellaçat."
+      }
+    }
+  },
+  {
+    "concept_id": "245392006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cuerpo de la vesícula biliar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Body of gallbladder",
+          "Gallbladder body"
+        ],
+        "definition": "The main, central part of the gallbladder, located between the fundus and the neck."
+      },
+      "ca": {
+        "terms": [
+          "Cos de la vesícula biliar",
+          "Vesícula biliar, cos"
+        ],
+        "definition": "La part principal i central de la vesícula biliar, situada entre el fons i el coll."
+      }
+    }
+  },
+  {
+    "concept_id": "368595003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "córnea del ojo izquierdo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Cornea of left eye",
+          "Left corneal structure"
+        ],
+        "definition": "The transparent, avascular, anterior part of the fibrous tunic of the left eyeball."
+      },
+      "ca": {
+        "terms": [
+          "Còrnia de l'ull esquerre",
+          "Estructura corneal esquerra"
+        ],
+        "definition": "La part transparent, avascular i anterior de la túnica fibrosa del globus ocular esquerre."
+      }
+    }
+  },
+  {
+    "concept_id": "61134003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculo dorsal largo de la cabeza"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Longissimus capitis muscle",
+          "Long dorsal muscle of head",
+          "Musculus longissimus capitis"
+        ],
+        "definition": "A muscle of the back and neck that extends from the transverse processes of the upper thoracic and lower cervical vertebrae to the mastoid process of the temporal bone, involved in head extension and rotation."
+      },
+      "ca": {
+        "terms": [
+          "Múscul llarguíssim del cap",
+          "Múscul dorsal llarg del cap",
+          "Musculus longissimus capitis"
+        ],
+        "definition": "Múscul de l'esquena i el coll que s'estén des dels processos transversos de les vèrtebres toràciques superiors i cervicals inferiors fins al procés mastoide de l'os temporal, implicat en l'extensió i rotació del cap."
+      }
+    }
+  },
+  {
+    "concept_id": "1187380003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculo cigomático"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Zygomatic muscle",
+          "Musculus zygomaticus"
+        ],
+        "definition": "A facial muscle that originates from the zygomatic bone and inserts into the orbicularis oculi and skin at the corner of the mouth, involved in smiling."
+      },
+      "ca": {
+        "terms": [
+          "Múscul zigomàtic",
+          "Musculus zygomaticus"
+        ],
+        "definition": "Múscul facial que s'origina a l'os zigomàtic i s'insereix a l'orbicular de l'ull i la pell a la comissura de la boca, implicat en el somriure."
+      }
+    }
+  },
+  {
+    "concept_id": "244738002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "elevador del labio superior y del ala de la nariz"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Levator labii superioris alaeque nasi muscle",
+          "Muscle levator labii superioris alaeque nasi",
+          "Common elevator of upper lip and ala of nose"
+        ],
+        "definition": "A facial muscle that elevates the upper lip and dilates the nostril."
+      },
+      "ca": {
+        "terms": [
+          "Múscul elevador del llavi superior i de l'ala del nas",
+          "Elevador del llavi superior i de l'ala del nas",
+          "Musculus levator labii superioris alaeque nasi"
+        ],
+        "definition": "Múscul facial que eleva el llavi superior i dilata la fossa nasal."
+      }
+    }
+  },
+  {
+    "concept_id": "835273002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "subluxación palmar cerrada"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Closed palmar subluxation",
+          "Palmar subluxation, closed"
+        ],
+        "definition": "A partial dislocation of a joint where the distal bone is displaced towards the palmar aspect, without an open wound communicating with the joint."
+      },
+      "ca": {
+        "terms": [
+          "Subluxació palmar tancada",
+          "Subluxació palmar, tancada"
+        ],
+        "definition": "Dislocació parcial d'una articulació on l'os distal es desplaça cap a la cara palmar, sense una ferida oberta que comuniqui amb l'articulació."
+      }
+    }
+  },
+  {
+    "concept_id": "727617008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tracto de salida de vejiga",
+          "salida de la vejiga",
+          "salida de vejiga"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Bladder outlet",
+          "Vesical outlet",
+          "Urethral outlet (from bladder)"
+        ],
+        "definition": "The anatomical region of the urinary bladder that leads into the urethra, including the bladder neck and internal urethral sphincter."
+      },
+      "ca": {
+        "terms": [
+          "Tracte de sortida de la bufeta",
+          "Sortida de la bufeta",
+          "Sortida vesical"
+        ],
+        "definition": "La regió anatòmica de la bufeta urinària que condueix a la uretra, incloent el coll de la bufeta i l'esfínter uretral intern."
+      }
+    }
+  },
+  {
+    "concept_id": "33803000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "lisosoma primario"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Primary lysosome",
+          "Virgin lysosome",
+          "Storage lysosome"
+        ],
+        "definition": "A lysosome that has not yet fused with an endosome or phagosome and contains only newly synthesized hydrolytic enzymes."
+      },
+      "ca": {
+        "terms": [
+          "Lisosoma primari",
+          "Lisosoma verge",
+          "Lisosoma d'emmagatzematge"
+        ],
+        "definition": "Lisosoma que encara no s'ha fusionat amb un endosoma o fagosoma i conté només enzims hidrolítics recentment sintetitzats."
+      }
+    }
+  },
+  {
+    "concept_id": "368743008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "aponeurosis de lengua",
+          "aponeurosis de lengua (como un todo)"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Aponeurosis of tongue",
+          "Lingual aponeurosis"
+        ],
+        "definition": "A thin, fibrous sheet of connective tissue forming part of the structure of the tongue, providing attachment for muscles."
+      },
+      "ca": {
+        "terms": [
+          "Aponeurosi de la llengua",
+          "Aponeurosi lingual"
+        ],
+        "definition": "Làmina fina i fibrosa de teixit connectiu que forma part de l'estructura de la llengua, proporcionant inserció per als músculs."
+      }
+    }
+  },
+  {
+    "concept_id": "244029009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "dermatoma raquídeo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Spinal dermatome",
+          "Dermatome (spinal nerve)"
+        ],
+        "definition": "An area of skin supplied by sensory nerve fibers from a single spinal nerve root."
+      },
+      "ca": {
+        "terms": [
+          "Dermatoma raquidi",
+          "Dermatoma (nervi raquidi)"
+        ],
+        "definition": "Àrea de pell innervada per fibres nervioses sensorials d'una única arrel nerviosa espinal."
+      }
+    }
+  },
+  {
+    "concept_id": "727724000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cuello de tercer metatarsiano"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Neck of third metatarsal bone",
+          "Third metatarsal neck"
+        ],
+        "definition": "The constricted part of the third metatarsal bone, located between its head and shaft."
+      },
+      "ca": {
+        "terms": [
+          "Coll del tercer metatarsià",
+          "Tercer metatarsià, coll"
+        ],
+        "definition": "La part constreta del tercer os metatarsià, situada entre el seu cap i el cos."
+      }
+    }
+  },
+  {
+    "concept_id": "728095004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tendón de músculo geniogloso"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Tendon of genioglossus muscle",
+          "Genioglossus tendon"
+        ],
+        "definition": "The fibrous connective tissue structure that attaches the genioglossus muscle to its points of origin and insertion."
+      },
+      "ca": {
+        "terms": [
+          "Tendó del múscul genioglòs",
+          "Tendó genioglòs"
+        ],
+        "definition": "L'estructura de teixit connectiu fibrós que uneix el múscul genioglòs als seus punts d'origen i inserció."
+      }
+    }
+  },
+  {
+    "concept_id": "279527005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "borde del cartílago cricoides"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Border of cricoid cartilage",
+          "Cricoid cartilage border"
+        ],
+        "definition": "The edge or margin of the cricoid cartilage, which is a ring-shaped cartilage forming the inferior part of the larynx."
+      },
+      "ca": {
+        "terms": [
+          "Vora del cartílag cricoide",
+          "Cartílag cricoide, vora"
+        ],
+        "definition": "La vora o marge del cartílag cricoide, que és un cartílag en forma d'anell que forma la part inferior de la laringe."
+      }
+    }
+  },
+  {
+    "concept_id": "2,1521E+13",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "eritema telangiectásico reticulado"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Reticulated telangiectatic erythema",
+          "Erythema, reticulated telangiectatic"
+        ],
+        "definition": "A skin condition characterized by a net-like or reticulated pattern of redness (erythema) with visible dilated blood vessels (telangiectasias)."
+      },
+      "ca": {
+        "terms": [
+          "Eritema telangiectàsic reticulat",
+          "Eritema reticulat telangiectàsic"
+        ],
+        "definition": "Una condició de la pell caracteritzada per un patró reticulat o en xarxa d'enrogiment (eritema) amb vasos sanguinis dilatats visibles (telangièctasis)."
+      }
+    }
+  },
+  {
+    "concept_id": "110656005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "conducto deferente y conducto deferente (sitio combinado)",
+          "conducto deferente y conducto deferente, SC",
+          "conducto deferente y conducto deferente"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vas deferens, combined site",
+          "Bilateral vas deferens"
+        ],
+        "definition": "The combined anatomical site encompassing both the left and right vas deferens."
+      },
+      "ca": {
+        "terms": [
+          "Conducte deferent, lloc combinat",
+          "Conductes deferents bilaterals"
+        ],
+        "definition": "El lloc anatòmic combinat que inclou tant el conducte deferent esquerre com el dret."
+      }
+    }
+  },
+  {
+    "concept_id": "212741000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vena de la rodilla"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vein of knee",
+          "Knee vein",
+          "Genicular vein"
+        ],
+        "definition": "Any vein located in or around the knee joint."
+      },
+      "ca": {
+        "terms": [
+          "Vena del genoll",
+          "Vena genicular"
+        ],
+        "definition": "Qualsevol vena situada a o al voltant de l'articulació del genoll."
+      }
+    }
+  },
+  {
+    "concept_id": "119192001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "parte del peroné"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Part of fibula",
+          "Fibular part"
+        ],
+        "definition": "Any segment or region of the fibula bone."
+      },
+      "ca": {
+        "terms": [
+          "Part del peroné",
+          "Porció del peroné"
+        ],
+        "definition": "Qualsevol segment o regió de l'os peroné."
+      }
+    }
+  },
+  {
+    "concept_id": "732100000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "nervio de estructura genital"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Nerve of genital structure",
+          "Genital nerve"
+        ],
+        "definition": "Any nerve innervating a structure of the genital system."
+      },
+      "ca": {
+        "terms": [
+          "Nervi d'estructura genital",
+          "Nervi genital"
+        ],
+        "definition": "Qualsevol nervi que innerva una estructura del sistema genital."
+      }
+    }
+  },
+  {
+    "concept_id": "728745009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "agujero craneal"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Cranial foramen",
+          "Foramen of skull"
+        ],
+        "definition": "Any opening or hole in the skull through which nerves, blood vessels, or other structures pass."
+      },
+      "ca": {
+        "terms": [
+          "Forat cranial",
+          "Foramen cranial"
+        ],
+        "definition": "Qualsevol obertura o orifici al crani a través del qual passen nervis, vasos sanguinis o altres estructures."
+      }
+    }
+  },
+  {
+    "concept_id": "1259302005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vía accesoria posteroseptal izquierda"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Left posteroseptal accessory pathway",
+          "Left posterior septal accessory pathway"
+        ],
+        "definition": "An abnormal electrical conduction pathway located in the left posteroseptal region of the heart, bypassing the atrioventricular node."
+      },
+      "ca": {
+        "terms": [
+          "Via accessòria posteroseptal esquerra"
+        ],
+        "definition": "Una via de conducció elèctrica anormal situada a la regió posteroseptal esquerra del cor, que bypassa el node auriculoventricular."
+      }
+    }
+  },
+  {
+    "concept_id": "1204396005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "membrana sinovial de articulación glenohumeral derecha",
+          "membrana sinovial de articulación de hombro derecho"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Synovial membrane of right glenohumeral joint",
+          "Right shoulder joint synovial membrane"
+        ],
+        "definition": "The synovial membrane lining the capsule of the right glenohumeral (shoulder) joint."
+      },
+      "ca": {
+        "terms": [
+          "Membrana sinovial d'articulació glenohumeral dreta"
+        ],
+        "definition": "La membrana sinovial que recobreix la càpsula de l'articulació glenohumeral (espatlla) dreta."
+      }
+    }
+  },
+  {
+    "concept_id": "4647008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "gotita de lípido, homogénea (sustancia del cuerpo)",
+          "gotita de lípido, homogénea"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Homogeneous lipid droplet (body substance)",
+          "Lipid droplet, homogeneous"
+        ],
+        "definition": "A small, spherical inclusion of lipid within a cell, appearing uniform in composition."
+      },
+      "ca": {
+        "terms": [
+          "Goteta de lípid, homogènia (substància del cos)",
+          "Goteta lipídica homogènia"
+        ],
+        "definition": "Una petita inclusió esfèrica de lípid dins d'una cèl·lula, d'aparença uniforme en composició."
+      }
+    }
+  },
+  {
+    "concept_id": "721078004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vena superficial de miembro inferior izquierdo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Superficial vein of left lower limb",
+          "Left lower extremity superficial vein"
+        ],
+        "definition": "Any vein located superficially in the left lower limb, typically above the deep fascia."
+      },
+      "ca": {
+        "terms": [
+          "Vena superficial de membre inferior esquerre"
+        ],
+        "definition": "Qualsevol vena situada superficialment al membre inferior esquerre, típicament per sobre de la fàscia profunda."
+      }
+    }
+  },
+  {
+    "concept_id": "699646004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "porción superior de la pared torácica"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Upper portion of thoracic wall",
+          "Superior thoracic wall"
+        ],
+        "definition": "The superior region of the chest wall, encompassing its bony, muscular, and cutaneous components."
+      },
+      "ca": {
+        "terms": [
+          "Porció superior de la paret toràcica"
+        ],
+        "definition": "La regió superior de la paret toràcica, que inclou els seus components ossis, musculars i cutanis."
+      }
+    }
+  },
+  {
+    "concept_id": "200903004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "parte vertebral de la cara interna del pulmón"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vertebral part of medial surface of lung",
+          "Vertebral surface of lung",
+          "Medial lung surface, vertebral part"
+        ],
+        "definition": "The posterior-most aspect of the medial (mediastinal) surface of the lung, adjacent to the vertebral column."
+      },
+      "ca": {
+        "terms": [
+          "Part vertebral de la cara interna del pulmó"
+        ],
+        "definition": "L'aspecte més posterior de la superfície medial (mediastínica) del pulmó, adjacent a la columna vertebral."
+      }
+    }
+  },
+  {
+    "concept_id": "731475004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "compartimiento pleuropulmonar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Pleuropulmonary compartment",
+          "Pleural and pulmonary compartment"
+        ],
+        "definition": "The anatomical space encompassing the lung and its surrounding pleura."
+      },
+      "ca": {
+        "terms": [
+          "Compartiment pleuropulmonar"
+        ],
+        "definition": "L'espai anatòmic que inclou el pulmó i la seva pleura circumdant."
+      }
+    }
+  },
+  {
+    "concept_id": "307035003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "compartimiento del brazo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Compartment of arm",
+          "Arm compartment"
+        ],
+        "definition": "Any of the fascial compartments within the arm, typically anterior (flexor) and posterior (extensor)."
+      },
+      "ca": {
+        "terms": [
+          "Compartiment del braç"
+        ],
+        "definition": "Qualsevol dels compartiments fascials dins del braç, típicament anterior (flexor) i posterior (extensor)."
+      }
+    }
+  },
+  {
+    "concept_id": "87595009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "quiste de inclusión epitelial"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Epithelial inclusion cyst",
+          "Epidermoid cyst"
+        ],
+        "definition": "A benign cyst lined by stratified squamous epithelium, typically containing keratin and cellular debris."
+      },
+      "ca": {
+        "terms": [
+          "Quist d'inclusió epitelial",
+          "Quist epidermoide"
+        ],
+        "definition": "Un quist benigne revestit per epiteli escamós estratificat, que típicament conté queratina i restes cel·lulars."
+      }
+    }
+  },
+  {
+    "concept_id": "303549000",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "lóbulo inferior del pulmón"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Inferior lobe of lung",
+          "Lower lobe of lung"
+        ],
+        "definition": "The lower division of a lung, typically separated from the upper lobe by a fissure."
+      },
+      "ca": {
+        "terms": [
+          "Lòbul inferior del pulmó",
+          "Lòbul pulmonar inferior"
+        ],
+        "definition": "La divisió inferior d'un pulmó, típicament separada del lòbul superior per una fissura."
+      }
+    }
+  },
+  {
+    "concept_id": "278340005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ganglio raquídeo de la cuarta vértebra dorsal"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Spinal ganglion of fourth thoracic vertebra",
+          "Dorsal root ganglion of T4",
+          "T4 dorsal root ganglion"
+        ],
+        "definition": "A sensory ganglion located on the dorsal root of the fourth thoracic spinal nerve."
+      },
+      "ca": {
+        "terms": [
+          "Gangli raquidi de la quarta vèrtebra dorsal",
+          "Gangli de l'arrel dorsal de T4",
+          "Gangli espinal de la quarta vèrtebra toràcica"
+        ],
+        "definition": "Un gangli sensorial situat a l'arrel dorsal del quart nervi espinal toràcic."
+      }
+    }
+  },
+  {
+    "concept_id": "33718005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ligamento tibioperóneo anterior"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Anterior tibiofibular ligament",
+          "Anterior inferior tibiofibular ligament",
+          "AITFL"
+        ],
+        "definition": "A ligament connecting the anterior aspects of the tibia and fibula, forming part of the ankle joint."
+      },
+      "ca": {
+        "terms": [
+          "Lligament tibioperoneal anterior",
+          "Lligament tibiofibular anterior",
+          "Lligament tibioperoneal anteroinferior"
+        ],
+        "definition": "Un lligament que connecta les cares anteriors de la tíbia i el peroné, formant part de l'articulació del turmell."
+      }
+    }
+  },
+  {
+    "concept_id": "1237595002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ligamento lateral de articulación de dedo índice de mano derecha",
+          "ligamento colateral de articulación de segundo dedo de mano derecha"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Lateral ligament of right index finger joint",
+          "Collateral ligament of right index finger joint"
+        ],
+        "definition": "A ligament providing stability to a joint of the right index finger, located on its lateral side."
+      },
+      "ca": {
+        "terms": [
+          "Lligament lateral d'articulació de dit índex de mà dreta",
+          "Lligament col·lateral de l'articulació del dit índex dret"
+        ],
+        "definition": "Un lligament que proporciona estabilitat a una articulació del dit índex dret, situat al seu costat lateral."
+      }
+    }
+  },
+  {
+    "concept_id": "204251009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "linfáticos del tórax",
+          "vaso linfático del tórax"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Lymphatics of thorax",
+          "Thoracic lymphatics",
+          "Lymphatic vessels of thorax"
+        ],
+        "definition": "The network of lymphatic vessels and nodes located within the thoracic cavity."
+      },
+      "ca": {
+        "terms": [
+          "Limfàtics del tòrax",
+          "Vasos limfàtics del tòrax",
+          "Limfàtics toràcics"
+        ],
+        "definition": "La xarxa de vasos i ganglis limfàtics situats dins de la cavitat toràcica."
+      }
+    }
+  },
+  {
+    "concept_id": "180945001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "nervio auditivo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Auditory nerve",
+          "Vestibulocochlear nerve",
+          "Cranial nerve VIII",
+          "Acoustic nerve"
+        ],
+        "definition": "The eighth cranial nerve, responsible for transmitting sound and balance information from the inner ear to the brain."
+      },
+      "ca": {
+        "terms": [
+          "Nervi auditiu",
+          "Nervi vestibulococlear",
+          "Vuitè parell cranial",
+          "Nervi acústic"
+        ],
+        "definition": "El vuitè nervi cranial, responsable de transmetre informació de so i equilibri des de l'orella interna al cervell."
+      }
+    }
+  },
+  {
+    "concept_id": "727486004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ganglio linfático mediastínico mayor"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Major mediastinal lymph node",
+          "Large mediastinal lymph node"
+        ],
+        "definition": "A prominent lymph node located within the mediastinum, involved in draining lymph from thoracic structures."
+      },
+      "ca": {
+        "terms": [
+          "Gangli limfàtic mediastínic major",
+          "Gangli limfàtic mediastínic gran"
+        ],
+        "definition": "Un gangli limfàtic prominent situat dins del mediastí, implicat en el drenatge de la limfa de les estructures toràciques."
+      }
+    }
+  },
+  {
+    "concept_id": "48707006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "aceleración del crecimiento",
+          "crecimiento acelerado"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Growth acceleration",
+          "Accelerated growth",
+          "Growth spurt"
+        ],
+        "definition": "A period of rapid increase in height and weight, typically occurring during puberty or early childhood."
+      },
+      "ca": {
+        "terms": [
+          "Acceleració del creixement",
+          "Creixement accelerat",
+          "Estirada de creixement"
+        ],
+        "definition": "Un període d'augment ràpid d'alçada i pes, que sol ocórrer durant la pubertat o la primera infància."
+      }
+    }
+  },
+  {
+    "concept_id": "422032003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "diente mandibular",
+          "diente mandibular (como un todo)"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Mandibular tooth",
+          "Lower tooth"
+        ],
+        "definition": "Any tooth located in the mandible (lower jaw)."
+      },
+      "ca": {
+        "terms": [
+          "Dent mandibular",
+          "Dent inferior"
+        ],
+        "definition": "Qualsevol dent situada a la mandíbula (maxil·lar inferior)."
+      }
+    }
+  },
+  {
+    "concept_id": "368059003",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "membrana intercostal interna"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Internal intercostal membrane",
+          "Inner intercostal membrane"
+        ],
+        "definition": "A fibrous membrane that extends from the internal intercostal muscles to the sternum anteriorly and the vertebral column posteriorly."
+      },
+      "ca": {
+        "terms": [
+          "Membrana intercostal interna",
+          "Membrana intercostal interior"
+        ],
+        "definition": "Una membrana fibrosa que s'estén des dels músculs intercostals interns fins a l'estèrnum anteriorment i la columna vertebral posteriorment."
+      }
+    }
+  },
+  {
+    "concept_id": "729742001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cóndilo de fémur",
+          "cóndilo femoral"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Femoral condyle",
+          "Condyle of femur"
+        ],
+        "definition": "One of the two rounded prominences at the distal end of the femur, articulating with the tibia."
+      },
+      "ca": {
+        "terms": [
+          "Còndil de fèmur",
+          "Còndil femoral"
+        ],
+        "definition": "Una de les dues prominències arrodonides a l'extrem distal del fèmur, que s'articula amb la tíbia."
+      }
+    }
+  },
+  {
+    "concept_id": "879846007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "epitelio de córnea periférica del ojo izquierdo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Epithelium of peripheral cornea of left eye",
+          "Left eye peripheral corneal epithelium"
+        ],
+        "definition": "The outermost layer of cells covering the peripheral region of the cornea in the left eye."
+      },
+      "ca": {
+        "terms": [
+          "Epiteli de còrnia perifèrica de l'ull esquerre",
+          "Epiteli corneal perifèric de l'ull esquerre"
+        ],
+        "definition": "La capa més externa de cèl·lules que cobreix la regió perifèrica de la còrnia a l'ull esquerre."
+      }
+    }
+  },
+  {
+    "concept_id": "181680009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "músculo vasto interno del cuádriceps"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vastus medialis muscle of quadriceps",
+          "Vastus medialis",
+          "VMO"
+        ],
+        "definition": "One of the four muscles of the quadriceps femoris group, located on the medial side of the thigh."
+      },
+      "ca": {
+        "terms": [
+          "Múscul vast intern del quàdriceps",
+          "Múscul vast medial",
+          "Vast medial"
+        ],
+        "definition": "Un dels quatre músculs del grup quàdriceps femoral, situat a la cara medial de la cuixa."
+      }
+    }
+  },
+  {
+    "concept_id": "125198007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "mordedura de perro"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Dog bite",
+          "Bite by dog"
+        ],
+        "definition": "An injury caused by the teeth of a dog."
+      },
+      "ca": {
+        "terms": [
+          "Mossegada de gos",
+          "Picada de gos"
+        ],
+        "definition": "Una lesió causada per les dents d'un gos."
+      }
+    }
+  },
+  {
+    "concept_id": "264445009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "injerto aórtico"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Aortic graft",
+          "Aortic bypass graft",
+          "Aortic prosthesis"
+        ],
+        "definition": "A surgical implant used to replace or bypass a diseased or damaged section of the aorta."
+      },
+      "ca": {
+        "terms": [
+          "Empelt aòrtic",
+          "Pròtesi aòrtica",
+          "Injert aòrtic"
+        ],
+        "definition": "Un implant quirúrgic utilitzat per reemplaçar o derivar una secció malalta o danyada de l'aorta."
+      }
+    }
+  },
+  {
+    "concept_id": "29708002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "pituicito"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Pituicyte"
+        ],
+        "definition": "A type of glial cell found in the posterior pituitary gland, structurally similar to astrocytes."
+      },
+      "ca": {
+        "terms": [
+          "Pituïcit"
+        ],
+        "definition": "Un tipus de cèl·lula glial que es troba a la glàndula pituïtària posterior, estructuralment similar als astròcits."
+      }
+    }
+  },
+  {
+    "concept_id": "729926002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "arteria interna de la nariz"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Internal nasal artery"
+        ],
+        "definition": "An artery that supplies blood to the internal structures of the nose."
+      },
+      "ca": {
+        "terms": [
+          "Artèria nasal interna"
+        ],
+        "definition": "Una artèria que subministra sang a les estructures internes del nas."
+      }
+    }
+  },
+  {
+    "concept_id": "108355006",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "filamento citoplasmático, túbulo, centríolo, Y/O estructura relacionada"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Cytoplasmic filament, tubule, centriole, AND/OR related structure"
+        ],
+        "definition": "A group of intracellular structures including cytoplasmic filaments, tubules, and centrioles, or other related components, involved in maintaining cell shape, movement, and division."
+      },
+      "ca": {
+        "terms": [
+          "Filament citoplasmàtic, túbul, centríol, I/O estructura relacionada"
+        ],
+        "definition": "Un grup d'estructures intracel·lulars que inclouen filaments citoplasmàtics, túbuls i centríols, o altres components relacionats, implicats en el manteniment de la forma cel·lular, el moviment i la divisió."
+      }
+    }
+  },
+  {
+    "concept_id": "1293118009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "adenocarcinoma de glándula anogenital tipo mamaria"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Adenocarcinoma of anogenital mammary-type gland"
+        ],
+        "definition": "A malignant glandular tumor arising from mammary-type glands located in the anogenital region."
+      },
+      "ca": {
+        "terms": [
+          "Adenocarcinoma de glàndula anogenital de tipus mamari"
+        ],
+        "definition": "Un tumor glandular maligne que s'origina a partir de glàndules de tipus mamari situades a la regió anogenital."
+      }
+    }
+  },
+  {
+    "concept_id": "72143005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "la región sacrococcígea",
+          "región sacrococcígea",
+          "región sacra y/o coccígea"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Sacrococcygeal region"
+        ],
+        "definition": "The anatomical region encompassing the sacrum and coccyx, located at the inferior end of the vertebral column."
+      },
+      "ca": {
+        "terms": [
+          "Regió sacrococcígia"
+        ],
+        "definition": "La regió anatòmica que inclou el sacre i el còccix, situada a l'extrem inferior de la columna vertebral."
+      }
+    }
+  },
+  {
+    "concept_id": "86373002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "macrófago armado",
+          "macrófago activado"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Armed macrophage"
+        ],
+        "definition": "A macrophage that has been activated by cytokines, enhancing its phagocytic and cytotoxic capabilities."
+      },
+      "ca": {
+        "terms": [
+          "Macròfag armat"
+        ],
+        "definition": "Un macròfag que ha estat activat per citocines, augmentant les seves capacitats fagocítiques i citotòxiques."
+      }
+    }
+  },
+  {
+    "concept_id": "129795008",
+    "semantic_type": "Hallazgo",
+    "languages": {
+      "es": {
+        "terms": [
+          "engrosamiento de las trabÃ©culas mamarias"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Thickening of mammary trabeculae"
+        ],
+        "definition": "An increase in the thickness of the connective tissue septa (trabeculae) within the mammary gland, often observed in imaging or histological examination."
+      },
+      "ca": {
+        "terms": [
+          "Engrossiment de les trabècules mamàries"
+        ],
+        "definition": "Un augment del gruix dels septes de teixit connectiu (trabècules) dins de la glàndula mamària, sovint observat en imatges o examen histològic."
+      }
+    }
+  },
+  {
+    "concept_id": "52241002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "polo superior del testículo",
+          "polo superior de testículo",
+          "extremidad superior del testículo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Superior pole of testis"
+        ],
+        "definition": "The upper extremity or end of the testis."
+      },
+      "ca": {
+        "terms": [
+          "Pol superior del testicle"
+        ],
+        "definition": "L'extremitat o extrem superior del testicle."
+      }
+    }
+  },
+  {
+    "concept_id": "244616005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ligamento humeral transverso"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Transverse humeral ligament"
+        ],
+        "definition": "A fibrous band that bridges the bicipital groove of the humerus, holding the long head of the biceps tendon in place."
+      },
+      "ca": {
+        "terms": [
+          "Lligament humeral transvers"
+        ],
+        "definition": "Una banda fibrosa que uneix el solc bicipital de l'húmer, mantenint el tendó del cap llarg del bíceps al seu lloc."
+      }
+    }
+  },
+  {
+    "concept_id": "302533005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "falange de dedo de pie"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Toe phalanx"
+        ],
+        "definition": "Any of the bones that form the toes."
+      },
+      "ca": {
+        "terms": [
+          "Falange del dit del peu"
+        ],
+        "definition": "Qualsevol dels ossos que formen els dits del peu."
+      }
+    }
+  },
+  {
+    "concept_id": "720658004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "falange de dedo grande de pie izquierdo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Phalanx of left great toe",
+          "Phalanx of left hallux"
+        ],
+        "definition": "Any of the bones that form the great toe of the left foot."
+      },
+      "ca": {
+        "terms": [
+          "Falange del dit gros del peu esquerre",
+          "Falange de l'hàl·lux esquerre"
+        ],
+        "definition": "Qualsevol dels ossos que formen el dit gros del peu esquerre."
+      }
+    }
+  },
+  {
+    "concept_id": "728349001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "superficie mesio-linguo-distal de diente",
+          "mesio-linguo-distal"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Mesiolinguodistal surface of tooth"
+        ],
+        "definition": "A complex surface of a tooth encompassing the mesial, lingual, and distal aspects."
+      },
+      "ca": {
+        "terms": [
+          "Superfície mesiolinguodistal de la dent"
+        ],
+        "definition": "Una superfície complexa d'una dent que abasta els aspectes mesial, lingual i distal."
+      }
+    }
+  },
+  {
+    "concept_id": "273193001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "punto auricular chino en codo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Chinese auricular point on elbow"
+        ],
+        "definition": "A specific acupuncture point located on the elbow, as described in traditional Chinese auricular acupuncture."
+      },
+      "ca": {
+        "terms": [
+          "Punt auricular xinès al colze"
+        ],
+        "definition": "Un punt d'acupuntura específic situat al colze, tal com es descriu en l'acupuntura auricular tradicional xinesa."
+      }
+    }
+  },
+  {
+    "concept_id": "119242005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "parte del cerebelo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Part of cerebellum"
+        ],
+        "definition": "Any anatomical subdivision or functional component of the cerebellum."
+      },
+      "ca": {
+        "terms": [
+          "Part del cerebel"
+        ],
+        "definition": "Qualsevol subdivisió anatòmica o component funcional del cerebel."
+      }
+    }
+  },
+  {
+    "concept_id": "281232002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vascular de cabeza y/o cuello",
+          "vascular de cabeza y cuello"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vascular structure of head AND/OR neck"
+        ],
+        "definition": "Any blood vessel or network of vessels located within the head and/or neck region."
+      },
+      "ca": {
+        "terms": [
+          "Estructura vascular del cap I/O coll"
+        ],
+        "definition": "Qualsevol vas sanguini o xarxa de vasos sanguinis situats a la regió del cap i/o coll."
+      }
+    }
+  },
+  {
+    "concept_id": "729852009",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "inserción de músculo subescapular"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Subscapular muscle insertion",
+          "Insertion of subscapularis muscle"
+        ],
+        "definition": "The point where the subscapular muscle attaches to a bone, typically the lesser tubercle of the humerus."
+      },
+      "ca": {
+        "terms": [
+          "Inserció del múscul subescapular"
+        ],
+        "definition": "El punt on el múscul subescapular s'uneix a un os, típicament el tubercle menor de l'húmer."
+      }
+    }
+  },
+  {
+    "concept_id": "181991004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cabeza de la falange proximal de dedo de la mano",
+          "cabeza de falange proximal de dedo de la mano"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Head of proximal phalanx of finger",
+          "Proximal phalanx head of finger"
+        ],
+        "definition": "The distal end of the proximal phalanx bone in a finger, forming part of the metacarpophalangeal joint."
+      },
+      "ca": {
+        "terms": [
+          "Cap de la falange proximal del dit de la mà"
+        ],
+        "definition": "L'extrem distal de l'os de la falange proximal d'un dit, que forma part de l'articulació metacarpofalàngica."
+      }
+    }
+  },
+  {
+    "concept_id": "229445005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "piel entre el cuarto y el quinto dedo del pie"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Skin between fourth and fifth toe",
+          "Interdigital skin of fourth and fifth toe"
+        ],
+        "definition": "The integumentary tissue located in the space between the fourth and fifth digits of the foot."
+      },
+      "ca": {
+        "terms": [
+          "Pell entre el quart i el cinquè dit del peu",
+          "Pell interdigital del quart i cinquè dit del peu"
+        ],
+        "definition": "El teixit tegumentari situat a l'espai entre el quart i el cinquè dit del peu."
+      }
+    }
+  },
+  {
+    "concept_id": "359744007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "bronquio de lóbulo izquierdo",
+          "bronquio del lóbulo izquierdo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Left lobar bronchus",
+          "Bronchus of left lobe"
+        ],
+        "definition": "A major airway branching from the left main bronchus, supplying a lobe of the left lung."
+      },
+      "ca": {
+        "terms": [
+          "Bronqui del lòbul esquerre",
+          "Bronqui lobar esquerre"
+        ],
+        "definition": "Una via aèria principal que es ramifica del bronqui principal esquerre, subministrant un lòbul del pulmó esquerre."
+      }
+    }
+  },
+  {
+    "concept_id": "731853005",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ósea de hueso cuneiforme",
+          "hueso cuneiforme"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Bone structure of cuneiform bone",
+          "Cuneiform bone structure"
+        ],
+        "definition": "The osseous tissue and architectural arrangement forming a cuneiform bone in the foot or wrist."
+      },
+      "ca": {
+        "terms": [
+          "Estructura òssia de l'os cuneïforme",
+          "Os cuneïforme (estructura òssia)"
+        ],
+        "definition": "El teixit ossi i l'arranjament arquitectònic que formen un os cuneïforme al peu o al canell."
+      }
+    }
+  },
+  {
+    "concept_id": "51091007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tejido intersticial de la glándula parótida"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Interstitial tissue of parotid gland",
+          "Parotid gland interstitial tissue"
+        ],
+        "definition": "The connective tissue and extracellular matrix located between the functional cells (parenchyma) of the parotid gland."
+      },
+      "ca": {
+        "terms": [
+          "Teixit intersticial de la glàndula paròtide",
+          "Interstici de la glàndula paròtide"
+        ],
+        "definition": "El teixit connectiu i la matriu extracel·lular situats entre les cèl·lules funcionals (parènquima) de la glàndula paròtide."
+      }
+    }
+  },
+  {
+    "concept_id": "91043001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "vacuolización",
+          "vacuolación"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Vacuolization",
+          "Vacuolation"
+        ],
+        "definition": "The formation of vacuoles within cells or tissues, often indicative of cellular degeneration or metabolic changes."
+      },
+      "ca": {
+        "terms": [
+          "Vacuolització"
+        ],
+        "definition": "La formació de vacúols dins de cèl·lules o teixits, sovint indicativa de degeneració cel·lular o canvis metabòlics."
+      }
+    }
+  },
+  {
+    "concept_id": "728557002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "tercio interno de clavícula",
+          "tercio medial de clavícula"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Medial third of clavicle",
+          "Inner third of clavicle"
+        ],
+        "definition": "The portion of the clavicle closest to the sternum, comprising approximately one-third of its length."
+      },
+      "ca": {
+        "terms": [
+          "Terç medial de la clavícula",
+          "Terç intern de la clavícula"
+        ],
+        "definition": "La porció de la clavícula més propera a l'estèrnum, que comprèn aproximadament un terç de la seva longitud."
+      }
+    }
+  },
+  {
+    "concept_id": "264200007",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "superestructura del estribo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Stapes superstructure",
+          "Superstructure of stapes"
+        ],
+        "definition": "The part of the stapes bone in the middle ear that extends from the footplate, including the crura and head."
+      },
+      "ca": {
+        "terms": [
+          "Superestructura de l'estrep"
+        ],
+        "definition": "La part de l'os de l'estrep a l'orella mitjana que s'estén des de la platina, incloent les crura i el cap."
+      }
+    }
+  },
+  {
+    "concept_id": "314294008",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "arteria del oído interno"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Artery of inner ear",
+          "Labyrinthine artery",
+          "Internal auditory artery"
+        ],
+        "definition": "An artery that supplies blood to the structures of the inner ear, typically a branch of the anterior inferior cerebellar artery or basilar artery."
+      },
+      "ca": {
+        "terms": [
+          "Artèria de l'orella interna",
+          "Artèria laberíntica",
+          "Artèria auditiva interna"
+        ],
+        "definition": "Una artèria que subministra sang a les estructures de l'orella interna, típicament una branca de l'artèria cerebel·losa anteroinferior o de l'artèria basilar."
+      }
+    }
+  },
+  {
+    "concept_id": "73649002",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "la vaina tendinosa de los músculos extensor corto y abductor largo del dedo pulgar"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Tendon sheath of extensor pollicis brevis and abductor pollicis longus muscles",
+          "First dorsal compartment tendon sheath",
+          "De Quervain's sheath"
+        ],
+        "definition": "The fibrous tunnel and synovial lining enclosing the tendons of the extensor pollicis brevis and abductor pollicis longus muscles at the wrist."
+      },
+      "ca": {
+        "terms": [
+          "Vaina tendinosa dels músculs extensor curt i abductor llarg del polze",
+          "Vaina del primer compartiment dorsal"
+        ],
+        "definition": "El túnel fibrós i el revestiment sinovial que envolten els tendons dels músculs extensor curt del polze i abductor llarg del polze al canell."
+      }
+    }
+  },
+  {
+    "concept_id": "729529004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "cuadrante nasal superior de retina"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Superior nasal quadrant of retina",
+          "Retinal superior nasal quadrant"
+        ],
+        "definition": "The upper and inner section of the retina, responsible for processing visual information from the inferior temporal visual field."
+      },
+      "ca": {
+        "terms": [
+          "Quadrant nasal superior de la retina",
+          "Retina quadrant nasal superior"
+        ],
+        "definition": "La secció superior i interna de la retina, responsable de processar la informació visual del camp visual inferotemporal."
+      }
+    }
+  },
+  {
+    "concept_id": "76060004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "neuroblastoma olfativo",
+          "estesioneuroblastoma"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Olfactory neuroblastoma",
+          "Esthesioneuroblastoma"
+        ],
+        "definition": "A rare malignant tumor arising from the neuroectodermal cells of the olfactory epithelium, typically located in the nasal cavity."
+      },
+      "ca": {
+        "terms": [
+          "Neuroblastoma olfactori",
+          "Estesioneuroblastoma"
+        ],
+        "definition": "Un tumor maligne rar que s'origina de les cèl·lules neuroectodèrmiques de l'epiteli olfactori, típicament localitzat a la cavitat nasal."
+      }
+    }
+  },
+  {
+    "concept_id": "370662001",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "ligamento sesamoideo medio de extremidad trasera equina"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Middle sesamoidean ligament of equine hindlimb",
+          "Equine hindlimb middle sesamoidean ligament"
+        ],
+        "definition": "A specific ligament in the equine hindlimb that connects the proximal sesamoid bones to the distal phalanx, part of the suspensory apparatus."
+      },
+      "ca": {
+        "terms": [
+          "Lligament sesamoideà mitjà de l'extremitat posterior equina"
+        ],
+        "definition": "Un lligament específic a l'extremitat posterior equina que connecta els ossos sesamoideus proximals amb la falange distal, part de l'aparell suspensori."
+      }
+    }
+  },
+  {
+    "concept_id": "399886004",
+    "semantic_type": "Estructura_corporal",
+    "languages": {
+      "es": {
+        "terms": [
+          "microscópica de tejido conjuntivo"
+        ],
+        "definition": null
+      },
+      "en": {
+        "terms": [
+          "Microscopic structure of connective tissue",
+          "Connective tissue microscopic structure"
+        ],
+        "definition": "The detailed anatomical organization of connective tissue as observed under a microscope, including its cells and extracellular matrix components."
+      },
+      "ca": {
+        "terms": [
+          "Estructura microscòpica del teixit connectiu",
+          "Teixit connectiu (estructura microscòpica)"
+        ],
+        "definition": "L'organització anatòmica detallada del teixit connectiu observada al microscopi, incloent les seves cèl·lules i components de la matriu extracel·lular."
+      }
+    }
+  }
+]
