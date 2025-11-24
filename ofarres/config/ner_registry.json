@@ -17,7 +17,13 @@
   "OntologyExact": {
     "module": "src.NER.ontology_ner",
     "class": "OntologyNER",
-    "ontology_path": "ontology/hybrid_ontology.csv", 
-    "min_length": 2
+    "ontology_path": "ontology/multilingual_ontology.json", 
+    "min_length": 1
+  },
+  "Acronyms": {
+    "module": "src.NER.acronym_ner",
+    "class": "AcronymNER",
+    "ontology_path": "ontology/multilingual_ontology.json",
+    "max_acronym_len": 8
   }
 }

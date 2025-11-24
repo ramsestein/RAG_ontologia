@@ -1,11 +1,7 @@
 # benchmarks/diagnose_NER.py
 #
-# OBJETIVO: Orquestador SOTA para diagnosticar modelos NER (Individuales o Ensamble).
-#
-# MODOS:
-# 1. Individual: python diagnose_NER.py SBc5
-# 2. Comparativo: python diagnose_NER.py all
-# 3. Ensamble: python diagnose_NER.py assembly  <-- ¡NUEVO!
+# OBJETIVO: Orquestador SOTA para diagnosticar modelos NER.
+# AHORA INCLUYE: Reporte global de Falsos Negativos (FN).
 
 import json
 import time
@@ -13,11 +9,10 @@ import sys
 import argparse
 import importlib
 from pathlib import Path
-from typing import List, Dict, Any, Tuple, Set
+from typing import List, Dict, Any
 
 # --- Arreglo de Paths ---
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
-SRC_PATH = PROJECT_ROOT / "src"
 sys.path.append(str(PROJECT_ROOT))
 
 # --- Imports de Módulos ---
@@ -100,7 +95,29 @@ def print_note_report(note_id, time_s, metrics, matches, fps, fns, text):
     if fns:
         print(f"    ⚠️ Perdidos (Top 5 FN):")
         for g in fns[:5]:
-            print(f"       [{g['start']}-{g['end']}] '{text[g['start']:g['end']][:30]}'")
+            term = text[g['start']:g['end']][:30]
+            print(f"       [{g['start']}-{g['end']}] '{term}'")
+
+def print_missed_terms_report(all_fns: List[str]):
+    """Imprime un resumen de los términos que NUNCA se detectaron."""
+    if not all_fns:
+        return
+
+    from collections import Counter
+    fn_counts = Counter(all_fns)
+    
+    print("\n" + "="*60)
+    print(f" 📉  TÉRMINOS PERDIDOS (Falsos Negativos Globales)")
+    print("="*60)
+    print(f"Total FN: {len(all_fns)}")
+    print("-" * 60)
+    print(f"{'Frecuencia':<12} | {'Término Perdido'}")
+    print("-" * 60)
+    
+    for term, count in fn_counts.most_common(20): # Top 20 fallos
+        print(f"{count:<12} | {term}")
+    print("-" * 60)
+    print("TIP: Añade estos términos a tu ontología o mejora el acronym_ner.")
 
 def run_benchmark(ids, registry, notes, gt_data, iou_th, mode):
     results = []
@@ -112,9 +129,9 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode):
         for nid in ids:
             if w := load_ner_worker(nid, registry[nid]): workers.append(w)
         if not workers: return []
-        run_ids = ["ASSEMBLY"] # Etiqueta para la tabla
+        run_ids = ["ASSEMBLY"] 
     else:
-        run_ids = ids # Iterar uno por uno
+        run_ids = ids 
 
     for run_id in run_ids:
         if mode != 'assembly':
@@ -123,15 +140,18 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode):
             if not w: continue
             current_workers = [w]
         else:
-            current_workers = workers # Usar todos
+            current_workers = workers 
 
         all_preds = {}
         note_f1s = []
         t_total = 0
+        
+        # Colección global de fallos para este run
+        global_missed_terms = []
 
         for nid, text in notes.items():
             t0 = time.time()
-            # Extracción (y unión si es assembly)
+            # Extracción
             raw_preds = []
             for w in current_workers:
                 raw_preds.extend(w.extract_entities(text))
@@ -140,12 +160,20 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode):
             t_total += (time.time() - t0)
             all_preds[nid] = preds
             
-            # Métricas por nota
+            # Métricas
             matches, fps, fns = get_detailed_matches(preds, gt_data.get(nid, []), iou_th)
             m = _calculate_pr_f1(len(matches), len(fps), len(fns))
             note_f1s.append(m['f1'])
             
+            # Recolectar texto de los fallos
+            for fn in fns:
+                term = text[fn['start']:fn['end']].strip()
+                global_missed_terms.append(term)
+            
             print_note_report(nid, time.time()-t0, m, matches, fps, fns, text)
+
+        # Reporte de Fallos (Solo si es assembly o si se pide explícitamente)
+        print_missed_terms_report(global_missed_terms)
 
         # Métricas Globales
         global_m = calculate_ner_micro_f1(all_preds, gt_data, iou_th)
@@ -153,8 +181,8 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode):
         
         results.append({
             "ID": run_id,
-            "F1-Harmonic": global_m['f1'],      # Harmonic (Global)
-            "F1-Arithmetic": arithmetic_f1,       # Arithmetic (Mean of notes)
+            "F1-Harmonic": global_m['f1'],
+            "F1-Arithmetic": arithmetic_f1,
             "Precision": global_m['precision'],
             "Recall": global_m['recall'],
             "TP": global_m['tp'], "FP": global_m['fp'], "FN": global_m['fn'],
@@ -187,8 +215,6 @@ def main():
             print(f" RESULTADOS FINALES ({mode.upper()}) - IoU > {args.iou}")
             print("="*115)
             
-            # HEADER CORREGIDO CON ANCHOS SUFICIENTES
-            # ID (20) | F1-Harm (12) | F1-Arit (14) | Prec (10) | Rec (8) | TP (4) | FP (4) | FN (4) | Time (8)
             print(f"{'ID':<20} | {'F1-Harmonic':<12} | {'F1-Arithmetic':<14} | {'Precision':<10} | {'Recall':<8} | {'TP':<4} | {'FP':<4} | {'FN':<4} | {'Time':<8}")
             print("-" * 115)
             

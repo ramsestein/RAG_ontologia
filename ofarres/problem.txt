@@ -1,0 +1,14 @@
+I am doing an entitiy linking problem which combines a dual architecture:
+1-NER
+2-RAG
+
+The goal is to, given N notes of ictus pacients, we extract the K medical entities coded with the SNOMED-CT terminology. 
+
+Now I am focusing on the NER part. I now the errors are a cascade, comitting an error in the NER part will just be multiplied in the RAG part. The idea is to get a perfect 100% f1-score. However this is very difficult. That's why I am focusing on a 100% recall and then trying to have an almost 90% precision. To get a 100% recall I am using a hybrid approach:
+
+As I need an ontology for the RAG, I must as well use it to boost my recall.
+1-BERTs from scispaCy.
+2-DFA RegEx from the ontology (O(n) time).
+
+
+

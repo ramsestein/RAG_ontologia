@@ -1,93 +1,131 @@
-import pandas as pd
-from flashtext import KeywordProcessor
-from typing import List, Dict
-from pathlib import Path
+import json
 import re
+from flashtext import KeywordProcessor
+from typing import List, Dict, Set
+from pathlib import Path
 
 class OntologyNER:
     """
-    Worker NER Simbólico SOTA para CSVs con formato 'tripletas' de texto.
+    Worker NER SOTA con Expansión Morfológica Generalizable.
+    NO usa listas hardcodeadas. Usa reglas lingüísticas y médicas universales.
     """
     
-    def __init__(self, ontology_path: str, min_length: int = 2, **kwargs):
-        print(f"[NER Worker: Ontology] Cargando ontología desde {ontology_path}...")
-        self.keyword_processor = KeywordProcessor(case_sensitive=False)
+    def __init__(self, ontology_path: str = None, min_term_len: int = 2, **kwargs):
+        # --- 1. Resolución de Rutas ---
+        if not ontology_path:
+            ontology_path = Path(__file__).parent.parent.parent / "ontology" / "multilingual_ontology.json"
+        else:
+            ontology_path = Path(ontology_path)
+            if not ontology_path.is_absolute():
+                ontology_path = Path(__file__).parent.parent.parent / ontology_path
+            
+        self.ontology_path = ontology_path
+        self.min_term_len = min_term_len
+        print(f"[NER Worker] Loading ontology from: {self.ontology_path}")
         
-        try:
-            df = pd.read_csv(ontology_path)
-            
-            # Detectar columnas
-            col_narrativa = 'narrativa' if 'narrativa' in df.columns else 'term'
-            
-            # Lista de patrones basura a eliminar
-            # (Basado en tu CSV: "230690007 tiene sinónimo ...")
-            patterns_to_remove = [
-                r'^\d+\s+tiene\s+sinónimo\s+',
-                r'^\d+\s+tiene\s+término\s+preferido\s+',
-                r'^\d+\s+se\s+define\s+como:\s*',
-                r'^\d+\s+tiene\s+código\s+\d+', # Ignorar líneas de solo código
-                r'\s*\(estructura corporal\)',
-                r'\s*\(anomalía morfológica\)',
-                r'\s*\(hallazgo\)',
-                r'\s*\(célula\)',
-                r'\s*\[como un todo\]'
-            ]
-            
-            combined_pattern = re.compile('|'.join(patterns_to_remove), re.IGNORECASE)
-            
-            raw_terms = df[col_narrativa].dropna().unique().tolist()
-            
-            # --- FASE DE LIMPIEZA ---
-            clean_terms = set()
-            
-            # Añadir términos críticos manuales (siempre útiles)
-            clean_terms.update(["CT", "MRI", "MRA", "tPA", "NIHSS", "ASPECTS", "TICI", "LVO"])
+        # --- 2. Configuración FlashText ---
+        self.keyword_processor = KeywordProcessor(case_sensitive=False)
+        # Permitir que guiones y barras sean parte de la palabra (ej: "check-up", "t/c")
+        # Pero NO añadimos caracteres que queremos que rompan (como espacios)
+        self.keyword_processor.add_non_word_boundary('-') 
+        self.keyword_processor.add_non_word_boundary('/')
+        
+        self._load_and_expand()
 
-            for raw_text in raw_terms:
-                # Tu CSV tiene muchas frases en una sola celda a veces?
-                # Si es una lista de frases separadas, iteramos.
-                # Si es una sola frase por fila, procesamos.
-                
-                # Limpiar el string
-                cleaned = combined_pattern.sub('', str(raw_text)).strip()
-                
-                # A veces quedan residuos o la frase era solo metadatos
-                if not cleaned or cleaned.isdigit():
-                    continue
-                    
-                # Validación extra: Longitud mínima
-                if len(cleaned) >= min_length:
-                    clean_terms.add(cleaned)
+    def _generate_generic_variations(self, term: str) -> Set[str]:
+        """
+        Genera variaciones lingüísticas universales (sin hardcoding médico específico).
+        """
+        variations = {term}
+        clean_term = term.strip()
+        
+        # 1. Pluralización Simple (EN/ES)
+        # Regla heurística segura: añadir 's' o quitar 's' final
+        if clean_term.lower().endswith('s'):
+            variations.add(clean_term[:-1]) 
+        else:
+            variations.add(clean_term + 's') 
             
-            print(f"[NER Worker: Ontology] Indexando {len(clean_terms)} términos limpios...")
+        # 2. Descomposición de Frases (Head Word Extraction Heurístico)
+        # Si el término es "Acute myocardial infarction", extraemos "Infarction"
+        # Regla: Si la última palabra tiene >4 letras, es candidata a ser el núcleo.
+        parts = clean_term.split()
+        if len(parts) > 1:
+            last_word = parts[-1]
+            if len(last_word) >= 4:
+                variations.add(last_word)
+                # Y su plural
+                variations.add(last_word + 's')
+
+        # 3. Normalización de Puntuación
+        # "Stroke-like" -> "Stroke like"
+        if '-' in clean_term:
+            variations.add(clean_term.replace('-', ' '))
             
-            for term in clean_terms:
-                self.keyword_processor.add_keyword(term)
-                
-            print(f"[NER Worker: Ontology] Motor listo.")
-            
+        return variations
+
+    def _load_and_expand(self):
+        if not self.ontology_path.exists():
+            print(f"[ERROR] Ontology file not found: {self.ontology_path}")
+            return
+
+        try:
+            with open(self.ontology_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
         except Exception as e:
-            print(f"[ERROR] Fallo cargando ontología: {e}")
-            import traceback
-            traceback.print_exc()
-            self.keyword_processor = None
+            print(f"[ERROR] Failed to load JSON: {e}")
+            return
+
+        term_count = 0
+        
+        for entry in data:
+            cid = entry['concept_id']
+            all_raw_terms = set()
+            
+            # Recolectar términos de todos los idiomas disponibles
+            # Esto hace que el sistema sea agnóstico al idioma de entrada
+            for lang_code in ["es", "en", "ca"]:
+                lang_data = entry.get("languages", {}).get(lang_code, {})
+                terms = lang_data.get("terms", [])
+                if isinstance(terms, list):
+                    all_raw_terms.update(terms)
+                elif isinstance(terms, str):
+                    all_raw_terms.add(terms)
+
+            # Procesar y Expandir
+            for raw_term in all_raw_terms:
+                # Limpieza básica
+                if not raw_term or len(raw_term) < self.min_term_len: 
+                    continue
+                
+                # Generar variaciones
+                expanded_set = self._generate_generic_variations(raw_term)
+                
+                for final_term in expanded_set:
+                    # Filtrar basura generada (ej: "de", "la")
+                    if len(final_term) < self.min_term_len:
+                        continue
+                        
+                    self.keyword_processor.add_keyword(final_term, cid)
+                    term_count += 1
+                        
+        print(f"[NER Worker] ✅ Engine Ready. {term_count} terms indexed (generic expansion).")
 
     def extract_entities(self, text: str) -> List[Dict]:
         if not self.keyword_processor:
             return []
             
-        # span_info=True devuelve [(keyword, start, end)]
-        # Nota: FlashText a veces devuelve el nombre canónico si se configuró mapping.
-        # Aquí añadimos keywords tal cual, así que devuelve el string encontrado.
-        keywords_found = self.keyword_processor.extract_keywords(text, span_info=True)
+        # FlashText devuelve: [(ID_ENCONTRADO, start, end), ...]
+        found = self.keyword_processor.extract_keywords(text, span_info=True)
         
         predictions = []
-        for keyword, start, end in keywords_found:
+        for concept_id, start, end in found:
             predictions.append({
                 "start": start,
                 "end": end,
                 "span_text": text[start:end], 
-                "label": "ONTOLOGY_EXACT"
+                "label": "ONTOLOGY",
+                "concept_id": concept_id
             })
             
         return predictions

@@ -141,7 +141,7 @@ def main():
             if extracted["preferred"] and syn.lower() != extracted["preferred"].lower():
                 terms_es.append(syn)
             elif not extracted["preferred"]:
-                 terms_es.append(syn)
+                terms_es.append(syn)
 
         # Si no hay términos, saltamos este concepto (datos corruptos)
         if not terms_es:
