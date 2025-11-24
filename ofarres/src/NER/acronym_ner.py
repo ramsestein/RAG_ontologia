@@ -1,23 +1,19 @@
 import json
+import spacy
 from flashtext import KeywordProcessor
 from typing import List, Dict
 from pathlib import Path
 
 class AcronymNER:
     """
-    Worker Especialista en Acrónimos (Dinámico).
+    Worker Especialista en Acrónimos (Stopword-Aware + Boundary Fix).
     
-    ESTRATEGIA:
-    1. Carga la ontología completa (JSON).
-    2. Filtra términos que parecen acrónimos (longitud corta).
-    3. Los indexa en modo CASE SENSITIVE (Estricto).
-    
-    Esto permite detectar 'CT' (Tomografía) ignorando 'ct' (final de 'act'),
-    sin necesidad de hardcodear ninguna lista.
+    CORRECCIÓN:
+    1. Incluye límites de palabra (-, /, .) para detectar "CT-scan" o "C.T.".
+    2. Usa Stopwords para permitir siglas cortas ("CT") bloqueando basura ("AT", "IN").
     """
     
     def __init__(self, ontology_path: str = None, max_len: int = 6, **kwargs):
-        # 1. Resolución de Rutas (Igual que el NER principal)
         if not ontology_path:
             ontology_path = Path(__file__).parent.parent.parent / "ontology" / "multilingual_ontology.json"
         else:
@@ -28,36 +24,33 @@ class AcronymNER:
         self.ontology_path = ontology_path
         self.max_len = max_len
         
-        print(f"[AcronymNER] Extrayendo siglas dinámicamente de: {self.ontology_path}")
+        print(f"[AcronymNER] Iniciando motor con lógica Stopword-Aware...")
+
+        # 1. Carga de Stopwords (Universal English)
+        try:
+            self.nlp = spacy.blank("en")
+            self.stopwords = self.nlp.Defaults.stop_words
+        except Exception:
+            # Fallback seguro
+            self.stopwords = {
+                "of", "in", "at", "on", "to", "by", "is", "it", "no", "us", "am", "pm", 
+                "do", "be", "an", "as", "if", "or", "so", "up", "my", "he", "we", "go",
+                "me", "my", "et", "al", "vs"
+            }
         
-        # 2. CONFIGURACIÓN CRÍTICA: Case Sensitive = True
-        # Esto es lo que diferencia este worker del OntologyNER normal.
+        # 2. Configuración FlashText (Case Sensitive = True)
         self.keyword_processor = KeywordProcessor(case_sensitive=True)
+        
+        # IMPORTANTE: Permitir que siglas pegadas a puntuación sean detectadas
+        # Ej: "CT-scan", "N/A", "C.T."
+        self.keyword_processor.add_non_word_boundary('-')
+        self.keyword_processor.add_non_word_boundary('/')
+        self.keyword_processor.add_non_word_boundary('.')
         
         self._load_dynamic_acronyms()
 
-    def _is_likely_acronym(self, term: str) -> bool:
-        """
-        Heurística para decidir si un término de la ontología debe tratarse como acrónimo estricto.
-        """
-        term = term.strip()
-        
-        # Regla 1: Longitud (Los acrónimos suelen ser cortos, ej: 2-6 letras)
-        if not (2 <= len(term) <= self.max_len):
-            return False
-            
-        # Regla 2: Composición
-        # - Si es todo mayúsculas (CT, MRI, ACV) -> SÍ
-        # - Si mezcla mayúsculas/minúsculas (tPA, HbA1c, mRNA) -> SÍ
-        # - Si es todo minúsculas (stroke, ictus) -> NO (Eso es trabajo del OntologyNER general)
-        if term.islower():
-            return False
-            
-        return True
-
     def _load_dynamic_acronyms(self):
         if not self.ontology_path.exists():
-            print(f"[ERROR] No existe {self.ontology_path}")
             return
 
         try:
@@ -68,23 +61,42 @@ class AcronymNER:
             return
 
         count = 0
+        
         for entry in data:
             cid = entry['concept_id']
-            
-            # Recorremos todos los idiomas
             candidates = set()
+            
+            # Recolectar de todos los idiomas
             for lang in ["es", "en", "ca"]:
                 terms = entry.get("languages", {}).get(lang, {}).get("terms", [])
-                candidates.update(terms)
+                if isinstance(terms, list):
+                    candidates.update(terms)
+                elif isinstance(terms, str):
+                    candidates.add(terms)
             
-            # Filtramos y añadimos
             for term in candidates:
-                if self._is_likely_acronym(term):
-                    # FlashText: (Term, ID)
-                    self.keyword_processor.add_keyword(term, cid)
+                term_clean = term.strip()
+                
+                # Filtro de Longitud (Solo siglas)
+                if not (2 <= len(term_clean) <= self.max_len):
+                    continue
+                
+                is_stopword = term_clean.lower() in self.stopwords
+                
+                # Caso A: Sigla Segura (No es stopword: "CT", "MRI")
+                if not is_stopword:
+                    self.keyword_processor.add_keyword(term_clean.lower(), cid) # ct
+                    self.keyword_processor.add_keyword(term_clean.upper(), cid) # CT
+                    self.keyword_processor.add_keyword(term_clean.title(), cid) # Ct
+                    count += 1
+                
+                # Caso B: Sigla Peligrosa (Es stopword: "NO", "US")
+                # Solo añadimos si es coincidencia exacta con ontología (usualmente mayúsculas)
+                else:
+                    self.keyword_processor.add_keyword(term_clean, cid)
                     count += 1
         
-        print(f"[AcronymNER] ✅ Motor listo. {count} siglas detectadas y cargadas dinámicamente.")
+        print(f"[AcronymNER] ✅ Motor listo. {count} variantes cargadas.")
 
     def extract_entities(self, text: str) -> List[Dict]:
         if not self.keyword_processor:
@@ -98,8 +110,7 @@ class AcronymNER:
                 "start": start,
                 "end": end,
                 "span_text": text[start:end], 
-                "label": "ACRONYM", # Etiqueta diferenciada para debug
+                "label": "ACRONYM",
                 "concept_id": concept_id
             })
-            
         return predictions

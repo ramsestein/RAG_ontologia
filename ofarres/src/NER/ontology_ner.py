@@ -1,17 +1,20 @@
 import json
-import re
+import spacy
 from flashtext import KeywordProcessor
 from typing import List, Dict, Set
 from pathlib import Path
 
 class OntologyNER:
     """
-    Worker NER SOTA con Expansión Morfológica Generalizable.
-    NO usa listas hardcodeadas. Usa reglas lingüísticas y médicas universales.
+    Worker NER SOTA Genérico.
+    
+    CORRECCIONES:
+    1. min_term_len = 2 (Recupera 'CT', 'TIA').
+    2. Usa Stopwords para filtrar basura corta ('of', 'in').
+    3. Ignora núcleos genéricos ('Artery', 'Disease') para evitar colisiones.
     """
     
     def __init__(self, ontology_path: str = None, min_term_len: int = 2, **kwargs):
-        # --- 1. Resolución de Rutas ---
         if not ontology_path:
             ontology_path = Path(__file__).parent.parent.parent / "ontology" / "multilingual_ontology.json"
         else:
@@ -20,45 +23,75 @@ class OntologyNER:
                 ontology_path = Path(__file__).parent.parent.parent / ontology_path
             
         self.ontology_path = ontology_path
-        self.min_term_len = min_term_len
-        print(f"[NER Worker] Loading ontology from: {self.ontology_path}")
+        self.min_term_len = min_term_len # RESTAURADO A 2
         
-        # --- 2. Configuración FlashText ---
+        print(f"[OntologyNER] Loading ontology from: {self.ontology_path}")
+        
+        # Carga de Stopwords para seguridad con palabras cortas
+        try:
+            self.nlp = spacy.blank("en")
+            self.stopwords = self.nlp.Defaults.stop_words
+        except:
+            self.stopwords = {"of", "in", "at", "on", "to", "by", "is", "it", "no", "us"}
+
+        # Configuración FlashText
         self.keyword_processor = KeywordProcessor(case_sensitive=False)
-        # Permitir que guiones y barras sean parte de la palabra (ej: "check-up", "t/c")
-        # Pero NO añadimos caracteres que queremos que rompan (como espacios)
         self.keyword_processor.add_non_word_boundary('-') 
         self.keyword_processor.add_non_word_boundary('/')
         
         self._load_and_expand()
 
     def _generate_generic_variations(self, term: str) -> Set[str]:
-        """
-        Genera variaciones lingüísticas universales (sin hardcoding médico específico).
-        """
         variations = {term}
         clean_term = term.strip()
         
-        # 1. Pluralización Simple (EN/ES)
-        # Regla heurística segura: añadir 's' o quitar 's' final
+        # 1. Pluralización
         if clean_term.lower().endswith('s'):
             variations.add(clean_term[:-1]) 
         else:
             variations.add(clean_term + 's') 
             
-        # 2. Descomposición de Frases (Head Word Extraction Heurístico)
-        # Si el término es "Acute myocardial infarction", extraemos "Infarction"
-        # Regla: Si la última palabra tiene >4 letras, es candidata a ser el núcleo.
+        # 2. Morfología Médica (Generic Suffix Stripping)
+        if clean_term.endswith("tion"): # Infarction -> Infarct
+            base = clean_term[:-4]
+            variations.add(base + "t") 
+            variations.add(base + "ted")
+            
+        if clean_term.endswith("rhage"): # Hemorrhage -> Hemorrhagic
+            variations.add(clean_term[:-1] + "gic")
+            
+        if clean_term.endswith("sis"): # Stenosis -> Stenotic
+            variations.add(clean_term[:-3] + "tic")
+
+        if clean_term.endswith("itis"): # Arthritis -> Arthritic
+            variations.add(clean_term[:-4] + "itic")
+            
+        if clean_term.endswith("ia"): # Ischemia -> Ischemic
+            variations.add(clean_term[:-2] + "ic")
+
+        # 3. Head Word Extraction (Mejorado)
         parts = clean_term.split()
         if len(parts) > 1:
             last_word = parts[-1]
-            if len(last_word) >= 4:
+            
+            # LISTA NEGRA DE NÚCLEOS: Palabras que son demasiado genéricas para ser indexadas solas.
+            ignored_heads = {
+                "left", "right", "acute", "chronic", "mild", "severe", "upper", "lower",
+                "artery", "vein", "nerve", "muscle", "ligament", "bone", # Anatomía genérica
+                "disease", "disorder", "syndrome", "condition", "problem", # Patología genérica
+                "sign", "symptom", "finding"
+            }
+            
+            # Indexamos la última palabra SOLO si no es genérica y es lo suficientemente larga
+            # Ej: "Basilar Artery" -> Ignora "Artery".
+            # Ej: "Atrial Fibrillation" -> Indexa "Fibrillation".
+            if len(last_word) >= 4 and last_word.lower() not in ignored_heads:
                 variations.add(last_word)
-                # Y su plural
                 variations.add(last_word + 's')
+                if last_word.endswith("tion"):
+                    variations.add(last_word[:-4] + "t")
 
-        # 3. Normalización de Puntuación
-        # "Stroke-like" -> "Stroke like"
+        # 4. Puntuación
         if '-' in clean_term:
             variations.add(clean_term.replace('-', ' '))
             
@@ -66,14 +99,12 @@ class OntologyNER:
 
     def _load_and_expand(self):
         if not self.ontology_path.exists():
-            print(f"[ERROR] Ontology file not found: {self.ontology_path}")
             return
 
         try:
             with open(self.ontology_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-        except Exception as e:
-            print(f"[ERROR] Failed to load JSON: {e}")
+        except Exception:
             return
 
         term_count = 0
@@ -82,40 +113,40 @@ class OntologyNER:
             cid = entry['concept_id']
             all_raw_terms = set()
             
-            # Recolectar términos de todos los idiomas disponibles
-            # Esto hace que el sistema sea agnóstico al idioma de entrada
             for lang_code in ["es", "en", "ca"]:
-                lang_data = entry.get("languages", {}).get(lang_code, {})
-                terms = lang_data.get("terms", [])
+                terms = entry.get("languages", {}).get(lang_code, {}).get("terms", [])
                 if isinstance(terms, list):
                     all_raw_terms.update(terms)
                 elif isinstance(terms, str):
                     all_raw_terms.add(terms)
 
-            # Procesar y Expandir
             for raw_term in all_raw_terms:
-                # Limpieza básica
-                if not raw_term or len(raw_term) < self.min_term_len: 
+                if not raw_term: continue
+                
+                # Check inicial de longitud
+                if len(raw_term) < self.min_term_len:
                     continue
                 
-                # Generar variaciones
                 expanded_set = self._generate_generic_variations(raw_term)
                 
                 for final_term in expanded_set:
-                    # Filtrar basura generada (ej: "de", "la")
+                    # FILTRO FINAL: Longitud y Stopwords
                     if len(final_term) < self.min_term_len:
+                        continue
+                    
+                    # Si es una palabra corta, verificar que no sea stopword ("in", "on")
+                    if final_term.lower() in self.stopwords:
                         continue
                         
                     self.keyword_processor.add_keyword(final_term, cid)
                     term_count += 1
                         
-        print(f"[NER Worker] ✅ Engine Ready. {term_count} terms indexed (generic expansion).")
+        print(f"[OntologyNER] ✅ Engine Ready. {term_count} terms indexed.")
 
     def extract_entities(self, text: str) -> List[Dict]:
         if not self.keyword_processor:
             return []
-            
-        # FlashText devuelve: [(ID_ENCONTRADO, start, end), ...]
+        
         found = self.keyword_processor.extract_keywords(text, span_info=True)
         
         predictions = []
