@@ -141,12 +141,10 @@ def calculate_micro_average_f1(all_predictions: Dict[str, List[Dict]],
                                iou_threshold: float = 0.5
                                ) -> Dict[str, float]:
     """
-    Calcula el F1-Score SOTA "Micro-Average" (COMPLETO).
-    Suma TODOS los TP, FP, y FN de todas las notas juntas.
+    Calcula el F1-Score SOTA "Micro-Average" (COMPLETO) como media aritmética.
+    Calcula F1 para cada nota y luego hace la media aritmética: (x1+x2+...+xn)/n.
     """
-    total_tp = 0
-    total_fp = 0
-    total_fn = 0
+    f1_scores_per_note = []
 
     for note_id, gt_annotations in all_ground_truth.items():
         pred_annotations = all_predictions.get(note_id, [])
@@ -157,11 +155,15 @@ def calculate_micro_average_f1(all_predictions: Dict[str, List[Dict]],
             iou_threshold
         )
         
-        total_tp += tp_i
-        total_fp += fp_i
-        total_fn += fn_i
+        metrics_i = _calculate_pr_f1(tp_i, fp_i, fn_i)
+        f1_scores_per_note.append(metrics_i['f1'])
 
-    return _calculate_pr_f1(total_tp, total_fp, total_fn)
+    if not f1_scores_per_note:
+        return {"micro_f1": 0.0}
+        
+    micro_f1 = sum(f1_scores_per_note) / len(f1_scores_per_note)
+    
+    return {"micro_f1": micro_f1}
 
 
 # ==============================================================================
@@ -243,85 +245,11 @@ def calculate_ner_micro_f1(all_predictions: Dict[str, List[Dict]],
                            iou_threshold: float = 0.5
                            ) -> Dict[str, float]:
     """
-    Calcula el F1-Score de SOLO NER (Micro-Average).
-    Suma TODOS los TP, FP, y FN (basados en span) de todas las notas.
-    """
-    total_tp = 0
-    total_fp = 0
-    total_fn = 0
-
-    for note_id, gt_annotations in all_ground_truth.items():
-        pred_annotations = all_predictions.get(note_id, [])
-        
-        # Usa la nueva función de matching de SOLO NER
-        tp_i, fp_i, fn_i = _find_ner_span_matches(
-            pred_annotations, 
-            gt_annotations, 
-            iou_threshold
-        )
-        
-        total_tp += tp_i
-        total_fp += fp_i
-        total_fn += fn_i
-
-    # Devuelve el P, R, F1 global de solo-NER
-    return _calculate_pr_f1(total_tp, total_fp, total_fn)
-
-# ==============================================================================
-# 4. MÉTRICAS DE *SOLO NER* (AISLADO)
-# (¡AÑADE ESTO AL FINAL DE TU metrics.py!)
-# ==============================================================================
-
-def _find_ner_span_matches(predictions: List[Dict], 
-                           ground_truth: List[Dict], 
-                           iou_threshold: float = 0.5
-                           ) -> Tuple[int, int, int]:
-    """
-    MATCHING (SOLO NER): Un "acierto" requiere SOLO IoU > threshold.
-    Ignora el concept_id.
-    Devuelve: (TP, FP, FN)
-    """
-    tp = 0
-    matched_gt_indices: Set[int] = set()
-    matched_pred_indices: Set[int] = set()
-
-    for pred_idx, pred in enumerate(predictions):
-        best_match_gt_idx = -1
-        best_iou = -1
-
-        for gt_idx, gt in enumerate(ground_truth):
-            if gt_idx in matched_gt_indices:
-                continue
-
-            # --- COINCIDENCIA DE SPAN (IoU) ---
-            # (Esta es la única comprobación que hacemos)
-            # (No comprobamos concept_id)
-            iou = calculate_iou(pred, gt)
-            
-            if iou > iou_threshold and iou > best_iou:
-                best_iou = iou
-                best_match_gt_idx = gt_idx
-        
-        if best_match_gt_idx != -1:
-            tp += 1
-            matched_pred_indices.add(pred_idx)
-            matched_gt_indices.add(best_match_gt_idx)
-
-    fp = len(predictions) - len(matched_pred_indices)
-    fn = len(ground_truth) - len(matched_gt_indices)
-    
-    return tp, fp, fn
-
-def calculate_ner_macro_f1(all_predictions: Dict[str, List[Dict]], 
-                           all_ground_truth: Dict[str, List[Dict]], 
-                           iou_threshold: float = 0.5
-                           ) -> Dict[str, float]:
-    """
-    Calcula el F1-Score de SOLO NER (Macro-Average).
-    Mide el F1 de Span (IoU) para cada nota y luego hace la media.
+    Calcula el F1-Score de SOLO NER (Micro-Average) como media aritmética.
+    Calcula F1 para cada nota y luego hace la media aritmética: (x1+x2+...+xn)/n.
     """
     f1_scores_per_note = []
-    
+
     for note_id, gt_annotations in all_ground_truth.items():
         pred_annotations = all_predictions.get(note_id, [])
         
@@ -336,37 +264,8 @@ def calculate_ner_macro_f1(all_predictions: Dict[str, List[Dict]],
         f1_scores_per_note.append(metrics_i['f1'])
 
     if not f1_scores_per_note:
-        return {"macro_f1": 0.0}
+        return {"micro_f1": 0.0}
         
-    macro_f1 = sum(f1_scores_per_note) / len(f1_scores_per_note)
+    micro_f1 = sum(f1_scores_per_note) / len(f1_scores_per_note)
     
-    return {"macro_f1": macro_f1}
-
-def calculate_ner_micro_f1(all_predictions: Dict[str, List[Dict]], 
-                           all_ground_truth: Dict[str, List[Dict]], 
-                           iou_threshold: float = 0.5
-                           ) -> Dict[str, float]:
-    """
-    Calcula el F1-Score de SOLO NER (Micro-Average).
-    Suma TODOS los TP, FP, y FN (basados en span) de todas las notas.
-    """
-    total_tp = 0
-    total_fp = 0
-    total_fn = 0
-
-    for note_id, gt_annotations in all_ground_truth.items():
-        pred_annotations = all_predictions.get(note_id, [])
-        
-        # Usa la nueva función de matching de SOLO NER
-        tp_i, fp_i, fn_i = _find_ner_span_matches(
-            pred_annotations, 
-            gt_annotations, 
-            iou_threshold
-        )
-        
-        total_tp += tp_i
-        total_fp += fp_i
-        total_fn += fn_i
-
-    # Devuelve el P, R, F1 global de solo-NER
-    return _calculate_pr_f1(total_tp, total_fp, total_fn)
+    return {"micro_f1": micro_f1}

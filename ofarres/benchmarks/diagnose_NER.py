@@ -244,7 +244,8 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode, verbose):
             label = run_id
         
         all_preds = {}
-        note_f1s = []
+        note_f1s_harmonic = []
+        note_f1s_arithmetic = []
         t_total = 0
         
         for nid, text in notes.items():
@@ -266,7 +267,13 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode, verbose):
             # C. Evaluate
             matches, fps, fns = get_detailed_matches(preds, gt_data.get(nid, []), iou_th)
             m = _calculate_pr_f1(len(matches), len(fps), len(fns))
-            note_f1s.append(m['f1'])
+            
+            # Store harmonic F1 (standard F1 = 2PR/(P+R))
+            note_f1s_harmonic.append(m['f1'])
+            
+            # Calculate and store arithmetic F1 (arithmetic mean of P and R = (P+R)/2)
+            f1_arith_per_note = (m['precision'] + m['recall']) / 2.0
+            note_f1s_arithmetic.append(f1_arith_per_note)
             
             print_note_report(nid, time.time()-t0, m, matches, fps, fns, text, verbose)
 
@@ -280,9 +287,12 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode, verbose):
         
         recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0
         prec = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0
-        f1_harm = 2 * (prec * recall) / (prec + recall) if (prec + recall) > 0 else 0
         
-        arith_f1 = sum(note_f1s) / len(note_f1s) if note_f1s else 0
+        # F1-Harmonic: Arithmetic mean of per-note harmonic F1 scores
+        f1_harm = sum(note_f1s_harmonic) / len(note_f1s_harmonic) if note_f1s_harmonic else 0
+        
+        # F1-Arithmetic: Arithmetic mean of per-note arithmetic F1 scores
+        arith_f1 = sum(note_f1s_arithmetic) / len(note_f1s_arithmetic) if note_f1s_arithmetic else 0
         
         res_entry = {
             "ID": label, 
