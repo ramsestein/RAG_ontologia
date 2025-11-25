@@ -10,5 +10,17 @@ As I need an ontology for the RAG, I must as well use it to boost my recall.
 1-BERTs from scispaCy.
 2-DFA RegEx from the ontology (O(n) time).
 
+---
 
+After boosting the NER recall to 1.00 (100%), it is time to implementte the NER judge, to boost the precision to ~95%
+I was wondering what strategies could I use. I was thinking of using an LLM to judge the NER results, but I don't know if this is a good idea.
+I also thought of using a Bi-Encoder.
 
+This are my results so far:
+===================================================================================================================
+ 🏆 RESULTADOS FINALES (ASSEMBLY) - IoU > 0.25
+===================================================================================================================
+ID                   | F1-Harmonic  | F1-Arithmetic  | Precision  | Recall   | TP   | FP   | FN   | Time
+-------------------------------------------------------------------------------------------------------------------
+ASSEMBLY             | 0.4265       | 0.6372         | 0.2737     | 1.0000   | 98   | 260  | 0    | 1.10
+===================================================================================================================
