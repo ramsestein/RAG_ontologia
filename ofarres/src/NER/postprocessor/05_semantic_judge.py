@@ -1,31 +1,50 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-05_semantic_judge.py - Semantic Relevance Filter
+05_semantic_judge.py - Multi-Anchor Semantic Competition (K-Anchor Zero-Shot Logic)
 
-RESPONSIBILITY: Filter out "Hard Noise" from Tier 3 entities using a combination
-                of blacklist filtering and Cross-Encoder scoring.
+RESPONSIBILITY: Filter out "Hard Noise" from Tier 2 & 3 entities using Multi-Anchor
+                Semantic Competition. NO BLACKLISTS. Pure semantic inference.
 
 EXAMPLES OF HARD NOISE (linguistically valid nouns, semantically irrelevant):
     - "gardening", "patient", "history", "life", "male", "female"
     - These pass linguistic filters but are not medical concepts for RAG
 
-APPROACH (Hybrid):
-    1. BLACKLIST: Known non-medical terms that appear frequently in clinical notes
-       but are not themselves medical concepts (e.g., "patient", "history", "male")
-    2. CROSS-ENCODER: For remaining entities, use contrastive scoring to filter
-       edge cases that slip through
+APPROACH (Semantic Race):
+    Instead of asking "Is this medical?" (Binary), compare the candidate against
+    K competing semantic definitions. The definition with the highest Cross-Encoder
+    score wins.
 
 MODEL: cross-encoder/ms-marco-MiniLM-L-6-v2 (~22M parameters, very fast)
 
-LOGIC:
-    Tier 1 & 2: AUTO-PASS (Do not waste compute on dictionary-backed entities)
+THE ANCHORS (4 Competitors that cleave the embedding space):
+    TARGET (Keep): "A clinical medical term: disease, symptom, anatomical structure,
+                   procedure, diagnostic test, drug, or pathological finding."
     
-    Tier 3: Apply filters
-        1. If in BLACKLIST -> DROP
-        2. If Cross-Encoder score < THRESHOLD -> DROP
+    NOISE_DEMO (Drop): "A patient demographic: male, female, elderly, young,
+                       adult, child, age, patient, race, ethnicity, person."
+    
+    NOISE_ADMIN (Drop): "A clinical documentation term: history, presentation,
+                        examination, admission, discharge, hospital, course."
+    
+    NOISE_GENERIC (Drop): "A common non-clinical English word: improved, completed,
+                          noted, observed, consistent, found, life, gardening."
+
+LOGIC:
+    Tier 1: AUTO-PASS (Elite - highest confidence, do not touch)
+    
+    Tier 2 & 3: Run the "Semantic Race"
+        1. Score candidate against all 4 Anchors
+        2. If TARGET has highest score -> KEEP
+        3. If NOISE wins BUT margin < NOISE_WIN_MARGIN -> KEEP (low confidence)
+        4. If NOISE wins with sufficient margin -> DROP
         
-    Batching: Process all Tier 3 candidates in batches for throughput
+    Batching: Process all Tier 2 & 3 candidates in batches for throughput
+
+MARGIN-BASED DECISION:
+    To preserve recall, we use a margin-based decision:
+    - If NOISE wins by less than NOISE_WIN_MARGIN, default to KEEP
+    - This prevents dropping valid medical terms when the model has low confidence
 
 INPUT: data/ner/04_linguistically_clean.json
 OUTPUT: data/ner/05_semantically_clean.json
@@ -50,133 +69,167 @@ OUTPUT_PATH = PROJECT_ROOT / "data" / "ner" / "05_semantically_clean.json"
 # Cross-Encoder Configuration
 MODEL_NAME = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
-# Contrastive anchors for scoring
-MEDICAL_ANCHOR = "This is a medical term describing a disease, symptom, condition, procedure, anatomy, or clinical finding"
-GENERAL_ANCHOR = "This is a general English word with no specific medical meaning"
+# ============================================================================
+# DECISION THRESHOLDS
+# ============================================================================
 
-# Threshold for Cross-Encoder (contrastive score)
-RELEVANCE_THRESHOLD = -1.0  # Very lenient for cross-encoder
-BATCH_SIZE = 64  # Batch size for inference
+# Minimum margin a NOISE anchor must win by to trigger a DROP.
+# If all scores are within this margin, we default to KEEP (favoring recall).
+# This prevents dropping valid medical terms when the model has low confidence.
+# Lower value = more aggressive filtering (drops more)
+# Higher value = more conservative (keeps more)
+NOISE_WIN_MARGIN = 0.2
 
 # ============================================================================
-# BLACKLIST: Known non-medical terms common in clinical notes
-# These are NOT medical concepts - they are contextual/demographic descriptors
+# SEMANTIC ANCHORS - The K Competitors
+# These definitions are designed to be mutually exclusive and cleave the 
+# embedding space effectively. NO BLACKLISTS - pure semantic categories.
+#
+# Key refinements:
+# - TARGET is broad to catch all medical terms (anatomical, pathological, etc.)
+# - NOISE anchors are specific to catch clear non-medical categories
+# - When in doubt (low margin), default to KEEP for recall preservation
 # ============================================================================
-BLACKLIST = {
-    # Demographics (not medical concepts)
-    "male", "female", "man", "woman", "patient", "patients",
-    "year", "years", "old", "age", "aged",
-    
-    # Temporal/Administrative (not medical concepts)
-    "history", "time", "day", "days", "hour", "hours", "week", "weeks",
-    "month", "months", "date", "admission", "discharge", "transfer",
-    "presentation", "onset", "duration", "course", "follow-up",
-    
-    # Generic clinical context (not medical concepts)
-    "examination", "exam", "evaluation", "assessment", "review",
-    "finding", "findings", "result", "results", "report",
-    "study", "studies", "test", "tests", "imaging",
-    "procedure", "intervention", "management", "treatment",  # Too generic
-    "status", "condition", "state", "level", "levels",
-    
-    # Generic descriptors (not medical concepts)
-    "normal", "abnormal", "positive", "negative",
-    "mild", "moderate", "marked", "significant",
-    "acute", "chronic", "stable", "unstable",
-    "left", "right", "bilateral", "unilateral",
-    "upper", "lower", "anterior", "posterior",
-    
-    # Hospital/Location terms (not medical concepts)
-    "hospital", "unit", "ward", "room", "bed",
-    "icu", "er", "ed", "or", "floor",
-    
-    # Actions/Verbs often mistakenly tagged (not medical concepts)  
-    "given", "received", "started", "continued", "stopped",
-    "noted", "seen", "observed", "documented", "reported",
-    "improved", "worsened", "resolved", "persisted",
-    
-    # Miscellaneous noise
-    "life", "work", "home", "family", "contact",
-    "use", "using", "used", "taking", "taken",
-    "per", "via", "with", "without", "due",
-}
 
-# Phrases to blacklist (multi-word)
-BLACKLIST_PHRASES = {
-    "medical history", "family history", "social history",
-    "past medical", "surgical history", "no history",
-    "year old", "years old", "day old",
-    "at this time", "at that time", "over time",
-    "this patient", "the patient", "patient was",
-    "hospital course", "clinical course",
-    "on examination", "physical examination",
-    "no evidence", "evidence of", "signs of",
+ANCHOR_TARGET = (
+    "A clinical medical term: disease name, symptom, anatomical structure, "
+    "medical procedure, diagnostic test, drug, or pathological finding."
+)
+
+ANCHOR_NOISE_DEMO = (
+    "A patient demographic: male, female, man, woman, elderly, young, adult, "
+    "child, age, patient, race, ethnicity, person."
+)
+
+ANCHOR_NOISE_ADMIN = (
+    "A clinical documentation term: history, presentation, examination, "
+    "admission, discharge, hospital, department, arrival, course, evaluation."
+)
+
+ANCHOR_NOISE_GENERIC = (
+    "A common non-clinical English word: improved, completed, noted, observed, "
+    "consistent, showed, found, appeared, underwent, life, gardening, activity."
+)
+
+# Anchor registry for iteration
+ANCHORS = {
+    "TARGET": ANCHOR_TARGET,
+    "NOISE_DEMO": ANCHOR_NOISE_DEMO,
+    "NOISE_ADMIN": ANCHOR_NOISE_ADMIN,
+    "NOISE_GENERIC": ANCHOR_NOISE_GENERIC,
 }
 
 
 class SemanticJudge:
-    """Cross-Encoder based semantic relevance filter using contrastive scoring."""
+    """
+    Multi-Anchor Semantic Competition using Cross-Encoder.
     
-    def __init__(self, verbose: bool = True):
-        """Initialize the Cross-Encoder model."""
-        if verbose:
-            print(f"[SemanticJudge] Loading model: {MODEL_NAME}")
-        
+    The "Semantic Race" approach: Compare each candidate against K competing
+    semantic definitions. The definition with the highest score wins.
+    """
+    
+    def __init__(self, model_name: str = MODEL_NAME):
+        """Initialize Cross-Encoder model."""
         from sentence_transformers import CrossEncoder
-        self.model = CrossEncoder(MODEL_NAME)
         
-        if verbose:
-            print(f"[SemanticJudge] Model loaded successfully")
+        print(f"[SemanticJudge] Loading Cross-Encoder: {model_name}")
+        self.model = CrossEncoder(model_name)
+        self.anchors = ANCHORS
+        print(f"[SemanticJudge] Loaded. Using {len(self.anchors)} competing anchors.")
     
-    def score_batch(self, texts: List[str]) -> List[float]:
+    def score_candidate(self, candidate_text: str) -> Dict[str, float]:
         """
-        Score a batch of texts for medical relevance using contrastive method.
+        Score a single candidate against all anchors.
         
-        Approach:
-        1. Score each text against MEDICAL_ANCHOR
-        2. Score each text against GENERAL_ANCHOR
-        3. Return (medical_score - general_score)
-        
-        Positive values = more medical, Negative values = more general
-        
-        Args:
-            texts: List of entity texts to score
-            
-        Returns:
-            List of contrastive relevance scores
+        Returns: Dict mapping anchor name to score
         """
-        if not texts:
+        pairs = [(candidate_text, anchor_def) for anchor_def in self.anchors.values()]
+        scores = self.model.predict(pairs)
+        
+        return {name: float(score) for name, score in zip(self.anchors.keys(), scores)}
+    
+    def score_batch(self, candidates: List[str]) -> List[Dict[str, float]]:
+        """
+        Score a batch of candidates against all anchors efficiently.
+        
+        Constructs all (candidate, anchor) pairs and scores in single batch,
+        then reshapes results.
+        
+        Returns: List of dicts mapping anchor name to score for each candidate
+        """
+        if not candidates:
             return []
         
-        # Create pairs for medical anchor
-        medical_pairs = [(MEDICAL_ANCHOR, text) for text in texts]
+        # Build all pairs: each candidate against each anchor
+        all_pairs = []
+        for candidate in candidates:
+            for anchor_def in self.anchors.values():
+                all_pairs.append((candidate, anchor_def))
         
-        # Create pairs for general anchor
-        general_pairs = [(GENERAL_ANCHOR, text) for text in texts]
+        # Score all pairs in single batch
+        all_scores = self.model.predict(all_pairs)
         
-        # Run inference
-        medical_scores = self.model.predict(medical_pairs, show_progress_bar=False)
-        general_scores = self.model.predict(general_pairs, show_progress_bar=False)
+        # Reshape: group scores by candidate
+        num_anchors = len(self.anchors)
+        results = []
+        for i, candidate in enumerate(candidates):
+            start_idx = i * num_anchors
+            candidate_scores = all_scores[start_idx:start_idx + num_anchors]
+            score_dict = {
+                name: float(score) 
+                for name, score in zip(self.anchors.keys(), candidate_scores)
+            }
+            results.append(score_dict)
         
-        # Contrastive score: medical - general
-        contrastive_scores = medical_scores - general_scores
-        
-        return contrastive_scores.tolist()
+        return results
     
-    def is_relevant(self, score: float) -> bool:
-        """Check if a contrastive score indicates medical relevance."""
-        return score >= RELEVANCE_THRESHOLD
+    def judge(self, scores: Dict[str, float]) -> Tuple[str, bool, str]:
+        """
+        Determine winner of the semantic race with margin-based decision.
+        
+        Decision Logic:
+        1. Find the anchor with the highest score (winner)
+        2. If TARGET wins -> KEEP
+        3. If NOISE wins but margin over TARGET < NOISE_WIN_MARGIN -> KEEP (low confidence)
+        4. If NOISE wins with sufficient margin -> DROP
+        
+        Args:
+            scores: Dict mapping anchor name to score
+            
+        Returns:
+            Tuple of (winning_anchor, should_keep, reason)
+            - winning_anchor: Name of the anchor with highest score
+            - should_keep: True if entity should be kept
+            - reason: Explanation for the decision
+        """
+        winner = max(scores, key=scores.get)
+        winner_score = scores[winner]
+        target_score = scores["TARGET"]
+        
+        if winner == "TARGET":
+            return winner, True, "TARGET_WINS"
+        
+        # NOISE anchor won - check margin
+        margin = winner_score - target_score
+        
+        if margin < NOISE_WIN_MARGIN:
+            # Low confidence - default to KEEP for recall preservation
+            return winner, True, "LOW_MARGIN_KEEP"
+        else:
+            # Clear NOISE win - DROP
+            return winner, False, "NOISE_CLEAR_WIN"
 
 
 def run_semantic_judge(verbose: bool = True) -> List[Dict]:
     """
-    Main semantic judge function.
+    Main semantic judge function using Multi-Anchor Semantic Competition.
     Returns the filtered assembly data.
     """
     if verbose:
         print("=" * 80)
-        print(" STEP 05: SEMANTIC JUDGE (Cross-Encoder Relevance Filter)")
-        print("   Responsibility: Remove semantically irrelevant Tier 3 entities")
+        print(" STEP 05: SEMANTIC JUDGE (Multi-Anchor Semantic Competition)")
+        print("   Responsibility: Filter Tier 3 via K-Anchor Zero-Shot Classification")
+        print("   Method: NO BLACKLISTS - Pure semantic inference with 4 anchors")
         print("=" * 80)
     
     # Load input
@@ -192,53 +245,58 @@ def run_semantic_judge(verbose: bool = True) -> List[Dict]:
         print(f"\n[SemanticJudge] Loaded {len(data)} notes from {INPUT_PATH}")
     
     # Initialize judge
-    start_time = time.time()
-    judge = SemanticJudge(verbose=verbose)
+    judge = SemanticJudge()
     
-    # Collect all Tier 3 entities for batch processing
-    tier3_candidates = []  # List of (note_idx, entity_idx, text)
+    # Collect Tier 2 AND Tier 3 entities for batch processing
+    # Tier 1 (Elite) auto-passes, Tier 2 & 3 go through semantic filtering
+    tier_entities = []
+    tier_positions = []  # Track (note_idx, entity_idx, tier) for later
     
     for note_idx, note_entry in enumerate(data):
         for entity_idx, entity in enumerate(note_entry['annotations']):
-            if entity.get('priority', 3) == 3:
-                text = entity.get('text', '')
-                tier3_candidates.append((note_idx, entity_idx, text))
+            tier = entity.get('priority', 3)
+            if tier >= 2:  # Tier 2 and Tier 3
+                tier_entities.append(entity.get('text', ''))
+                tier_positions.append((note_idx, entity_idx, tier))
     
     if verbose:
-        print(f"[SemanticJudge] Found {len(tier3_candidates)} Tier 3 entities to evaluate")
+        tier2_count = sum(1 for _, _, t in tier_positions if t == 2)
+        tier3_count = sum(1 for _, _, t in tier_positions if t == 3)
+        print(f"[SemanticJudge] Found {len(tier_entities)} entities to evaluate (Tier 2: {tier2_count}, Tier 3: {tier3_count})")
+        print("[SemanticJudge] Running Semantic Race (batch scoring)...")
     
-    # Score all Tier 3 entities in batches
-    all_scores = []
+    # Batch score all Tier 2 & Tier 3 entities
+    start_time = time.time()
+    all_scores = judge.score_batch(tier_entities)
+    elapsed = time.time() - start_time
     
-    for batch_start in range(0, len(tier3_candidates), BATCH_SIZE):
-        batch_end = min(batch_start + BATCH_SIZE, len(tier3_candidates))
-        batch_texts = [c[2] for c in tier3_candidates[batch_start:batch_end]]
-        
-        batch_scores = judge.score_batch(batch_texts)
-        all_scores.extend(batch_scores)
+    if verbose:
+        print(f"[SemanticJudge] Batch scoring completed in {elapsed:.2f}s")
+        print(f"[SemanticJudge] Throughput: {len(tier_entities) / elapsed:.1f} entities/sec")
     
-    # Create score lookup: (note_idx, entity_idx) -> score
-    score_lookup = {}
-    for i, (note_idx, entity_idx, _) in enumerate(tier3_candidates):
-        score_lookup[(note_idx, entity_idx)] = all_scores[i]
+    # Map (note_idx, entity_idx) -> (winner, should_keep, scores, reason)
+    decisions = {}
+    for (note_idx, entity_idx, tier), scores in zip(tier_positions, all_scores):
+        winner, should_keep, reason = judge.judge(scores)
+        decisions[(note_idx, entity_idx)] = (winner, should_keep, scores, reason, tier)
     
     # Stats
     stats = {
         "tier1_passed": 0,
         "tier2_passed": 0,
+        "tier2_dropped": 0,
         "tier3_passed": 0,
         "tier3_dropped": 0,
+        "anchor_wins": {name: 0 for name in ANCHORS.keys()},
+        "decision_reasons": {
+            "TARGET_WINS": 0,
+            "LOW_MARGIN_KEEP": 0,
+            "NOISE_CLEAR_WIN": 0,
+        },
         "dropped_examples": [],
-        "passed_examples": [],
-        "score_distribution": {
-            "below_0.1": 0,
-            "0.1_to_0.3": 0,
-            "0.3_to_0.5": 0,
-            "above_0.5": 0
-        }
+        "kept_examples": [],
     }
     
-    # Process and filter
     output_data = []
     total_before = 0
     total_after = 0
@@ -248,57 +306,56 @@ def run_semantic_judge(verbose: bool = True) -> List[Dict]:
         annotations = note_entry['annotations']
         
         total_before += len(annotations)
-        
         kept = []
         note_dropped = 0
         
         for entity_idx, entity in enumerate(annotations):
             tier = entity.get('priority', 3)
-            text = entity.get('text', '')
             
-            if tier <= 2:
-                # Tier 1 & 2: AUTO-PASS
+            if tier == 1:
+                # Tier 1: AUTO-PASS (Elite - highest confidence)
                 kept.append(entity)
-                if tier == 1:
-                    stats["tier1_passed"] += 1
-                else:
-                    stats["tier2_passed"] += 1
+                stats["tier1_passed"] += 1
             else:
-                # Tier 3: Check score
-                score = score_lookup.get((note_idx, entity_idx), 0.0)
+                # Tier 2 & 3: Check decision from batch
+                pos = (note_idx, entity_idx)
+                winner, should_keep, scores, reason, _ = decisions[pos]
+                stats["anchor_wins"][winner] += 1
+                stats["decision_reasons"][reason] += 1
                 
-                # Track score distribution
-                if score < 0.1:
-                    stats["score_distribution"]["below_0.1"] += 1
-                elif score < 0.3:
-                    stats["score_distribution"]["0.1_to_0.3"] += 1
-                elif score < 0.5:
-                    stats["score_distribution"]["0.3_to_0.5"] += 1
-                else:
-                    stats["score_distribution"]["above_0.5"] += 1
-                
-                if judge.is_relevant(score):
-                    # Add score to entity for transparency
-                    entity_copy = dict(entity)
-                    entity_copy['semantic_score'] = round(score, 4)
-                    kept.append(entity_copy)
-                    stats["tier3_passed"] += 1
+                if should_keep:
+                    kept.append(entity)
+                    if tier == 2:
+                        stats["tier2_passed"] += 1
+                    else:
+                        stats["tier3_passed"] += 1
                     
                     # Collect examples
-                    if len(stats["passed_examples"]) < 10:
-                        stats["passed_examples"].append({
-                            "text": text,
-                            "score": round(score, 4)
+                    if len(stats["kept_examples"]) < 10:
+                        stats["kept_examples"].append({
+                            "text": entity.get('text', ''),
+                            "tier": tier,
+                            "winner": winner,
+                            "reason": reason,
+                            "scores": {k: round(v, 3) for k, v in scores.items()},
+                            "note_id": note_id
                         })
                 else:
-                    stats["tier3_dropped"] += 1
+                    if tier == 2:
+                        stats["tier2_dropped"] += 1
+                    else:
+                        stats["tier3_dropped"] += 1
                     note_dropped += 1
                     
                     # Collect examples
-                    if len(stats["dropped_examples"]) < 15:
+                    if len(stats["dropped_examples"]) < 20:
                         stats["dropped_examples"].append({
-                            "text": text,
-                            "score": round(score, 4)
+                            "text": entity.get('text', ''),
+                            "tier": tier,
+                            "winner": winner,
+                            "reason": reason,
+                            "scores": {k: round(v, 3) for k, v in scores.items()},
+                            "note_id": note_id
                         })
         
         total_after += len(kept)
@@ -315,8 +372,6 @@ def run_semantic_judge(verbose: bool = True) -> List[Dict]:
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(output_data, f, indent=2, ensure_ascii=False)
     
-    elapsed_time = time.time() - start_time
-    
     if verbose:
         reduction = total_before - total_after
         reduction_pct = (reduction / total_before * 100) if total_before > 0 else 0
@@ -325,27 +380,33 @@ def run_semantic_judge(verbose: bool = True) -> List[Dict]:
         print(f"    Entities before: {total_before}")
         print(f"    Entities after:  {total_after}")
         print(f"    Reduction:       {reduction} ({reduction_pct:.1f}%)")
-        print(f"    Execution time:  {elapsed_time:.2f}s")
         print(f"\n    By Tier:")
-        print(f"      Tier 1 (auto-pass): {stats['tier1_passed']}")
-        print(f"      Tier 2 (auto-pass): {stats['tier2_passed']}")
-        print(f"      Tier 3 (passed):    {stats['tier3_passed']}")
-        print(f"      Tier 3 (dropped):   {stats['tier3_dropped']}")
-        print(f"\n    Tier 3 Score Distribution:")
-        print(f"      Score < 0.1:   {stats['score_distribution']['below_0.1']}")
-        print(f"      0.1 - 0.3:     {stats['score_distribution']['0.1_to_0.3']}")
-        print(f"      0.3 - 0.5:     {stats['score_distribution']['0.3_to_0.5']}")
-        print(f"      Score > 0.5:   {stats['score_distribution']['above_0.5']}")
+        print(f"      Tier 1 (passed): {stats['tier1_passed']}")
+        print(f"      Tier 2 (passed): {stats['tier2_passed']}")
+        print(f"      Tier 2 (dropped): {stats['tier2_dropped']}")
+        print(f"      Tier 3 (passed): {stats['tier3_passed']}")
+        print(f"      Tier 3 (dropped): {stats['tier3_dropped']}")
+        print(f"\n    Anchor Wins (Semantic Race Results):")
+        for anchor, count in stats["anchor_wins"].items():
+            marker = "✓ KEEP" if anchor == "TARGET" else "? NOISE"
+            print(f"      {anchor}: {count} ({marker})")
+        
+        print(f"\n    Decision Breakdown:")
+        print(f"      TARGET_WINS (keep):      {stats['decision_reasons']['TARGET_WINS']}")
+        print(f"      LOW_MARGIN_KEEP (keep):  {stats['decision_reasons']['LOW_MARGIN_KEEP']}")
+        print(f"      NOISE_CLEAR_WIN (drop):  {stats['decision_reasons']['NOISE_CLEAR_WIN']}")
         
         if stats["dropped_examples"]:
-            print(f"\n    Sample DROPPED Entities (score < {RELEVANCE_THRESHOLD}):")
+            print(f"\n    Sample DROPPED Entities (NOISE clear win):")
             for ex in stats["dropped_examples"][:10]:
-                print(f"      - \"{ex['text']}\" (score: {ex['score']:.4f})")
+                print(f"      - T{ex['tier']} \"{ex['text']}\" -> {ex['winner']} ({ex['reason']})")
+                print(f"        Scores: {ex['scores']}")
         
-        if stats["passed_examples"]:
-            print(f"\n    Sample PASSED Tier 3 Entities:")
-            for ex in stats["passed_examples"][:5]:
-                print(f"      - \"{ex['text']}\" (score: {ex['score']:.4f})")
+        if stats["kept_examples"]:
+            print(f"\n    Sample KEPT Entities:")
+            for ex in stats["kept_examples"][:5]:
+                print(f"      + T{ex['tier']} \"{ex['text']}\" -> {ex['winner']} ({ex['reason']})")
+                print(f"        Scores: {ex['scores']}")
         
         print(f"\n    Output saved to: {OUTPUT_PATH}")
     
