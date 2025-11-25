@@ -7,7 +7,7 @@ RESPONSIBILITY: Execute pipeline steps sequentially and audit the performance
                 after each step using specific "RAG-Friendly" metrics.
 
 SEQUENTIAL EXECUTION:
-    01_gather_assembly.py -> 02_assign_ranks.py -> 03_safe_deduplication.py -> 04_linguistic_filter.py
+    01_gather_assembly.py -> 02_assign_ranks.py -> 03_safe_deduplication.py -> 04_linguistic_filter.py -> 05_semantic_judge.py
 
 RAG-FRIENDLY BENCHMARK LOGIC:
     True Positive Criteria:
@@ -252,6 +252,15 @@ def run_pipeline():
     step_04_count = sum(len(anns) for anns in step_04_preds.values())
     step_04_metrics = evaluate_rag_friendly(step_04_preds, ground_truth, notes)
     results.append(("04_linguistic_filter", step_04_count, step_04_metrics))
+    
+    # === STEP 05: Semantic Judge ===
+    print("\n")
+    step_05_module = load_step_module("05_semantic_judge.py")
+    step_05_data = step_05_module.run_semantic_judge(verbose=True)
+    step_05_preds = format_preds_for_eval(step_05_data)
+    step_05_count = sum(len(anns) for anns in step_05_preds.values())
+    step_05_metrics = evaluate_rag_friendly(step_05_preds, ground_truth, notes)
+    results.append(("05_semantic_judge", step_05_count, step_05_metrics))
     
     # === DASHBOARD ===
     print_dashboard_header()

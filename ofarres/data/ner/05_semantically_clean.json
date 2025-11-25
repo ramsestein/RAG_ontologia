@@ -1,0 +1,3659 @@
+[
+  {
+    "note_id": "1",
+    "annotations": [
+      {
+        "start": 52,
+        "end": 56,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "male",
+        "priority": 3,
+        "semantic_score": 1.502
+      },
+      {
+        "start": 64,
+        "end": 71,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "history",
+        "priority": 3,
+        "semantic_score": 2.424
+      },
+      {
+        "start": 75,
+        "end": 87,
+        "span_text": "hypertension",
+        "label": "ONTOLOGY",
+        "concept_id": "38341003",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "hypertension",
+        "priority": 1
+      },
+      {
+        "start": 92,
+        "end": 109,
+        "span_text": "diabetes mellitus",
+        "label": "ONTOLOGY",
+        "concept_id": "73211009",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "diabetes mellitus",
+        "priority": 1
+      },
+      {
+        "start": 129,
+        "end": 140,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute onset",
+        "priority": 3,
+        "semantic_score": 2.2602
+      },
+      {
+        "start": 144,
+        "end": 163,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left-sided weakness",
+        "priority": 3,
+        "semantic_score": 1.2737
+      },
+      {
+        "start": 155,
+        "end": 163,
+        "span_text": "weakness",
+        "label": "ONTOLOGY",
+        "concept_id": "50582007",
+        "source": "OntologyExact",
+        "text": "weakness",
+        "priority": 2
+      },
+      {
+        "start": 168,
+        "end": 187,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "speech difficulties",
+        "priority": 3,
+        "semantic_score": 1.4795
+      },
+      {
+        "start": 168,
+        "end": 174,
+        "span_text": "speech",
+        "label": "ONTOLOGY",
+        "concept_id": "8011004",
+        "source": "OntologyExact",
+        "text": "speech",
+        "priority": 2
+      },
+      {
+        "start": 193,
+        "end": 200,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 215,
+        "end": 221,
+        "span_text": "normal",
+        "label": "ONTOLOGY",
+        "concept_id": "168545001",
+        "source": "OntologyExact",
+        "text": "normal",
+        "priority": 2
+      },
+      {
+        "start": 239,
+        "end": 251,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "presentation",
+        "priority": 3,
+        "semantic_score": 3.0928
+      },
+      {
+        "start": 256,
+        "end": 267,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "examination",
+        "priority": 3,
+        "semantic_score": 1.8149
+      },
+      {
+        "start": 273,
+        "end": 280,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 287,
+        "end": 329,
+        "span_text": "National Institutes of Health Stroke Scale",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "National Institutes of Health Stroke Scale",
+        "priority": 1
+      },
+      {
+        "start": 331,
+        "end": 336,
+        "span_text": "NIHSS",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "NIHSS",
+        "priority": 1
+      },
+      {
+        "start": 338,
+        "end": 343,
+        "span_text": "score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "score",
+        "priority": 1
+      },
+      {
+        "start": 356,
+        "end": 372,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left hemiparesis",
+        "priority": 3,
+        "semantic_score": 0.8581
+      },
+      {
+        "start": 356,
+        "end": 360,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 361,
+        "end": 372,
+        "span_text": "hemiparesis",
+        "label": "ONTOLOGY",
+        "concept_id": "50582007",
+        "source": "OntologyExact",
+        "text": "hemiparesis",
+        "priority": 2
+      },
+      {
+        "start": 378,
+        "end": 386,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "strength",
+        "priority": 3,
+        "semantic_score": 1.2257
+      },
+      {
+        "start": 389,
+        "end": 406,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left facial droop",
+        "priority": 3,
+        "semantic_score": 1.3078
+      },
+      {
+        "start": 389,
+        "end": 393,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 394,
+        "end": 400,
+        "span_text": "facial",
+        "label": "ONTOLOGY",
+        "concept_id": "726960008",
+        "source": "OntologyExact",
+        "text": "facial",
+        "priority": 2
+      },
+      {
+        "start": 412,
+        "end": 427,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "mild dysarthria",
+        "priority": 3,
+        "semantic_score": 1.6784
+      },
+      {
+        "start": 417,
+        "end": 427,
+        "span_text": "dysarthria",
+        "label": "ONTOLOGY",
+        "concept_id": "8011004",
+        "source": "OntologyExact",
+        "text": "dysarthria",
+        "priority": 2
+      },
+      {
+        "start": 431,
+        "end": 438,
+        "span_text": "IMAGING",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "IMAGING",
+        "priority": 1
+      },
+      {
+        "start": 440,
+        "end": 472,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Non-contrast computed tomography",
+        "priority": 3,
+        "semantic_score": 1.6872
+      },
+      {
+        "start": 453,
+        "end": 472,
+        "span_text": "computed tomography",
+        "label": "ONTOLOGY",
+        "concept_id": "77477000",
+        "source": "OntologyExact",
+        "text": "computed tomography",
+        "priority": 2
+      },
+      {
+        "start": 474,
+        "end": 476,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 485,
+        "end": 489,
+        "span_text": "head",
+        "label": "ONTOLOGY",
+        "concept_id": "406121007",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "head",
+        "priority": 1
+      },
+      {
+        "start": 500,
+        "end": 516,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute hemorrhage",
+        "priority": 3,
+        "semantic_score": 1.2382
+      },
+      {
+        "start": 506,
+        "end": 516,
+        "span_text": "hemorrhage",
+        "label": "ONTOLOGY",
+        "concept_id": "69449002",
+        "source": "OntologyExact",
+        "text": "hemorrhage",
+        "priority": 2
+      },
+      {
+        "start": 518,
+        "end": 532,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT angiography",
+        "priority": 3,
+        "semantic_score": 2.5244
+      },
+      {
+        "start": 518,
+        "end": 520,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 521,
+        "end": 532,
+        "span_text": "angiography",
+        "label": "ONTOLOGY",
+        "concept_id": "77343006",
+        "source": "OntologyExact",
+        "text": "angiography",
+        "priority": 2
+      },
+      {
+        "start": 546,
+        "end": 555,
+        "span_text": "occlusion",
+        "label": "ONTOLOGY",
+        "concept_id": "26036001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "occlusion",
+        "priority": 1
+      },
+      {
+        "start": 563,
+        "end": 591,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right middle cerebral artery",
+        "priority": 3,
+        "semantic_score": 0.95
+      },
+      {
+        "start": 563,
+        "end": 568,
+        "span_text": "right",
+        "label": "ONTOLOGY",
+        "concept_id": "1163363007",
+        "source": "OntologyExact",
+        "text": "right",
+        "priority": 2
+      },
+      {
+        "start": 569,
+        "end": 591,
+        "span_text": "middle cerebral artery",
+        "label": "ONTOLOGY",
+        "concept_id": "69930009",
+        "source": "OntologyExact",
+        "text": "middle cerebral artery",
+        "priority": 2
+      },
+      {
+        "start": 593,
+        "end": 596,
+        "span_text": "MCA",
+        "label": "ONTOLOGY",
+        "concept_id": "69930009",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "MCA",
+        "priority": 1
+      },
+      {
+        "start": 598,
+        "end": 608,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "M1 segment",
+        "priority": 3,
+        "semantic_score": 2.0551
+      },
+      {
+        "start": 601,
+        "end": 608,
+        "span_text": "segment",
+        "label": "ONTOLOGY",
+        "concept_id": "279939009",
+        "source": "OntologyExact",
+        "text": "segment",
+        "priority": 2
+      },
+      {
+        "start": 610,
+        "end": 647,
+        "span_text": "Alberta Stroke Program Early CT Score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "Alberta Stroke Program Early CT Score",
+        "priority": 2
+      },
+      {
+        "start": 618,
+        "end": 624,
+        "span_text": "Stroke",
+        "label": "ACRONYM",
+        "concept_id": "230690007",
+        "source": "Acronyms",
+        "text": "Stroke",
+        "priority": 1
+      },
+      {
+        "start": 639,
+        "end": 641,
+        "span_text": "CT",
+        "label": "ACRONYM",
+        "concept_id": "21793004",
+        "source": "Acronyms",
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 649,
+        "end": 656,
+        "span_text": "ASPECTS",
+        "label": "ONTOLOGY",
+        "concept_id": "102294004",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "ASPECTS",
+        "priority": 1
+      },
+      {
+        "start": 665,
+        "end": 677,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT perfusion",
+        "priority": 3,
+        "semantic_score": 1.4695
+      },
+      {
+        "start": 665,
+        "end": 667,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 693,
+        "end": 701,
+        "span_text": "penumbra",
+        "label": "ONTOLOGY",
+        "concept_id": "230691006",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "penumbra",
+        "priority": 1
+      },
+      {
+        "start": 707,
+        "end": 720,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "core-penumbra",
+        "priority": 3,
+        "semantic_score": 0.8244
+      },
+      {
+        "start": 763,
+        "end": 770,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 780,
+        "end": 798,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "intravenous tissue",
+        "priority": 3,
+        "semantic_score": 1.1326
+      },
+      {
+        "start": 792,
+        "end": 820,
+        "span_text": "tissue plasminogen activator",
+        "label": "ONTOLOGY",
+        "concept_id": "387467008",
+        "source": "OntologyExact",
+        "text": "tissue plasminogen activator",
+        "priority": 2
+      },
+      {
+        "start": 822,
+        "end": 825,
+        "span_text": "tPA",
+        "label": "ONTOLOGY",
+        "concept_id": "387467008",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "tPA",
+        "priority": 1
+      },
+      {
+        "start": 845,
+        "end": 852,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "symptom",
+        "priority": 3,
+        "semantic_score": 6.5484
+      },
+      {
+        "start": 876,
+        "end": 892,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "vessel occlusion",
+        "priority": 3,
+        "semantic_score": 1.3944
+      },
+      {
+        "start": 876,
+        "end": 882,
+        "span_text": "vessel",
+        "label": "ONTOLOGY",
+        "concept_id": "321862009",
+        "source": "OntologyExact",
+        "text": "vessel",
+        "priority": 2
+      },
+      {
+        "start": 883,
+        "end": 892,
+        "span_text": "occlusion",
+        "label": "ONTOLOGY",
+        "concept_id": "26036001",
+        "source": "OntologyExact",
+        "text": "occlusion",
+        "priority": 2
+      },
+      {
+        "start": 909,
+        "end": 917,
+        "span_text": "penumbra",
+        "label": "ONTOLOGY",
+        "concept_id": "230691006",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "penumbra",
+        "priority": 1
+      },
+      {
+        "start": 919,
+        "end": 942,
+        "span_text": "mechanical thrombectomy",
+        "label": "ONTOLOGY",
+        "concept_id": "433112001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "mechanical thrombectomy",
+        "priority": 1
+      },
+      {
+        "start": 969,
+        "end": 983,
+        "span_text": "recanalization",
+        "label": "ONTOLOGY",
+        "concept_id": "449894001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "recanalization",
+        "priority": 1
+      },
+      {
+        "start": 1002,
+        "end": 1037,
+        "span_text": "Thrombolysis in Cerebral Infarction",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "Thrombolysis in Cerebral Infarction",
+        "priority": 2
+      },
+      {
+        "start": 1039,
+        "end": 1043,
+        "span_text": "TICI",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "TICI",
+        "priority": 1
+      },
+      {
+        "start": 1045,
+        "end": 1052,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "2B flow",
+        "priority": 3,
+        "semantic_score": 1.7245
+      },
+      {
+        "start": 1064,
+        "end": 1086,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Post-procedure imaging",
+        "priority": 3,
+        "semantic_score": 3.6485
+      },
+      {
+        "start": 1079,
+        "end": 1086,
+        "span_text": "imaging",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": "OntologyExact",
+        "text": "imaging",
+        "priority": 2
+      },
+      {
+        "start": 1105,
+        "end": 1119,
+        "span_text": "recanalization",
+        "label": "ONTOLOGY",
+        "concept_id": "449894001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "recanalization",
+        "priority": 1
+      },
+      {
+        "start": 1133,
+        "end": 1159,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "hemorrhagic transformation",
+        "priority": 3,
+        "semantic_score": 1.8414
+      },
+      {
+        "start": 1165,
+        "end": 1174,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient's",
+        "priority": 3,
+        "semantic_score": 2.4773
+      },
+      {
+        "start": 1175,
+        "end": 1199,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "neurological examination",
+        "priority": 3,
+        "semantic_score": 3.0378
+      },
+      {
+        "start": 1200,
+        "end": 1208,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "improved",
+        "priority": 3,
+        "semantic_score": 2.2503
+      },
+      {
+        "start": 1229,
+        "end": 1234,
+        "span_text": "NIHSS",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "NIHSS",
+        "priority": 1
+      },
+      {
+        "start": 1235,
+        "end": 1245,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "decreasing",
+        "priority": 3,
+        "semantic_score": 1.7234
+      }
+    ]
+  },
+  {
+    "note_id": "2",
+    "annotations": [
+      {
+        "start": 28,
+        "end": 34,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "female",
+        "priority": 3,
+        "semantic_score": 1.4978
+      },
+      {
+        "start": 40,
+        "end": 59,
+        "span_text": "atrial fibrillation",
+        "label": "ONTOLOGY",
+        "concept_id": "49436004",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "atrial fibrillation",
+        "priority": 1
+      },
+      {
+        "start": 68,
+        "end": 83,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "anticoagulation",
+        "priority": 3,
+        "semantic_score": 1.0323
+      },
+      {
+        "start": 102,
+        "end": 122,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "emergency department",
+        "priority": 3,
+        "semantic_score": 0.8506
+      },
+      {
+        "start": 128,
+        "end": 140,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "sudden onset",
+        "priority": 3,
+        "semantic_score": 2.0168
+      },
+      {
+        "start": 151,
+        "end": 159,
+        "span_text": "headache",
+        "label": "ONTOLOGY",
+        "concept_id": "25064002",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "headache",
+        "priority": 1
+      },
+      {
+        "start": 161,
+        "end": 167,
+        "span_text": "nausea",
+        "label": "ONTOLOGY",
+        "concept_id": "422587007",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "nausea",
+        "priority": 1
+      },
+      {
+        "start": 173,
+        "end": 181,
+        "span_text": "vomiting",
+        "label": "ONTOLOGY",
+        "concept_id": "422400008",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "vomiting",
+        "priority": 1
+      },
+      {
+        "start": 187,
+        "end": 195,
+        "span_text": "headache",
+        "label": "ONTOLOGY",
+        "concept_id": "25064002",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "headache",
+        "priority": 1
+      },
+      {
+        "start": 224,
+        "end": 232,
+        "span_text": "headache",
+        "label": "ONTOLOGY",
+        "concept_id": "25064002",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "headache",
+        "priority": 1
+      },
+      {
+        "start": 240,
+        "end": 244,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "life",
+        "priority": 3,
+        "semantic_score": 1.776
+      },
+      {
+        "start": 251,
+        "end": 262,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute onset",
+        "priority": 3,
+        "semantic_score": 2.2602
+      },
+      {
+        "start": 269,
+        "end": 278,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "gardening",
+        "priority": 3,
+        "semantic_score": 1.1848
+      },
+      {
+        "start": 297,
+        "end": 309,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "presentation",
+        "priority": 3,
+        "semantic_score": 3.0928
+      },
+      {
+        "start": 315,
+        "end": 322,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 340,
+        "end": 360,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "significant distress",
+        "priority": 3,
+        "semantic_score": 1.5942
+      },
+      {
+        "start": 362,
+        "end": 376,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Blood pressure",
+        "priority": 3,
+        "semantic_score": 0.6368
+      },
+      {
+        "start": 368,
+        "end": 376,
+        "span_text": "pressure",
+        "label": "ONTOLOGY",
+        "concept_id": "1163225002",
+        "source": "OntologyExact",
+        "text": "pressure",
+        "priority": 2
+      },
+      {
+        "start": 381,
+        "end": 389,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "elevated",
+        "priority": 3,
+        "semantic_score": 1.2978
+      },
+      {
+        "start": 401,
+        "end": 405,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "mmHg",
+        "priority": 3,
+        "semantic_score": 0.8719
+      },
+      {
+        "start": 407,
+        "end": 431,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Neurological examination",
+        "priority": 3,
+        "semantic_score": 3.0378
+      },
+      {
+        "start": 441,
+        "end": 447,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "nuchal",
+        "priority": 3,
+        "semantic_score": 0.5223
+      },
+      {
+        "start": 448,
+        "end": 456,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "rigidity",
+        "priority": 3,
+        "semantic_score": 1.2727
+      },
+      {
+        "start": 461,
+        "end": 472,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "photophobia",
+        "priority": 3,
+        "semantic_score": 1.4768
+      },
+      {
+        "start": 474,
+        "end": 492,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Glasgow Coma Scale",
+        "priority": 3,
+        "semantic_score": 1.6501
+      },
+      {
+        "start": 487,
+        "end": 492,
+        "span_text": "Scale",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "Scale",
+        "priority": 2
+      },
+      {
+        "start": 502,
+        "end": 509,
+        "span_text": "IMAGING",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "IMAGING",
+        "priority": 1
+      },
+      {
+        "start": 511,
+        "end": 523,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Non-contrast",
+        "priority": 3,
+        "semantic_score": 1.7317
+      },
+      {
+        "start": 524,
+        "end": 526,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 534,
+        "end": 538,
+        "span_text": "head",
+        "label": "ONTOLOGY",
+        "concept_id": "406121007",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "head",
+        "priority": 1
+      },
+      {
+        "start": 548,
+        "end": 571,
+        "span_text": "subarachnoid hemorrhage",
+        "label": "ONTOLOGY",
+        "concept_id": "21454007",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "subarachnoid hemorrhage",
+        "priority": 1
+      },
+      {
+        "start": 577,
+        "end": 582,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "blood",
+        "priority": 3,
+        "semantic_score": 0.4839
+      },
+      {
+        "start": 590,
+        "end": 604,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "basal cisterns",
+        "priority": 3,
+        "semantic_score": 1.0162
+      },
+      {
+        "start": 590,
+        "end": 595,
+        "span_text": "basal",
+        "label": "ONTOLOGY",
+        "concept_id": "125486006",
+        "source": "OntologyExact",
+        "text": "basal",
+        "priority": 2
+      },
+      {
+        "start": 596,
+        "end": 604,
+        "span_text": "cisterns",
+        "label": "ONTOLOGY",
+        "concept_id": "369389009",
+        "source": "OntologyExact",
+        "text": "cisterns",
+        "priority": 2
+      },
+      {
+        "start": 609,
+        "end": 625,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "sylvian fissures",
+        "priority": 3,
+        "semantic_score": 2.0304
+      },
+      {
+        "start": 627,
+        "end": 641,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT angiography",
+        "priority": 3,
+        "semantic_score": 2.5244
+      },
+      {
+        "start": 627,
+        "end": 629,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 630,
+        "end": 641,
+        "span_text": "angiography",
+        "label": "ONTOLOGY",
+        "concept_id": "77343006",
+        "source": "OntologyExact",
+        "text": "angiography",
+        "priority": 2
+      },
+      {
+        "start": 661,
+        "end": 699,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "anterior communicating artery aneurysm",
+        "priority": 3,
+        "semantic_score": 1.55
+      },
+      {
+        "start": 661,
+        "end": 669,
+        "span_text": "anterior",
+        "label": "ONTOLOGY",
+        "concept_id": "303963002",
+        "source": "OntologyExact",
+        "text": "anterior",
+        "priority": 2
+      },
+      {
+        "start": 684,
+        "end": 690,
+        "span_text": "artery",
+        "label": "ONTOLOGY",
+        "concept_id": "54247002",
+        "source": "OntologyExact",
+        "text": "artery",
+        "priority": 2
+      },
+      {
+        "start": 691,
+        "end": 699,
+        "span_text": "aneurysm",
+        "label": "ONTOLOGY",
+        "concept_id": "22039006",
+        "source": "OntologyExact",
+        "text": "aneurysm",
+        "priority": 2
+      },
+      {
+        "start": 707,
+        "end": 719,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "daughter sac",
+        "priority": 3,
+        "semantic_score": 0.8623
+      },
+      {
+        "start": 716,
+        "end": 719,
+        "span_text": "sac",
+        "label": "ONTOLOGY",
+        "concept_id": "118762006",
+        "source": "OntologyExact",
+        "text": "sac",
+        "priority": 2
+      },
+      {
+        "start": 721,
+        "end": 736,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "consistent with",
+        "priority": 3,
+        "semantic_score": 2.547
+      },
+      {
+        "start": 744,
+        "end": 751,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "rupture",
+        "priority": 3,
+        "semantic_score": 1.3126
+      },
+      {
+        "start": 756,
+        "end": 765,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "vasospasm",
+        "priority": 3,
+        "semantic_score": 1.0123
+      },
+      {
+        "start": 796,
+        "end": 803,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 808,
+        "end": 816,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "admitted",
+        "priority": 3,
+        "semantic_score": 1.9886
+      },
+      {
+        "start": 824,
+        "end": 848,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "neurointensive care unit",
+        "priority": 3,
+        "semantic_score": 1.9215
+      },
+      {
+        "start": 844,
+        "end": 848,
+        "span_text": "unit",
+        "label": "ONTOLOGY",
+        "concept_id": "247604006",
+        "source": "OntologyExact",
+        "text": "unit",
+        "priority": 2
+      },
+      {
+        "start": 850,
+        "end": 864,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Blood pressure",
+        "priority": 3,
+        "semantic_score": 0.6368
+      },
+      {
+        "start": 856,
+        "end": 864,
+        "span_text": "pressure",
+        "label": "ONTOLOGY",
+        "concept_id": "1163225002",
+        "source": "OntologyExact",
+        "text": "pressure",
+        "priority": 2
+      },
+      {
+        "start": 891,
+        "end": 901,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Nimodipine",
+        "priority": 3,
+        "semantic_score": 0.4556
+      },
+      {
+        "start": 920,
+        "end": 941,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "vasospasm prophylaxis",
+        "priority": 3,
+        "semantic_score": 1.4556
+      },
+      {
+        "start": 943,
+        "end": 963,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Endovascular coiling",
+        "priority": 3,
+        "semantic_score": 1.4086
+      },
+      {
+        "start": 943,
+        "end": 955,
+        "span_text": "Endovascular",
+        "label": "ONTOLOGY",
+        "concept_id": "433112001",
+        "source": "OntologyExact",
+        "text": "Endovascular",
+        "priority": 2
+      },
+      {
+        "start": 971,
+        "end": 979,
+        "span_text": "aneurysm",
+        "label": "ONTOLOGY",
+        "concept_id": "22039006",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "aneurysm",
+        "priority": 1
+      },
+      {
+        "start": 1010,
+        "end": 1022,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "hospital day",
+        "priority": 3,
+        "semantic_score": 1.6337
+      },
+      {
+        "start": 1046,
+        "end": 1053,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 1064,
+        "end": 1089,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "delayed cerebral ischemia",
+        "priority": 3,
+        "semantic_score": 1.0076
+      },
+      {
+        "start": 1072,
+        "end": 1089,
+        "span_text": "cerebral ischemia",
+        "label": "ONTOLOGY",
+        "concept_id": "52674009",
+        "source": "OntologyExact",
+        "text": "cerebral ischemia",
+        "priority": 2
+      },
+      {
+        "start": 1093,
+        "end": 1098,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "day 7",
+        "priority": 3,
+        "semantic_score": 2.7755
+      },
+      {
+        "start": 1113,
+        "end": 1120,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "induced",
+        "priority": 3,
+        "semantic_score": 1.6643
+      },
+      {
+        "start": 1121,
+        "end": 1133,
+        "span_text": "hypertension",
+        "label": "ONTOLOGY",
+        "concept_id": "38341003",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "hypertension",
+        "priority": 1
+      },
+      {
+        "start": 1138,
+        "end": 1157,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "balloon angioplasty",
+        "priority": 3,
+        "semantic_score": 1.3962
+      },
+      {
+        "start": 1159,
+        "end": 1168,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Discharge",
+        "priority": 3,
+        "semantic_score": 0.5153
+      },
+      {
+        "start": 1176,
+        "end": 1179,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "day",
+        "priority": 3,
+        "semantic_score": 2.2706
+      },
+      {
+        "start": 1188,
+        "end": 1215,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "modified Rankin Scale score",
+        "priority": 3,
+        "semantic_score": 1.9489
+      },
+      {
+        "start": 1204,
+        "end": 1209,
+        "span_text": "Scale",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "Scale",
+        "priority": 2
+      },
+      {
+        "start": 1210,
+        "end": 1215,
+        "span_text": "score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "score",
+        "priority": 2
+      }
+    ]
+  },
+  {
+    "note_id": "3",
+    "annotations": [
+      {
+        "start": 0,
+        "end": 6,
+        "span_text": "STROKE",
+        "label": "ONTOLOGY",
+        "concept_id": "67889009",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "STROKE",
+        "priority": 1
+      },
+      {
+        "start": 31,
+        "end": 35,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "male",
+        "priority": 3,
+        "semantic_score": 1.502
+      },
+      {
+        "start": 41,
+        "end": 48,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "history",
+        "priority": 3,
+        "semantic_score": 2.424
+      },
+      {
+        "start": 52,
+        "end": 59,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "smoking",
+        "priority": 3,
+        "semantic_score": 0.4543
+      },
+      {
+        "start": 64,
+        "end": 78,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "hyperlipidemia",
+        "priority": 3,
+        "semantic_score": 1.5323
+      },
+      {
+        "start": 94,
+        "end": 103,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "transient",
+        "priority": 3,
+        "semantic_score": 0.9452
+      },
+      {
+        "start": 104,
+        "end": 114,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "episode of",
+        "priority": 3,
+        "semantic_score": 3.2682
+      },
+      {
+        "start": 115,
+        "end": 135,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right-sided weakness",
+        "priority": 3,
+        "semantic_score": 1.2039
+      },
+      {
+        "start": 127,
+        "end": 135,
+        "span_text": "weakness",
+        "label": "ONTOLOGY",
+        "concept_id": "50582007",
+        "source": "OntologyExact",
+        "text": "weakness",
+        "priority": 2
+      },
+      {
+        "start": 140,
+        "end": 159,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "speech difficulties",
+        "priority": 3,
+        "semantic_score": 1.4795
+      },
+      {
+        "start": 140,
+        "end": 146,
+        "span_text": "speech",
+        "label": "ONTOLOGY",
+        "concept_id": "8011004",
+        "source": "OntologyExact",
+        "text": "speech",
+        "priority": 2
+      },
+      {
+        "start": 171,
+        "end": 178,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "minutes",
+        "priority": 3,
+        "semantic_score": 2.4734
+      },
+      {
+        "start": 180,
+        "end": 188,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Symptoms",
+        "priority": 3,
+        "semantic_score": 5.9596
+      },
+      {
+        "start": 200,
+        "end": 208,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "resolved",
+        "priority": 3,
+        "semantic_score": 2.9666
+      },
+      {
+        "start": 218,
+        "end": 225,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "arrival",
+        "priority": 3,
+        "semantic_score": 2.0191
+      },
+      {
+        "start": 255,
+        "end": 260,
+        "span_text": "score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "score",
+        "priority": 1
+      },
+      {
+        "start": 282,
+        "end": 285,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "age",
+        "priority": 3,
+        "semantic_score": 2.0615
+      },
+      {
+        "start": 290,
+        "end": 304,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "blood pressure",
+        "priority": 3,
+        "semantic_score": 0.6368
+      },
+      {
+        "start": 296,
+        "end": 304,
+        "span_text": "pressure",
+        "label": "ONTOLOGY",
+        "concept_id": "1163225002",
+        "source": "OntologyExact",
+        "text": "pressure",
+        "priority": 2
+      },
+      {
+        "start": 313,
+        "end": 330,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "clinical features",
+        "priority": 3,
+        "semantic_score": 5.2413
+      },
+      {
+        "start": 334,
+        "end": 353,
+        "span_text": "unilateral weakness",
+        "label": "ONTOLOGY",
+        "concept_id": "50582007",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "unilateral weakness",
+        "priority": 1
+      },
+      {
+        "start": 358,
+        "end": 376,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "speech disturbance",
+        "priority": 3,
+        "semantic_score": 1.3434
+      },
+      {
+        "start": 358,
+        "end": 364,
+        "span_text": "speech",
+        "label": "ONTOLOGY",
+        "concept_id": "8011004",
+        "source": "OntologyExact",
+        "text": "speech",
+        "priority": 2
+      },
+      {
+        "start": 378,
+        "end": 386,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "duration",
+        "priority": 3,
+        "semantic_score": 1.9452
+      },
+      {
+        "start": 399,
+        "end": 410,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "no diabetes",
+        "priority": 3,
+        "semantic_score": -0.0891
+      },
+      {
+        "start": 402,
+        "end": 410,
+        "span_text": "diabetes",
+        "label": "ONTOLOGY",
+        "concept_id": "73211009",
+        "source": "OntologyExact",
+        "text": "diabetes",
+        "priority": 2
+      },
+      {
+        "start": 413,
+        "end": 438,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Carotid duplex ultrasound",
+        "priority": 3,
+        "semantic_score": 1.9366
+      },
+      {
+        "start": 452,
+        "end": 460,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "stenosis",
+        "priority": 1
+      },
+      {
+        "start": 468,
+        "end": 496,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left internal carotid artery",
+        "priority": 3,
+        "semantic_score": 0.8767
+      },
+      {
+        "start": 468,
+        "end": 472,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 473,
+        "end": 496,
+        "span_text": "internal carotid artery",
+        "label": "ONTOLOGY",
+        "concept_id": "86547008",
+        "source": "OntologyExact",
+        "text": "internal carotid artery",
+        "priority": 2
+      },
+      {
+        "start": 499,
+        "end": 506,
+        "span_text": "IMAGING",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "IMAGING",
+        "priority": 1
+      },
+      {
+        "start": 508,
+        "end": 517,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "MRI brain",
+        "priority": 3,
+        "semantic_score": 1.8851
+      },
+      {
+        "start": 508,
+        "end": 511,
+        "span_text": "MRI",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "MRI",
+        "priority": 1
+      },
+      {
+        "start": 512,
+        "end": 517,
+        "span_text": "brain",
+        "label": "ONTOLOGY",
+        "concept_id": "263353005",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "brain",
+        "priority": 1
+      },
+      {
+        "start": 523,
+        "end": 549,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "diffusion-weighted imaging",
+        "priority": 3,
+        "semantic_score": 1.9011
+      },
+      {
+        "start": 542,
+        "end": 549,
+        "span_text": "imaging",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": "OntologyExact",
+        "text": "imaging",
+        "priority": 2
+      },
+      {
+        "start": 551,
+        "end": 554,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "DWI",
+        "priority": 3,
+        "semantic_score": 1.6398
+      },
+      {
+        "start": 569,
+        "end": 582,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute infarct",
+        "priority": 3,
+        "semantic_score": 1.6767
+      },
+      {
+        "start": 575,
+        "end": 582,
+        "span_text": "infarct",
+        "label": "ONTOLOGY",
+        "concept_id": "28208008",
+        "source": "OntologyExact",
+        "text": "infarct",
+        "priority": 2
+      },
+      {
+        "start": 590,
+        "end": 609,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left corona radiata",
+        "priority": 3,
+        "semantic_score": 1.0108
+      },
+      {
+        "start": 590,
+        "end": 594,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 611,
+        "end": 625,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "MR angiography",
+        "priority": 3,
+        "semantic_score": 2.4545
+      },
+      {
+        "start": 614,
+        "end": 625,
+        "span_text": "angiography",
+        "label": "ONTOLOGY",
+        "concept_id": "77343006",
+        "source": "OntologyExact",
+        "text": "angiography",
+        "priority": 2
+      },
+      {
+        "start": 643,
+        "end": 680,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left internal carotid artery stenosis",
+        "priority": 3,
+        "semantic_score": 1.2535
+      },
+      {
+        "start": 643,
+        "end": 647,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 648,
+        "end": 671,
+        "span_text": "internal carotid artery",
+        "label": "ONTOLOGY",
+        "concept_id": "86547008",
+        "source": "OntologyExact",
+        "text": "internal carotid artery",
+        "priority": 2
+      },
+      {
+        "start": 672,
+        "end": 680,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": "OntologyExact",
+        "text": "stenosis",
+        "priority": 2
+      },
+      {
+        "start": 682,
+        "end": 696,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Echocardiogram",
+        "priority": 3,
+        "semantic_score": 1.4232
+      },
+      {
+        "start": 706,
+        "end": 738,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "normal left ventricular function",
+        "priority": 3,
+        "semantic_score": 1.2124
+      },
+      {
+        "start": 706,
+        "end": 712,
+        "span_text": "normal",
+        "label": "ONTOLOGY",
+        "concept_id": "168545001",
+        "source": "OntologyExact",
+        "text": "normal",
+        "priority": 2
+      },
+      {
+        "start": 713,
+        "end": 717,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 759,
+        "end": 772,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "cardioembolic",
+        "priority": 3,
+        "semantic_score": 0.4495
+      },
+      {
+        "start": 793,
+        "end": 818,
+        "span_text": "Transient ischemic attack",
+        "label": "ONTOLOGY",
+        "concept_id": "266257000",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "Transient ischemic attack",
+        "priority": 1
+      },
+      {
+        "start": 820,
+        "end": 823,
+        "span_text": "TIA",
+        "label": "ONTOLOGY",
+        "concept_id": "266257000",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "TIA",
+        "priority": 1
+      },
+      {
+        "start": 830,
+        "end": 839,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "completed",
+        "priority": 3,
+        "semantic_score": 2.1448
+      },
+      {
+        "start": 840,
+        "end": 860,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "small vessel infarct",
+        "priority": 3,
+        "semantic_score": 1.1665
+      },
+      {
+        "start": 846,
+        "end": 852,
+        "span_text": "vessel",
+        "label": "ONTOLOGY",
+        "concept_id": "321862009",
+        "source": "OntologyExact",
+        "text": "vessel",
+        "priority": 2
+      },
+      {
+        "start": 853,
+        "end": 860,
+        "span_text": "infarct",
+        "label": "ONTOLOGY",
+        "concept_id": "28208008",
+        "source": "OntologyExact",
+        "text": "infarct",
+        "priority": 2
+      },
+      {
+        "start": 880,
+        "end": 905,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "artery-to-artery embolism",
+        "priority": 3,
+        "semantic_score": 0.8702
+      },
+      {
+        "start": 911,
+        "end": 927,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "carotid stenosis",
+        "priority": 3,
+        "semantic_score": 1.3833
+      },
+      {
+        "start": 919,
+        "end": 927,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": "OntologyExact",
+        "text": "stenosis",
+        "priority": 2
+      },
+      {
+        "start": 941,
+        "end": 966,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Dual antiplatelet therapy",
+        "priority": 3,
+        "semantic_score": 1.2476
+      },
+      {
+        "start": 1003,
+        "end": 1019,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "carotid stenosis",
+        "priority": 3,
+        "semantic_score": 1.3833
+      },
+      {
+        "start": 1011,
+        "end": 1019,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": "OntologyExact",
+        "text": "stenosis",
+        "priority": 2
+      },
+      {
+        "start": 1031,
+        "end": 1039,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "symptoms",
+        "priority": 3,
+        "semantic_score": 5.9596
+      },
+      {
+        "start": 1041,
+        "end": 1063,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "carotid endarterectomy",
+        "priority": 3,
+        "semantic_score": 1.4436
+      },
+      {
+        "start": 1068,
+        "end": 1079,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "recommended",
+        "priority": 3,
+        "semantic_score": 2.5242
+      },
+      {
+        "start": 1102,
+        "end": 1115,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "complications",
+        "priority": 3,
+        "semantic_score": 2.9815
+      }
+    ]
+  },
+  {
+    "note_id": "4",
+    "annotations": [
+      {
+        "start": 0,
+        "end": 12,
+        "span_text": "THROMBECTOMY",
+        "label": "ONTOLOGY",
+        "concept_id": "433112001",
+        "source": "OntologyExact",
+        "text": "THROMBECTOMY",
+        "priority": 2
+      },
+      {
+        "start": 52,
+        "end": 56,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "male",
+        "priority": 3,
+        "semantic_score": 1.502
+      },
+      {
+        "start": 72,
+        "end": 94,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute onset of aphasia",
+        "priority": 3,
+        "semantic_score": 2.1921
+      },
+      {
+        "start": 87,
+        "end": 94,
+        "span_text": "aphasia",
+        "label": "ONTOLOGY",
+        "concept_id": "87486003",
+        "source": "OntologyExact",
+        "text": "aphasia",
+        "priority": 2
+      },
+      {
+        "start": 99,
+        "end": 115,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right hemiplegia",
+        "priority": 3,
+        "semantic_score": 1.0704
+      },
+      {
+        "start": 99,
+        "end": 104,
+        "span_text": "right",
+        "label": "ONTOLOGY",
+        "concept_id": "1163363007",
+        "source": "OntologyExact",
+        "text": "right",
+        "priority": 2
+      },
+      {
+        "start": 159,
+        "end": 171,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "presentation",
+        "priority": 3,
+        "semantic_score": 3.0928
+      },
+      {
+        "start": 189,
+        "end": 194,
+        "span_text": "NIHSS",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "NIHSS",
+        "priority": 1
+      },
+      {
+        "start": 195,
+        "end": 200,
+        "span_text": "score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "score",
+        "priority": 1
+      },
+      {
+        "start": 205,
+        "end": 207,
+        "span_text": "18",
+        "label": "ONTOLOGY",
+        "concept_id": "25895008",
+        "source": "OntologyExact",
+        "text": "18",
+        "priority": 2
+      },
+      {
+        "start": 209,
+        "end": 211,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 212,
+        "end": 216,
+        "span_text": "head",
+        "label": "ONTOLOGY",
+        "concept_id": "406121007",
+        "source": "OntologyExact",
+        "text": "head",
+        "priority": 2
+      },
+      {
+        "start": 227,
+        "end": 243,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute hemorrhage",
+        "priority": 3,
+        "semantic_score": 1.2382
+      },
+      {
+        "start": 233,
+        "end": 243,
+        "span_text": "hemorrhage",
+        "label": "ONTOLOGY",
+        "concept_id": "69449002",
+        "source": "OntologyExact",
+        "text": "hemorrhage",
+        "priority": 2
+      },
+      {
+        "start": 249,
+        "end": 256,
+        "span_text": "ASPECTS",
+        "label": "ONTOLOGY",
+        "concept_id": "102294004",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "ASPECTS",
+        "priority": 1
+      },
+      {
+        "start": 257,
+        "end": 262,
+        "span_text": "score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "score",
+        "priority": 2
+      },
+      {
+        "start": 269,
+        "end": 283,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT angiography",
+        "priority": 3,
+        "semantic_score": 2.5244
+      },
+      {
+        "start": 269,
+        "end": 271,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 272,
+        "end": 283,
+        "span_text": "angiography",
+        "label": "ONTOLOGY",
+        "concept_id": "77343006",
+        "source": "OntologyExact",
+        "text": "angiography",
+        "priority": 2
+      },
+      {
+        "start": 293,
+        "end": 333,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left M1 middle cerebral artery occlusion",
+        "priority": 3,
+        "semantic_score": 1.1673
+      },
+      {
+        "start": 293,
+        "end": 297,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 301,
+        "end": 323,
+        "span_text": "middle cerebral artery",
+        "label": "ONTOLOGY",
+        "concept_id": "69930009",
+        "source": "OntologyExact",
+        "text": "middle cerebral artery",
+        "priority": 2
+      },
+      {
+        "start": 324,
+        "end": 333,
+        "span_text": "occlusion",
+        "label": "ONTOLOGY",
+        "concept_id": "26036001",
+        "source": "OntologyExact",
+        "text": "occlusion",
+        "priority": 2
+      },
+      {
+        "start": 355,
+        "end": 366,
+        "span_text": "circulation",
+        "label": "ONTOLOGY",
+        "concept_id": "782966009",
+        "source": "OntologyExact",
+        "text": "circulation",
+        "priority": 2
+      },
+      {
+        "start": 368,
+        "end": 384,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "collateral score",
+        "priority": 3,
+        "semantic_score": 1.6006
+      },
+      {
+        "start": 379,
+        "end": 384,
+        "span_text": "score",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": "OntologyExact",
+        "text": "score",
+        "priority": 2
+      },
+      {
+        "start": 390,
+        "end": 399,
+        "span_text": "PROCEDURE",
+        "label": "ONTOLOGY",
+        "concept_id": "52447001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "PROCEDURE",
+        "priority": 1
+      },
+      {
+        "start": 407,
+        "end": 425,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "general anesthesia",
+        "priority": 3,
+        "semantic_score": 0.3157
+      },
+      {
+        "start": 427,
+        "end": 433,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "access",
+        "priority": 3,
+        "semantic_score": 2.6727
+      },
+      {
+        "start": 451,
+        "end": 471,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right femoral artery",
+        "priority": 3,
+        "semantic_score": 0.526
+      },
+      {
+        "start": 451,
+        "end": 456,
+        "span_text": "right",
+        "label": "ONTOLOGY",
+        "concept_id": "1163363007",
+        "source": "OntologyExact",
+        "text": "right",
+        "priority": 2
+      },
+      {
+        "start": 457,
+        "end": 464,
+        "span_text": "femoral",
+        "label": "ONTOLOGY",
+        "concept_id": "699991006",
+        "source": "OntologyExact",
+        "text": "femoral",
+        "priority": 2
+      },
+      {
+        "start": 465,
+        "end": 471,
+        "span_text": "artery",
+        "label": "ONTOLOGY",
+        "concept_id": "54247002",
+        "source": "OntologyExact",
+        "text": "artery",
+        "priority": 2
+      },
+      {
+        "start": 475,
+        "end": 483,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "6F guide",
+        "priority": 3,
+        "semantic_score": 2.7203
+      },
+      {
+        "start": 484,
+        "end": 492,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "catheter",
+        "priority": 3,
+        "semantic_score": 0.7571
+      },
+      {
+        "start": 515,
+        "end": 543,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left internal carotid artery",
+        "priority": 3,
+        "semantic_score": 0.8767
+      },
+      {
+        "start": 515,
+        "end": 519,
+        "span_text": "left",
+        "label": "ONTOLOGY",
+        "concept_id": "729413005",
+        "source": "OntologyExact",
+        "text": "left",
+        "priority": 2
+      },
+      {
+        "start": 520,
+        "end": 543,
+        "span_text": "internal carotid artery",
+        "label": "ONTOLOGY",
+        "concept_id": "86547008",
+        "source": "OntologyExact",
+        "text": "internal carotid artery",
+        "priority": 2
+      },
+      {
+        "start": 553,
+        "end": 558,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "stent",
+        "priority": 3,
+        "semantic_score": 1.1508
+      },
+      {
+        "start": 569,
+        "end": 578,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "technique",
+        "priority": 3,
+        "semantic_score": 2.0002
+      },
+      {
+        "start": 584,
+        "end": 588,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "clot",
+        "priority": 3,
+        "semantic_score": 0.4525
+      },
+      {
+        "start": 606,
+        "end": 613,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "removed",
+        "priority": 3,
+        "semantic_score": 1.8488
+      },
+      {
+        "start": 627,
+        "end": 644,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Final angiography",
+        "priority": 3,
+        "semantic_score": 2.7916
+      },
+      {
+        "start": 633,
+        "end": 644,
+        "span_text": "angiography",
+        "label": "ONTOLOGY",
+        "concept_id": "77343006",
+        "source": "OntologyExact",
+        "text": "angiography",
+        "priority": 2
+      },
+      {
+        "start": 652,
+        "end": 656,
+        "span_text": "TICI",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "TICI",
+        "priority": 1
+      },
+      {
+        "start": 659,
+        "end": 673,
+        "span_text": "recanalization",
+        "label": "ONTOLOGY",
+        "concept_id": "449894001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "recanalization",
+        "priority": 1
+      },
+      {
+        "start": 696,
+        "end": 703,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 708,
+        "end": 717,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "monitored",
+        "priority": 3,
+        "semantic_score": 1.171
+      },
+      {
+        "start": 725,
+        "end": 749,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "neurointensive care unit",
+        "priority": 3,
+        "semantic_score": 1.9215
+      },
+      {
+        "start": 745,
+        "end": 749,
+        "span_text": "unit",
+        "label": "ONTOLOGY",
+        "concept_id": "247604006",
+        "source": "OntologyExact",
+        "text": "unit",
+        "priority": 2
+      },
+      {
+        "start": 751,
+        "end": 761,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "24-hour CT",
+        "priority": 3,
+        "semantic_score": 2.2151
+      },
+      {
+        "start": 759,
+        "end": 761,
+        "span_text": "CT",
+        "label": "ONTOLOGY",
+        "concept_id": "21793004",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "CT",
+        "priority": 1
+      },
+      {
+        "start": 780,
+        "end": 794,
+        "span_text": "recanalization",
+        "label": "ONTOLOGY",
+        "concept_id": "449894001",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "recanalization",
+        "priority": 1
+      },
+      {
+        "start": 815,
+        "end": 828,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "complications",
+        "priority": 3,
+        "semantic_score": 2.9815
+      },
+      {
+        "start": 830,
+        "end": 835,
+        "span_text": "NIHSS",
+        "label": "ONTOLOGY",
+        "concept_id": "450893003",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "NIHSS",
+        "priority": 1
+      },
+      {
+        "start": 836,
+        "end": 844,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "improved",
+        "priority": 3,
+        "semantic_score": 2.2503
+      },
+      {
+        "start": 871,
+        "end": 880,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "discharge",
+        "priority": 3,
+        "semantic_score": 0.5153
+      },
+      {
+        "start": 893,
+        "end": 899,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Workup",
+        "priority": 3,
+        "semantic_score": 2.891
+      },
+      {
+        "start": 909,
+        "end": 923,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patent foramen",
+        "priority": 3,
+        "semantic_score": 1.1215
+      },
+      {
+        "start": 916,
+        "end": 923,
+        "span_text": "foramen",
+        "label": "ONTOLOGY",
+        "concept_id": "134035007",
+        "source": "OntologyExact",
+        "text": "foramen",
+        "priority": 2
+      },
+      {
+        "start": 924,
+        "end": 929,
+        "span_text": "ovale",
+        "label": "ONTOLOGY",
+        "concept_id": "4718009",
+        "source": "OntologyExact",
+        "text": "ovale",
+        "priority": 2
+      },
+      {
+        "start": 935,
+        "end": 957,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "atrial septal aneurysm",
+        "priority": 3,
+        "semantic_score": 1.4721
+      },
+      {
+        "start": 935,
+        "end": 941,
+        "span_text": "atrial",
+        "label": "ONTOLOGY",
+        "concept_id": "49436004",
+        "source": "OntologyExact",
+        "text": "atrial",
+        "priority": 2
+      },
+      {
+        "start": 949,
+        "end": 957,
+        "span_text": "aneurysm",
+        "label": "ONTOLOGY",
+        "concept_id": "22039006",
+        "source": "OntologyExact",
+        "text": "aneurysm",
+        "priority": 2
+      },
+      {
+        "start": 959,
+        "end": 974,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "consistent with",
+        "priority": 3,
+        "semantic_score": 2.547
+      },
+      {
+        "start": 975,
+        "end": 995,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "paradoxical embolism",
+        "priority": 3,
+        "semantic_score": 1.6296
+      },
+      {
+        "start": 997,
+        "end": 1012,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Anticoagulation",
+        "priority": 3,
+        "semantic_score": 1.0323
+      },
+      {
+        "start": 1031,
+        "end": 1051,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "secondary prevention",
+        "priority": 3,
+        "semantic_score": 1.5956
+      }
+    ]
+  },
+  {
+    "note_id": "5",
+    "annotations": [
+      {
+        "start": 0,
+        "end": 9,
+        "span_text": "POSTERIOR",
+        "label": "ONTOLOGY",
+        "concept_id": "265759005",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "POSTERIOR",
+        "priority": 1
+      },
+      {
+        "start": 10,
+        "end": 21,
+        "span_text": "CIRCULATION",
+        "label": "ONTOLOGY",
+        "concept_id": "782966009",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "CIRCULATION",
+        "priority": 1
+      },
+      {
+        "start": 22,
+        "end": 28,
+        "span_text": "STROKE",
+        "label": "ONTOLOGY",
+        "concept_id": "67889009",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "STROKE",
+        "priority": 1
+      },
+      {
+        "start": 42,
+        "end": 48,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "female",
+        "priority": 3,
+        "semantic_score": 1.4978
+      },
+      {
+        "start": 54,
+        "end": 83,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "vertebrobasilar insufficiency",
+        "priority": 3,
+        "semantic_score": 1.3728
+      },
+      {
+        "start": 99,
+        "end": 110,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute onset",
+        "priority": 3,
+        "semantic_score": 2.2602
+      },
+      {
+        "start": 123,
+        "end": 131,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "diplopia",
+        "priority": 3,
+        "semantic_score": 1.6261
+      },
+      {
+        "start": 137,
+        "end": 143,
+        "span_text": "ataxia",
+        "label": "ONTOLOGY",
+        "concept_id": "20262006",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "ataxia",
+        "priority": 1
+      },
+      {
+        "start": 145,
+        "end": 153,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Symptoms",
+        "priority": 3,
+        "semantic_score": 5.9596
+      },
+      {
+        "start": 175,
+        "end": 183,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "standing",
+        "priority": 3,
+        "semantic_score": 1.643
+      },
+      {
+        "start": 191,
+        "end": 206,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "seated position",
+        "priority": 3,
+        "semantic_score": 1.3077
+      },
+      {
+        "start": 198,
+        "end": 206,
+        "span_text": "position",
+        "label": "ONTOLOGY",
+        "concept_id": "129773009",
+        "source": "OntologyExact",
+        "text": "position",
+        "priority": 2
+      },
+      {
+        "start": 226,
+        "end": 233,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "patient",
+        "priority": 3,
+        "semantic_score": 2.5585
+      },
+      {
+        "start": 255,
+        "end": 277,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "bilateral internuclear",
+        "priority": 3,
+        "semantic_score": 1.4715
+      },
+      {
+        "start": 255,
+        "end": 264,
+        "span_text": "bilateral",
+        "label": "ONTOLOGY",
+        "concept_id": "55654005",
+        "source": "OntologyExact",
+        "text": "bilateral",
+        "priority": 2
+      },
+      {
+        "start": 278,
+        "end": 293,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "ophthalmoplegia",
+        "priority": 3,
+        "semantic_score": 2.0362
+      },
+      {
+        "start": 299,
+        "end": 313,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "truchal ataxia",
+        "priority": 3,
+        "semantic_score": 1.0115
+      },
+      {
+        "start": 307,
+        "end": 313,
+        "span_text": "ataxia",
+        "label": "ONTOLOGY",
+        "concept_id": "20262006",
+        "source": "OntologyExact",
+        "text": "ataxia",
+        "priority": 2
+      },
+      {
+        "start": 315,
+        "end": 325,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Cerebellar",
+        "priority": 3,
+        "semantic_score": 1.2095
+      },
+      {
+        "start": 352,
+        "end": 361,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "dysmetria",
+        "priority": 3,
+        "semantic_score": 1.7225
+      },
+      {
+        "start": 366,
+        "end": 384,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "dysdiadochokinesia",
+        "priority": 3,
+        "semantic_score": 2.5113
+      },
+      {
+        "start": 386,
+        "end": 393,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "No limb",
+        "priority": 3,
+        "semantic_score": -0.7592
+      },
+      {
+        "start": 389,
+        "end": 393,
+        "span_text": "limb",
+        "label": "ONTOLOGY",
+        "concept_id": "734854000",
+        "source": "OntologyExact",
+        "text": "limb",
+        "priority": 2
+      },
+      {
+        "start": 394,
+        "end": 402,
+        "span_text": "weakness",
+        "label": "ONTOLOGY",
+        "concept_id": "50582007",
+        "source": "OntologyExact",
+        "text": "weakness",
+        "priority": 2
+      },
+      {
+        "start": 418,
+        "end": 425,
+        "span_text": "IMAGING",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "IMAGING",
+        "priority": 1
+      },
+      {
+        "start": 427,
+        "end": 436,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "MRI brain",
+        "priority": 3,
+        "semantic_score": 1.8851
+      },
+      {
+        "start": 427,
+        "end": 430,
+        "span_text": "MRI",
+        "label": "ONTOLOGY",
+        "concept_id": "113091000",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "MRI",
+        "priority": 1
+      },
+      {
+        "start": 431,
+        "end": 436,
+        "span_text": "brain",
+        "label": "ONTOLOGY",
+        "concept_id": "263353005",
+        "source": [
+          "OntologyExact",
+          "Acronyms"
+        ],
+        "text": "brain",
+        "priority": 1
+      },
+      {
+        "start": 446,
+        "end": 460,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "acute infarcts",
+        "priority": 3,
+        "semantic_score": 2.2206
+      },
+      {
+        "start": 452,
+        "end": 460,
+        "span_text": "infarcts",
+        "label": "ONTOLOGY",
+        "concept_id": "277849002",
+        "source": "OntologyExact",
+        "text": "infarcts",
+        "priority": 2
+      },
+      {
+        "start": 468,
+        "end": 477,
+        "span_text": "bilateral",
+        "label": "ONTOLOGY",
+        "concept_id": "55654005",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "bilateral",
+        "priority": 1
+      },
+      {
+        "start": 478,
+        "end": 497,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "medial longitudinal",
+        "priority": 3,
+        "semantic_score": 1.329
+      },
+      {
+        "start": 478,
+        "end": 484,
+        "span_text": "medial",
+        "label": "ONTOLOGY",
+        "concept_id": "280573006",
+        "source": "OntologyExact",
+        "text": "medial",
+        "priority": 2
+      },
+      {
+        "start": 485,
+        "end": 497,
+        "span_text": "longitudinal",
+        "label": "ONTOLOGY",
+        "concept_id": "369225004",
+        "source": "OntologyExact",
+        "text": "longitudinal",
+        "priority": 2
+      },
+      {
+        "start": 512,
+        "end": 541,
+        "span_text": "superior cerebellar peduncles",
+        "label": "ONTOLOGY",
+        "concept_id": "279218008",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "superior cerebellar peduncles",
+        "priority": 1
+      },
+      {
+        "start": 543,
+        "end": 557,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "MR angiography",
+        "priority": 3,
+        "semantic_score": 2.4545
+      },
+      {
+        "start": 546,
+        "end": 557,
+        "span_text": "angiography",
+        "label": "ONTOLOGY",
+        "concept_id": "77343006",
+        "source": "OntologyExact",
+        "text": "angiography",
+        "priority": 2
+      },
+      {
+        "start": 572,
+        "end": 580,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "stenosis",
+        "priority": 1
+      },
+      {
+        "start": 588,
+        "end": 602,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "basilar artery",
+        "priority": 3,
+        "semantic_score": 0.6569
+      },
+      {
+        "start": 588,
+        "end": 595,
+        "span_text": "basilar",
+        "label": "ONTOLOGY",
+        "concept_id": "871539007",
+        "source": "OntologyExact",
+        "text": "basilar",
+        "priority": 2
+      },
+      {
+        "start": 596,
+        "end": 602,
+        "span_text": "artery",
+        "label": "ONTOLOGY",
+        "concept_id": "54247002",
+        "source": "OntologyExact",
+        "text": "artery",
+        "priority": 2
+      },
+      {
+        "start": 608,
+        "end": 646,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "poor posterior circulation collaterals",
+        "priority": 3,
+        "semantic_score": 1.2574
+      },
+      {
+        "start": 613,
+        "end": 622,
+        "span_text": "posterior",
+        "label": "ONTOLOGY",
+        "concept_id": "265759005",
+        "source": "OntologyExact",
+        "text": "posterior",
+        "priority": 2
+      },
+      {
+        "start": 623,
+        "end": 634,
+        "span_text": "circulation",
+        "label": "ONTOLOGY",
+        "concept_id": "782966009",
+        "source": "OntologyExact",
+        "text": "circulation",
+        "priority": 2
+      },
+      {
+        "start": 648,
+        "end": 666,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Vertebral arteries",
+        "priority": 3,
+        "semantic_score": 0.7914
+      },
+      {
+        "start": 648,
+        "end": 657,
+        "span_text": "Vertebral",
+        "label": "ONTOLOGY",
+        "concept_id": "243900004",
+        "source": "OntologyExact",
+        "text": "Vertebral",
+        "priority": 2
+      },
+      {
+        "start": 658,
+        "end": 666,
+        "span_text": "arteries",
+        "label": "ONTOLOGY",
+        "concept_id": "88873003",
+        "source": "OntologyExact",
+        "text": "arteries",
+        "priority": 2
+      },
+      {
+        "start": 674,
+        "end": 699,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "bilateral ostial stenosis",
+        "priority": 3,
+        "semantic_score": 1.4315
+      },
+      {
+        "start": 674,
+        "end": 683,
+        "span_text": "bilateral",
+        "label": "ONTOLOGY",
+        "concept_id": "55654005",
+        "source": "OntologyExact",
+        "text": "bilateral",
+        "priority": 2
+      },
+      {
+        "start": 691,
+        "end": 699,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": "OntologyExact",
+        "text": "stenosis",
+        "priority": 2
+      },
+      {
+        "start": 702,
+        "end": 708,
+        "span_text": "STROKE",
+        "label": "ONTOLOGY",
+        "concept_id": "67889009",
+        "source": [
+          "OntologyExact",
+          "SBert",
+          "Acronyms"
+        ],
+        "text": "STROKE",
+        "priority": 1
+      },
+      {
+        "start": 724,
+        "end": 731,
+        "span_text": "pattern",
+        "label": "ONTOLOGY",
+        "concept_id": "70145005",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "pattern",
+        "priority": 1
+      },
+      {
+        "start": 735,
+        "end": 745,
+        "span_text": "infarction",
+        "label": "ONTOLOGY",
+        "concept_id": "67889009",
+        "source": [
+          "OntologyExact",
+          "SBert"
+        ],
+        "text": "infarction",
+        "priority": 1
+      },
+      {
+        "start": 750,
+        "end": 765,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "consistent with",
+        "priority": 3,
+        "semantic_score": 2.547
+      },
+      {
+        "start": 766,
+        "end": 797,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "basilar artery branch occlusion",
+        "priority": 3,
+        "semantic_score": 1.2767
+      },
+      {
+        "start": 766,
+        "end": 773,
+        "span_text": "basilar",
+        "label": "ONTOLOGY",
+        "concept_id": "871539007",
+        "source": "OntologyExact",
+        "text": "basilar",
+        "priority": 2
+      },
+      {
+        "start": 774,
+        "end": 780,
+        "span_text": "artery",
+        "label": "ONTOLOGY",
+        "concept_id": "54247002",
+        "source": "OntologyExact",
+        "text": "artery",
+        "priority": 2
+      },
+      {
+        "start": 781,
+        "end": 787,
+        "span_text": "branch",
+        "label": "ONTOLOGY",
+        "concept_id": "423522006",
+        "source": "OntologyExact",
+        "text": "branch",
+        "priority": 2
+      },
+      {
+        "start": 788,
+        "end": 797,
+        "span_text": "occlusion",
+        "label": "ONTOLOGY",
+        "concept_id": "26036001",
+        "source": "OntologyExact",
+        "text": "occlusion",
+        "priority": 2
+      },
+      {
+        "start": 823,
+        "end": 846,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "stenotic basilar artery",
+        "priority": 3,
+        "semantic_score": 0.99
+      },
+      {
+        "start": 832,
+        "end": 839,
+        "span_text": "basilar",
+        "label": "ONTOLOGY",
+        "concept_id": "871539007",
+        "source": "OntologyExact",
+        "text": "basilar",
+        "priority": 2
+      },
+      {
+        "start": 840,
+        "end": 846,
+        "span_text": "artery",
+        "label": "ONTOLOGY",
+        "concept_id": "54247002",
+        "source": "OntologyExact",
+        "text": "artery",
+        "priority": 2
+      },
+      {
+        "start": 847,
+        "end": 854,
+        "span_text": "segment",
+        "label": "ONTOLOGY",
+        "concept_id": "279939009",
+        "source": "OntologyExact",
+        "text": "segment",
+        "priority": 2
+      },
+      {
+        "start": 868,
+        "end": 888,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Antiplatelet therapy",
+        "priority": 3,
+        "semantic_score": 1.4231
+      },
+      {
+        "start": 893,
+        "end": 902,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "optimized",
+        "priority": 3,
+        "semantic_score": 2.6538
+      },
+      {
+        "start": 914,
+        "end": 954,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "high-risk posterior circulation stenosis",
+        "priority": 3,
+        "semantic_score": 1.2416
+      },
+      {
+        "start": 924,
+        "end": 933,
+        "span_text": "posterior",
+        "label": "ONTOLOGY",
+        "concept_id": "265759005",
+        "source": "OntologyExact",
+        "text": "posterior",
+        "priority": 2
+      },
+      {
+        "start": 934,
+        "end": 945,
+        "span_text": "circulation",
+        "label": "ONTOLOGY",
+        "concept_id": "782966009",
+        "source": "OntologyExact",
+        "text": "circulation",
+        "priority": 2
+      },
+      {
+        "start": 946,
+        "end": 954,
+        "span_text": "stenosis",
+        "label": "ONTOLOGY",
+        "concept_id": "415582006",
+        "source": "OntologyExact",
+        "text": "stenosis",
+        "priority": 2
+      },
+      {
+        "start": 956,
+        "end": 981,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "endovascular intervention",
+        "priority": 3,
+        "semantic_score": 1.7354
+      },
+      {
+        "start": 956,
+        "end": 968,
+        "span_text": "endovascular",
+        "label": "ONTOLOGY",
+        "concept_id": "433112001",
+        "source": "OntologyExact",
+        "text": "endovascular",
+        "priority": 2
+      },
+      {
+        "start": 987,
+        "end": 1006,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "balloon angioplasty",
+        "priority": 3,
+        "semantic_score": 1.3962
+      },
+      {
+        "start": 1011,
+        "end": 1019,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "stenting",
+        "priority": 3,
+        "semantic_score": 1.6101
+      },
+      {
+        "start": 1039,
+        "end": 1047,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "deferred",
+        "priority": 3,
+        "semantic_score": 0.9217
+      },
+      {
+        "start": 1055,
+        "end": 1073,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "clinical stability",
+        "priority": 3,
+        "semantic_score": 3.3772
+      },
+      {
+        "start": 1078,
+        "end": 1098,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "small infarct volume",
+        "priority": 3,
+        "semantic_score": 1.5267
+      },
+      {
+        "start": 1084,
+        "end": 1091,
+        "span_text": "infarct",
+        "label": "ONTOLOGY",
+        "concept_id": "28208008",
+        "source": "OntologyExact",
+        "text": "infarct",
+        "priority": 2
+      }
+    ]
+  }
+]
