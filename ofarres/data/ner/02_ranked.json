@@ -80,14 +80,6 @@
       },
       {
         "start": 168,
-        "end": 187,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "speech difficulties",
-        "priority": 3
-      },
-      {
-        "start": 168,
         "end": 174,
         "span_text": "speech",
         "label": "ONTOLOGY",
@@ -95,6 +87,14 @@
         "source": "OntologyExact",
         "text": "speech",
         "priority": 2
+      },
+      {
+        "start": 168,
+        "end": 187,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "speech difficulties",
+        "priority": 3
       },
       {
         "start": 193,
@@ -152,6 +152,16 @@
         "priority": 1
       },
       {
+        "start": 317,
+        "end": 323,
+        "span_text": "Stroke",
+        "label": "ACRONYM",
+        "concept_id": "230690007",
+        "source": "Acronyms",
+        "text": "Stroke",
+        "priority": 1
+      },
+      {
         "start": 331,
         "end": 336,
         "span_text": "NIHSS",
@@ -180,14 +190,6 @@
       },
       {
         "start": 356,
-        "end": 372,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left hemiparesis",
-        "priority": 3
-      },
-      {
-        "start": 356,
         "end": 360,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -195,6 +197,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 356,
+        "end": 372,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left hemiparesis",
+        "priority": 3
       },
       {
         "start": 361,
@@ -216,14 +226,6 @@
       },
       {
         "start": 389,
-        "end": 406,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left facial droop",
-        "priority": 3
-      },
-      {
-        "start": 389,
         "end": 393,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -231,6 +233,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 389,
+        "end": 406,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left facial droop",
+        "priority": 3
       },
       {
         "start": 394,
@@ -338,14 +348,6 @@
       },
       {
         "start": 518,
-        "end": 532,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "CT angiography",
-        "priority": 3
-      },
-      {
-        "start": 518,
         "end": 520,
         "span_text": "CT",
         "label": "ONTOLOGY",
@@ -356,6 +358,14 @@
         ],
         "text": "CT",
         "priority": 1
+      },
+      {
+        "start": 518,
+        "end": 532,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT angiography",
+        "priority": 3
       },
       {
         "start": 521,
@@ -382,14 +392,6 @@
       },
       {
         "start": 563,
-        "end": 591,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "right middle cerebral artery",
-        "priority": 3
-      },
-      {
-        "start": 563,
         "end": 568,
         "span_text": "right",
         "label": "ONTOLOGY",
@@ -397,6 +399,14 @@
         "source": "OntologyExact",
         "text": "right",
         "priority": 2
+      },
+      {
+        "start": 563,
+        "end": 591,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right middle cerebral artery",
+        "priority": 3
       },
       {
         "start": 569,
@@ -451,6 +461,14 @@
         "priority": 2
       },
       {
+        "start": 610,
+        "end": 632,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Alberta Stroke Program",
+        "priority": 3
+      },
+      {
         "start": 618,
         "end": 624,
         "span_text": "Stroke",
@@ -459,6 +477,14 @@
         "source": "Acronyms",
         "text": "Stroke",
         "priority": 1
+      },
+      {
+        "start": 633,
+        "end": 647,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Early CT Score",
+        "priority": 3
       },
       {
         "start": 639,
@@ -485,14 +511,6 @@
       },
       {
         "start": 665,
-        "end": 677,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "CT perfusion",
-        "priority": 3
-      },
-      {
-        "start": 665,
         "end": 667,
         "span_text": "CT",
         "label": "ONTOLOGY",
@@ -503,6 +521,14 @@
         ],
         "text": "CT",
         "priority": 1
+      },
+      {
+        "start": 665,
+        "end": 677,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT perfusion",
+        "priority": 3
       },
       {
         "start": 693,
@@ -582,14 +608,6 @@
       },
       {
         "start": 876,
-        "end": 892,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "vessel occlusion",
-        "priority": 3
-      },
-      {
-        "start": 876,
         "end": 882,
         "span_text": "vessel",
         "label": "ONTOLOGY",
@@ -597,6 +615,14 @@
         "source": "OntologyExact",
         "text": "vessel",
         "priority": 2
+      },
+      {
+        "start": 876,
+        "end": 892,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "vessel occlusion",
+        "priority": 3
       },
       {
         "start": 883,
@@ -656,6 +682,22 @@
         "source": "OntologyExact",
         "text": "Thrombolysis in Cerebral Infarction",
         "priority": 2
+      },
+      {
+        "start": 1002,
+        "end": 1014,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Thrombolysis",
+        "priority": 3
+      },
+      {
+        "start": 1018,
+        "end": 1037,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Cerebral Infarction",
+        "priority": 3
       },
       {
         "start": 1039,
@@ -1115,14 +1157,6 @@
       },
       {
         "start": 590,
-        "end": 604,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "basal cisterns",
-        "priority": 3
-      },
-      {
-        "start": 590,
         "end": 595,
         "span_text": "basal",
         "label": "ONTOLOGY",
@@ -1130,6 +1164,14 @@
         "source": "OntologyExact",
         "text": "basal",
         "priority": 2
+      },
+      {
+        "start": 590,
+        "end": 604,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "basal cisterns",
+        "priority": 3
       },
       {
         "start": 596,
@@ -1151,14 +1193,6 @@
       },
       {
         "start": 627,
-        "end": 641,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "CT angiography",
-        "priority": 3
-      },
-      {
-        "start": 627,
         "end": 629,
         "span_text": "CT",
         "label": "ONTOLOGY",
@@ -1169,6 +1203,14 @@
         ],
         "text": "CT",
         "priority": 1
+      },
+      {
+        "start": 627,
+        "end": 641,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT angiography",
+        "priority": 3
       },
       {
         "start": 630,
@@ -1182,14 +1224,6 @@
       },
       {
         "start": 661,
-        "end": 699,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "anterior communicating artery aneurysm",
-        "priority": 3
-      },
-      {
-        "start": 661,
         "end": 669,
         "span_text": "anterior",
         "label": "ONTOLOGY",
@@ -1197,6 +1231,14 @@
         "source": "OntologyExact",
         "text": "anterior",
         "priority": 2
+      },
+      {
+        "start": 661,
+        "end": 699,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "anterior communicating artery aneurysm",
+        "priority": 3
       },
       {
         "start": 684,
@@ -1346,14 +1388,6 @@
       },
       {
         "start": 943,
-        "end": 963,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "Endovascular coiling",
-        "priority": 3
-      },
-      {
-        "start": 943,
         "end": 955,
         "span_text": "Endovascular",
         "label": "ONTOLOGY",
@@ -1361,6 +1395,14 @@
         "source": "OntologyExact",
         "text": "Endovascular",
         "priority": 2
+      },
+      {
+        "start": 943,
+        "end": 963,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Endovascular coiling",
+        "priority": 3
       },
       {
         "start": 971,
@@ -1593,14 +1635,6 @@
       },
       {
         "start": 140,
-        "end": 159,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "speech difficulties",
-        "priority": 3
-      },
-      {
-        "start": 140,
         "end": 146,
         "span_text": "speech",
         "label": "ONTOLOGY",
@@ -1608,6 +1642,14 @@
         "source": "OntologyExact",
         "text": "speech",
         "priority": 2
+      },
+      {
+        "start": 140,
+        "end": 159,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "speech difficulties",
+        "priority": 3
       },
       {
         "start": 171,
@@ -1719,14 +1761,6 @@
       },
       {
         "start": 358,
-        "end": 376,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "speech disturbance",
-        "priority": 3
-      },
-      {
-        "start": 358,
         "end": 364,
         "span_text": "speech",
         "label": "ONTOLOGY",
@@ -1734,6 +1768,14 @@
         "source": "OntologyExact",
         "text": "speech",
         "priority": 2
+      },
+      {
+        "start": 358,
+        "end": 376,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "speech disturbance",
+        "priority": 3
       },
       {
         "start": 378,
@@ -1784,14 +1826,6 @@
       },
       {
         "start": 468,
-        "end": 496,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left internal carotid artery",
-        "priority": 3
-      },
-      {
-        "start": 468,
         "end": 472,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -1799,6 +1833,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 468,
+        "end": 496,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left internal carotid artery",
+        "priority": 3
       },
       {
         "start": 473,
@@ -1825,14 +1867,6 @@
       },
       {
         "start": 508,
-        "end": 517,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "MRI brain",
-        "priority": 3
-      },
-      {
-        "start": 508,
         "end": 511,
         "span_text": "MRI",
         "label": "ONTOLOGY",
@@ -1843,6 +1877,14 @@
         ],
         "text": "MRI",
         "priority": 1
+      },
+      {
+        "start": 508,
+        "end": 517,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "MRI brain",
+        "priority": 3
       },
       {
         "start": 512,
@@ -1903,14 +1945,6 @@
       },
       {
         "start": 590,
-        "end": 609,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left corona radiata",
-        "priority": 3
-      },
-      {
-        "start": 590,
         "end": 594,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -1918,6 +1952,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 590,
+        "end": 609,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left corona radiata",
+        "priority": 3
       },
       {
         "start": 611,
@@ -1947,14 +1989,6 @@
       },
       {
         "start": 643,
-        "end": 680,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left internal carotid artery stenosis",
-        "priority": 3
-      },
-      {
-        "start": 643,
         "end": 647,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -1962,6 +1996,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 643,
+        "end": 680,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left internal carotid artery stenosis",
+        "priority": 3
       },
       {
         "start": 648,
@@ -1993,14 +2035,6 @@
       },
       {
         "start": 706,
-        "end": 738,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "normal left ventricular function",
-        "priority": 3
-      },
-      {
-        "start": 706,
         "end": 712,
         "span_text": "normal",
         "label": "ONTOLOGY",
@@ -2008,6 +2042,14 @@
         "source": "OntologyExact",
         "text": "normal",
         "priority": 2
+      },
+      {
+        "start": 706,
+        "end": 738,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "normal left ventricular function",
+        "priority": 3
       },
       {
         "start": 713,
@@ -2249,14 +2291,6 @@
       },
       {
         "start": 99,
-        "end": 115,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "right hemiplegia",
-        "priority": 3
-      },
-      {
-        "start": 99,
         "end": 104,
         "span_text": "right",
         "label": "ONTOLOGY",
@@ -2264,6 +2298,14 @@
         "source": "OntologyExact",
         "text": "right",
         "priority": 2
+      },
+      {
+        "start": 99,
+        "end": 115,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right hemiplegia",
+        "priority": 3
       },
       {
         "start": 159,
@@ -2384,14 +2426,6 @@
       },
       {
         "start": 269,
-        "end": 283,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "CT angiography",
-        "priority": 3
-      },
-      {
-        "start": 269,
         "end": 271,
         "span_text": "CT",
         "label": "ONTOLOGY",
@@ -2402,6 +2436,14 @@
         ],
         "text": "CT",
         "priority": 1
+      },
+      {
+        "start": 269,
+        "end": 283,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "CT angiography",
+        "priority": 3
       },
       {
         "start": 272,
@@ -2415,14 +2457,6 @@
       },
       {
         "start": 293,
-        "end": 333,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left M1 middle cerebral artery occlusion",
-        "priority": 3
-      },
-      {
-        "start": 293,
         "end": 297,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -2430,6 +2464,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 293,
+        "end": 333,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left M1 middle cerebral artery occlusion",
+        "priority": 3
       },
       {
         "start": 301,
@@ -2510,14 +2552,6 @@
       },
       {
         "start": 451,
-        "end": 471,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "right femoral artery",
-        "priority": 3
-      },
-      {
-        "start": 451,
         "end": 456,
         "span_text": "right",
         "label": "ONTOLOGY",
@@ -2525,6 +2559,14 @@
         "source": "OntologyExact",
         "text": "right",
         "priority": 2
+      },
+      {
+        "start": 451,
+        "end": 471,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "right femoral artery",
+        "priority": 3
       },
       {
         "start": 457,
@@ -2564,14 +2606,6 @@
       },
       {
         "start": 515,
-        "end": 543,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "left internal carotid artery",
-        "priority": 3
-      },
-      {
-        "start": 515,
         "end": 519,
         "span_text": "left",
         "label": "ONTOLOGY",
@@ -2579,6 +2613,14 @@
         "source": "OntologyExact",
         "text": "left",
         "priority": 2
+      },
+      {
+        "start": 515,
+        "end": 543,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "left internal carotid artery",
+        "priority": 3
       },
       {
         "start": 520,
@@ -2835,14 +2877,6 @@
       },
       {
         "start": 935,
-        "end": 957,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "atrial septal aneurysm",
-        "priority": 3
-      },
-      {
-        "start": 935,
         "end": 941,
         "span_text": "atrial",
         "label": "ONTOLOGY",
@@ -2850,6 +2884,14 @@
         "source": "OntologyExact",
         "text": "atrial",
         "priority": 2
+      },
+      {
+        "start": 935,
+        "end": 957,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "atrial septal aneurysm",
+        "priority": 3
       },
       {
         "start": 949,
@@ -3051,14 +3093,6 @@
       },
       {
         "start": 255,
-        "end": 277,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "bilateral internuclear",
-        "priority": 3
-      },
-      {
-        "start": 255,
         "end": 264,
         "span_text": "bilateral",
         "label": "ONTOLOGY",
@@ -3066,6 +3100,14 @@
         "source": "OntologyExact",
         "text": "bilateral",
         "priority": 2
+      },
+      {
+        "start": 255,
+        "end": 277,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "bilateral internuclear",
+        "priority": 3
       },
       {
         "start": 278,
@@ -3168,14 +3210,6 @@
       },
       {
         "start": 427,
-        "end": 436,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "MRI brain",
-        "priority": 3
-      },
-      {
-        "start": 427,
         "end": 430,
         "span_text": "MRI",
         "label": "ONTOLOGY",
@@ -3186,6 +3220,14 @@
         ],
         "text": "MRI",
         "priority": 1
+      },
+      {
+        "start": 427,
+        "end": 436,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "MRI brain",
+        "priority": 3
       },
       {
         "start": 431,
@@ -3233,14 +3275,6 @@
       },
       {
         "start": 478,
-        "end": 497,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "medial longitudinal",
-        "priority": 3
-      },
-      {
-        "start": 478,
         "end": 484,
         "span_text": "medial",
         "label": "ONTOLOGY",
@@ -3248,6 +3282,14 @@
         "source": "OntologyExact",
         "text": "medial",
         "priority": 2
+      },
+      {
+        "start": 478,
+        "end": 497,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "medial longitudinal",
+        "priority": 3
       },
       {
         "start": 485,
@@ -3313,14 +3355,6 @@
       },
       {
         "start": 588,
-        "end": 602,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "basilar artery",
-        "priority": 3
-      },
-      {
-        "start": 588,
         "end": 595,
         "span_text": "basilar",
         "label": "ONTOLOGY",
@@ -3328,6 +3362,14 @@
         "source": "OntologyExact",
         "text": "basilar",
         "priority": 2
+      },
+      {
+        "start": 588,
+        "end": 602,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "basilar artery",
+        "priority": 3
       },
       {
         "start": 596,
@@ -3369,14 +3411,6 @@
       },
       {
         "start": 648,
-        "end": 666,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "Vertebral arteries",
-        "priority": 3
-      },
-      {
-        "start": 648,
         "end": 657,
         "span_text": "Vertebral",
         "label": "ONTOLOGY",
@@ -3384,6 +3418,14 @@
         "source": "OntologyExact",
         "text": "Vertebral",
         "priority": 2
+      },
+      {
+        "start": 648,
+        "end": 666,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "Vertebral arteries",
+        "priority": 3
       },
       {
         "start": 658,
@@ -3397,14 +3439,6 @@
       },
       {
         "start": 674,
-        "end": 699,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "bilateral ostial stenosis",
-        "priority": 3
-      },
-      {
-        "start": 674,
         "end": 683,
         "span_text": "bilateral",
         "label": "ONTOLOGY",
@@ -3412,6 +3446,14 @@
         "source": "OntologyExact",
         "text": "bilateral",
         "priority": 2
+      },
+      {
+        "start": 674,
+        "end": 699,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "bilateral ostial stenosis",
+        "priority": 3
       },
       {
         "start": 691,
@@ -3481,14 +3523,6 @@
       },
       {
         "start": 766,
-        "end": 797,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "basilar artery branch occlusion",
-        "priority": 3
-      },
-      {
-        "start": 766,
         "end": 773,
         "span_text": "basilar",
         "label": "ONTOLOGY",
@@ -3496,6 +3530,14 @@
         "source": "OntologyExact",
         "text": "basilar",
         "priority": 2
+      },
+      {
+        "start": 766,
+        "end": 797,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "basilar artery branch occlusion",
+        "priority": 3
       },
       {
         "start": 774,
@@ -3637,14 +3679,6 @@
       },
       {
         "start": 956,
-        "end": 981,
-        "label": "ENTITY",
-        "source": "SBert",
-        "text": "endovascular intervention",
-        "priority": 3
-      },
-      {
-        "start": 956,
         "end": 968,
         "span_text": "endovascular",
         "label": "ONTOLOGY",
@@ -3652,6 +3686,14 @@
         "source": "OntologyExact",
         "text": "endovascular",
         "priority": 2
+      },
+      {
+        "start": 956,
+        "end": 981,
+        "label": "ENTITY",
+        "source": "SBert",
+        "text": "endovascular intervention",
+        "priority": 3
       },
       {
         "start": 987,

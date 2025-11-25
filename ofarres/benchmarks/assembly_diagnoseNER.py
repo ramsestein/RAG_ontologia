@@ -17,6 +17,25 @@ CONFIG_PATH = PROJECT_ROOT / "config" / "ner_registry.json"
 NOTES_PATH = PROJECT_ROOT / "data" / "notes.json"
 GT_PATH = PROJECT_ROOT / "data" / "ground_truth.json"
 IOU_THRESHOLD = 0.25  # The threshold for loose matching
+MIN_IOU_OVERLAP = 0.1  # Minimum IoU for physical overlap (Text Containment logic)
+
+
+def text_containment_match(pred_text: str, gt_text: str) -> bool:
+    """
+    Verifica si hay una relación de contención textual entre predicción y GT.
+    
+    Criterios (después de normalizar a lowercase y strip):
+    - Context Expansion: GT está contenido en Pred (ej: "acute hemorrhage" contiene "hemorrhage")
+    - Partial Match: Pred está contenido en GT
+    
+    Returns: True si hay contención en cualquier dirección.
+    """
+    pred_norm = pred_text.lower().strip()
+    gt_norm = gt_text.lower().strip()
+    
+    # Context Expansion: GT['text'] is substring of Pred['text']
+    # O Partial Match: Pred['text'] is substring of GT['text']
+    return gt_norm in pred_norm or pred_norm in gt_norm
 
 def load_data():
     print(f"[Loader] Notes: {NOTES_PATH}")
@@ -55,36 +74,79 @@ def deduplicate_predictions(preds: List[Dict]) -> List[Dict]:
 
 def classify_predictions(preds, gt, text):
     """
-    Classifies each prediction as TP or FP based on Coverage Logic.
+    Classifies each prediction as TP or FP based on Text Containment + IoU Logic.
+    
+    NEW MATCHING CRITERIA (RAG-Ready Recall):
+    1. Condition A: IoU > 0.1 (physical overlap)
+    2. Condition B: Text containment (GT in Pred OR Pred in GT)
+    3. Constraint: 1-to-1 matching (protects against "Bad Merge")
+    
     Returns a list of dicts ready for printing.
     """
     rows = []
+    matched_gt_indices = set()
+    matched_pred_indices = set()
     
-    # 1. Determine Status for every prediction
+    # Ensure predictions have text field
+    preds_with_text = []
     for p in preds:
-        # Find ALL GTs covered by this prediction
-        matches = []
-        for g in gt:
-            if calculate_iou(p, g) > IOU_THRESHOLD:
-                matches.append(g)
+        p_copy = dict(p)
+        if 'text' not in p_copy:
+            p_copy['text'] = text[p_copy['start']:p_copy['end']]
+        preds_with_text.append(p_copy)
+    
+    # 1. Match predictions to GT using 1-to-1 Text Containment + IoU logic
+    for g_idx, g in enumerate(gt):
+        gt_text = g.get('text', text[g['start']:g['end']])
+        best_pred_idx = None
+        best_iou = -1.0
         
-        p_text = text[p['start']:p['end']].replace('\n', ' ')
-        
-        if matches:
-            # It is a True Positive
-            # It might match multiple nested GTs (e.g. SAH + Hemorrhage)
-            match_texts = [text[m['start']:m['end']] for m in matches]
-            match_str = ", ".join(list(set(match_texts))) # Dedupe strings
+        for p_idx, p in enumerate(preds_with_text):
+            if p_idx in matched_pred_indices:
+                continue
             
-            rows.append({
-                "start": p['start'],
-                "end": p['end'],
-                "text": p_text,
-                "status": "✅ TP",
-                "match_info": f"Matches: {match_str}"
-            })
+            iou = calculate_iou(p, g)
+            
+            # Condition A: Physical overlap
+            if iou <= MIN_IOU_OVERLAP:
+                continue
+            
+            pred_text = p.get('text', '')
+            
+            # Condition B: Text containment
+            if not text_containment_match(pred_text, gt_text):
+                continue
+            
+            # Valid match - track best by IoU
+            if iou > best_iou:
+                best_iou = iou
+                best_pred_idx = p_idx
+        
+        if best_pred_idx is not None:
+            matched_gt_indices.add(g_idx)
+            matched_pred_indices.add(best_pred_idx)
+    
+    # 2. Build rows for display
+    for p_idx, p in enumerate(preds_with_text):
+        p_text = p.get('text', '').replace('\n', ' ')
+        
+        if p_idx in matched_pred_indices:
+            # Find which GT it matched
+            for g_idx, g in enumerate(gt):
+                if g_idx in matched_gt_indices:
+                    gt_text = g.get('text', text[g['start']:g['end']])
+                    iou = calculate_iou(p, g)
+                    if iou > MIN_IOU_OVERLAP and text_containment_match(p_text, gt_text):
+                        rows.append({
+                            "start": p['start'],
+                            "end": p['end'],
+                            "text": p_text,
+                            "status": "✅ TP",
+                            "match_info": f"Matches: {gt_text}"
+                        })
+                        break
         else:
-            # It is a False Positive
+            # False Positive
             rows.append({
                 "start": p['start'],
                 "end": p['end'],
@@ -92,18 +154,12 @@ def classify_predictions(preds, gt, text):
                 "status": "❌ FP",
                 "match_info": "-"
             })
-            
-    # 2. Check for False Negatives (GTs that were NOT covered by ANY prediction)
+    
+    # 3. Check for False Negatives (GTs not matched)
     fn_rows = []
-    for g in gt:
-        is_covered = False
-        for p in preds:
-            if calculate_iou(p, g) > IOU_THRESHOLD:
-                is_covered = True
-                break
-        
-        if not is_covered:
-            g_text = text[g['start']:g['end']].replace('\n', ' ')
+    for g_idx, g in enumerate(gt):
+        if g_idx not in matched_gt_indices:
+            g_text = g.get('text', text[g['start']:g['end']]).replace('\n', ' ')
             fn_rows.append({
                 "start": g['start'],
                 "end": g['end'],
@@ -116,27 +172,24 @@ def classify_predictions(preds, gt, text):
     all_rows = rows + fn_rows
     all_rows.sort(key=lambda x: x['start'])
     
-    return all_rows, len(rows), len(fn_rows)
+    n_tp = len(matched_pred_indices)
+    n_fp = len(preds_with_text) - n_tp
+    n_fn = len(gt) - len(matched_gt_indices)
+    
+    return all_rows, n_tp, n_fn
 
 def calculate_metrics(all_rows):
     tp = sum(1 for r in all_rows if r['status'] == "✅ TP")
     fp = sum(1 for r in all_rows if r['status'] == "❌ FP")
     fn = sum(1 for r in all_rows if r['status'] == "⚠️ FN")
     
-    # Note: In Coverage logic, one TP pred can cover 2 GT items.
-    # Strictly speaking for Recall, we count FOUND GTs.
-    # But for this visual table summary, we count Prediction Hits.
-    
     # Precision = Useful Preds / Total Preds
     prec = tp / (tp + fp) if (tp + fp) > 0 else 0
     
-    # Recall calculation here is simplified based on row counts.
-    # Ideally, use the rigorous calculate_ner_micro_f1 for final stats.
-    # Here just for the note summary:
-    # Found GTs / Total GTs
-    # (Approx: TPs usually align with Found GTs unless one pred covers many)
+    # Recall = Found GTs / Total GTs (using Text Containment + IoU logic)
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0
     
-    return tp, fp, fn, prec
+    return tp, fp, fn, prec, recall
 
 def main():
     print(f"🚀 DIAGNOSE NER ASSEMBLY [IoU > {IOU_THRESHOLD}]")

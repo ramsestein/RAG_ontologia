@@ -171,39 +171,87 @@ def calculate_micro_average_f1(all_predictions: Dict[str, List[Dict]],
 # (¡NUEVO! Esto es lo que necesitas para tu diagnose_NER.py)
 # ==============================================================================
 
+# --- Minimum IoU for physical overlap (Text Containment logic) ---
+MIN_IOU_OVERLAP = 0.1
+
+
+def text_containment_match(pred_text: str, gt_text: str) -> bool:
+    """
+    Verifica si hay una relación de contención textual entre predicción y GT.
+    
+    Criterios (después de normalizar a lowercase y strip):
+    - Context Expansion: GT está contenido en Pred (ej: "acute hemorrhage" contiene "hemorrhage")
+    - Partial Match: Pred está contenido en GT
+    
+    Returns: True si hay contención en cualquier dirección.
+    """
+    pred_norm = pred_text.lower().strip()
+    gt_norm = gt_text.lower().strip()
+    
+    return gt_norm in pred_norm or pred_norm in gt_norm
+
+
 def _find_ner_span_matches(predictions: List[Dict], 
                            ground_truth: List[Dict], 
-                           iou_threshold: float = 0.5
+                           iou_threshold: float = 0.5,
+                           note_text: str = None
                            ) -> Tuple[int, int, int]:
     """
-    MATCHING (SOLO NER): Un "acierto" requiere SOLO IoU > threshold.
-    Ignora el concept_id.
+    MATCHING (SOLO NER) con Text Containment + IoU:
+    
+    NEW MATCHING CRITERIA (RAG-Ready Recall):
+    1. Condition A: IoU > 0.1 (physical overlap)
+    2. Condition B: Text containment (GT in Pred OR Pred in GT)
+    3. Constraint: 1-to-1 matching (protects against "Bad Merge")
+    
     Devuelve: (TP, FP, FN)
     """
     tp = 0
     matched_gt_indices: Set[int] = set()
     matched_pred_indices: Set[int] = set()
+    
+    # Ensure predictions have text field
+    preds_with_text = []
+    for p in predictions:
+        p_copy = dict(p)
+        if 'text' not in p_copy and note_text:
+            p_copy['text'] = note_text[p_copy['start']:p_copy['end']]
+        preds_with_text.append(p_copy)
 
-    for pred_idx, pred in enumerate(predictions):
-        best_match_gt_idx = -1
+    for gt_idx, gt in enumerate(ground_truth):
+        best_match_pred_idx = -1
         best_iou = -1
+        
+        gt_text = gt.get('text', '')
+        if not gt_text and note_text:
+            gt_text = note_text[gt['start']:gt['end']]
 
-        for gt_idx, gt in enumerate(ground_truth):
-            if gt_idx in matched_gt_indices:
+        for pred_idx, pred in enumerate(preds_with_text):
+            if pred_idx in matched_pred_indices:
                 continue
 
             # --- COINCIDENCIA DE SPAN (IoU) ---
-            # (Esta es la única comprobación que hacemos)
             iou = calculate_iou(pred, gt)
             
-            if iou > iou_threshold and iou > best_iou:
+            # Condition A: Physical overlap
+            if iou <= MIN_IOU_OVERLAP:
+                continue
+            
+            pred_text = pred.get('text', '')
+            
+            # Condition B: Text containment
+            if not text_containment_match(pred_text, gt_text):
+                continue
+            
+            # Valid match - track best by IoU
+            if iou > best_iou:
                 best_iou = iou
-                best_match_gt_idx = gt_idx
+                best_match_pred_idx = pred_idx
         
-        if best_match_gt_idx != -1:
+        if best_match_pred_idx != -1:
             tp += 1
-            matched_pred_indices.add(pred_idx)
-            matched_gt_indices.add(best_match_gt_idx)
+            matched_pred_indices.add(best_match_pred_idx)
+            matched_gt_indices.add(gt_idx)
 
     fp = len(predictions) - len(matched_pred_indices)
     fn = len(ground_truth) - len(matched_gt_indices)
@@ -212,22 +260,25 @@ def _find_ner_span_matches(predictions: List[Dict],
 
 def calculate_ner_macro_f1(all_predictions: Dict[str, List[Dict]], 
                            all_ground_truth: Dict[str, List[Dict]], 
-                           iou_threshold: float = 0.5
+                           iou_threshold: float = 0.5,
+                           all_notes: Dict[str, str] = None
                            ) -> Dict[str, float]:
     """
-    Calcula el F1-Score de SOLO NER (Macro-Average).
-    Mide el F1 de Span (IoU) para cada nota y luego hace la media.
+    Calcula el F1-Score de SOLO NER (Macro-Average) con Text Containment + IoU.
+    Mide el F1 de Span para cada nota y luego hace la media.
     """
     f1_scores_per_note = []
     
     for note_id, gt_annotations in all_ground_truth.items():
         pred_annotations = all_predictions.get(note_id, [])
+        note_text = all_notes.get(note_id, '') if all_notes else None
         
-        # Usa la nueva función de matching de SOLO NER
+        # Usa la nueva función de matching con Text Containment + IoU
         tp_i, fp_i, fn_i = _find_ner_span_matches(
             pred_annotations, 
             gt_annotations, 
-            iou_threshold
+            iou_threshold,
+            note_text
         )
         
         metrics_i = _calculate_pr_f1(tp_i, fp_i, fn_i)
@@ -242,30 +293,49 @@ def calculate_ner_macro_f1(all_predictions: Dict[str, List[Dict]],
 
 def calculate_ner_micro_f1(all_predictions: Dict[str, List[Dict]], 
                            all_ground_truth: Dict[str, List[Dict]], 
-                           iou_threshold: float = 0.5
+                           iou_threshold: float = 0.5,
+                           all_notes: Dict[str, str] = None
                            ) -> Dict[str, float]:
     """
-    Calcula el F1-Score de SOLO NER (Micro-Average) como media aritmética.
+    Calcula el F1-Score de SOLO NER (Micro-Average) con Text Containment + IoU.
     Calcula F1 para cada nota y luego hace la media aritmética: (x1+x2+...+xn)/n.
     """
     f1_scores_per_note = []
+    total_tp, total_fp, total_fn = 0, 0, 0
 
     for note_id, gt_annotations in all_ground_truth.items():
         pred_annotations = all_predictions.get(note_id, [])
+        note_text = all_notes.get(note_id, '') if all_notes else None
         
-        # Usa la nueva función de matching de SOLO NER
+        # Usa la nueva función de matching con Text Containment + IoU
         tp_i, fp_i, fn_i = _find_ner_span_matches(
             pred_annotations, 
             gt_annotations, 
-            iou_threshold
+            iou_threshold,
+            note_text
         )
+        
+        total_tp += tp_i
+        total_fp += fp_i
+        total_fn += fn_i
         
         metrics_i = _calculate_pr_f1(tp_i, fp_i, fn_i)
         f1_scores_per_note.append(metrics_i['f1'])
 
     if not f1_scores_per_note:
-        return {"micro_f1": 0.0}
+        return {"micro_f1": 0.0, "recall": 0.0, "precision": 0.0, "tp": 0, "fp": 0, "fn": 0}
         
     micro_f1 = sum(f1_scores_per_note) / len(f1_scores_per_note)
     
-    return {"micro_f1": micro_f1}
+    # Also calculate global metrics
+    global_metrics = _calculate_pr_f1(total_tp, total_fp, total_fn)
+    
+    return {
+        "micro_f1": micro_f1,
+        "recall": global_metrics['recall'],
+        "precision": global_metrics['precision'],
+        "f1": global_metrics['f1'],
+        "tp": total_tp,
+        "fp": total_fp,
+        "fn": total_fn
+    }

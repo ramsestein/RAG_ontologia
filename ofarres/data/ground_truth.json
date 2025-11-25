@@ -5,147 +5,176 @@
       {
         "start": 75,
         "end": 87,
-        "concept_id": "38341003"
+        "concept_id": "38341003",
+        "text": "hypertension"
       },
       {
         "start": 92,
         "end": 100,
-        "concept_id": "73211009"
+        "concept_id": "73211009",
+        "text": "diabetes"
       },
       {
         "start": 155,
         "end": 163,
-        "concept_id": "13791008"
+        "concept_id": "13791008",
+        "text": "weakness"
       },
       {
         "start": 317,
         "end": 323,
-        "concept_id": "230690007"
+        "concept_id": "230690007",
+        "text": "Stroke"
       },
       {
         "start": 331,
         "end": 336,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "NIHSS"
       },
       {
         "start": 361,
         "end": 372,
-        "concept_id": "50582007"
+        "concept_id": "50582007",
+        "text": "hemiparesis"
       },
       {
         "start": 417,
         "end": 427,
-        "concept_id": "8011004"
+        "concept_id": "8011004",
+        "text": "dysarthria"
       },
       {
         "start": 474,
         "end": 476,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 506,
         "end": 516,
-        "concept_id": "50960005"
+        "concept_id": "50960005",
+        "text": "hemorrhage"
       },
       {
         "start": 518,
         "end": 520,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 521,
         "end": 532,
-        "concept_id": "77343006"
+        "concept_id": "77343006",
+        "text": "angiography"
       },
       {
         "start": 546,
         "end": 555,
-        "concept_id": "26036001"
+        "concept_id": "26036001",
+        "text": "occlusion"
       },
       {
         "start": 569,
         "end": 591,
-        "concept_id": "69930009"
+        "concept_id": "69930009",
+        "text": "middle cerebral artery"
       },
       {
         "start": 618,
         "end": 624,
-        "concept_id": "230690007"
+        "concept_id": "230690007",
+        "text": "Stroke"
       },
       {
         "start": 639,
         "end": 641,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 649,
         "end": 656,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "ASPECTS"
       },
       {
         "start": 665,
         "end": 667,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 693,
         "end": 701,
-        "concept_id": "230691006"
+        "concept_id": "230691006",
+        "text": "penumbra"
       },
       {
         "start": 712,
         "end": 720,
-        "concept_id": "230691006"
+        "concept_id": "230691006",
+        "text": "penumbra"
       },
       {
         "start": 792,
         "end": 820,
-        "concept_id": "387467008"
+        "concept_id": "387467008",
+        "text": "tissue plasminogen activator"
       },
       {
         "start": 822,
         "end": 825,
-        "concept_id": "387467008"
+        "concept_id": "387467008",
+        "text": "tPA"
       },
       {
         "start": 883,
         "end": 892,
-        "concept_id": "26036001"
+        "concept_id": "26036001",
+        "text": "occlusion"
       },
       {
         "start": 909,
         "end": 917,
-        "concept_id": "230691006"
+        "concept_id": "230691006",
+        "text": "penumbra"
       },
       {
         "start": 930,
         "end": 942,
-        "concept_id": "433112001"
+        "concept_id": "433112001",
+        "text": "thrombectomy"
       },
       {
         "start": 969,
         "end": 983,
-        "concept_id": "449894001"
+        "concept_id": "449894001",
+        "text": "recanalization"
       },
       {
         "start": 1027,
         "end": 1034,
-        "concept_id": "55342001"
+        "concept_id": "55342001",
+        "text": "Infarct"
       },
       {
         "start": 1039,
         "end": 1043,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "TICI"
       },
       {
         "start": 1105,
         "end": 1119,
-        "concept_id": "449894001"
+        "concept_id": "449894001",
+        "text": "recanalization"
       },
       {
         "start": 1229,
         "end": 1234,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "NIHSS"
       }
     ]
   },
@@ -155,77 +184,86 @@
       {
         "start": 40,
         "end": 59,
-        "concept_id": "49436004"
+        "concept_id": "49436004",
+        "text": "atrial fibrillation"
       },
       {
         "start": 151,
         "end": 159,
-        "concept_id": "25064002"
+        "concept_id": "25064002",
+        "text": "headache"
       },
       {
         "start": 161,
         "end": 167,
-        "concept_id": "422587007"
+        "concept_id": "422587007",
+        "text": "nausea"
       },
       {
         "start": 173,
         "end": 181,
-        "concept_id": "422400008"
+        "concept_id": "422400008",
+        "text": "vomiting"
       },
       {
         "start": 187,
         "end": 195,
-        "concept_id": "25064002"
+        "concept_id": "25064002",
+        "text": "headache"
       },
       {
         "start": 224,
         "end": 232,
-        "concept_id": "25064002"
+        "concept_id": "25064002",
+        "text": "headache"
       },
       {
         "start": 524,
         "end": 526,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 548,
         "end": 571,
-        "concept_id": "21454007"
-      },
-      {
-        "start": 561,
-        "end": 571,
-        "concept_id": "50960005"
+        "concept_id": "21454007",
+        "text": "subarachnoid hemorrhage"
       },
       {
         "start": 627,
         "end": 629,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 630,
         "end": 641,
-        "concept_id": "77343006"
+        "concept_id": "77343006",
+        "text": "angiography"
       },
       {
         "start": 691,
         "end": 699,
-        "concept_id": "432101006"
+        "concept_id": "432101006",
+        "text": "aneurysm"
       },
       {
         "start": 971,
         "end": 979,
-        "concept_id": "432101006"
+        "concept_id": "432101006",
+        "text": "aneurysm"
       },
       {
         "start": 1081,
         "end": 1089,
-        "concept_id": "52674009"
+        "concept_id": "52674009",
+        "text": "ischemia"
       },
       {
         "start": 1121,
         "end": 1133,
-        "concept_id": "38341003"
+        "concept_id": "38341003",
+        "text": "hypertension"
       }
     ]
   },
@@ -235,92 +273,110 @@
       {
         "start": 0,
         "end": 6,
-        "concept_id": "230690007"
+        "concept_id": "230690007",
+        "text": "STROKE"
       },
       {
         "start": 127,
         "end": 135,
-        "concept_id": "13791008"
+        "concept_id": "13791008",
+        "text": "weakness"
       },
       {
         "start": 345,
         "end": 353,
-        "concept_id": "13791008"
+        "concept_id": "13791008",
+        "text": "weakness"
       },
       {
         "start": 402,
         "end": 410,
-        "concept_id": "73211009"
+        "concept_id": "73211009",
+        "text": "diabetes"
       },
       {
         "start": 452,
         "end": 460,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       },
       {
         "start": 473,
         "end": 496,
-        "concept_id": "86547008"
+        "concept_id": "86547008",
+        "text": "internal carotid artery"
       },
       {
         "start": 508,
         "end": 511,
-        "concept_id": "113091000"
+        "concept_id": "113091000",
+        "text": "MRI"
       },
       {
         "start": 575,
         "end": 582,
-        "concept_id": "55342001"
+        "concept_id": "55342001",
+        "text": "infarct"
       },
       {
         "start": 614,
         "end": 625,
-        "concept_id": "77343006"
+        "concept_id": "77343006",
+        "text": "angiography"
       },
       {
         "start": 648,
         "end": 671,
-        "concept_id": "86547008"
+        "concept_id": "86547008",
+        "text": "internal carotid artery"
       },
       {
         "start": 672,
         "end": 680,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       },
       {
         "start": 793,
         "end": 818,
-        "concept_id": "266257000"
+        "concept_id": "266257000",
+        "text": "Transient ischemic attack"
       },
       {
         "start": 820,
         "end": 823,
-        "concept_id": "266257000"
+        "concept_id": "266257000",
+        "text": "TIA"
       },
       {
         "start": 853,
         "end": 860,
-        "concept_id": "55342001"
+        "concept_id": "55342001",
+        "text": "infarct"
       },
       {
         "start": 911,
         "end": 927,
-        "concept_id": "69449002"
+        "concept_id": "69449002",
+        "text": "carotid stenosis"
       },
       {
         "start": 919,
         "end": 927,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       },
       {
         "start": 1003,
         "end": 1019,
-        "concept_id": "69449002"
+        "concept_id": "69449002",
+        "text": "carotid stenosis"
       },
       {
         "start": 1011,
         "end": 1019,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       }
     ]
   },
@@ -330,97 +386,116 @@
       {
         "start": 0,
         "end": 12,
-        "concept_id": "433112001"
+        "concept_id": "433112001",
+        "text": "THROMBECTOMY"
       },
       {
         "start": 87,
         "end": 94,
-        "concept_id": "87486003"
+        "concept_id": "87486003",
+        "text": "aphasia"
       },
       {
         "start": 105,
         "end": 115,
-        "concept_id": "50582007"
+        "concept_id": "50582007",
+        "text": "hemiplegia"
       },
       {
         "start": 189,
         "end": 194,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "NIHSS"
       },
       {
         "start": 209,
         "end": 211,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 233,
         "end": 243,
-        "concept_id": "50960005"
+        "concept_id": "50960005",
+        "text": "hemorrhage"
       },
       {
         "start": 249,
         "end": 256,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "ASPECTS"
       },
       {
         "start": 269,
         "end": 271,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 272,
         "end": 283,
-        "concept_id": "77343006"
+        "concept_id": "77343006",
+        "text": "angiography"
       },
       {
         "start": 301,
         "end": 323,
-        "concept_id": "69930009"
+        "concept_id": "69930009",
+        "text": "middle cerebral artery"
       },
       {
         "start": 324,
         "end": 333,
-        "concept_id": "26036001"
+        "concept_id": "26036001",
+        "text": "occlusion"
       },
       {
         "start": 520,
         "end": 543,
-        "concept_id": "86547008"
+        "concept_id": "86547008",
+        "text": "internal carotid artery"
       },
       {
         "start": 633,
         "end": 644,
-        "concept_id": "77343006"
+        "concept_id": "77343006",
+        "text": "angiography"
       },
       {
         "start": 652,
         "end": 656,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "TICI"
       },
       {
         "start": 659,
         "end": 673,
-        "concept_id": "449894001"
+        "concept_id": "449894001",
+        "text": "recanalization"
       },
       {
         "start": 759,
         "end": 761,
-        "concept_id": "77477000"
+        "concept_id": "77477000",
+        "text": "CT"
       },
       {
         "start": 780,
         "end": 794,
-        "concept_id": "449894001"
+        "concept_id": "449894001",
+        "text": "recanalization"
       },
       {
         "start": 830,
         "end": 835,
-        "concept_id": "450893003"
+        "concept_id": "450893003",
+        "text": "NIHSS"
       },
       {
         "start": 949,
         "end": 957,
-        "concept_id": "432101006"
+        "concept_id": "432101006",
+        "text": "aneurysm"
       }
     ]
   },
@@ -430,87 +505,104 @@
       {
         "start": 22,
         "end": 28,
-        "concept_id": "230690007"
+        "concept_id": "230690007",
+        "text": "STROKE"
       },
       {
         "start": 137,
         "end": 143,
-        "concept_id": "20262006"
+        "concept_id": "20262006",
+        "text": "ataxia"
       },
       {
         "start": 307,
         "end": 313,
-        "concept_id": "20262006"
+        "concept_id": "20262006",
+        "text": "ataxia"
       },
       {
         "start": 394,
         "end": 402,
-        "concept_id": "13791008"
+        "concept_id": "13791008",
+        "text": "weakness"
       },
       {
         "start": 427,
         "end": 430,
-        "concept_id": "113091000"
+        "concept_id": "113091000",
+        "text": "MRI"
       },
       {
         "start": 452,
         "end": 459,
-        "concept_id": "55342001"
+        "concept_id": "55342001",
+        "text": "infarct"
       },
       {
         "start": 546,
         "end": 557,
-        "concept_id": "77343006"
+        "concept_id": "77343006",
+        "text": "angiography"
       },
       {
         "start": 572,
         "end": 580,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       },
       {
         "start": 588,
         "end": 602,
-        "concept_id": "67889009"
+        "concept_id": "67889009",
+        "text": "basilar artery"
       },
       {
         "start": 691,
         "end": 699,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       },
       {
         "start": 702,
         "end": 708,
-        "concept_id": "230690007"
+        "concept_id": "230690007",
+        "text": "STROKE"
       },
       {
         "start": 735,
         "end": 742,
-        "concept_id": "55342001"
+        "concept_id": "55342001",
+        "text": "infarct"
       },
       {
         "start": 766,
         "end": 780,
-        "concept_id": "67889009"
+        "concept_id": "67889009",
+        "text": "basilar artery"
       },
       {
         "start": 788,
         "end": 797,
-        "concept_id": "26036001"
+        "concept_id": "26036001",
+        "text": "occlusion"
       },
       {
         "start": 832,
         "end": 846,
-        "concept_id": "67889009"
+        "concept_id": "67889009",
+        "text": "basilar artery"
       },
       {
         "start": 946,
         "end": 954,
-        "concept_id": "415582006"
+        "concept_id": "415582006",
+        "text": "stenosis"
       },
       {
         "start": 1084,
         "end": 1091,
-        "concept_id": "55342001"
+        "concept_id": "55342001",
+        "text": "infarct"
       }
     ]
   }

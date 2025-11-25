@@ -18,6 +18,7 @@ try:
         load_data, 
         load_ner_worker, 
         get_detailed_matches, 
+        text_containment_match,
         deduplicate_predictions,
         CONFIG_PATH, NOTES_PATH, GT_PATH
     )
@@ -27,6 +28,7 @@ except ModuleNotFoundError:
         load_data, 
         load_ner_worker, 
         get_detailed_matches, 
+        text_containment_match,
         deduplicate_predictions,
         CONFIG_PATH, NOTES_PATH, GT_PATH
     )
@@ -68,7 +70,11 @@ def run_efficiency_test(worker_order: tuple, worker_cache: Dict, notes: Dict, gt
     """
     Calculates the 'Efficiency Score': Sum of cumulative recall at each step.
     Higher score = The heavy lifters are at the start of the chain.
+    
+    Uses Text Containment + IoU matching logic for RAG-Ready Recall.
     """
+    MIN_IOU_OVERLAP = 0.1  # Minimum IoU for physical overlap
+    
     # Generate unique IDs for all GT items to track coverage
     total_gt_ids = set()
     for nid, anns in gt_data.items():
@@ -86,13 +92,34 @@ def run_efficiency_test(worker_order: tuple, worker_cache: Dict, notes: Dict, gt
         
         for nid, text in notes.items():
             preds = worker_cache[wid][nid]
+            gt_list = gt_data.get(nid, [])
             
-            # Check matches using the imported greedy match logic
-            matches, _, _ = get_detailed_matches(preds, gt_data.get(nid, []), iou_th)
-            
-            for _, g, _ in matches:
-                gid = f"{nid}_{g['start']}_{g['end']}"
-                current_step_found.add(gid)
+            # Check matches using Text Containment + IoU logic
+            for gt_item in gt_list:
+                gid = f"{nid}_{gt_item['start']}_{gt_item['end']}"
+                
+                # Skip if already found by previous worker
+                if gid in found_so_far:
+                    continue
+                
+                gt_text = gt_item.get('text', text[gt_item['start']:gt_item['end']])
+                
+                # Check if any prediction matches this GT
+                for p in preds:
+                    from src.utils.metrics import calculate_iou
+                    iou = calculate_iou(p, gt_item)
+                    
+                    # Condition A: Physical overlap
+                    if iou <= MIN_IOU_OVERLAP:
+                        continue
+                    
+                    # Extract prediction text
+                    pred_text = text[p['start']:p['end']]
+                    
+                    # Condition B: Text containment
+                    if text_containment_match(pred_text, gt_text):
+                        current_step_found.add(gid)
+                        break
         
         # Update global found
         found_so_far.update(current_step_found)

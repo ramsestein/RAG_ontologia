@@ -2,7 +2,10 @@
 #
 # OBJETIVO: Orquestador SOTA para diagnosticar modelos NER.
 # UPDATES:
-# - FIX: Lógica de Matching "Coverage" para 100% Recall en entidades anidadas.
+# - FIX: Lógica de Matching "Text Containment + IoU" para RAG-Ready Recall.
+#   - Condition A: IoU > 0.1 (overlap físico mínimo)
+#   - Condition B: Contención textual (GT en Pred O Pred en GT)
+#   - Constraint: 1-to-1 matching (protege contra "Bad Merge")
 # - FEATURE: Análisis secuencial de contribución (Non-Redundant Recall).
 # - FIX: Tabla de resultados detallada con F1 Harmónico/Aritmético.
 
@@ -69,44 +72,100 @@ def load_ner_worker(ner_id: str, config: Dict) -> Any:
         print(f"[ERROR] {ner_id}: {e}")
         return None
 
-def get_detailed_matches(preds: List[Dict], gt: List[Dict], iou_thresh: float) -> Tuple[List, List, List]:
+def text_containment_match(pred_text: str, gt_text: str) -> bool:
     """
-    Matching Logic "Coverage" (Cobertura):
-    1. RECALL: Iteramos sobre el GT. Si una entidad GT es cubierta por CUALQUIER
-       predicción (aunque esa predicción ya se haya usado), cuenta como TP.
-       Esto soluciona el problema de entidades anidadas ("Hemorrhage" dentro de "SAH").
+    Verifica si hay una relación de contención textual entre predicción y GT.
     
-    2. PRECISION: Una predicción es FP solo si no toca NINGUNA entidad GT.
+    Criterios (después de normalizar a lowercase y strip):
+    - Context Expansion: GT está contenido en Pred (ej: "acute hemorrhage" contiene "hemorrhage")
+    - Partial Match: Pred está contenido en GT
+    
+    Returns: True si hay contención en cualquier dirección.
     """
+    pred_norm = pred_text.lower().strip()
+    gt_norm = gt_text.lower().strip()
+    
+    # Context Expansion: GT['text'] is substring of Pred['text']
+    # O Partial Match: Pred['text'] is substring of GT['text']
+    return gt_norm in pred_norm or pred_norm in gt_norm
+
+
+def get_detailed_matches(preds: List[Dict], gt: List[Dict], iou_thresh: float, note_text: str = None) -> Tuple[List, List, List]:
+    """
+    Matching Logic "Text Containment + IoU Overlap" (RAG-Ready Recall):
+    
+    NUEVO CRITERIO TP:
+    1. Condition A: IoU > 0.1 (overlap físico mínimo para asegurar misma ubicación)
+    2. Condition B: Contención textual (GT en Pred O Pred en GT)
+    
+    CONSTRAINT: 1-to-1 matching. Una predicción solo cuenta para UN GT.
+    Esto protege contra el escenario "Bad Merge" donde una predicción cubre
+    múltiples entidades GT (ej: "headache and vomiting" cubriendo 2 GT).
+    
+    Args:
+        preds: Lista de predicciones con keys: start, end, (opcionalmente 'text')
+        gt: Lista de ground truth con keys: start, end, text
+        iou_thresh: Umbral IoU mínimo (default 0.1 para overlap)
+        note_text: Texto de la nota para extraer texto de predicciones si no lo tienen
+    """
+    # Umbral IoU mínimo para asegurar overlap físico (Condition A)
+    MIN_IOU_OVERLAP = 0.1
+    
     tp_pairs = [] 
     matched_gt_indices = set()
+    matched_pred_indices = set()  # Para 1-to-1 matching
+    
+    # Asegurar que las predicciones tienen el campo 'text'
+    preds_with_text = []
+    for p in preds:
+        p_copy = dict(p)
+        if 'text' not in p_copy and note_text:
+            p_copy['text'] = note_text[p_copy['start']:p_copy['end']]
+        preds_with_text.append(p_copy)
     
     # 1. Recall Scan (Barrido sobre Ground Truth)
+    # Para cada GT, buscar la MEJOR predicción que cumpla ambos criterios
     for g_idx, g_item in enumerate(gt):
-        best_iou = -1.0
-        best_pred = None
-        for p in preds:
-            iou = calculate_iou(p, g_item)
-            if iou > iou_thresh and iou > best_iou:
-                best_iou = iou
-                best_pred = p
+        best_match_score = -1.0
+        best_pred_idx = None
+        best_iou = 0.0
         
-        if best_pred:
+        gt_text = g_item.get('text', '')
+        
+        for p_idx, p in enumerate(preds_with_text):
+            # Skip si esta predicción ya fue asignada a otro GT (1-to-1 constraint)
+            if p_idx in matched_pred_indices:
+                continue
+            
+            iou = calculate_iou(p, g_item)
+            
+            # Condition A: Debe haber overlap físico mínimo
+            if iou <= MIN_IOU_OVERLAP:
+                continue
+            
+            pred_text = p.get('text', '')
+            
+            # Condition B: Contención textual
+            if not text_containment_match(pred_text, gt_text):
+                continue
+            
+            # Ambos criterios cumplidos: es un match válido
+            # Usamos IoU como score para elegir el mejor match
+            if iou > best_match_score:
+                best_match_score = iou
+                best_pred_idx = p_idx
+                best_iou = iou
+        
+        if best_pred_idx is not None:
             matched_gt_indices.add(g_idx)
-            tp_pairs.append((best_pred, g_item, best_iou))
+            matched_pred_indices.add(best_pred_idx)
+            tp_pairs.append((preds_with_text[best_pred_idx], g_item, best_iou))
 
     fn_gts = [gt[i] for i in range(len(gt)) if i not in matched_gt_indices]
 
     # 2. Precision Scan (Barrido sobre Predicciones)
-    fp_preds = []
-    for p in preds:
-        is_useful = False
-        for g in gt:
-            if calculate_iou(p, g) > iou_thresh:
-                is_useful = True
-                break
-        if not is_useful:
-            fp_preds.append(p)
+    # FP: Predicciones que no matchearon con ningún GT
+    fp_preds = [preds_with_text[i] for i in range(len(preds_with_text)) if i not in matched_pred_indices]
 
     return tp_pairs, fp_preds, fn_gts
 
@@ -165,9 +224,12 @@ def print_note_report(note_id, time_s, m, matches, fps, fns, text, verbose):
 
 def calculate_sequential_contribution(worker_ids: List[str], notes: Dict, gt_data: Dict, iou_th: float, registry: Dict) -> Dict[str, float]:
     """
-    Calcula la contribución INCREMENTAL de cada worker.
+    Calcula la contribución INCREMENTAL de cada worker usando la nueva lógica
+    de Text Containment + IoU.
     Es decir: ¿Cuántos TP *nuevos* encuentra el worker X que los anteriores no encontraron?
     """
+    MIN_IOU_OVERLAP = 0.1  # Mismo umbral que get_detailed_matches
+    
     total_gt_count = sum(len(g) for g in gt_data.values())
     if total_gt_count == 0: return {}
     
@@ -187,7 +249,7 @@ def calculate_sequential_contribution(worker_ids: List[str], notes: Dict, gt_dat
             w_preds = worker.extract_entities(text)
             gt_list = gt_data.get(nid, [])
             
-            # Usamos la lógica de matching "Coverage"
+            # Usamos la lógica de matching "Text Containment + IoU"
             # Para cada item del GT, chequeamos si este worker lo encuentra
             for gt_item in gt_list:
                 # ID único para este GT item
@@ -197,10 +259,21 @@ def calculate_sequential_contribution(worker_ids: List[str], notes: Dict, gt_dat
                 if gt_uid in covered_gt_ids:
                     continue
                 
+                gt_text = gt_item.get('text', '')
+                
                 # Si no ha sido encontrado, verificamos si este worker lo encuentra
                 found = False
                 for p in w_preds:
-                    if calculate_iou(p, gt_item) > iou_th:
+                    iou = calculate_iou(p, gt_item)
+                    # Condition A: IoU overlap mínimo
+                    if iou <= MIN_IOU_OVERLAP:
+                        continue
+                    
+                    # Extraer texto de la predicción
+                    pred_text = text[p['start']:p['end']]
+                    
+                    # Condition B: Contención textual
+                    if text_containment_match(pred_text, gt_text):
                         found = True
                         break
                 
@@ -264,8 +337,8 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode, verbose):
             t_total += (time.time() - t0)
             all_preds[nid] = preds
             
-            # C. Evaluate
-            matches, fps, fns = get_detailed_matches(preds, gt_data.get(nid, []), iou_th)
+            # C. Evaluate (passing note_text for text containment matching)
+            matches, fps, fns = get_detailed_matches(preds, gt_data.get(nid, []), iou_th, note_text=text)
             m = _calculate_pr_f1(len(matches), len(fps), len(fns))
             
             # Store harmonic F1 (standard F1 = 2PR/(P+R))
@@ -278,12 +351,11 @@ def run_benchmark(ids, registry, notes, gt_data, iou_th, mode, verbose):
             print_note_report(nid, time.time()-t0, m, matches, fps, fns, text, verbose)
 
         # D. Metrics
-        # Nota: calculate_ner_micro_f1 usa set intersection simple, 
-        # recalcular metrics basados en los conteos "Coverage" locales es más preciso para Nested.
+        # Nota: Recalculamos usando la nueva lógica "Text Containment + IoU"
         
-        total_tp = sum(len(get_detailed_matches(all_preds[nid], gt_data.get(nid, []), iou_th)[0]) for nid in notes)
-        total_fp = sum(len(get_detailed_matches(all_preds[nid], gt_data.get(nid, []), iou_th)[1]) for nid in notes)
-        total_fn = sum(len(get_detailed_matches(all_preds[nid], gt_data.get(nid, []), iou_th)[2]) for nid in notes)
+        total_tp = sum(len(get_detailed_matches(all_preds[nid], gt_data.get(nid, []), iou_th, note_text=notes[nid])[0]) for nid in notes)
+        total_fp = sum(len(get_detailed_matches(all_preds[nid], gt_data.get(nid, []), iou_th, note_text=notes[nid])[1]) for nid in notes)
+        total_fn = sum(len(get_detailed_matches(all_preds[nid], gt_data.get(nid, []), iou_th, note_text=notes[nid])[2]) for nid in notes)
         
         recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0
         prec = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0
