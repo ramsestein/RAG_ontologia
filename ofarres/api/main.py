@@ -8,7 +8,7 @@ Following SOLID principles and clean architecture.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import notes, entities, health
+from .routers import notes, entities, health, benchmark
 
 # Create FastAPI application
 app = FastAPI(
@@ -33,6 +33,7 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(notes.router, prefix="/api/v1", tags=["Notes"])
 app.include_router(entities.router, prefix="/api/v1", tags=["Entities"])
+app.include_router(benchmark.router, prefix="/api/v1", tags=["Benchmark"])
 
 
 @app.get("/")

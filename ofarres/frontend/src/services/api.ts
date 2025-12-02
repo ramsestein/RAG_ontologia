@@ -11,7 +11,7 @@ const api: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  timeout: 30000, // 30 seconds timeout for analysis requests
+  timeout: 300000, // 5 minutes timeout for benchmark requests
 });
 
 // Request Interceptor

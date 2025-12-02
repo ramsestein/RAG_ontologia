@@ -98,3 +98,116 @@ class SnomedDetailResponse(BaseModel):
                 "parents": ["Cardiovascular disease", "Disorder of cardiovascular system"]
             }
         }
+
+
+# ==============================================================================
+# BENCHMARK SCHEMAS
+# ==============================================================================
+
+class BenchmarkMode(str, Enum):
+    """Benchmark execution mode."""
+    ALL = "all"           # Run each model individually
+    ASSEMBLY = "assembly" # Run all models together (ensemble)
+    SINGLE = "single"     # Run a specific model
+
+
+class AnnotationInput(BaseModel):
+    """Input model for a single ground truth annotation."""
+    start: int
+    end: int
+    text: str
+    concept_id: Optional[str] = None
+
+
+class NoteInput(BaseModel):
+    """Input model for a clinical note."""
+    note_id: str
+    text: str
+
+
+class GroundTruthInput(BaseModel):
+    """Input model for ground truth annotations."""
+    note_id: str
+    annotations: List[AnnotationInput]
+
+
+class NERBenchmarkRequest(BaseModel):
+    """Request model for NER benchmarking."""
+    notes: List[NoteInput] = Field(..., description="List of clinical notes")
+    ground_truth: List[GroundTruthInput] = Field(..., description="Ground truth annotations")
+    model_id: str = Field(default="ground_truth", description="NER model ID to evaluate")
+    iou_threshold: float = Field(default=0.25, ge=0.0, le=1.0, description="IoU threshold for matching")
+
+
+class NoteMetrics(BaseModel):
+    """Metrics for a single note."""
+    note_id: str
+    precision: float
+    recall: float
+    f1: float
+    tp: int
+    fp: int
+    fn: int
+
+
+class SequentialContribution(BaseModel):
+    """Sequential contribution of each model in assembly mode."""
+    model_id: str
+    incremental_recall: float  # New recall added by this model
+    cumulative_recall: float   # Total recall up to this model
+
+
+class ModelBenchmarkResult(BaseModel):
+    """Result for a single model's benchmark."""
+    model_id: str
+    precision: float
+    recall: float
+    f1_micro: float
+    f1_macro: float
+    f1_harmonic: float  # Same as f1_macro (mean of per-note F1s)
+    f1_arithmetic: float  # Mean of per-note (P+R)/2
+    total_tp: int
+    total_fp: int
+    total_fn: int
+    processing_time_s: float
+    per_note_metrics: List[NoteMetrics]
+
+
+class NERBenchmarkResponse(BaseModel):
+    """Response model for NER benchmark results."""
+    mode: BenchmarkMode
+    iou_threshold: float
+    
+    # Results for each model (or single entry for assembly/single)
+    results: List[ModelBenchmarkResult]
+    
+    # Sequential contribution (only for assembly mode)
+    sequential_contribution: Optional[List[SequentialContribution]] = None
+    
+    # Processing info
+    total_processing_time_ms: int
+    notes_processed: int
+    total_entities: int
+
+
+class NERModelInfo(BaseModel):
+    """Information about an available NER model."""
+    id: str
+    name: str
+    description: str
+    available: bool
+
+
+class RAGMetrics(BaseModel):
+    """Metrics for RAG evaluation."""
+    precision: Optional[float] = None
+    recall: Optional[float] = None
+    f1: Optional[float] = None
+    mrr: Optional[float] = None  # Mean Reciprocal Rank
+
+
+class RAGBenchmarkResponse(BaseModel):
+    """Response model for RAG benchmark status."""
+    status: str
+    message: str
+    metrics: Optional[RAGMetrics] = None

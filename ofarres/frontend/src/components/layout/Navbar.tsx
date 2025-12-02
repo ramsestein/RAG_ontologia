@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, BookOpen } from 'lucide-react';
+import { Activity, BookOpen, Bug } from 'lucide-react';
 import { APP_NAME } from '../../config/constants';
 
 /**
@@ -42,6 +42,10 @@ export const Navbar: React.FC = () => {
         <Link to="/docs" className={getNavLinkClasses('/docs')}>
           <BookOpen className="h-4 w-4" />
           <span className="hidden sm:inline">Docs</span>
+        </Link>
+        <Link to="/debug" className={getNavLinkClasses('/debug')}>
+          <Bug className="h-4 w-4" />
+          <span className="hidden sm:inline">Debug</span>
         </Link>
       </div>
     </nav>
