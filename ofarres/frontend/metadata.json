@@ -1,0 +1,5 @@
+{
+  "name": "Medical Entity RAG Workbench",
+  "description": "A production-ready React SPA for analyzing medical notes using a decoupled RAG architecture. Features a medical entity extractor, SNOMED CT lookup integration, and Laravel-style documentation.",
+  "requestFramePermissions": []
+}
