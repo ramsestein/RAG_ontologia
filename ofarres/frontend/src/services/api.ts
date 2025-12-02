@@ -1,24 +1,26 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { API_BASE_URL } from '../config/constants';
 
-// Create a configured Axios instance
+/**
+ * Configured Axios instance for API communication.
+ * Following Single Responsibility Principle.
+ */
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 30000, // 30 seconds timeout for analysis requests
 });
 
 // Request Interceptor
 api.interceptors.request.use(
   (config) => {
-    // Potential place to inject Auth tokens
-    // const token = localStorage.getItem('auth_token');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    // Log requests in development
+    if (import.meta.env.DEV) {
+      console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
+    }
     return config;
   },
   (error) => {
@@ -36,7 +38,7 @@ api.interceptors.response.use(
     if (error.response) {
       console.error('API Error:', error.response.status, error.response.data);
     } else if (error.request) {
-      console.error('Network Error:', error.request);
+      console.error('Network Error: Backend may not be running');
     } else {
       console.error('Error:', error.message);
     }

@@ -1,19 +1,21 @@
 import React, { useRef } from 'react';
-import { UploadCloud, ArrowRight, FileText, Keyboard, Sparkles } from 'lucide-react';
+import { UploadCloud, ArrowRight, Keyboard, Sparkles, Database } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
 interface IngestionViewProps {
   inputText: string;
   setInputText: (text: string) => void;
   onAnalyze: () => void;
-  onLoadSample: () => void;
+  onLoadFromBackend: () => void;
+  isLoading?: boolean;
 }
 
 export const IngestionView: React.FC<IngestionViewProps> = ({ 
   inputText, 
   setInputText, 
-  onAnalyze, 
-  onLoadSample 
+  onAnalyze,
+  onLoadFromBackend,
+  isLoading = false
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,17 +35,20 @@ export const IngestionView: React.FC<IngestionViewProps> = ({
         <div>
           <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary-600" />
-            New Analysis Session
+            Clinical Notes Analysis
           </h1>
-          <p className="text-slate-500 mt-1">Import clinical notes to begin entity extraction.</p>
+          <p className="text-slate-500 mt-1">Import clinical notes or load from backend to begin entity extraction.</p>
         </div>
         <div className="flex items-center gap-3">
-           <button 
-             onClick={onLoadSample}
-             className="text-sm font-medium text-slate-500 hover:text-primary-600 underline decoration-dotted transition-colors"
+           <Button 
+             onClick={onLoadFromBackend}
+             variant="secondary"
+             disabled={isLoading}
+             className="flex items-center gap-2"
            >
-             Load Demo Data
-           </button>
+             <Database className="h-4 w-4" />
+             {isLoading ? 'Loading...' : 'Load from Backend'}
+           </Button>
         </div>
       </div>
 

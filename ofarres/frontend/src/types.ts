@@ -31,8 +31,29 @@ export interface SnomedDetail {
 
 export interface Note {
   id: string;
-  anonymousId: string; // e.g. "PATIENT-8821"
+  anonymousId: string;
   content: string;
   timestamp: string;
   status: 'pending' | 'analyzed';
+}
+
+/**
+ * Backend note format - matches API response.
+ */
+export interface BackendNote {
+  note_id: string;
+  text: string;
+}
+
+/**
+ * Backend entity format - matches API response.
+ */
+export interface BackendEntity {
+  id: string;
+  text: string;
+  type: string;
+  start: number;
+  end: number;
+  snomed_code?: string;
+  confidence: number;
 }

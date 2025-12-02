@@ -1,35 +1,21 @@
 import React, { useState } from 'react';
-import { analyzeNote, segmentClinicalNotes } from '../../services/medical';
-import { Entity, Note } from '../../types';
+import { 
+  analyzeNote, 
+  segmentClinicalNotes, 
+  fetchAllNotes, 
+  fetchNoteWithEntities,
+  transformBackendNotes 
+} from '../../services/medical';
+import type { Entity, Note } from '../../types';
 import { IngestionView } from './IngestionView';
 import { LoadingView } from './LoadingView';
 import { DashboardView } from './DashboardView';
-
-const SAMPLE_BULK_TEXT = `Patient ID: 8821
-Reason: Follow-up
-Subjective: 65M w/ hx of CAD and Type 2 Diabetes. Complains of mild chest tightness upon exertion.
-Assessment: Stable Angina.
-Plan: Continue Metformin 500mg and Aspirin.
-
----
-
-Patient ID: 9940
-Reason: Emergency
-History: Patient fell from standing height. Pain in left wrist.
-Radiology: X-ray confirms distal radius fracture.
-Plan: Splint application and ortho referral.
-
----
-
-Patient ID: 1023
-Reason: Routine
-Notes: 45F for annual physical. BP 120/80. No complaints. 
-Screening: Mammogram scheduled.`;
 
 export const WorkbenchPage: React.FC = () => {
   // --- State ---
   const [viewMode, setViewMode] = useState<'ingest' | 'loading' | 'analysis'>('ingest');
   const [inputText, setInputText] = useState<string>('');
+  const [isLoadingBackend, setIsLoadingBackend] = useState(false);
   
   // Loading State
   const [progress, setProgress] = useState(0);
@@ -40,7 +26,60 @@ export const WorkbenchPage: React.FC = () => {
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [entityMap, setEntityMap] = useState<Record<string, Entity[]>>({});
 
-  // --- Logic ---
+  // --- Load Notes from Backend ---
+  const loadFromBackend = async () => {
+    setIsLoadingBackend(true);
+    
+    try {
+      // Fetch all notes from backend
+      const backendNotes = await fetchAllNotes();
+      
+      if (backendNotes.length === 0) {
+        alert('No notes found in backend');
+        setIsLoadingBackend(false);
+        return;
+      }
+
+      // Transform to frontend format
+      const frontendNotes = transformBackendNotes(backendNotes);
+      setNotes(frontendNotes);
+      setSelectedNoteId(frontendNotes[0]?.id || null);
+
+      // Transition to loading view
+      setViewMode('loading');
+      setProgress(0);
+      setEta(backendNotes.length);
+
+      // Fetch entities for each note
+      const newEntityMap: Record<string, Entity[]> = {};
+      const totalNotes = backendNotes.length;
+      
+      for (let i = 0; i < backendNotes.length; i++) {
+        const note = backendNotes[i];
+        try {
+          const result = await fetchNoteWithEntities(note.note_id);
+          newEntityMap[note.note_id] = result.entities;
+        } catch (error) {
+          console.error(`Failed to fetch entities for note ${note.note_id}:`, error);
+          newEntityMap[note.note_id] = [];
+        }
+        
+        // Update progress
+        setProgress(((i + 1) / totalNotes) * 100);
+        setEta(Math.max(0, totalNotes - i - 1));
+      }
+
+      setEntityMap(newEntityMap);
+      setViewMode('analysis');
+    } catch (error) {
+      console.error('Failed to load from backend:', error);
+      alert('Failed to connect to backend. Make sure the API server is running on http://localhost:8000');
+    } finally {
+      setIsLoadingBackend(false);
+    }
+  };
+
+  // --- Process Manual Input ---
   const processAndSegment = async () => {
     if (!inputText.trim()) return;
     
@@ -49,8 +88,8 @@ export const WorkbenchPage: React.FC = () => {
     setProgress(0);
     setEta(5);
 
-    // 2. Mock Progress Simulation (5 seconds)
-    const duration = 5000;
+    // 2. Progress Simulation
+    const duration = 3000;
     const intervalTime = 50;
     const steps = duration / intervalTime;
     let currentStep = 0;
@@ -72,12 +111,12 @@ export const WorkbenchPage: React.FC = () => {
       }, intervalTime);
     });
 
-    // 3. Business Logic (Segmentation)
+    // 3. Segment text into notes
     const generatedNotes = segmentClinicalNotes(inputText);
     setNotes(generatedNotes);
     setSelectedNoteId(generatedNotes[0]?.id || null);
 
-    // 4. Batch Analysis (Mock)
+    // 4. Analyze each note
     const newEntityMap: Record<string, Entity[]> = {};
     await Promise.all(generatedNotes.map(async (note) => {
       const result = await analyzeNote(note.content);
@@ -97,7 +136,8 @@ export const WorkbenchPage: React.FC = () => {
         inputText={inputText}
         setInputText={setInputText}
         onAnalyze={processAndSegment}
-        onLoadSample={() => setInputText(SAMPLE_BULK_TEXT)}
+        onLoadFromBackend={loadFromBackend}
+        isLoading={isLoadingBackend}
       />
     );
   }
