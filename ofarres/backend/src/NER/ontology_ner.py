@@ -131,7 +131,7 @@ class OntologyNER:
                     self.keyword_processor.add_keyword(final_term, cid)
                     term_count += 1
                         
-        print(f"[OntologyNER] ✅ Engine Ready. {term_count} terms indexed (No-Cheat Mode).")
+        print(f"[OntologyNER] [OK] Engine Ready. {term_count} terms indexed (No-Cheat Mode).")
 
     def extract_entities(self, text: str) -> List[Dict]:
         if not self.keyword_processor:

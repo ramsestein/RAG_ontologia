@@ -96,7 +96,7 @@ class AcronymNER:
                     self.keyword_processor.add_keyword(term_clean, cid)
                     count += 1
         
-        print(f"[AcronymNER] ✅ Motor listo. {count} variantes cargadas.")
+        print(f"[AcronymNER] [OK] Motor listo. {count} variantes cargadas.")
 
     def extract_entities(self, text: str) -> List[Dict]:
         if not self.keyword_processor:

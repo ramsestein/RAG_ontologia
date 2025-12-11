@@ -133,7 +133,7 @@ export const NERDebugSection: React.FC = () => {
         params.set('model_id', selectedModel);
       }
       
-      const sseUrl = `http://localhost:8000/api/benchmark/ner/stream?${params.toString()}`;
+      const sseUrl = `http://localhost:8000/api/v1/benchmark/ner/stream?${params.toString()}`;
       console.log('Connecting to SSE:', sseUrl);
       
       const eventSource = new EventSource(sseUrl);

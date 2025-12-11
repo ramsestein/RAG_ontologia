@@ -58,40 +58,75 @@ export const DocLayout: React.FC = () => {
     
     // Find the heading in the content and scroll to it
     const headingMap: Record<string, string> = {
+      // Installation
       'overview': 'Overview',
       'system-requirements': 'System Requirements',
       'quick-start': 'Quick Start',
-      'clone-repo': 'Clone the Repository',
-      'install-deps': 'Install Dependencies',
-      'start-app': 'Start the Application',
-      'next-steps': 'Next Steps',
-      'environment-variables': 'Environment Variables',
-      'configuration-options': 'Configuration Options',
-      'advanced-configuration': 'Advanced Configuration',
-      'api-key-authentication': 'API Key Authentication',
-      'oauth-2': 'OAuth 2.0',
-      'role-based-access': 'Role-Based Access Control',
-      'security-best-practices': 'Security Best Practices',
-      'how-it-works': 'How It Works',
-      'supported-entity-types': 'Supported Entity Types',
-      'api-usage': 'API Usage',
-      'confidence-scores': 'Confidence Scores',
-      'architecture': 'Architecture',
-      'pipeline-stages': 'Pipeline Stages',
-      'text-preprocessing': 'Text Preprocessing',
-      'entity-recognition': 'Entity Recognition',
-      'vector-search': 'Vector Search',
-      'performance-metrics': 'Performance Metrics',
-      'optimization-tips': 'Optimization Tips',
-      'how-vector-search-works': 'How Vector Search Works',
-      'index-statistics': 'Index Statistics',
-      'query-examples': 'Query Examples',
-      'tuning-parameters': 'Tuning Parameters',
-      'key-components': 'Key Components',
-      'vector-store': 'The Vector Store',
-      'inference-engine': 'The Inference Engine',
-      'api-integration': 'API Integration',
-      'data-privacy': 'Data Privacy',
+      'access-points': 'Access Points',
+      
+      // Architecture Overview
+      'two-stage-philosophy': 'The Two-Stage Philosophy',
+      'why-two-stages': 'Why Two Stages?',
+      'pipeline-architecture': 'Pipeline Architecture',
+      'key-insight': 'Key Insight',
+      
+      // Why 100% Recall
+      'catastrophic-cost': 'The Catastrophic Cost of Missing Entities',
+      'low-precision-acceptable': 'Why Low Precision',
+      'ner-performance': 'Our NER Performance',
+      'golden-rule': 'The Golden Rule',
+      
+      // NER Workers
+      'multi-worker-strategy': 'Multi-Worker Strategy',
+      'ontology-ner': 'OntologyNER',
+      'scispacy-ner': 'ScispaCyNER',
+      'acronym-ner': 'AcronymNER',
+      'assembly-effect': 'The Assembly Effect',
+      'confidence-tiers': 'Confidence Tiers',
+      
+      // Error Stacking
+      'errors-propagate': 'Errors Propagate and Amplify',
+      'ner-errors-fatal': 'NER Errors Are Fatal',
+      'rag-errors-recoverable': 'RAG Errors Are Recoverable',
+      'asymmetry': 'The Asymmetry',
+      'conclusion': 'Conclusion',
+      
+      // RAG Precision
+      'stage-2-goals': 'Stage 2 Goals',
+      'why-precision-matters': 'Why Precision Matters Here',
+      'rag-filtering-process': 'RAG Filtering Process',
+      'precision-in-action': 'Precision in Action',
+      'why-rag-recall-less-critical': 'Why RAG Recall Is Less Critical',
+      
+      // Dictionary Power
+      'why-dictionary-gold': 'Why Dictionary Matches Are Gold',
+      'high-precision-foundation': 'The High-Precision Foundation',
+      'experimental-evidence': 'Experimental Evidence',
+      'the-takeaway': 'The Takeaway',
+      'why-matters-rag': 'Why This Matters for RAG',
+      'dictionary-statistics': 'Dictionary Statistics',
+      
+      // LLM Weighting
+      'how-entities-weighted': 'How Entities Are Weighted',
+      'why-weighting-works': 'Why This Weighting Works',
+      'context-assembly': 'Context Assembly for LLM',
+      'llm-intelligence': "The LLM's Intelligence",
+      'example-comparison': 'Example Comparison',
+      'practical-impact': 'Practical Impact',
+      
+      // Pipeline Example
+      'input-clinical-note': 'Input Clinical Note',
+      'stage-1-ner-processing': 'Stage 1: NER Processing',
+      'stage-2-rag-processing': 'Stage 2: RAG Processing',
+      'final-llm-output': 'Final LLM Output',
+      'quality-improvement': 'Quality Improvement',
+      
+      // Performance Metrics
+      'understanding-metrics': 'Understanding the Metrics',
+      'current-performance': 'Our Current Performance',
+      'why-numbers-make-sense': 'Why These Numbers Make Sense',
+      'performance-summary': 'Performance Summary',
+      'key-takeaways': 'Key Takeaways',
     };
 
     const headingText = headingMap[itemId];

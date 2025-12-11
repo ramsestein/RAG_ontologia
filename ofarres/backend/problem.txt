@@ -24,3 +24,11 @@ ID                   | F1-Harmonic  | F1-Arithmetic  | Precision  | Recall   | T
 -------------------------------------------------------------------------------------------------------------------
 ASSEMBLY             | 0.4265       | 0.6372         | 0.2737     | 1.0000   | 98   | 260  | 0    | 1.10
 ===================================================================================================================
+
+
+"ClinicalBERT_ES": {
+        "module": "src.NER.transformer_ner", 
+        "class": "esBSCNER",
+        "model_name": "PlanTL-GOB-ES/bsc-bio-ehr-es",
+        "description": "State-of-the-art Spanish model trained on clinical EHRs (Hospital discharge reports, including Ictus data)."
+    },
