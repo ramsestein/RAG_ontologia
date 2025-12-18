@@ -6,3 +6,7 @@ api_keys
 
 ofarres/__pycache__/
 ofarres/.env
+
+new_ofarres/__pycache__/
+new_ofarres/.env
+new_ofarres/data/notes/*

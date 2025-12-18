@@ -1,0 +1,11 @@
+I am an NLP engineer working in medical contexts. My job is to, given a note in spanish, 
+correctly identify all entities (Named Entity Recognisition) and then assign a code in a terminology 
+(it can either be: ) if it exists (it can not be recognised in any of those terminologies).
+Essentially the process is twofold:
+    1-Recognise all entities
+    2-Assign their code if they have one
+
+I have been working on this project for a couple of months now, but they have changed my dataset
+and I have this new rules (before I just had to identify all the SNOMED concepts (relevant)). 
+Now I have been told to work with an ontology (owl) and then to be able above of all that to be able to
+generate like a tree where I can go up/down and keep track of all concepts appeared in a note.
