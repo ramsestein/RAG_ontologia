@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 """
-Convert medical notes from .txt files to structured JSON format.
+Convert medical notes from .txt files to a CLEAN and STRUCTURED JSON format.
 
-This script reads medical notes that follow a semi-structured format with headers
-and converts them into a clean JSON dataset for NLP processing.
-
-Header format examples:
-- CODE (Description): content
-- CODE: content
-
-The content for each key spans multiple lines until the next header is found.
+This script reads medical notes, parses the raw headers, and transforms them
+into a canonical schema (clinical_data, study_metadata, admin_metadata).
 """
 
 import re
@@ -21,31 +15,13 @@ import argparse
 
 def parse_medical_note(text: str) -> Dict[str, str]:
     """
-    Parse a medical note text into a dictionary of fields.
-    
-    The text contains headers in the format:
-    - CODE (Description): content
-    - CODE: content
-    
-    Content spans multiple lines until the next header.
-    
-    Args:
-        text: Raw text content of the medical note
-        
-    Returns:
-        Dictionary mapping field codes to their content
+    Parse a medical note text into a dictionary of raw fields.
     """
-    # Regular expression to match headers:
-    # - Starts at beginning of line (^)
-    # - Captures the CODE (uppercase letters, numbers, underscores)
-    # - Optionally matches (Description) in parentheses
-    # - Followed by a colon
     header_pattern = re.compile(
         r'^([A-Z0-9_]+)\s*(?:\([^)]*\))?\s*:\s*(.*)$',
         re.MULTILINE
     )
     
-    # Find all headers and their positions
     headers = list(header_pattern.finditer(text))
     
     if not headers:
@@ -54,23 +30,18 @@ def parse_medical_note(text: str) -> Dict[str, str]:
     result = {}
     
     for i, match in enumerate(headers):
-        code = match.group(1)  # The field code (e.g., UO_PACN, RESL)
-        first_line = match.group(2).strip()  # Content on the same line as header
+        code = match.group(1)
+        first_line = match.group(2).strip()
         
-        # Determine the start and end positions for this field's content
         content_start = match.end()
         
-        # If there's another header after this one, content ends there
-        # Otherwise, content goes to the end of the text
         if i + 1 < len(headers):
             content_end = headers[i + 1].start()
         else:
             content_end = len(text)
         
-        # Extract the multi-line content
         multi_line_content = text[content_start:content_end].strip()
         
-        # Combine first line with multi-line content
         if first_line and multi_line_content:
             full_content = f"{first_line}\n{multi_line_content}"
         elif first_line:
@@ -78,12 +49,47 @@ def parse_medical_note(text: str) -> Dict[str, str]:
         else:
             full_content = multi_line_content
         
-        # Clean up: strip extra whitespace but preserve internal line breaks
-        full_content = full_content.strip()
-        
-        result[code] = full_content
+        result[code] = full_content.strip()
     
     return result
+
+
+def transform_to_canonical(raw_content: Dict[str, str], file_name: str, note_id: int) -> Dict:
+    """
+    Transforms the raw content dictionary into the clean, nested structure.
+    """
+    # Clean the filename to create a clean ID (remove _cleaned.txt extension)
+    clean_id = file_name.replace("_cleaned.txt", "").replace(".txt", "")
+
+    return {
+        "id": clean_id,
+        "note_id": note_id,  # Sequential ID as requested
+        
+        # 1. CLINICAL DATA (The signal for NLP)
+        "clinical_data": {
+            "history": raw_content.get("CLIN", "").strip(),
+            "findings": raw_content.get("RESL", "").strip(),
+            "impression": raw_content.get("CONCL", "").strip()
+        },
+        
+        # 2. STUDY METADATA (Context)
+        "study_metadata": {
+            "procedure": raw_content.get("PRUEB", "").strip(),
+            "protocol": raw_content.get("OBSR", "").strip(),
+            "description": raw_content.get("EST_T_DES", "").strip()
+        },
+        
+        # 3. ADMIN METADATA (Administrative info)
+        "admin_metadata": {
+            "unit": raw_content.get("UO_PACN", "").strip(),
+            "tech_code": raw_content.get("COD_TECN", "").strip(),
+            "additional_activity": raw_content.get("ACTI_ADICI", "").strip(),
+            "diagnosis_text": raw_content.get("X00DIATXT", "").strip(),
+            "comments": raw_content.get("DKTXT", "").strip(),
+            "icon_code": raw_content.get("ICON", "").strip(),
+            "vessels_right": raw_content.get("ZVASOS_D", "").strip()
+        }
+    }
 
 
 def process_notes_folder(
@@ -92,26 +98,14 @@ def process_notes_folder(
     pattern: str = "*.txt"
 ) -> int:
     """
-    Process all text files in a folder and convert to JSON.
-    
-    Args:
-        input_folder: Path to folder containing .txt files
-        output_file: Path to output JSON file
-        pattern: Glob pattern for files to process (default: "*.txt")
-        
-    Returns:
-        Number of files processed
+    Process all text files in a folder, parse, transform and save to JSON.
     """
     if not input_folder.exists():
         raise FileNotFoundError(f"Input folder not found: {input_folder}")
     
-    if not input_folder.is_dir():
-        raise ValueError(f"Input path is not a directory: {input_folder}")
-    
     print(f"Scanning folder: {input_folder}")
     print(f"File pattern: {pattern}")
     
-    # Find all matching files
     txt_files = sorted(input_folder.glob(pattern))
     
     if not txt_files:
@@ -120,34 +114,29 @@ def process_notes_folder(
     
     print(f"Found {len(txt_files)} file(s) to process\n")
     
-    # Process each file
     dataset = []
     processed = 0
     errors = 0
+    note_id = 1  # Initialize sequential ID
     
     for txt_file in txt_files:
         try:
-            print(f"Processing: {txt_file.name}...", end=" ")
-            
             # Read the file
             with open(txt_file, 'r', encoding='utf-8') as f:
                 text = f.read()
             
-            # Parse the content
-            content = parse_medical_note(text)
+            # 1. Parse raw text
+            raw_content = parse_medical_note(text)
             
-            # Create entry
-            entry = {
-                "file_id": txt_file.name,
-                "content": content
-            }
+            # 2. Transform to Canonical Structure
+            clean_entry = transform_to_canonical(raw_content, txt_file.name, note_id)
             
-            dataset.append(entry)
+            dataset.append(clean_entry)
             processed += 1
-            print(f"✓ ({len(content)} fields)")
+            note_id += 1
             
         except Exception as e:
-            print(f"✗ Error: {e}")
+            print(f"✗ Error processing {txt_file.name}: {e}")
             errors += 1
     
     # Write to JSON
@@ -161,7 +150,6 @@ def process_notes_folder(
     print(f"{'='*60}")
     print(f"Files processed:     {processed}")
     print(f"Files with errors:   {errors}")
-    print(f"Total entries:       {len(dataset)}")
     print(f"Output file:         {output_file}")
     print(f"{'='*60}")
     
@@ -169,95 +157,58 @@ def process_notes_folder(
     if dataset:
         print(f"\nSample entry (first file):")
         sample = dataset[0]
-        print(f"File ID: {sample['file_id']}")
-        print(f"Fields found: {list(sample['content'].keys())}")
-        if sample['content']:
-            first_key = list(sample['content'].keys())[0]
-            first_value = sample['content'][first_key]
-            preview = first_value[:100] + "..." if len(first_value) > 100 else first_value
-            print(f"\nExample field '{first_key}':")
-            print(f"  {preview}")
+        print(f"ID: {sample['id']}")
+        print(f"Note ID: {sample['note_id']}")
+        print(f"Findings start: {sample['clinical_data']['findings'][:50]}...")
     
     return processed
 
 
 def main():
-    """Main function with argument parsing."""
     parser = argparse.ArgumentParser(
-        description="Convert medical notes from .txt files to structured JSON",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  # Process files in default 'raw_notes' folder
-  python txt2json_notes.py
-  
-  # Process files in a specific folder
-  python txt2json_notes.py --input ../data/notes
-  
-  # Specify custom output file
-  python txt2json_notes.py --output my_dataset.json
-  
-  # Process files with custom pattern
-  python txt2json_notes.py --pattern "*_cleaned.txt"
-        """
+        description="Convert medical notes .txt -> structured clean JSON"
     )
     
     parser.add_argument(
         '--input', '-i',
         type=str,
-        default='raw_notes',
-        help='Input folder containing .txt files (default: raw_notes)'
+        default='data/raw_notes',
+        help='Input folder containing .txt files'
     )
     
     parser.add_argument(
         '--output', '-o',
         type=str,
-        default='medical_notes_dataset.json',
-        help='Output JSON file (default: medical_notes_dataset.json)'
+        default='data/medical_notes.json',
+        help='Output JSON file'
     )
     
     parser.add_argument(
         '--pattern', '-p',
         type=str,
         default='*.txt',
-        help='File pattern to match (default: *.txt)'
+        help='File pattern to match'
     )
     
     args = parser.parse_args()
     
-    # Setup paths
     script_dir = Path(__file__).parent
     
-    # Input folder: if relative, make it relative to script directory
     input_path = Path(args.input)
     if not input_path.is_absolute():
         input_path = script_dir.parent / input_path
     
-    # Output file: if relative, make it relative to script directory
     output_path = Path(args.output)
     if not output_path.is_absolute():
         output_path = script_dir.parent / output_path
     
     try:
-        processed = process_notes_folder(
-            input_folder=input_path,
-            output_file=output_path,
-            pattern=args.pattern
-        )
-        
-        if processed > 0:
-            print("\n✓ Conversion completed successfully!")
-            return 0
-        else:
-            print("\n⚠ No files were processed.")
-            return 1
-            
+        process_notes_folder(input_path, output_path, args.pattern)
     except Exception as e:
         print(f"\n✗ Error: {e}")
-        import traceback
-        traceback.print_exc()
         return 1
 
+    return 0
 
 if __name__ == "__main__":
     exit(main())

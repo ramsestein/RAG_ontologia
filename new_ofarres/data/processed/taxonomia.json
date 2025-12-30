@@ -1,9 +1,9 @@
 [
   {
     "code": "1386000",
-    "local_name": "hemorragia intracreaneal",
+    "local_name": "hemorragia intracraneal",
     "aliases": [
-      "hemorragia intracreaneal"
+      "hemorragia intracraneal"
     ]
   },
   {
@@ -96,14 +96,14 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of1",
     "local_name": "segmento m5",
     "aliases": [
       "segmento m5"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of2",
     "local_name": "segmento m6",
     "aliases": [
       "segmento m6"
@@ -187,7 +187,7 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of3",
     "local_name": "trombo hiperdenso",
     "aliases": [
       "trombo hiperdenso"
@@ -230,7 +230,7 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of4",
     "local_name": "lesiones isquémicas parenquimatosas subagudas",
     "aliases": [
       "lesiones isquémicas parenquimatosas subagudas"
@@ -245,7 +245,7 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of5",
     "local_name": "oclusión arteria intracraneal",
     "aliases": [
       "oclusión arteria intracraneal",
@@ -254,7 +254,7 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of6",
     "local_name": "arteria carótida interna intracraneal",
     "aliases": [
       "arteria carótida interna intracraneal",
@@ -287,7 +287,7 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of7",
     "local_name": "arteria cerebelosa superior derecha",
     "aliases": [
       "arteria cerebelosa superior derecha",
@@ -295,14 +295,14 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of8",
     "local_name": "arteria cerebelosa superior izquierda",
     "aliases": [
       "arteria cerebelosa superior izquierda"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of9",
     "local_name": "arteria cerebelosa anteroinferior derecha",
     "aliases": [
       "arteria cerebelosa anteroinferior derecha",
@@ -310,14 +310,14 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of10",
     "local_name": "arteria cerebelosa anteroinferior izquierda",
     "aliases": [
       "arteria cerebelosa anteroinferior izquierda"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of11",
     "local_name": "arteria cerebelosa posteroinferior derecha",
     "aliases": [
       "arteria cerebelosa posteroinferior derecha",
@@ -327,14 +327,14 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of12",
     "local_name": "arteria cerebelosa posteroinferior izquierda",
     "aliases": [
       "arteria cerebelosa posteroinferior izquierda"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of13",
     "local_name": "oclusión arterial de arteria carótida interna extracraneal",
     "aliases": [
       "oclusión arterial de arteria carótida interna extracraneal",
@@ -343,35 +343,35 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of14",
     "local_name": "oclusión arterial de arteria vertebral extracraneal",
     "aliases": [
       "oclusión arterial de arteria vertebral extracraneal"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of15",
     "local_name": "grado estenosis",
     "aliases": [
       "grado estenosis"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of16",
     "local_name": "estenosis origen arteria carótida interna derecha",
     "aliases": [
       "estenosis origen arteria carótida interna derecha"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of17",
     "local_name": "estenosis origen arteria carótida interna izquierda",
     "aliases": [
       "estenosis origen arteria carótida interna izquierda"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of18",
     "local_name": "estenosis origen arteria vertebral derecha",
     "aliases": [
       "estenosis origen arteria vertebral derecha",
@@ -379,7 +379,7 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of19",
     "local_name": "estenosis origen arteria vertebral izquierda",
     "aliases": [
       "estenosis origen arteria vertebral izquierda"
@@ -394,42 +394,42 @@
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of20",
     "local_name": "territorio arteria carótida interna intracraneal",
     "aliases": [
       "territorio arteria carótida interna intracraneal"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of21",
     "local_name": "territorio arteria cerebral media",
     "aliases": [
       "territorio arteria cerebral media"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of22",
     "local_name": "territorio arteria cerebral anterior",
     "aliases": [
       "territorio arteria cerebral anterior"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of23",
     "local_name": "territorio arteria cerebral posterior",
     "aliases": [
       "territorio arteria cerebral posterior"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of24",
     "local_name": "discordancia entre territorio penumbra y core",
     "aliases": [
       "discordancia entre territorio penumbra y core"
     ]
   },
   {
-    "code": "uncoded",
+    "code": "of25",
     "local_name": "ratio penumbra-core",
     "aliases": [
       "ratio penumbra-core"

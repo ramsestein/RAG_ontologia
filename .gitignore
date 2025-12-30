@@ -10,4 +10,5 @@ ofarres/.env
 new_ofarres/__pycache__/
 new_ofarres/.env
 new_ofarres/data/raw_notes/*
-new_ofarres/data/medical_notes.json
+new_ofarres/data/processed/medical_notes.json
+new_ofarres/test/samples/validation_test.json

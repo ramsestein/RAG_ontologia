@@ -6,6 +6,8 @@ This script reads a medical taxonomy CSV file and:
 - Cleans terminology codes (handles floats, scientific notation, NaN)
 - Aggregates all synonym columns into a single aliases list
 - Normalizes aliases (trim, lowercase, deduplicate)
+- Fixes specific spelling errors (e.g., intracreaneal -> intracraneal)
+- Generates unique internal codes (of1, of2...) for items without standard codes
 - Outputs to taxonomia.json
 """
 
@@ -28,7 +30,7 @@ def clean_terminology_code(code):
         code: Raw code value from CSV
         
     Returns:
-        Cleaned code as string
+        Cleaned code as string or "uncoded"
     """
     # Check if value is NaN or empty
     if pd.isna(code) or code == '':
@@ -43,7 +45,7 @@ def clean_terminology_code(code):
             # Try to convert to float first to handle scientific notation strings
             code = float(code)
         except ValueError:
-            # If it's not numeric, return as-is
+            # If it's not numeric, return as-is (e.g. RID666)
             return code
     
     # Handle numeric values (float or int)
@@ -56,6 +58,32 @@ def clean_terminology_code(code):
             return "uncoded"
     
     return str(code)
+
+
+def fix_spelling_errors(text):
+    """
+    Fix known spelling errors in medical terminology.
+    
+    Args:
+        text: Text to correct
+        
+    Returns:
+        Corrected text
+    """
+    if not isinstance(text, str):
+        return text
+    
+    # Dictionary of known spelling errors and their corrections
+    corrections = {
+        'intracreaneal': 'intracraneal',
+    }
+    
+    # Apply corrections
+    corrected = text
+    for wrong, correct in corrections.items():
+        corrected = corrected.replace(wrong, correct)
+    
+    return corrected
 
 
 def aggregate_aliases(row, synonym_columns):
@@ -76,8 +104,10 @@ def aggregate_aliases(row, synonym_columns):
             value = row[col]
             # Skip NaN or empty values
             if pd.notna(value) and str(value).strip():
+                # Fix spelling errors first
+                value = fix_spelling_errors(str(value))
                 # Clean: strip whitespace and convert to lowercase
-                cleaned = str(value).strip().lower()
+                cleaned = value.strip().lower()
                 if cleaned:
                     aliases.append(cleaned)
     
@@ -127,22 +157,31 @@ def convert_csv_to_json(csv_path, json_path):
     # Process each row
     results = []
     skipped = 0
+    internal_code_counter = 1  # Counter for generating 'of1', 'of2', etc.
     
     for idx, row in df.iterrows():
-        # Clean terminology code
-        code = clean_terminology_code(row.get('terminology_code'))
+        # 1. Clean terminology code
+        raw_code = clean_terminology_code(row.get('terminology_code'))
         
-        # Get local name
+        # 2. Logic for Internal Codes
+        # If the code is "uncoded", we assign a unique internal ID
+        if raw_code == "uncoded":
+            code = f"of{internal_code_counter}"
+            internal_code_counter += 1
+        else:
+            code = raw_code
+        
+        # 3. Get local name and fix spelling
         local_name = row.get('nombre_local_hallazgo', '')
         if pd.isna(local_name):
             local_name = ''
-        local_name = str(local_name).strip().lower()
+        local_name = fix_spelling_errors(str(local_name)).strip().lower()
         
-        # Aggregate aliases
+        # 4. Aggregate aliases (spelling fixes applied inside)
         aliases = aggregate_aliases(row, existing_synonym_columns)
         
         # Skip rows with no meaningful data
-        if not local_name and not aliases and code == "uncoded":
+        if not local_name and not aliases:
             skipped += 1
             continue
         
@@ -167,6 +206,7 @@ def convert_csv_to_json(csv_path, json_path):
     print(f"Total rows read:        {len(df)}")
     print(f"Rows converted to JSON: {len(results)}")
     print(f"Rows skipped (empty):   {skipped}")
+    print(f"Internal codes generated: {internal_code_counter - 1} (of1 - of{internal_code_counter - 1})")
     print(f"Output file:            {json_path}")
     print(f"{'='*60}")
     
@@ -175,21 +215,39 @@ def convert_csv_to_json(csv_path, json_path):
     for i, entry in enumerate(results[:3], 1):
         print(f"\n{i}. Code: {entry['code']}")
         print(f"   Local name: {entry['local_name']}")
-        print(f"   Aliases ({len(entry['aliases'])}): {entry['aliases'][:3]}{'...' if len(entry['aliases']) > 3 else ''}")
+        print(f"   Aliases ({len(entry['aliases'])}): {entry['aliases'][:3]}...")
 
 
 def main():
     """Main function to run the conversion."""
     # Define paths
     script_dir = Path(__file__).parent
-    data_dir = script_dir.parent / 'data'
+    # Assuming standard structure: project/utils/this_script.py -> project/data
+    data_dir = script_dir.parent / 'data' / 'processed'
+    # Adjust if your raw csv is in /data/raw_taxonomy and output in /data/processed
+    raw_data_dir = script_dir.parent / 'data' / 'raw_taxonomy'
+
+    # Ensure the raw taxonomy path is respected even if 'processed' is missing.
+    # Try to create the processed directory if it doesn't exist so output can be written.
+    if not data_dir.exists():
+        try:
+            data_dir.mkdir(parents=True, exist_ok=True)
+            print(f"Created missing processed data directory: {data_dir}")
+        except Exception:
+            # If creation fails, fall back to the project data directory
+            data_dir = script_dir.parent / 'data'
+
+    csv_path = raw_data_dir / 'Taxonomia.csv'
+    # If not in raw, check processed or root
+    if not csv_path.exists():
+         csv_path = data_dir / 'Taxonomia.csv'
     
-    csv_path = data_dir / 'Taxonomia.csv'
     json_path = data_dir / 'taxonomia.json'
     
     # Check if CSV exists
     if not csv_path.exists():
         print(f"Error: CSV file not found at {csv_path}")
+        print("Please check your directory structure.")
         return 1
     
     try:
