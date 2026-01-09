@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 """
-evaluator.py - Evaluador de métricas para el pipeline NER
+evaluator_stage3.py - Evaluador de métricas para Stage 3 (SemanticFisher)
 
-Compara las predicciones del pipeline (stage2_filtered.json) con el ground truth
+Compara las predicciones del SemanticFisher (stage3_llm.json) con el ground truth
 y calcula métricas de precisión, recall y F1 por nota y en promedio.
-
-Un concepto es correctamente identificado si:
-1. Fue encontrado por el matcher (DFA)
-2. NO fue marcado como negado
-3. Su código coincide con el ground truth
 """
 
 import json
@@ -31,25 +26,25 @@ def save_json(data: Any, filepath: str) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def extract_predictions_from_filtered(filtered_data: List[Dict]) -> Dict[str, Set[str]]:
+def extract_predictions_from_stage3(stage3_data: Dict) -> Dict[str, Set[str]]:
     """
-    Extrae los códigos predichos (no negados) agrupados por nota.
+    Extrae los códigos predichos agrupados por nota.
     
     Args:
-        filtered_data: Datos del stage2_filtered.json
+        stage3_data: Datos del stage3_llm.json
     
     Returns:
         Diccionario {id_nota: set(códigos_predichos)}
     """
     predictions = {}
+    results = stage3_data.get('results', [])
     
-    for candidate in filtered_data:
-        note_id = str(candidate.get('id', ''))
-        code = candidate.get('code', '')
-        is_negated = candidate.get('negated', False)
+    for result in results:
+        note_id = str(result.get('id', ''))
+        code = result.get('code')
         
-        # Solo considerar candidatos NO negados
-        if not is_negated and code:
+        # Solo considerar candidatos con código asignado
+        if code:
             if note_id not in predictions:
                 predictions[note_id] = set()
             predictions[note_id].add(code)
@@ -95,8 +90,8 @@ def run_evaluation():
     # Definir rutas
     base_path = Path(__file__).parent.parent.parent  # new_ofarres/
     gt_path = base_path / 'test' / 'llm' / 'ground_truth.json'
-    pred_path = base_path / 'src' / 'NER' / 'output' / 'stage2_filtered.json'
-    output_path = base_path / 'src' / 'NER' / 'output' / 'evaluation_results.json'
+    pred_path = base_path / 'src' / 'NER' / 'output' / 'stage3_llm.json'
+    output_path = base_path / 'src' / 'NER' / 'output' / 'evaluation_stage3.json'
     
     # Buffer para guardar en archivo
     output_lines = []
@@ -106,7 +101,7 @@ def run_evaluation():
         output_lines.append(text)
     
     print_and_save("=" * 100)
-    print_and_save("📊 EVALUADOR NER: MÉTRICAS POR NOTA MÉDICA")
+    print_and_save("📊 EVALUADOR STAGE 3: SemanticFisher (High-Recall NER)")
     print_and_save("=" * 100)
     print_and_save(f"📅 Fecha de evaluación: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print_and_save(f"📂 Ground Truth: {gt_path}")
@@ -115,14 +110,18 @@ def run_evaluation():
     
     # Cargar datos
     gt_data = load_json(gt_path)
-    filtered_data = load_json(pred_path)
+    stage3_data = load_json(pred_path)
     
-    # Extraer predicciones (solo candidatos no negados)
-    pred_map = extract_predictions_from_filtered(filtered_data)
+    # Extraer predicciones
+    pred_map = extract_predictions_from_stage3(stage3_data)
     
+    # Mostrar metadatos del stage3
+    metadata = stage3_data.get('metadata', {})
     print_and_save(f"✓ Ground truth cargado: {len(gt_data)} notas")
-    print_and_save(f"✓ Predicciones cargadas: {len(filtered_data)} candidatos")
-    print_and_save(f"✓ Notas con predicciones (no negadas): {len(pred_map)}")
+    print_and_save(f"✓ Predicciones Stage 3 cargadas:")
+    print_and_save(f"    - Total entidades: {metadata.get('total_entities', 'N/A')}")
+    print_and_save(f"    - Threshold: {metadata.get('threshold', 'N/A')}")
+    print_and_save(f"    - Notas con predicciones: {len(pred_map)}")
     print_and_save("")
     
     # Tabla de resultados
@@ -197,7 +196,7 @@ def run_evaluation():
     # Resumen final
     print_and_save("")
     print_and_save("=" * 100)
-    print_and_save("📈 RESUMEN FINAL")
+    print_and_save("📈 RESUMEN FINAL - STAGE 3")
     print_and_save("=" * 100)
     print_and_save(f"Total de notas evaluadas: {len(gt_data)}")
     print_and_save(f"Total True Positives (TP): {total_tp}")
@@ -213,6 +212,7 @@ def run_evaluation():
     # Guardar resultados en JSON (median metrics only)
     evaluation_output = {
         "metadata": {
+            "stage": "stage3_llm",
             "evaluation_date": datetime.now().isoformat(),
             "gt_path": str(gt_path),
             "pred_path": str(pred_path),
@@ -237,7 +237,7 @@ def run_evaluation():
     print_and_save(f"\n✅ Resultados guardados en: {output_path}")
     
     # Guardar reporte en texto
-    report_path = base_path / 'src' / 'NER' / 'output' / 'evaluation_report.txt'
+    report_path = base_path / 'src' / 'NER' / 'output' / 'evaluation_stage3_report.txt'
     with open(report_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(output_lines))
     print_and_save(f"✅ Reporte de texto guardado en: {report_path}")
