@@ -1,32 +1,621 @@
 I am an NLP engineer working in medical contexts. My job is to, given a note in spanish, 
-
 correctly identify all entities (Named Entity Recognisition) and then assign a code in a terminology 
-
 (it can either be: ) if it exists (it can not be recognised in any of those terminologies).
 
 Essentially the process is twofold:
-
     1-Recognise all entities
-
     2-Assign their code if they have one
 
-
-
 I have been working on this project for a couple of months now, but they have changed my dataset
-
 and I have this new rules (before I just had to identify all the SNOMED concepts (relevant)). 
-
 Now I have been told to work with an ontology (owl) and then to be able above of all that to be able to
-
 generate like a tree where I can go up/down and keep track of all concepts appeared in a note.
 
+Let's focus solely on the NER: Entity Extraction step.
+
+I have approached it as a multistep pipeline:
+    1-DFA (with ahocorasick), with TRIEs for obvious dictionary words
+    2-NegEx to delete false positives
+    3-LLM to filter everything out
+
+The idea is to use this as a cascade pipeline, where the maximum priority is recall 100%. The idea is
+that I cannot miss TP but having some FP it is not a problem. That is, the sole metric we need to maximize is recall.
+Ideally a recall of 100%. 
+
+Just for the entity recognisition, my idea is to identify the entitis with the union of 2 identifiers:
+    1-DFA (+NegEX to delete some FP)
+    2-LLM
 
 
-I am working in the NER.
+    
+
+Example of a note:
+NOTE:
+    "id": "0000000010000000058049418",
+    "note_id": 7,
+    "clinical_data": {
+      "history": "Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada",
+      "findings": "TC CRANEAL BASAL:\nNo se observa hemorragia intra ni extraaxial.\nDiferenciación cortico-subcortical conservada, sin signos valorables de lesión isquémica aguda (ASPECTS 10).\nHipodensidades parcheadas en sustancia blanca periventricular, de predominio bifrontal, sugestivas de cambios crónicos por enfermedad de pequeño vaso en grado moderado-severo.\nCambios involutivos acordes a la edad con prominencia secundaria del sistema ventricular.\nLínea media centrada. Cisternas basales libres.\nTC PERFUSIÓN:\nNo se observan alteraciones valorables en el TTP, CBV y CBF. Sin discordancia significativa.\nANGIO-TC EXTRA E INTRACRANEAL:\nArco aórtico y segmentos proximales de troncos supraórticos con moderados signos de ateromatosis calcificada, sin estenosis.\nSignos de ateromatosis calcificada en ambas bifurcaciones carotídeas (leve derecha, moderada izquierda), sin estenosis valorable. Segmentos intracavernoso y supraclinoideo de ambas ACI, con signos de ateromatosis, sin estenosis.\nOrigen de las arterias vertebrales sin estenosis. Sistema vertebrobasilar permeable.\nEn el segmento M2 distal de la ACM izquierda (división inferior) se identifica una aparente estenosis focal, con adecuada permeabilidad y recuperación del calibre del vaso distal a este punto. Podría corresponder a ateromatosis vs trombo parcialmente recanalizado (es difícil determinar la trascendencia clínica del hallazgo dada la normalidad de los mapas de perfusión).\nResto de principales arterias cerebrales intracraneales permeables (ACAs, ACMd y ACPs). Hipoplasia del segmento A1 derecho.\nImagen nodular subpleural de 6 mm en segmento anterior del LSD, parcialmente incluída, difícil de caracterizar en las condiciones actuales del estudio. A valorar realización de control por TC en 6 meses.\nPrótesis total de hombro derecho que condiciona importante artefacto metálico.",
+      "impression": "Estenosis focal en segmento M2 distal izquierdo (división inferior), con adecuada permeabilidad y recuperación del calibre del vaso distal a este punto. Dada la normalidad de los mapas de perfusión, es difícil determinar la posible relación entre el hallazgo y la clínica de la paciente, pero radiológicamente podría corresponder a una estenosis ateromatosa vs trombo parcialmente recanalizado.\nEstudio basal sin signos de patología hemorrágica ni lesiones isquémicas agudas valorables.\nImagen nodular subpleural de 6 mm en segmento anterior del LSD, parcialmente incluída. A valorar realización de control por TC en 6 meses."
+    },
+GROUND TRUTH:
+  {
+    "id": "0000000010000000058049418",
+    "note_id": 7,
+    "found_codes": [
+      "111298007",
+      "1290003007",
+      "369353001",
+      "415582006",
+      "432504007",
+      "RID671",
+      "7771000"
+    ]
+  },
 
 
-
-I have done it as a multistep pipeline:
-1-DFA (with ahocorasick), with TRIEs for obvious dictionary words
-2-NegEx to delete false positives
-3-LLM to filter everything out
+And this is the Taxonomy:
+[
+  {
+    "code": "1386000",
+    "local_name": "hemorragia intracraneal",
+    "aliases": [
+      "hemorragia intracraneal"
+    ]
+  },
+  {
+    "code": "16218291000119100",
+    "local_name": "signos lesión isquémica aguda",
+    "aliases": [
+      "signos lesión isquémica aguda",
+      "isquemia cerebral aguda"
+    ]
+  },
+  {
+    "code": "11000004",
+    "local_name": "caudado",
+    "aliases": [
+      "caudado",
+      "estructura del núcleo caudado",
+      "núcleo caudado"
+    ]
+  },
+  {
+    "code": "41648007",
+    "local_name": "lenticular",
+    "aliases": [
+      "lenticular",
+      "estructura del núcleo lenticular",
+      "núcleo lenticular"
+    ]
+  },
+  {
+    "code": "85637007",
+    "local_name": "cápsula interna",
+    "aliases": [
+      "cápsula interna",
+      "estructura de la cápsula interna del cerebro",
+      "cápsula cerebral interna",
+      "cápsula interna del cerebro",
+      "estructura de la cápsula interna"
+    ]
+  },
+  {
+    "code": "314190005",
+    "local_name": "ribete insular",
+    "aliases": [
+      "ribete insular",
+      "estructura de surco insular",
+      "surco insular"
+    ]
+  },
+  {
+    "code": "RID666",
+    "local_name": "segmento m1",
+    "aliases": [
+      "segmento m1",
+      "m1 segment of middle cerebral artery",
+      "sphenoid part of middle cerebral artery",
+      "segmento esfenoidal de arteria cerebral media",
+      "arteria cerebral media, segmento m1"
+    ]
+  },
+  {
+    "code": "RID671",
+    "local_name": "segmento m2",
+    "aliases": [
+      "segmento m2",
+      "m2 segment of middle cerebral artery",
+      "insular segment of middle cerebral artery",
+      "segmento insular de arteria cerebral media",
+      "arteria cerebral media, segmento m2"
+    ]
+  },
+  {
+    "code": "RID680",
+    "local_name": "segmento m3",
+    "aliases": [
+      "segmento m3",
+      "m3 segment of middle cerebral artery",
+      "cortical part of middle cerebral artery",
+      "arteria cerebral media, segmento m3",
+      "segmento opercular de la arteria cerebral media"
+    ]
+  },
+  {
+    "code": "RID682",
+    "local_name": "segmento m4",
+    "aliases": [
+      "segmento m4",
+      "m4 segment of middle cerebral artery",
+      "arteria cerebral media, segmento m4",
+      "porción cortical de la arteria cerebral media"
+    ]
+  },
+  {
+    "code": "of1",
+    "local_name": "segmento m5",
+    "aliases": [
+      "segmento m5"
+    ]
+  },
+  {
+    "code": "of2",
+    "local_name": "segmento m6",
+    "aliases": [
+      "segmento m6"
+    ]
+  },
+  {
+    "code": "1290003007",
+    "local_name": "aspects",
+    "aliases": [
+      "aspects",
+      "escala de tomografía computarizada temprana del programa de accidentes cerebrovasculares de alberta",
+      "escala aspects (alberta stroke program early ct score) - escala de tomografía computarizada temprana del programa de accidentes cerebrovasculares de alberta",
+      "evaluación con escala aspects (alberta stroke program early ct score)",
+      "evaluación con escala de tomografía computarizada temprana de programa de accidentes cerebrovasculares de alberta"
+    ]
+  },
+  {
+    "code": "60176003",
+    "local_name": "arteria cerebral anterior",
+    "aliases": [
+      "arteria cerebral anterior",
+      "estructura de la arteria cerebral anterior"
+    ]
+  },
+  {
+    "code": "369298005",
+    "local_name": "arteria cerebral anterior derecha",
+    "aliases": [
+      "arteria cerebral anterior derecha",
+      "estructura de la arteria cerebral anterior derecha"
+    ]
+  },
+  {
+    "code": "369299002",
+    "local_name": "arteria cerebral anterior izquierda",
+    "aliases": [
+      "arteria cerebral anterior izquierda",
+      "estructura de la arteria cerebral anterior izquierda"
+    ]
+  },
+  {
+    "code": "70382005",
+    "local_name": "arteria cerebral posterior",
+    "aliases": [
+      "arteria cerebral posterior",
+      "estructura de la arteria cerebral posterior"
+    ]
+  },
+  {
+    "code": "369300005",
+    "local_name": "arteria cerebral posterior derecha",
+    "aliases": [
+      "arteria cerebral posterior derecha",
+      "estructura de la arteria cerebral posterior derecha"
+    ]
+  },
+  {
+    "code": "369301009",
+    "local_name": "arteria cerebral posterior izquierda",
+    "aliases": [
+      "arteria cerebral posterior izquierda",
+      "estructura de la arteria cerebral posterior izquierda"
+    ]
+  },
+  {
+    "code": "113305005",
+    "local_name": "cerebelo",
+    "aliases": [
+      "cerebelo",
+      "estructura cerebelosa"
+    ]
+  },
+  {
+    "code": "15926001",
+    "local_name": "troncoencéfalo",
+    "aliases": [
+      "troncoencéfalo",
+      "estructura del tronco cerebral",
+      "tronco encefálico",
+      "tronco del encéfalo"
+    ]
+  },
+  {
+    "code": "of3",
+    "local_name": "trombo hiperdenso",
+    "aliases": [
+      "trombo hiperdenso"
+    ]
+  },
+  {
+    "code": "86117002",
+    "local_name": "arteria carótida interna",
+    "aliases": [
+      "arteria carótida interna",
+      "estructura de la arteria carótida interna"
+    ]
+  },
+  {
+    "code": "414722000",
+    "local_name": "arteria cerebral media segmento m1",
+    "aliases": [
+      "arteria cerebral media segmento m1",
+      "estructura de arteria cerebral media, segmento m1",
+      "segmento esfenoidal de arteria cerebral media",
+      "arteria cerebral media, segmento m1"
+    ]
+  },
+  {
+    "code": "414723005",
+    "local_name": "arteria cerebral media segmento m2",
+    "aliases": [
+      "arteria cerebral media segmento m2",
+      "estructura de arteria cerebral media, segmento m2",
+      "segmento insular de arteria cerebral media",
+      "arteria cerebral media, segmento m2"
+    ]
+  },
+  {
+    "code": "59011009",
+    "local_name": "arteria basilar",
+    "aliases": [
+      "arteria basilar",
+      "estructura de la arteria basilar"
+    ]
+  },
+  {
+    "code": "of4",
+    "local_name": "lesiones isquémicas parenquimatosas subagudas",
+    "aliases": [
+      "lesiones isquémicas parenquimatosas subagudas"
+    ]
+  },
+  {
+    "code": "111298007",
+    "local_name": "lesiones isquémicas parenquimatosas crónicas",
+    "aliases": [
+      "lesiones isquémicas parenquimatosas crónicas",
+      "isquemia cerebral crónica"
+    ]
+  },
+  {
+    "code": "of5",
+    "local_name": "oclusión arteria intracraneal",
+    "aliases": [
+      "oclusión arteria intracraneal",
+      "enfermedad oclusiva arterial",
+      "obstrucción arterial"
+    ]
+  },
+  {
+    "code": "of6",
+    "local_name": "arteria carótida interna intracraneal",
+    "aliases": [
+      "arteria carótida interna intracraneal",
+      "arteria carótida interna"
+    ]
+  },
+  {
+    "code": "17232002",
+    "local_name": "arteria cerebral media",
+    "aliases": [
+      "arteria cerebral media",
+      "estructura de la arteria cerebral media",
+      "arteria de silvio"
+    ]
+  },
+  {
+    "code": "369352006",
+    "local_name": "arteria cerebral media derecha",
+    "aliases": [
+      "arteria cerebral media derecha",
+      "estructura de la arteria cerebral media derecha"
+    ]
+  },
+  {
+    "code": "369353001",
+    "local_name": "arteria cerebral media izquierda",
+    "aliases": [
+      "arteria cerebral media izquierda",
+      "estructura de la arteria cerebral media izquierda"
+    ]
+  },
+  {
+    "code": "of7",
+    "local_name": "arteria cerebelosa superior derecha",
+    "aliases": [
+      "arteria cerebelosa superior derecha",
+      "arteria cerebelosa superior"
+    ]
+  },
+  {
+    "code": "of8",
+    "local_name": "arteria cerebelosa superior izquierda",
+    "aliases": [
+      "arteria cerebelosa superior izquierda"
+    ]
+  },
+  {
+    "code": "of9",
+    "local_name": "arteria cerebelosa anteroinferior derecha",
+    "aliases": [
+      "arteria cerebelosa anteroinferior derecha",
+      "arteria cerebelosa anteroinferior"
+    ]
+  },
+  {
+    "code": "of10",
+    "local_name": "arteria cerebelosa anteroinferior izquierda",
+    "aliases": [
+      "arteria cerebelosa anteroinferior izquierda"
+    ]
+  },
+  {
+    "code": "of11",
+    "local_name": "arteria cerebelosa posteroinferior derecha",
+    "aliases": [
+      "arteria cerebelosa posteroinferior derecha",
+      "arteria cerebelosa inferoposterior",
+      "arteria posteroinferior del cerebelo",
+      "arteria inferior posterior cerebelli"
+    ]
+  },
+  {
+    "code": "of12",
+    "local_name": "arteria cerebelosa posteroinferior izquierda",
+    "aliases": [
+      "arteria cerebelosa posteroinferior izquierda"
+    ]
+  },
+  {
+    "code": "of13",
+    "local_name": "oclusión arterial de arteria carótida interna extracraneal",
+    "aliases": [
+      "oclusión arterial de arteria carótida interna extracraneal",
+      "enfermedad oclusiva arterial",
+      "obstrucción arterial"
+    ]
+  },
+  {
+    "code": "of14",
+    "local_name": "oclusión arterial de arteria vertebral extracraneal",
+    "aliases": [
+      "oclusión arterial de arteria vertebral extracraneal"
+    ]
+  },
+  {
+    "code": "of15",
+    "local_name": "grado estenosis",
+    "aliases": [
+      "grado estenosis"
+    ]
+  },
+  {
+    "code": "of16",
+    "local_name": "estenosis origen arteria carótida interna derecha",
+    "aliases": [
+      "estenosis origen arteria carótida interna derecha"
+    ]
+  },
+  {
+    "code": "of17",
+    "local_name": "estenosis origen arteria carótida interna izquierda",
+    "aliases": [
+      "estenosis origen arteria carótida interna izquierda"
+    ]
+  },
+  {
+    "code": "of18",
+    "local_name": "estenosis origen arteria vertebral derecha",
+    "aliases": [
+      "estenosis origen arteria vertebral derecha",
+      "estrechamiento de arteria vertebral"
+    ]
+  },
+  {
+    "code": "of19",
+    "local_name": "estenosis origen arteria vertebral izquierda",
+    "aliases": [
+      "estenosis origen arteria vertebral izquierda"
+    ]
+  },
+  {
+    "code": "RID4977",
+    "local_name": "retraso en los tiempos de circulación",
+    "aliases": [
+      "retraso en los tiempos de circulación",
+      "hypoperfusion"
+    ]
+  },
+  {
+    "code": "of20",
+    "local_name": "territorio arteria carótida interna intracraneal",
+    "aliases": [
+      "territorio arteria carótida interna intracraneal"
+    ]
+  },
+  {
+    "code": "of21",
+    "local_name": "territorio arteria cerebral media",
+    "aliases": [
+      "territorio arteria cerebral media"
+    ]
+  },
+  {
+    "code": "of22",
+    "local_name": "territorio arteria cerebral anterior",
+    "aliases": [
+      "territorio arteria cerebral anterior"
+    ]
+  },
+  {
+    "code": "of23",
+    "local_name": "territorio arteria cerebral posterior",
+    "aliases": [
+      "territorio arteria cerebral posterior"
+    ]
+  },
+  {
+    "code": "of24",
+    "local_name": "discordancia entre territorio penumbra y core",
+    "aliases": [
+      "discordancia entre territorio penumbra y core"
+    ]
+  },
+  {
+    "code": "of25",
+    "local_name": "ratio penumbra-core",
+    "aliases": [
+      "ratio penumbra-core"
+    ]
+  },
+  {
+    "code": "396339007",
+    "local_name": "trombo",
+    "aliases": [
+      "trombo"
+    ]
+  },
+  {
+    "code": "432504007",
+    "local_name": "infarto cerebral",
+    "aliases": [
+      "infarto cerebral"
+    ]
+  },
+  {
+    "code": "2929001",
+    "local_name": "oclusión arterial",
+    "aliases": [
+      "oclusión arterial",
+      "enfermedad oclusiva arterial"
+    ]
+  },
+  {
+    "code": "51691006",
+    "local_name": "arteria cerebelosa superior",
+    "aliases": [
+      "arteria cerebelosa superior",
+      "estructura de la arteria cerebelosa superior"
+    ]
+  },
+  {
+    "code": "50395001",
+    "local_name": "arteria cerebelosa anteroinferior",
+    "aliases": [
+      "arteria cerebelosa anteroinferior",
+      "estructura de la arteria cerebelosa anteroinferior"
+    ]
+  },
+  {
+    "code": "45242005",
+    "local_name": "arteria cerebelosa posteroinferior",
+    "aliases": [
+      "arteria cerebelosa posteroinferior",
+      "estructura de la arteria cerebelosa posteroinferior"
+    ]
+  },
+  {
+    "code": "415582006",
+    "local_name": "estenosis",
+    "aliases": [
+      "estenosis"
+    ]
+  },
+  {
+    "code": "233964008",
+    "local_name": "estenosis de la arteria carótida interna",
+    "aliases": [
+      "estenosis de la arteria carótida interna"
+    ]
+  },
+  {
+    "code": "90520006",
+    "local_name": "estenosis de arteria vertebral",
+    "aliases": [
+      "estenosis de arteria vertebral"
+    ]
+  },
+  {
+    "code": "125149003",
+    "local_name": "densidad aumentada",
+    "aliases": [
+      "densidad aumentada",
+      "densidad por encima de rango de referencia"
+    ]
+  },
+  {
+    "code": "19939008",
+    "local_name": "subagudo",
+    "aliases": [
+      "subagudo"
+    ]
+  },
+  {
+    "code": "303231004",
+    "local_name": "intracraneal",
+    "aliases": [
+      "intracraneal"
+    ]
+  },
+  {
+    "code": "24028007",
+    "local_name": "derecho",
+    "aliases": [
+      "derecho"
+    ]
+  },
+  {
+    "code": "7771000",
+    "local_name": "izquierdo",
+    "aliases": [
+      "izquierdo",
+      "siniestro"
+    ]
+  },
+  {
+    "code": "85234005",
+    "local_name": "arteria vertebral",
+    "aliases": [
+      "arteria vertebral",
+      "estructura de arteria vertebral"
+    ]
+  },
+  {
+    "code": "103421006",
+    "local_name": "grado",
+    "aliases": [
+      "grado"
+    ]
+  },
+  {
+    "code": "303232006",
+    "local_name": "extracraneal",
+    "aliases": [
+      "extracraneal"
+    ]
+  }
+]

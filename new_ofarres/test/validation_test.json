@@ -1,0 +1,278 @@
+[
+  {
+    "id": "0000000010000000058049418",
+    "note_id": 7,
+    "clinical_data": {
+      "history": "Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada",
+      "findings": "TC CRANEAL BASAL:\nNo se observa hemorragia intra ni extraaxial.\nDiferenciación cortico-subcortical conservada, sin signos valorables de lesión isquémica aguda (ASPECTS 10).\nHipodensidades parcheadas en sustancia blanca periventricular, de predominio bifrontal, sugestivas de cambios crónicos por enfermedad de pequeño vaso en grado moderado-severo.\nCambios involutivos acordes a la edad con prominencia secundaria del sistema ventricular.\nLínea media centrada. Cisternas basales libres.\nTC PERFUSIÓN:\nNo se observan alteraciones valorables en el TTP, CBV y CBF. Sin discordancia significativa.\nANGIO-TC EXTRA E INTRACRANEAL:\nArco aórtico y segmentos proximales de troncos supraórticos con moderados signos de ateromatosis calcificada, sin estenosis.\nSignos de ateromatosis calcificada en ambas bifurcaciones carotídeas (leve derecha, moderada izquierda), sin estenosis valorable. Segmentos intracavernoso y supraclinoideo de ambas ACI, con signos de ateromatosis, sin estenosis.\nOrigen de las arterias vertebrales sin estenosis. Sistema vertebrobasilar permeable.\nEn el segmento M2 distal de la ACM izquierda (división inferior) se identifica una aparente estenosis focal, con adecuada permeabilidad y recuperación del calibre del vaso distal a este punto. Podría corresponder a ateromatosis vs trombo parcialmente recanalizado (es difícil determinar la trascendencia clínica del hallazgo dada la normalidad de los mapas de perfusión).\nResto de principales arterias cerebrales intracraneales permeables (ACAs, ACMd y ACPs). Hipoplasia del segmento A1 derecho.\nImagen nodular subpleural de 6 mm en segmento anterior del LSD, parcialmente incluída, difícil de caracterizar en las condiciones actuales del estudio. A valorar realización de control por TC en 6 meses.\nPrótesis total de hombro derecho que condiciona importante artefacto metálico.",
+      "impression": "Estenosis focal en segmento M2 distal izquierdo (división inferior), con adecuada permeabilidad y recuperación del calibre del vaso distal a este punto. Dada la normalidad de los mapas de perfusión, es difícil determinar la posible relación entre el hallazgo y la clínica de la paciente, pero radiológicamente podría corresponder a una estenosis ateromatosa vs trombo parcialmente recanalizado.\nEstudio basal sin signos de patología hemorrágica ni lesiones isquémicas agudas valorables.\nImagen nodular subpleural de 6 mm en segmento anterior del LSD, parcialmente incluída. A valorar realización de control por TC en 6 meses."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "Protocolo Código Ictus (TC Basal + TC Perfusión + AngioTC extra- intracraneal)",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "ICON (Estudio):",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000058134532",
+    "note_id": 9,
+    "clinical_data": {
+      "history": "Paciente hallagda en glasgow 13 en su domicilio Coma no especificat",
+      "findings": "TC CRANEAL BASAL:\nMarcada ocupación hiperdensa de los surcos de la convexidad derecha, con abundante contenido hemático a nivel de la cisura silviana derecha (de un grosor de hasta 4 cm), además de surcos de convexidad izquierda en menor medida, cisternas supraselares, perimesencefálicas y peritronculares, sin contaminación del sistema ventricular. Todo ello compatible con HSA Fisher modificado III.\nEl acúmulo de sangre de la convexidad derecha ejerce efecto de masa sobre el parénquima adyacente y sobre el VL ipsilateral, que se encuentra parcialmente colapsado, además de provocar una desviación de la línea media de 10mm hacia la izquierda. Se objetivan signos incipientes de herniación subfalcina, herniación uncal derecha y descenso de ambas amígdalas cerebelosas de unos 5mm aprox.\nParénquima cerebral sin otras alteraciones densitométricas significativas. Adecuada diferenciación cortico-subcortical. Estructuras óseas sin trazos de fractura.\nANGIO INTRA-EXTRACRANAL:\nArco aórtico y segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.\nOrigen de las arterias vertebrales sin ateromatosis ni signos de estenosis.\nOrigen, bifurcación y segmentos cervicales de la arteria carótida interna sin ateromatosis ni signos de estenosis. Segmentos intracavernoso y supraclinoideo de la arteria carótida interna sin ateromatosis ni signos de estenosis.\nPrincipales arterias cerebrales intracraneales permeables (ACAs, ACMs y ACPs), sin signos de estenosis de su luz. ACP izquierda fetal. Sistema vertebrobasilar permeable.\nSe identifican 2 imagenes aneurismaticas:\nA nivel posterior de la bifurcación de M1 derecha se observa una imagen sugestiva de aneurisma sacular de 78 x 50 mm con cuello de 20 mm.\nA nivel del sifón carotídeo izquierdo, justo después del origen de la arteria oftálmica, se observa otra imagen sugestiva de aneurisma sacular de 62 x 42 mm con cuello de 28 mm.\nNo se observan otras imágenes sugestivas de aneurismas.",
+      "impression": "HSA difusa Fisher modificado III de patrón aneurismático, con abundante contenido hemático en surco de silvio derecho que condiciona efecto de masa sobre el parénquima adyacente, con colapso de surcos ipsilaterales y colapso parcial del VL ipsilateral, además de condicionar desviamiento de la línea media hacia la izquierda de 11m y provocar signos incipientes de herniación subfalcina, uncal izquierda y descenso amigdalar bilateral (D>I) de hasta 5mm.\nSe observan dos anuerismas saculares, el causante de la HSA situado en la parte posterior de la M1 derecha justo antes de su bifurcación de 78 x 50 mm con cuello de 20 mm, y otro de 62 x 42 mm en el sifón carotídeo izquierdo. No se observan otros aneurismas."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CRANEAL BASAL + ANGIO INTAR-EXTRACRANEAL.",
+      "description": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)"
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "DKTXT (Descripció): ICS TC ABDOMEN",
+      "diagnosis_text": "",
+      "comments": "",
+      "icon_code": "X00DIATXT (Texto del diagnóstico ACR):",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000058575249",
+    "note_id": 14,
+    "clinical_data": {
+      "history": "Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada",
+      "findings": "Se compara con TC de hoy (HC3) TC CRANEAL BASAL:\nNo se observa hemorragia intra ni extraaxial.\nHipodensidad en el brazo posterior de la cápsula interna derecha (ASPECTS 9). No se observan otras lesiones isquémicas agudas.\nHiperdensidad basal en TICA derecha que podría traducir oclusión trombótica a este nivel.\nHipodensidad de aspecto encefalomalácico en hemisferio cerebeloso izquierdo por lesión isquémica antigua (territorio ACP izquierda).\nHipodensidades en sustancia blanca subcortical y periventricular atribuibles a enfermedad de pequeño vaso.\nEstructuras de la línea media centradas. Sistema ventricular de tamaño y morfología normal. Cisternas basales libres.\nTC PERFUSIÓN:\nRetraso en los mapas de tiempo (TTP), flujo (CBF) y volumen (CBV) en brazo posterior de capsula interna derecha. Existe también discreto retraso en los mapas de tiempo (TTD) y flujo (CBF) en territorio carotídeo derecho.\nANGIO-TC EXTRA E INTRACRANEAL: (artefactos de movimiento que limitan valoración del estudio) Mínima ateromatosis cálcica en arco aórtico. Segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.\nAteromatosis cálcica en bifurcación carotídea derecha. A nivel del segmento proximal de ICA derecha existe una oclusión total ya presente en TC previa. Las segmentos más distales de la ICA no están opacificados.\nAtertomatosis cálcica en bifurcación carotídea izquierda que condiciona estenosis de aprox. 50 % de su luz. Resto de segmentos cervicales de ICA izquierda permeable y sin estenosis significativas.\nAteromatosis difusa en segmentos intracraneales (intracavernoso y supraclinoideo) de ambas ICAS, permeables.\nOrigen de las arterias vertebrales sin ateromatosis ni signos de estenosis.\nLa hiperdensidad basal en TICA derecha se correlacióna con ausencia de opacificación en esta localización lo que también traduce oclusión trombótica.\nPrincipales arterias cerebrales intracraneales permeables (ACAs, ACMs y ACPs). ACM y ACA derechas permeables con flujo dependiente de AcomA Sistema vertebrobasilar permeable.\nTórax incluido: derrame pleural bilateral. Marcapasos.",
+      "impression": "- Sin evidencia de hemorragia aguda intra ni extraxial.\n- Hipodensidad en brazo posterior de cápsula interna derecha por lesión isquémica aguda (ASPECTS 9). Lesión isquémica antigua en hemisferio cerebeloso izquierdo.\n- Oclusión total de segmento proximal de ICA derecha hasta TICA. Resto de principales arterias cerebrales intracraneales permeables, con ACM y ACA derechas con flujo dependiente de AcomA.\n- Los hallazgos traducen un retraso en mapas de tiempo, flujo y volumen en brazo posterior de cápsula interna derecha; sin discordancia significativa. Discretro retraso en TTP en territorio carotídeo derecho.\n- Signos de ICC, a valorar clínicamente."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CODIGO ICTUS (BASAL + PERFUSION CEREBRAL + ANGIOTC TSA E INTRACRANEAL)",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "ICON (Estudio):",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000058662657",
+    "note_id": 17,
+    "clinical_data": {
+      "history": "Vòmits no especificats de l'embaràs",
+      "findings": "No se dispone de estudios previos para comparar.\nTC CRANEAL BASAL:\nHematoma intraparenquimatoso agudo centrado en vermis cerebeloso de aprox. 15 x 42 x 27 mm (AP x LL x CC) y 7,5 cc; con apertura hacia el APC izquierdo, cisternas peritronculares, bordes libres de ambos hemitentorios y acueducto mesencefálico. Asocia edema perilesional y efecto masa con colapso de folias cerebelosas así como signos de herniación transtentorial ascendente.\nSistema ventricular supratentorial prominente, sin claros signos de edema transependimario. A valorar componente de hidrocefalia activa.\nTenue hipodensidad en sustancia blanca supratentorial atribuible a probables cambios por enfermedad crónica de pequeño vaso.\nProminencia global de surcos cerebrales así como del sistema ventricular supratentorial en relación con cambios involutivos cortico- subcorticales. El sistema ventricular se encuentra simétrico y normoposicionado.\nEstructuras de la línea media centradas.\nANGIO-TC INTRA Y EXTRACRANEAL:\nEn el seno del hematoma vermiano, se identifica un agrupación de vasos venosos prominentes y tortuosos que parecen drenar hacia el seno transverso derecho. Se acompaña de leve ingurgitación de venas cerebrales profundas. Adyacente a dichos vasos venosos, se identifica una dudosa imagen vascular que podría corresponder a un nidus. Asimismo, se observa una aparente aferencia arterial dependiente de PICA derecha.\nDefecto de replección hipodenso en uno de los vasos venosos tortuosos que sugieren trombo flotante.\nHallazgos que, en conjunto, sugieren malforación vascular, a valorar MAV, como primera opción diagnóstica.\nSegmentos proximales de los principales vasos intra-craneales (ACAs, ACMs y ACPs) permeables, sin signos de estenosis de su luz.\nSistema vertebro-basilar permeable.\nDiscreta ateromatosis cálcica del cayado aórtico. Tortuosidad de ambas ACIs, la derecha con recorrido parcialmente retrofaríngeo. Segmentos proximales de ambas ACIs con discreta ateromatosis calcificada.\nPrincipales vasos extra-craneales permeables, sin signos de estenosis de su luz.",
+      "impression": "Hematoma intraparenquimatoso vermiano de las características descritas con apertura al espacio extra-axial de su vecindad. Edema perilesional y efecto de masa con signos de herniación transtentorial ascendente.\nSistema ventricular supratentorial prominente, sin claros signos de edema transependimario. A valorar componente de hidrocefalia activa.\nEl estudio angioTC muestra una malformación vascular en el seno del hematoma, a considerar MAV como primera opción, con aparente aferencia arterial dependiente de PICA derecha y drenaje venoso hacia el seno transverso derecho."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CRANEAL BASAL + ANGIO-TC INTRA Y EXTRACRANEAL. URGENTE.",
+      "description": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)"
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "DKTXT (Descripció): ECO BASAL (ABDOMEN)",
+      "diagnosis_text": "",
+      "comments": "",
+      "icon_code": "X00DIATXT (Texto del diagnóstico ACR):",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000059075151",
+    "note_id": 25,
+    "clinical_data": {
+      "history": "TRDC",
+      "findings": "TC CRANEAL BASAL:\nNo se observa sangrado agudo intracraneal ni lesiones isquémicas agudas valorables por TC en el momento actual (ASPECTS 10).\nMúltiples infartos lacunares crónicos cápsuloganglionares bilaterales y en ambos tálamos. Area de encefalomalacia/gliosis por infarto crónico en territorio de ACA izquierda.\nHipodensidad de sustancia blanca supratentorial en probable relación con cambios por enfermedad crónica de pequeño vaso en grado moderado.\nSignos de atrofia cortico-subcortical con prominencia de espacio subaracnoideo y sistema ventricular.\nEstructuras de la línea media centradas. Cisternas basales no colapsadas.\nTC PERFUSIÓN:\nLos mapas de perfusión muestran leve asimetría con mapas de tiempo discretamente alargados en hemisferio izquierdo, de predominio parietotemporal (territorio ACMi). Volumen globalmente conservado.\nANGIO-TC EXTRA E INTRACRANEAL:\n*Estudio muy artefactado por movimiento a nivel intracraneal.\nArco aórtico y segmento proximales de los TSA permeables, con leve ateromatosis calcificada.\nAteromatosis calcificada en ambas bifrucaciones carotídeas, sin estenosis significativas (>70%).\nEn segmento proximal de la ACI izquierda destaca la presencia de un defecto de repleción endoluminal laminar que podría estar en relación con un flap de disección focal. Distalmente, la ACI izquierda es permeable, si bien presenta una placa calcificada igualmente en su segmento proximal que condiciona una estenosis de aprox 60%.\nSegmentos intracavernoso y supraclinoideo permeables, sin signos de estenosis.\nSegmentos proximales de ACMs (M1), ACPs y sistema vertebrobasilar permeable, si bien se observa estenosis significativa de la arteria vertebral izquierda en su segmento V4. Resto del estudio intracraneal no valorable. Dominancia vertebral derecha.\nEnfisema paraseptar y centrolobulillar. Engrosamientos peribronquiales difusos. Consolidación pulmonar derecha, incluida solo de forma marginal en el estudio actual.",
+      "impression": "TC BASAL:\nNo se observa sangrado agudo intracraneal ni lesiones isquémicas agudas valorables por TC (ASPECTS 10). Múltiples infartos lacunares crónicos cápsuloganglionares bilaterales y en ambos tálamos. Area de encefalomalacia/gliosis por infarto crónico en territorio de ACA izquierda. Estigmas de microangiopatía crónica.\nTC PERFUSIÓN:\nLeve asimetría hemisférica izquierda con mapas de tiempo discretamente alargados, de predominio parietotemporal (territorio superficial ACMi).\nVolumen globalmente conservado.\nANGIO-TC EXTRA E INTRACRANEAL:\n*Estudio muy artefactado por movimiento a nivel intracraneal.\nEn segmento proximal de la ACI izquierda destaca la presencia de un defecto de repleción laminar que podría estar en relación con un flap de disección focal. Distalmente, la ACI izquierda es permeable.\nSegmentos proximales de ACMs (M1), ACPs y sistema vertebrobasilar permeables, si bien se observa estenosis significativa de la arteria vertebral izquierda en su segmento V4. Resto del estudio intracraneal no valorable."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC craneal basal + TC perfusión + angioTC intracraneal y de TSA (URGENTE, CÓDIGO ICTUS).",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "DKTXT (Descripció): TC CEREBRAL",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "@JA@",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000059755672",
+    "note_id": 36,
+    "clinical_data": {
+      "history": "Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada",
+      "findings": "TC CRANEAL BASAL:\nNo se observa hemorragia aguda intra ni extraaxial.\nHipodensidad con pérdida de la diferenciación cortico-subcortical en ínsula, temporal y frontal derecho (territorios corticales M2, M3 y M5) en relación a evento isquémica agudo. ASPECTS 6/10.\nLesión hipodensa en centro semioval izquierdo de aspecto crónico, a valorar en próximo control.\nEstructuras de la línea media centradas.\nSistema ventricular de tamaño y morfología normal.\nCisternas basales libres.\nTC PERFUSIÓN:\n*NOTA: Estudio de perfusión con interpretación limitada por artefactos de movimiento.\nRetraso de tiempo hemisférico derecho con caída congruente de flujo y preservación del volumen correspondiente al área de penumbra isquémica; a excepción de ínsula, opercular-frontal y temporal derechos donde se identifica una caída de volumen, probablemente correspondiente al \"core\" isquémico. Discordancia significativa.\nANGIO-TC EXTRA E INTRACRANEAL:\nAorta de calibre normal con normodisposición de los TSA.\nIrregularidad y disminución progresiva del calibre en porción distal del seg. cervical de la ACI derecha en relación a diseción carotidea con trombosis de la luz falsa y oclusión focal completa de la luz verdadera que repermeabiliza inmedisatment distal a la misma.\nOclusión completa en el seg. M1 prebifurcación de la ACM derecha.\nRepermeabilización distal por probable colateralidad.\nSe observan diversos defectos de replecicón en ramas distales frontales y parietales de la ACM derecha.\nResto de los principales vasos intra-craneales (ACAs, ACM izquierda y ACPs) permeables. ACP izquierda fetal como variante anatómica.\nSistema vertebro-basilar permeable.\nRestos tímicos, parcialmente incluidos.",
+      "impression": "TC CRANEAL:\nNo se observa hemorragia aguda intra o extra-axial.\nÁreas de isquemia aguda en ínsula, temporal y frontal derecho (territorios corticales M2, M3 y M5) en relación a evento isquémica agudo. ASPECTS 6/10.\nLesión hipodensa en centro semioval izquierdo, indeterminada, a valorar en próximo control.\nTC PERFUSIÓN:\n*NOTA: Estudio de perfusión con interpretación limitada por artefactos de movimiento.\nÁrea de penumbra isquémica hemisférica derecha a excepción de ínsula, opercular-frontal y temporal derechos que corresponden al \"core\" isquémico. Discordancia significativa.\nANGIO-TC INTRA Y EXTRACRANEAL:\nDisección en seg. cervical de la porción distal de la ACI derecha que condiciona oclusión focal completa de su luz con repermeabilización posterior a la misma.\nOclusión completa en el seg. M1 prebifurcación de la ACM derecha con repermeabilización distal.\nSe observan otros defectos de rpleción en ramas distales frontales y parietales de de la ACM derecha."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CÓDIGO ICTUS: TC CRANEAL BASAL. Posteriormente, se administra contraste ev y se realiza Perfusión cerebral + AngioTC intra y extracraneal. URGENTE.",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "ICON (Estudio):",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000059855202",
+    "note_id": 41,
+    "clinical_data": {
+      "history": "Codi ictus",
+      "findings": "Se compara con estudios previos, última TC codigo ICTUS (basal + perfusión + angio) del xx/xx/xxxx.\nTC CRANEAL BASAL:\nSe compara con estudios previos, última TC craneal del xx/xx/xxxx (más reciente respecto a la última TC código ICTUS).\nNo se observa hemorragia intra ni extraaxial.\nDiferenciación cortico-subcortical conservada (ASPECTS 10).\nNo se observan lesiones focales ni ocupantes de espacio con efecto de masa evidente sobre el parénquima cerebral.\nMínima prominencia de surcos cerebrales y del sistema ventricular supratentorial en relación a cambios involutivos (menores a lo esperables para su edad).\nMínima hipodensidad de la sustancia blanca supratentorial de predominio periventricular en relación a cambios isquémicos crónicos por enfermedad de pequeño vaso en grado leve.\nEstructuras de la línea media centradas. Sistema ventricular de tamaño y morfología normal. Cisternas basales libres.\nTC PERFUSIÓN:\nDudosa disminución del tiempo en mapa de TMAX cortico-subcortical parietal izquierdo, sin traducción en mapas de flujo y volumen, que podría sugerir celeridad sin poder descartar artefacto (hallazgo frecuentemente encontrado en perfusiones realizadas en esta máquina, por lo que no se descarta problema de la técnica). A valorar clínicamente si procede (crisis comicial?).\nSin otras alteraciones valorables en el CBV, TTP y CBF.\nANGIO-TC EXTRA E INTRACRANEAL:\nPrincipales arterias cerebrales permeables (ACAs, ACMs y ACPs). Sistema vertebrobasilar permeable.\nMínima ateromatosis calcificada de arterias carótidas internas a nivel de la bifurcación sin estenosis significativa de su luz.\nMínima ateromatosis calcificada de segmentos intracavernoso y supraclinoideo de ambas arterias carótidas internas sin estenosis significativa.\nOrigen de las arterias vertebrales levemente tortuoso, sin ateromatosis ni signos de estenosis.\nAteromatosis calcificada de arco aórtico y segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.\nArteria cerebral anterior derecha de origen en complejo comunicante anterior. Arteria cerebral posterior derecha de origen fetal en arteria comunicante posterior derecha.",
+      "impression": "No se observa hemorragia intra ni extraaxial. ASPECTS 10.\nDudosa disminución del tiempo en mapa de TMAX, a valorar clínicamente (crisis comicial?) no siendo posible descartar artefacto (hallazgo recurrente en esta máquina, sospecha de problema técnico). Sin otras alteraciones valorables en el CBV, TTP y CBF.\nPrincipales arterias cerebrales permeables (ACAs, ACMs y ACPs)."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CODIGO ICTUS (CRÁNEO BASAL + PERFUSIÓN CEREBRAL + ANGIO TC DE TSA E INTRACRANEAL)",
+      "description": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)"
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "DKTXT (Descripció): ECOGRAFIA HOMBRO",
+      "diagnosis_text": "",
+      "comments": "",
+      "icon_code": "X00DIATXT (Texto del diagnóstico ACR):",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000060223875",
+    "note_id": 49,
+    "clinical_data": {
+      "history": "Mujer de 47 años con HSA por rotura de ACM-D el 31/12, embolizada el 02/01. Solicitamos TC de control por disminución del nivel de consciencia, interesa descartar vasoespasmo (mala ventana doppler).\nGracias.\nHSA espontanea.",
+      "findings": "TC CRANEAL BASAL:\nSe realiza estudio comparativo con exploraciones previas. Último estudio realizado el xx/xx/xxxx.\nMaterial de embolización en topografía de ACM derecha.\nDiferenciación cortico-subcortical global conservada, sin signos compatibles con isquemia establecida (ASPECTS 10).\nAlguna pequeña tenue hipodensidad subcortical frontal bilateral, no evidente en el TC previo y de dudoso significado, a valorar evolutivamente.\nPersisten focos de HSA conocida en ambos valles silvianos (predominio derecho) y en surcos de convexidad derecha, similar al previo. También se observa lámina de hemorragia extraaxial hemitentorial izquierda, estable.\nEn el TC actual no se identifica contaminación hemática intraventricular evidente, tampoco se observan signos de hidrocefalia activa.\nQuiste aracnoideo en polo temporal izquierdo que ejerce efecto de masa sobre el parénquima subyacente.\nResto de parénquima cerebral, cerebeloso y tronco del encéfalo sin otras alteraciones valorables.\nNo se observan desplazamientos valorables de la línea media.\nTC PERFUSIÓN:\nNo se observan alteraciones valorables en el TTP, CBV y CBF. Sin discordancia significativa.\nANGIO-TC EXTRA E INTRACRANEAL:\nSe realiza estudio comparativo con exploraciones previas. Último estudio realizado el xx/xx/xxxx.\nMaterial de embolización en M1 derecha con evidencia de paso de contraste hacia ramas distales.\nAneurismas en la bifurcación de ACM izquierda y en segmento oftálmico de ACI derecha, ya conocidos y descritos en estudios previos, estables.\nResto de arterias cerebrales intracraneales principales también permeables (ACAs, ACMs y ACPs), de calibre conservado, sin estenosis evidentes. Sistema vertebrobasilar permeable.\nOrigen, bifurcación y segmentos cervicales de la arteria carótida interna sin ateromatosis ni signos de estenosis.\nSegmentos intracavernoso y supraclinoideo de la arteria carótida interna sin ateromatosis ni signos de estenosis.\nOrigen de las arterias vertebrales sin ateromatosis ni signos de estenosis.\nArco aórtico y segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.",
+      "impression": "Sin alteraciones evidentes en el estudio de perfusión ni angio-TC que sugieran vasoespasmo. Tampoco se identifican signos de isquemia cortical establecida. Sin signos de hidrocefalia. Alguna pequeña tenue hipodensidad subcortical frontal bilateral, no evidente en el TC previo y de dudoso significado, a valorar evolutivamente."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CODIGO ICTUS (TC CRANEAL BASAL + PERFUSIÓN CEREBRAL + ANGIO TC DE TSA E INTRACRANEAL)",
+      "description": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)"
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "DKTXT (Descripció): TC CRANEO HSA ( + ANGIOTC ARTERIAL INTRA",
+      "diagnosis_text": "",
+      "comments": "",
+      "icon_code": "X00DIATXT (Texto del diagnóstico ACR):",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000061357517",
+    "note_id": 74,
+    "clinical_data": {
+      "history": "Ictus ACMD distal rtPA (adminsitrada velocidad de infusión mayor de la debida). TC basal control 21:30h. Gracias.\nInfart cerebral causat per oclusió o estenosi no especificades, artèria cerebral mitjana dreta",
+      "findings": "TC CRANEAL BASAL:\nNo se observan signos de hemorragia aguda intra o extraaxial.\nParénquima encefálico sin alteraciones densitométricas. Diferenciación cortico-subcortical conservada. ASPECTS 10/10.\nNo se observan lesiones isquémicas parenquimatosas subagudas ni otras lesiones isquémicas crónicas.\nEstructura de la línea media centradas.\nSistema ventricular de morfología, tamaño y situacuón conservadas.\nCisternas de la base libres.\nOsteoma en seno frontal izquierdo.\nTC PERFUSIÓN:\nÁrea de topografía parietal derecha con rertraso en mapas de tiempo con caida del CBF y volumen preservado.\nANGIO-TC EXTRA E INTRACRANEAL:\nArco aórtico y segmentos proximales de troncos supraaórticos sin ateromatosis ni signos de estenosis.\nOrigen, bifurcación y segmentos cervicales de las arterias carótidas internas con leve ateromatosis, sin signos de estenosis.\nPlaca hipodensa en segmento prebifurcacional de la ACC que condicona una disminución leve del calibre vascular (<50%).\nPrincipales arterias cerebrales intracraneales permeables (ACA, ACMs y ACPs) em sus segemntos proximales.\nOrigen de las arterias vertebrales sin ateromatosis ni signos de estenosis. Sistema vertebrobasilar permeable. Placa de aterma en segmento V4 izquierda que condiciona una estenosis focal leve/moderada a este nivel.\nFocos en vidrio deslustrado en el segmento anterior del LSD, en posible relación con patología inflamatoria/infecciosa. Cambios por estenotomía media. En los cortes torácicos se observa un dudoso defecto de repleción en una rama segmentaria (no identifciable si arteria o vena pulmonar), a valorar completar estudio con angioTC torácico para descartar TEP.",
+      "impression": "No hay signos de hemorragia intra ni extraaxial. No hay signos de isquemia aguda en la TC basal.\nÁrea de hipoperfusión con missmatch significativo parietal derecho, sin alteraciones significativas en la Angio-TC.\nFocos en vidrio deslustrado en el segmento anterior del LSD, en posible relación con patología inflamatoria/infecciosa.\nEn los cortes torácicos se observa un dudoso defecto de repleción en una rama segmentaria (no identifciable si arteria o vena pulmonar), a valorar completar estudio con angioTC torácico para descartar TEP."
+    },
+    "study_metadata": {
+      "procedure": "TC CEREBRAL",
+      "protocol": "CÓDIGO ICTUS: TC craneal basal + TC de perfusión cerebral + Angio-TC intra y extracraneal.\n*ADDENDUM:\nPor problema técnico, las imágenes de la TC craneal de control de las 22.55h se encuentran casadas con este informe. Para ver dicho informe, ver, informe TC craneal validado el día 4/4/2024.",
+      "description": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)"
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "9601A",
+      "additional_activity": "DKTXT (Descripció): RM MUSCUL-ESQUELETIC",
+      "diagnosis_text": "",
+      "comments": "",
+      "icon_code": "X00DIATXT (Texto del diagnóstico ACR):",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000061509702",
+    "note_id": 77,
+    "clinical_data": {
+      "history": "accidente cerebrovascular",
+      "findings": "TC CRANEAL BASAL:\nNo se observan signos de hemorragia aguda intra o extraaxial.\nDiferenciación cortico-subcortical conservada. ASPECTS 10/10.\nHipodensidades periventriculares en relación a enfermedad crónica de pequeño vaso leve.\nSe identifica una masa isodensa, de bordes bien definidos, extraxial, captante de contraste, con base dural en la lámina cribiforme, de 3,1 x 2,5 x 3,8 cm (AP x CC x LL), que protruye hacia el parénquima cerebral frontal paramedial bilateral, condicionando discreto efecto masa y mínima obliteración del asta frontal del VLi. Todo ello sugiere un meningioma, a valorar ampliar estudio mediante RM cerebral.\nEstructura de la línea media centradas.\nLeves cambios involutivos cortico-subcorticales que condicionan ensanchamiento de surcos y prominencia del sistema ventricular, acordes a la edad de la paciente.\nCisternas de la base libres.\nOcupación parcial por retenciones mucosas del seno maxilar derecho, con nivel hidroaéreo, que sugiere sinusopatía aguda.\nTC PERFUSIÓN:\nRetraso en los mapas de tiempo con caída de flujo y de volumen en el territorio de la ramas perforanes de la ACM izquierda, en relación con área de hipoperfusión sin mismatch significativo, sugiere área de isquemia aguda establecida.\nANGIO-TC EXTRA E INTRACRANEAL:\nArco aórtico y segmentos proximales de troncos supraaórticos sin ateromatosis ni signos de estenosis. Elongación de troncos supraaórticos que presentan: Loop de la a. subclavia derecha en su salida desde el tronco BC, coiling de la a. sublavia izquierda y de la ACC derecha.\nOrigen, bifurcación y segmentos cervicales de las arterias carótidas internas sin ateromatosis. Kinking de la ACI derecha y coiling de la izquierda en su segmento cervical, sin signos de estenosis significativos.\nPrincipales arterias cerebrales intracraneales permeables (ACA, ACMs y ACPs), sin signos de estenosis de su luz. ACP fetal derecha.\nOrigen de las arterias vertebrales sin ateromatosis ni signos de estenosis. Sistema vertebrobasilar permeable.\nEn cortes torácicos superiores: ténues áreas parchadas de vidrio deslustrado apicales derechas, indeterminadas, a correlacionar con clínica. Atelectasia laminar con bordes espiculados y base cisural en el aspecto más craneal de la cisura mayor derecha, que sugiere restos cicatriciales. A controlar mediaten TC de tórax. Estudio realizado en espiración que muestra áreas de atrapamiento aéreo, poco valorable por técnica no dirigida al estudio del parénquima pulmonar.",
+      "impression": "No hay signos de hemorragia ni áreas de isquemia subaguda/crónica identificables por TC sin contraste. ASPECTS 10/10.\nMeningioma de 3,1 x 2,5 x 3,8 cm (AP x CC x LL), con base dural en lámina cribiforme.\nÁrea de isquemia aguda establecida (mismatch no significativo) en el territorio de las arterias perforantes de la ACM derecha.\nLa Angio-TC no muestra signos de ateromatosis calcificada ni estenosis significativas en los vasos intra ni extracraneales. Elongación de troncos supraaórticos."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "CÓDIGO ICTUS: TC craneal basal + TC de perfusión cerebral + Angio-TC intra y extracraneal",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "ICON (Estudio):",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000061747046",
+    "note_id": 84,
+    "clinical_data": {
+      "history": "Malaltia no especificada",
+      "findings": "TC CRANEAL BASAL:\nNo se observa hemorragia aguda intra ni extraaxial.\nHipodensidad con pérdida diferenciación corticosubcortical en ínsula, territorios corticales M2, núcleo lenticular y capsula interna caudado derecho (ASPECTS 6/10).\nSegmentos M1 y M2 de ACM derecha basalmente densas.\nHipodensidad en sustancia blanca del hemisferio cerebeloso derecho, inespecífica, impresiona artefacto.\nEstructuras de la línea media centradas. Sistema ventricular de tamaño y morfología normal. Cisternas basales libres.\nTC PERFUSIÓN:\nExtensa área con retraso de tiempo caída congruente de flujo hemisférica derecha (territorio superficial de ACM derecha); con aumento del volumen en dicha región. No se identifican áreas con caída de volumen. Todo ello, sugiere área de penumbra isquémica con discordancia significativa.\nNo se observan otras alteraciones valorables en el TTP, CBV y CBF.\nANGIO-TC EXTRA E INTRACRANEAL:\nOclusión completa del segmento M1 de ACM derecha que se extiende hasta el tercio medio de una rama superior del segmento M2. Repermeabilización distal por probable colateralidad.\nResto de los principales vasos intra-craneales (ACAs, ACM izquierda y ACPs) permeables, sin signos de estenosis de su luz.\nACP fetal bilateral, como variante anatómica.\nSistema vertebro-basilar permeable. AV con origen independiente en la aorta.\nEn la cara posterolateral del bulbo carotídeo derecho, se observa una banda hipodensa endoluminal que puede corresponder a web carotídeo. A nivel contralateral, también identifico la imagen de las mismas características aunque menos evidente también podría corresponder a otro web carotídeo.\nLesiones blásticas en tercio proximal de la clavícula izquierda, en tercio superior del cuerpo esternal y en cuerpo vertebral de T1, sospechosas de malignidad (M1). Se recomienda completar estudio con TC toracoabdominal para despistaje de neoformación primaria.\nGanglios laterocervicales bilaterales indeterminados.\nEnfisema centroacinar.",
+      "impression": "TC CRANEAL BASAL:\nNo hay hemorragia aguda intra o extraaxial.\nÁreas de isquemia aguda en ínsula, territorios corticales M2, núcleo lenticular y caspula interna derecho (ASPECTS 6/10).\nTC PERFUSIÓN:\nÁrea de hipoperfusión con discordancia significativa en hemisferio cerebral derecho (territorio superficial de ACM derecha).\nANGIO-TC EXTRA E INTRACRANEAL:\nOclusión completa del segmento M1 de ACM derecha que se extiende hasta el tercio medio de una rama superior del segmento M2. Repermeabilización distal por probable colateralidad.\nWebs carotídeos bilaterales en ambos bulbos carotídeos, más evidentes el derecho.\nLesiones blásticas en tercio proximal de la clavícula izquierda, en tercio superior del cuerpo esternal y en cuerpo vertebral de T1, sospechosas de malignidad (M1). Se recomienda completar estudio con TC toracoabdominal para despistaje de neoformación primaria."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "TC CÓDIGO ICTUS: TC CRANEAL BASAL. Posteriormente, se administra contraste ev y se realiza Perfusión cerebral + AngioTC intra y extracraneal. URGENTE.",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "ICON (Estudio):",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "",
+      "vessels_right": ""
+    }
+  },
+  {
+    "id": "0000000010000000062905793",
+    "note_id": 98,
+    "clinical_data": {
+      "history": "ictus cerebral",
+      "findings": "TC CRANEAL BASAL:\nNo se observan signos de hemorragia aguda intra o extraaxial.\nTenue hipodensidad con pérdida de la diferenciación cortico-subcortical en territorio profundo de ACM izquierda (cabeza de caudado y n.\nlenticular), en relación a isquemia aguda/subaguda. ASPECTS 8/10.\nTénues hipodensidades periventriculares en relación a leve enfermedad crónica de pequeño vaso.\nCambios involutivos cortico-subcorticales que condicionan ensanchamiento global de surcos y prominencia del sistema ventricular, acordes a la edad de la paciente.\nEstructura de la línea media centradas.\nCisternas de la base libres.\nTC PERFUSIÓN:\nRetraso en los mapas de tiempo con caída de flujo en el territorio superficial y profundo de ACM izquierda, pero preservación del volumen afecto, en relación con área de hipoperfusión con mismatch significativo.\nANGIO-TC EXTRA E INTRACRANEAL:\nArco aórtico y segmentos proximales de troncos supraaórticos con ateromatosis calcificada pero sin signos de estenosis. Kinking del origen de la ACC izquierda. Coiling del segmento proximal de la ACC derecha.\nOrigen, bifurcación y segmentos cervicales de las arterias carótidas internas con ateromatosis, pero sin signos de estenosis. Coiling del segmento cervical de la ACI derecha.\nDefecto de repleción de una rama M2 proximal (insular) de la ACM izquierda, con repleción distal a la misma por probable circulación retrógrada. Sin signos de circulación colateral significativa (TAN 1).\nResto de principales arterias cerebrales intracraneales permeables (ACA, ACM derecha y ACPs), sin signos de estenosis de su luz. ACPs bilaterales fetales, variante.\nOrigen de las arterias vertebrales sin ateromatosis ni signos de estenosis. Sistema vertebrobasilar permeable. A. vertebral derecha que acaba en PICA, variante.\nEn cortes torácicos inferiores: discretos cambios fibrocicatriciales en ápex izquierda. Sin otros hallazgos significativos.",
+      "impression": "TC CRANEAL: No se observan signos de hemorragia aguda intra o extraaxial. Signos de isquemia aguda/subaguda en territorio profundo de ACM izquierda (cabeza de caudado y n. lenticular). ASPECTS 8/10.\nTC DE PERFUSIÓN: Área de hipoperfusión con mismatch significativo en el territorio superficial y profundo de ACM izquierda.\nANGIO-TC INTRA Y EXTRACRANEAL: Defecto de repleción de una rama M2 proximal (insular) de la ACM izquierda, con repleción distal a la misma por probable circulación retrógrada. Resto de principales arterias cerebrales intracraneales permeables."
+    },
+    "study_metadata": {
+      "procedure": "TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANG IOTC ARTERIAL INTRACRANEAL)",
+      "protocol": "CÓDIGO ICTUS: TC craneal basal + TC de perfusión cerebral + Angio-TC intra y extracraneal",
+      "description": ""
+    },
+    "admin_metadata": {
+      "unit": "RADIO",
+      "tech_code": "",
+      "additional_activity": "ICON (Estudio):",
+      "diagnosis_text": "EST_T_DES (Descripción): TC CODIGO ICTUS (PERFUSION CEREBRAL+ ANGIOTC ARTERIAL INTRACRANEAL)",
+      "comments": "",
+      "icon_code": "",
+      "vessels_right": ""
+    }
+  }
+]
