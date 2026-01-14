@@ -12,3 +12,4 @@ new_ofarres/.env
 new_ofarres/data/raw_notes/*
 new_ofarres/data/processed/medical_notes.json
 new_ofarres/test/samples/validation_test.json
+new_ofarres/LLM_evaluation/.env
