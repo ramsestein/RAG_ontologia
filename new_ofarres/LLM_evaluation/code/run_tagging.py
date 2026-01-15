@@ -1,9 +1,12 @@
 import json
 import os
 import argparse
+import re
+import time  # NEW: For timing metrics
+import httpx 
 from dotenv import load_dotenv
 from openai import OpenAI
-import chunking  # Ensure chunking.py is in the same folder
+import chunking
 
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,144 +16,175 @@ PROMPT_FILE = os.path.join(BASE_DIR, "prompts/tagging_prompt.txt")
 ENV_FILE = os.path.join(BASE_DIR, ".env")
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 
-# Load Keys
+# --- LOAD KEYS ---
 load_dotenv(ENV_FILE)
-# Handle cases where keys might be missing to avoid immediate crash
 api_key_openai = os.getenv("OPENAI_API_KEY")
 api_key_deepseek = os.getenv("DEEPSEEK_API_KEY")
 
-client_openai = OpenAI(api_key=api_key_openai) if api_key_openai else None
-client_deepseek = OpenAI(api_key=api_key_deepseek, base_url="https://api.deepseek.com") if api_key_deepseek else None
+# --- SSL BYPASS CLIENTS (CORPORATE PROXY FIX) ---
+# verify=False bypasses the self-signed cert error. timeout=60 prevents infinite hangs.
+insecure_transport = httpx.Client(verify=False, timeout=60.0)
 
-# --- FUNCTIONS ---
+client_openai = OpenAI(
+    api_key=api_key_openai, 
+    http_client=insecure_transport
+) if api_key_openai else None
+
+client_deepseek = OpenAI(
+    api_key=api_key_deepseek, 
+    base_url="https://api.deepseek.com",
+    http_client=insecure_transport
+) if api_key_deepseek else None
+
+# --- HELPER FUNCTIONS ---
 
 def flatten_taxonomy(taxonomy_json):
-    """Formats taxonomy for the prompt."""
+    """Formats taxonomy for the prompt text."""
     lines = []
     for item in taxonomy_json:
         terms = list(set([item['local_name']] + item.get('aliases', [])))
         lines.append(f"- Code: {item['code']} | Terms: {', '.join(terms)}")
     return "\n".join(lines)
 
- # Inside run_tagging.py
+# --- LLM CALL HANDLER ---
 
 def call_llm(prompt, mode):
-    # We split the prompt into System (Instructions) and User (Data)
-    # This is a heuristic split based on the marker we added in the text file
-    parts = prompt.split("### REAL DATA START")
-    
-    if len(parts) == 2:
+    # Split Prompt for System/User separation
+    if "### REAL TASK STARTS HERE" in prompt:
+        parts = prompt.split("### REAL TASK STARTS HERE")
         system_content = parts[0].strip()
-        user_content = parts[1].strip()
+        user_content = "### REAL TASK STARTS HERE" + parts[1]
     else:
-        # Fallback if split fails
-        system_content = "You are an expert Medical Coder. output format: [text](code)."
+        system_content = "You are a strict clinical entity tagger. Output format: [text](code)."
         user_content = prompt
 
+    start_time = time.time() # Start Clock
+
     try:
+        # GPT-4o-mini (Fast & Cheap)
         if mode == "GPT":
+            if not client_openai: return "[ERROR: No OpenAI Key]"
             response = client_openai.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-4o-mini", 
                 messages=[
                     {"role": "system", "content": system_content},
                     {"role": "user", "content": user_content}
                 ],
-                temperature=0
+                temperature=0.0
             )
+            duration = time.time() - start_time
+            print(f"    > GPT-Mini finished in {duration:.2f}s")
             return response.choices[0].message.content.strip()
-            
+
+        # DeepSeek V3 (Fast Chat) vs R1 (Slow Reasoner)
         elif mode == "DeepSeek":
+            if not client_deepseek: return "[ERROR: No DeepSeek Key]"
+            
+            # Use "deepseek-chat" (V3) for SPEED. Use "deepseek-reasoner" (R1) for LOGIC.
+            # Currently set to V3 to fix your 10-minute hang issue.
             response = client_deepseek.chat.completions.create(
                 model="deepseek-chat", 
                 messages=[
                     {"role": "system", "content": system_content},
                     {"role": "user", "content": user_content}
                 ],
-                temperature=0.1 # Low temp for precision
+                temperature=0.0
             )
+            duration = time.time() - start_time
+            print(f"    > DeepSeek finished in {duration:.2f}s")
             return response.choices[0].message.content.strip()
-            
+
     except Exception as e:
         print(f"❌ Error calling {mode}: {e}")
-        return "" # Return empty to avoid crashing pipeline
+        return "" 
+
+# --- MAIN PIPELINE ---
 
 def run_pipeline(mode):
-    print(f"🚀 Starting Tagging Pipeline. Mode: {mode}")
+    print(f"\n🚀 STARTING PIPELINE | Mode: {mode}")
+    print(f"📂 Output Directory: {OUTPUT_DIR}\n")
 
-    # Load Resources
-    with open(DATA_FILE, 'r', encoding='utf-8') as f: notes = json.load(f)
-    with open(TAXONOMY_FILE, 'r', encoding='utf-8') as f: tax = json.load(f)
-    with open(PROMPT_FILE, 'r', encoding='utf-8') as f: template = f.read()
+    # 1. Load Resources
+    try:
+        with open(DATA_FILE, 'r', encoding='utf-8') as f: notes = json.load(f)
+        with open(TAXONOMY_FILE, 'r', encoding='utf-8') as f: raw_tax = json.load(f)
+        with open(PROMPT_FILE, 'r', encoding='utf-8') as f: template = f.read()
+    except FileNotFoundError as e:
+        print(f"⛔ CRITICAL ERROR: File not found ({e})")
+        return
 
-    flat_tax = flatten_taxonomy(tax)
+    # 2. Flatten Taxonomy
+    flat_tax_str = flatten_taxonomy(raw_tax)
 
-    # We prepare lists to hold the FULL note objects with the new tags
     results_gpt = []
     results_ds = []
 
+    # 3. Processing Loop
     for i, note in enumerate(notes):
         note_id = note.get('note_id') or note.get('id')
         
-        # Merge History and Findings for context
-        full_original_text = f"{note['clinical_data']['history']}\n{note['clinical_data']['findings']}"
+        full_text = f"{note['clinical_data']['history']}\n{note['clinical_data']['findings']}"
+        chunks = chunking.create_smart_chunks(full_text)
         
-        # 1. Chunking
-        chunks = chunking.create_smart_chunks(full_original_text)
-        
-        # Buffers for chunks
         note_chunks_gpt = []
         note_chunks_ds = []
 
-        print(f"Processing Note {note_id} ({i+1}/{len(notes)}) - {len(chunks)} chunks")
+        print(f"📄 Note {note_id} ({i+1}/{len(notes)}) | {len(chunks)} Chunks processing...")
+        note_start = time.time()
 
-        for chunk in chunks:
-            final_prompt = template.format(taxonomy=flat_tax, text=chunk)
+        for c_idx, chunk in enumerate(chunks):
+            # Safe replacement
+            final_prompt = template.replace("{taxonomy}", flat_tax_str).replace("{text}", chunk)
 
-            # 2. Inference
+            # --- GPT ---
             if mode in ["GPT", "All"]:
                 tagged = call_llm(final_prompt, "GPT")
-                # Clean markdown if present
-                tagged = tagged.replace("```text", "").replace("```", "")
+                tagged = re.sub(r"^```(text|json)?\s*", "", tagged, flags=re.MULTILINE)
+                tagged = re.sub(r"\s*```$", "", tagged, flags=re.MULTILINE)
                 note_chunks_gpt.append(tagged)
 
+            # --- DeepSeek ---
             if mode in ["DeepSeek", "All"]:
                 tagged = call_llm(final_prompt, "DeepSeek")
-                tagged = tagged.replace("```text", "").replace("```", "")
+                tagged = re.sub(r"^```(text|json)?\s*", "", tagged, flags=re.MULTILINE)
+                tagged = re.sub(r"\s*```$", "", tagged, flags=re.MULTILINE)
+                tagged = re.sub(r"<think>.*?</think>", "", tagged, flags=re.DOTALL)
                 note_chunks_ds.append(tagged)
-
-        # 3. Construct the output objects (PRESERVING METADATA)
         
+        note_end = time.time()
+        print(f"⏱️  Note {note_id} processed in {note_end - note_start:.2f}s")
+
+        # 4. Save to Memory
         if mode in ["GPT", "All"]:
-            # Deep copy the original note to avoid modifying it in place for the next loop
-            note_copy_gpt = note.copy()
-            # Inject the new data
-            note_copy_gpt['tagged_text'] = " ".join(note_chunks_gpt)
-            note_copy_gpt['processing_model'] = "gpt-4o"
-            results_gpt.append(note_copy_gpt)
+            note_copy = note.copy()
+            note_copy['tagged_text'] = " ".join(note_chunks_gpt)
+            note_copy['model_used'] = "gpt-4o-mini"
+            results_gpt.append(note_copy)
 
         if mode in ["DeepSeek", "All"]:
-            note_copy_ds = note.copy()
-            note_copy_ds['tagged_text'] = " ".join(note_chunks_ds)
-            note_copy_ds['processing_model'] = "deepseek-v3"
-            results_ds.append(note_copy_ds)
+            note_copy = note.copy()
+            note_copy['tagged_text'] = " ".join(note_chunks_ds)
+            note_copy['model_used'] = "deepseek-chat (V3)" # Updated Label
+            results_ds.append(note_copy)
 
-    # 4. Save Final JSON Files
+    # 5. Final Save
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
     if mode in ["GPT", "All"]:
         path = os.path.join(OUTPUT_DIR, "gpt_full.json")
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(results_gpt, f, indent=2, ensure_ascii=False)
-        print(f"✅ Saved GPT results (with metadata) to {path}")
+        print(f"✅ Saved GPT Results: {path}")
 
     if mode in ["DeepSeek", "All"]:
         path = os.path.join(OUTPUT_DIR, "deepseek_full.json")
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(results_ds, f, indent=2, ensure_ascii=False)
-        print(f"✅ Saved DeepSeek results (with metadata) to {path}")
+        print(f"✅ Saved DeepSeek Results: {path}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["GPT", "DeepSeek", "All"], required=True)
     args = parser.parse_args()
+    
     run_pipeline(args.mode)

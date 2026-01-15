@@ -1,0 +1,1900 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>LLM Report: Voting vs Opus</title>
+        
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h1 { color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
+    h2 { color: #34495e; margin-top: 30px; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+    .metric-card { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+    .metric-val { font-size: 2em; font-weight: bold; color: #2980b9; }
+    .metric-label { color: #7f8c8d; font-size: 0.9em; text-transform: uppercase; }
+    
+    .note-card { border: 1px solid #e1e4e8; border-radius: 6px; margin-bottom: 30px; overflow: hidden; }
+    .note-header { background: #ecf0f1; padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; }
+    .note-content { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .text-panel { padding: 15px; border-right: 1px solid #eee; font-size: 0.9em; color: #555; background: #fafafa; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
+    .comparison-panel { padding: 0; }
+    
+    table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background-color: #f8f9fa; color: #555; }
+    
+    .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; color: white; }
+    .match { background-color: #27ae60; } 
+    .extra { background-color: #2980b9; } 
+    .miss { background-color: #c0392b; }  
+    
+    .row-match { background-color: #eafaf1; }
+    .row-extra { background-color: #ebf5fb; }
+    .row-miss { background-color: #fdedec; }
+</style>
+
+    </head>
+    <body>
+        <div class="container">
+            <h1>Reporte de Evaluación: Voting System vs Opus 4.5</h1>
+            <p>Generado el: 2026-01-15 12:42</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val">51.70%</div>
+                    <div class="metric-label">F1 Score (Códigos)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">43.68%</div>
+                    <div class="metric-label">Precision</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">63.33%</div>
+                    <div class="metric-label">Recall</div>
+                </div>
+            </div>
+
+            <h2>Detalle por Nota (12 comparadas)</h2>
+    
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 14</span>
+                <span>F1 Local: 0.61</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada
+
+FINDINGS:
+Se compara con TC de hoy (HC3) TC CRANEAL BASAL:
+No se observa hemorragia intra ni extraaxial.
+Hipodensidad en el brazo posterior de la cápsula interna derecha (ASPECTS 9). No se observan otras lesiones isquémicas agudas.
+Hiperdensidad basal en TICA derecha que podría traducir oclusión trombótica a este nivel.
+Hipodensidad de aspecto encefalomalácico en hemisferio cerebeloso izquierdo por lesión isquémica antigua (territorio ACP izquierda).
+Hipodensidades en sustancia blanca subcortical y periventricular atribuibles a enfermedad de pequeño vaso.
+Estructuras de la línea media centradas. Sistema ventricular de tamaño y morfología normal. Cisternas basales libres.
+TC PERFUSIÓN:
+Retraso en los mapas de tiempo (TTP), flujo (CBF) y volumen (CBV) en brazo posterior de capsula interna derecha. Existe también discreto retraso en los mapas de tiempo (TTD) y flujo (CBF) en territorio carotídeo derecho.
+ANGIO-TC EXTRA E INTRACRANEAL: (artefactos de movimiento que limitan valoración del estudio) Mínima ateromatosis cálcica en arco aórtico. Segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.
+Ateromatosis cálcica en bifurcación carotídea derecha. A nivel del segmento proximal de ICA derecha existe una oclusión total ya presente en TC previa. Las segmentos más distales de la ICA no están opacificados.
+Atertomatosis cálcica en bifurcación carotídea izquierda que condiciona estenosis de aprox. 50 % de su luz. Resto de segmentos cervicales de ICA izquierda permeable y sin estenosis significativas.
+Ateromatosis difusa en segmentos intracraneales (intracavernoso y supraclinoideo) de ambas ICAS, permeables.
+Origen de las arterias vertebrales sin ateromatosis ni signos de estenosis.
+La hiperdensidad basal en TICA derecha se correlacióna con ausencia de opacificación en esta localización lo que también traduce oclusión trombótica.
+Principales arterias cerebrales intracraneales permeables (ACAs, ACMs y ACPs). ACM y ACA derechas permeables con flujo dependiente de AcomA Sistema vertebrobasilar permeable.
+Tórax incluido: derrame pleural bilateral. Marcapasos.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>lesión isquémica</td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>cerebeloso</td>
+                <td>113305005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Hiperdensidad</td>
+                <td>125149003</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>lesiones isquémicas agudas</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>233964008</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>derechas, derecho</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>enfermedad oclusiva arterial, oclusión arterial</td>
+                <td>2929001</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>intracraneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>303232006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>trombótica</td>
+                <td>396339007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Infart cerebral</td>
+                <td>432504007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACP</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>izquierdo, izquierda</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>cápsula interna, capsula interna</td>
+                <td>85637007</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>retraso en los tiempos de circulación</td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of13</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of20</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of3</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of5</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of6</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 17</span>
+                <span>F1 Local: 0.25</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Vòmits no especificats de l'embaràs
+
+FINDINGS:
+No se dispone de estudios previos para comparar.
+TC CRANEAL BASAL:
+Hematoma intraparenquimatoso agudo centrado en vermis cerebeloso de aprox. 15 x 42 x 27 mm (AP x LL x CC) y 7,5 cc; con apertura hacia el APC izquierdo, cisternas peritronculares, bordes libres de ambos hemitentorios y acueducto mesencefálico. Asocia edema perilesional y efecto masa con colapso de folias cerebelosas así como signos de herniación transtentorial ascendente.
+Sistema ventricular supratentorial prominente, sin claros signos de edema transependimario. A valorar componente de hidrocefalia activa.
+Tenue hipodensidad en sustancia blanca supratentorial atribuible a probables cambios por enfermedad crónica de pequeño vaso.
+Prominencia global de surcos cerebrales así como del sistema ventricular supratentorial en relación con cambios involutivos cortico- subcorticales. El sistema ventricular se encuentra simétrico y normoposicionado.
+Estructuras de la línea media centradas.
+ANGIO-TC INTRA Y EXTRACRANEAL:
+En el seno del hematoma vermiano, se identifica un agrupación de vasos venosos prominentes y tortuosos que parecen drenar hacia el seno transverso derecho. Se acompaña de leve ingurgitación de venas cerebrales profundas. Adyacente a dichos vasos venosos, se identifica una dudosa imagen vascular que podría corresponder a un nidus. Asimismo, se observa una aparente aferencia arterial dependiente de PICA derecha.
+Defecto de replección hipodenso en uno de los vasos venosos tortuosos que sugieren trombo flotante.
+Hallazgos que, en conjunto, sugieren malforación vascular, a valorar MAV, como primera opción diagnóstica.
+Segmentos proximales de los principales vasos intra-craneales (ACAs, ACMs y ACPs) permeables, sin signos de estenosis de su luz.
+Sistema vertebro-basilar permeable.
+Discreta ateromatosis cálcica del cayado aórtico. Tortuosidad de ambas ACIs, la derecha con recorrido parcialmente retrofaríngeo. Segmentos proximales de ambas ACIs con discreta ateromatosis calcificada.
+Principales vasos extra-craneales permeables, sin signos de estenosis de su luz.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>cerebelosas, cerebeloso</td>
+                <td>113305005</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>derecho</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>intra-craneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>extra-craneales</td>
+                <td>303232006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>surcos cerebrales</td>
+                <td>314190005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>trombo</td>
+                <td>396339007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>45242005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>APC izquierdo</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>PICA derecha</td>
+                <td>of11</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of29</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Hematoma intraparenquimatoso agudo</td>
+                <td>of4</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of5</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 25</span>
+                <span>F1 Local: 0.62</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+TRDC
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observa sangrado agudo intracraneal ni lesiones isquémicas agudas valorables por TC en el momento actual (ASPECTS 10).
+Múltiples infartos lacunares crónicos cápsuloganglionares bilaterales y en ambos tálamos. Area de encefalomalacia/gliosis por infarto crónico en territorio de ACA izquierda.
+Hipodensidad de sustancia blanca supratentorial en probable relación con cambios por enfermedad crónica de pequeño vaso en grado moderado.
+Signos de atrofia cortico-subcortical con prominencia de espacio subaracnoideo y sistema ventricular.
+Estructuras de la línea media centradas. Cisternas basales no colapsadas.
+TC PERFUSIÓN:
+Los mapas de perfusión muestran leve asimetría con mapas de tiempo discretamente alargados en hemisferio izquierdo, de predominio parietotemporal (territorio ACMi). Volumen globalmente conservado.
+ANGIO-TC EXTRA E INTRACRANEAL:
+*Estudio muy artefactado por movimiento a nivel intracraneal.
+Arco aórtico y segmento proximales de los TSA permeables, con leve ateromatosis calcificada.
+Ateromatosis calcificada en ambas bifrucaciones carotídeas, sin estenosis significativas (>70%).
+En segmento proximal de la ACI izquierda destaca la presencia de un defecto de repleción endoluminal laminar que podría estar en relación con un flap de disección focal. Distalmente, la ACI izquierda es permeable, si bien presenta una placa calcificada igualmente en su segmento proximal que condiciona una estenosis de aprox 60%.
+Segmentos intracavernoso y supraclinoideo permeables, sin signos de estenosis.
+Segmentos proximales de ACMs (M1), ACPs y sistema vertebrobasilar permeable, si bien se observa estenosis significativa de la arteria vertebral izquierda en su segmento V4. Resto del estudio intracraneal no valorable. Dominancia vertebral derecha.
+Enfisema paraseptar y centrolobulillar. Engrosamientos peribronquiales difusos. Consolidación pulmonar derecha, incluida solo de forma marginal en el estudio actual.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>grado</td>
+                <td>103421006</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>lesiones isquémicas agudas</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>233964008</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>derecha</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>intracraneal</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ACA izquierda</td>
+                <td>369299002</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arteria cerebral posterior izquierda</td>
+                <td>369301009</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>arteria cerebral media izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>infarto cerebral</td>
+                <td>432504007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACPs</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>izquierdo</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>arteria vertebral izquierda</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>arteria carótida interna izquierda</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>90520006</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACMs, segmento m1</td>
+                <td>RID666</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>territorio ACMi</td>
+                <td>of21</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of22</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>lesiones isquémicas parenquimatosas subagudas</td>
+                <td>of4</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 36</span>
+                <span>F1 Local: 0.63</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observa hemorragia aguda intra ni extraaxial.
+Hipodensidad con pérdida de la diferenciación cortico-subcortical en ínsula, temporal y frontal derecho (territorios corticales M2, M3 y M5) en relación a evento isquémica agudo. ASPECTS 6/10.
+Lesión hipodensa en centro semioval izquierdo de aspecto crónico, a valorar en próximo control.
+Estructuras de la línea media centradas.
+Sistema ventricular de tamaño y morfología normal.
+Cisternas basales libres.
+TC PERFUSIÓN:
+*NOTA: Estudio de perfusión con interpretación limitada por artefactos de movimiento.
+Retraso de tiempo hemisférico derecho con caída congruente de flujo y preservación del volumen correspondiente al área de penumbra isquémica; a excepción de ínsula, opercular-frontal y temporal derechos donde se identifica una caída de volumen, probablemente correspondiente al "core" isquémico. Discordancia significativa.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Aorta de calibre normal con normodisposición de los TSA.
+Irregularidad y disminución progresiva del calibre en porción distal del seg. cervical de la ACI derecha en relación a diseción carotidea con trombosis de la luz falsa y oclusión focal completa de la luz verdadera que repermeabiliza inmedisatment distal a la misma.
+Oclusión completa en el seg. M1 prebifurcación de la ACM derecha.
+Repermeabilización distal por probable colateralidad.
+Se observan diversos defectos de replecicón en ramas distales frontales y parietales de la ACM derecha.
+Resto de los principales vasos intra-craneales (ACAs, ACM izquierda y ACPs) permeables. ACP izquierda fetal como variante anatómica.
+Sistema vertebro-basilar permeable.
+Restos tímicos, parcialmente incluidos.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>isquémica agudo</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>derechos</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>2929001</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>303232006</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>314190005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACAs</td>
+                <td>369299002</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACP izquierda</td>
+                <td>369301009</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ACM derecha, frontal derecho</td>
+                <td>369352006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACM izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>trombo</td>
+                <td>396339007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACPs</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>izquierdo</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>Retraso en los tiempos de circulación</td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>seg. M1</td>
+                <td>RID666</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>M2</td>
+                <td>RID671</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>M3</td>
+                <td>RID680</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>M5</td>
+                <td>of1</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of21</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>Discordancia entre territorio penumbra y core</td>
+                <td>of24</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of5</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 41</span>
+                <span>F1 Local: 0.31</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Codi ictus
+
+FINDINGS:
+Se compara con estudios previos, última TC codigo ICTUS (basal + perfusión + angio) del xx/xx/xxxx.
+TC CRANEAL BASAL:
+Se compara con estudios previos, última TC craneal del xx/xx/xxxx (más reciente respecto a la última TC código ICTUS).
+No se observa hemorragia intra ni extraaxial.
+Diferenciación cortico-subcortical conservada (ASPECTS 10).
+No se observan lesiones focales ni ocupantes de espacio con efecto de masa evidente sobre el parénquima cerebral.
+Mínima prominencia de surcos cerebrales y del sistema ventricular supratentorial en relación a cambios involutivos (menores a lo esperables para su edad).
+Mínima hipodensidad de la sustancia blanca supratentorial de predominio periventricular en relación a cambios isquémicos crónicos por enfermedad de pequeño vaso en grado leve.
+Estructuras de la línea media centradas. Sistema ventricular de tamaño y morfología normal. Cisternas basales libres.
+TC PERFUSIÓN:
+Dudosa disminución del tiempo en mapa de TMAX cortico-subcortical parietal izquierdo, sin traducción en mapas de flujo y volumen, que podría sugerir celeridad sin poder descartar artefacto (hallazgo frecuentemente encontrado en perfusiones realizadas en esta máquina, por lo que no se descarta problema de la técnica). A valorar clínicamente si procede (crisis comicial?).
+Sin otras alteraciones valorables en el CBV, TTP y CBF.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Principales arterias cerebrales permeables (ACAs, ACMs y ACPs). Sistema vertebrobasilar permeable.
+Mínima ateromatosis calcificada de arterias carótidas internas a nivel de la bifurcación sin estenosis significativa de su luz.
+Mínima ateromatosis calcificada de segmentos intracavernoso y supraclinoideo de ambas arterias carótidas internas sin estenosis significativa.
+Origen de las arterias vertebrales levemente tortuoso, sin ateromatosis ni signos de estenosis.
+Ateromatosis calcificada de arco aórtico y segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.
+Arteria cerebral anterior derecha de origen en complejo comunicante anterior. Arteria cerebral posterior derecha de origen fetal en arteria comunicante posterior derecha.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>grado</td>
+                <td>103421006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>isquémicos crónicos</td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Arteria cerebral anterior derecha</td>
+                <td>369298005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arteria comunicante posterior derecha</td>
+                <td>369300005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Arteria cerebral posterior derecha</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>parietal izquierdo</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias carótidas internas</td>
+                <td>86117002</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 49</span>
+                <span>F1 Local: 0.13</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Mujer de 47 años con HSA por rotura de ACM-D el 31/12, embolizada el 02/01. Solicitamos TC de control por disminución del nivel de consciencia, interesa descartar vasoespasmo (mala ventana doppler).
+Gracias.
+HSA espontanea.
+
+FINDINGS:
+TC CRANEAL BASAL:
+Se realiza estudio comparativo con exploraciones previas. Último estudio realizado el xx/xx/xxxx.
+Material de embolización en topografía de ACM derecha.
+Diferenciación cortico-subcortical global conservada, sin signos compatibles con isquemia establecida (ASPECTS 10).
+Alguna pequeña tenue hipodensidad subcortical frontal bilateral, no evidente en el TC previo y de dudoso significado, a valorar evolutivamente.
+Persisten focos de HSA conocida en ambos valles silvianos (predominio derecho) y en surcos de convexidad derecha, similar al previo. También se observa lámina de hemorragia extraaxial hemitentorial izquierda, estable.
+En el TC actual no se identifica contaminación hemática intraventricular evidente, tampoco se observan signos de hidrocefalia activa.
+Quiste aracnoideo en polo temporal izquierdo que ejerce efecto de masa sobre el parénquima subyacente.
+Resto de parénquima cerebral, cerebeloso y tronco del encéfalo sin otras alteraciones valorables.
+No se observan desplazamientos valorables de la línea media.
+TC PERFUSIÓN:
+No se observan alteraciones valorables en el TTP, CBV y CBF. Sin discordancia significativa.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Se realiza estudio comparativo con exploraciones previas. Último estudio realizado el xx/xx/xxxx.
+Material de embolización en M1 derecha con evidencia de paso de contraste hacia ramas distales.
+Aneurismas en la bifurcación de ACM izquierda y en segmento oftálmico de ACI derecha, ya conocidos y descritos en estudios previos, estables.
+Resto de arterias cerebrales intracraneales principales también permeables (ACAs, ACMs y ACPs), de calibre conservado, sin estenosis evidentes. Sistema vertebrobasilar permeable.
+Origen, bifurcación y segmentos cervicales de la arteria carótida interna sin ateromatosis ni signos de estenosis.
+Segmentos intracavernoso y supraclinoideo de la arteria carótida interna sin ateromatosis ni signos de estenosis.
+Origen de las arterias vertebrales sin ateromatosis ni signos de estenosis.
+Arco aórtico y segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>cerebelo</td>
+                <td>113305005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>TC, ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>HSA, hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>tronco del encéfalo</td>
+                <td>15926001</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>isquemia cerebral aguda</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>derecho</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>intracraneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACM-D</td>
+                <td>369352006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACM izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>izquierdo</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACI derecha, la arteria carótida interna</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>M1 derecha, segmento m1</td>
+                <td>RID666</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 7</span>
+                <span>F1 Local: 0.50</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Infart cerebral causat per oclusió o estenosi no especificades d'artèria cerebral no especificada
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observa hemorragia intra ni extraaxial.
+Diferenciación cortico-subcortical conservada, sin signos valorables de lesión isquémica aguda (ASPECTS 10).
+Hipodensidades parcheadas en sustancia blanca periventricular, de predominio bifrontal, sugestivas de cambios crónicos por enfermedad de pequeño vaso en grado moderado-severo.
+Cambios involutivos acordes a la edad con prominencia secundaria del sistema ventricular.
+Línea media centrada. Cisternas basales libres.
+TC PERFUSIÓN:
+No se observan alteraciones valorables en el TTP, CBV y CBF. Sin discordancia significativa.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Arco aórtico y segmentos proximales de troncos supraórticos con moderados signos de ateromatosis calcificada, sin estenosis.
+Signos de ateromatosis calcificada en ambas bifurcaciones carotídeas (leve derecha, moderada izquierda), sin estenosis valorable. Segmentos intracavernoso y supraclinoideo de ambas ACI, con signos de ateromatosis, sin estenosis.
+Origen de las arterias vertebrales sin estenosis. Sistema vertebrobasilar permeable.
+En el segmento M2 distal de la ACM izquierda (división inferior) se identifica una aparente estenosis focal, con adecuada permeabilidad y recuperación del calibre del vaso distal a este punto. Podría corresponder a ateromatosis vs trombo parcialmente recanalizado (es difícil determinar la trascendencia clínica del hallazgo dada la normalidad de los mapas de perfusión).
+Resto de principales arterias cerebrales intracraneales permeables (ACAs, ACMd y ACPs). Hipoplasia del segmento A1 derecho.
+Imagen nodular subpleural de 6 mm en segmento anterior del LSD, parcialmente incluída, difícil de caracterizar en las condiciones actuales del estudio. A valorar realización de control por TC en 6 meses.
+Prótesis total de hombro derecho que condiciona importante artefacto metálico.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>grado</td>
+                <td>103421006</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>TC, ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>signos lesión isquémica aguda</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>derecho, derecha</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>intracraneales, intracavernoso</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ACM izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>trombo</td>
+                <td>396339007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>Infart cerebral</td>
+                <td>432504007</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACI</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>segmento m2</td>
+                <td>RID671</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 74</span>
+                <span>F1 Local: 0.44</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Ictus ACMD distal rtPA (adminsitrada velocidad de infusión mayor de la debida). TC basal control 21:30h. Gracias.
+Infart cerebral causat per oclusió o estenosi no especificades, artèria cerebral mitjana dreta
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observan signos de hemorragia aguda intra o extraaxial.
+Parénquima encefálico sin alteraciones densitométricas. Diferenciación cortico-subcortical conservada. ASPECTS 10/10.
+No se observan lesiones isquémicas parenquimatosas subagudas ni otras lesiones isquémicas crónicas.
+Estructura de la línea media centradas.
+Sistema ventricular de morfología, tamaño y situacuón conservadas.
+Cisternas de la base libres.
+Osteoma en seno frontal izquierdo.
+TC PERFUSIÓN:
+Área de topografía parietal derecha con rertraso en mapas de tiempo con caida del CBF y volumen preservado.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Arco aórtico y segmentos proximales de troncos supraaórticos sin ateromatosis ni signos de estenosis.
+Origen, bifurcación y segmentos cervicales de las arterias carótidas internas con leve ateromatosis, sin signos de estenosis.
+Placa hipodensa en segmento prebifurcacional de la ACC que condicona una disminución leve del calibre vascular (<50%).
+Principales arterias cerebrales intracraneales permeables (ACA, ACMs y ACPs) em sus segemntos proximales.
+Origen de las arterias vertebrales sin ateromatosis ni signos de estenosis. Sistema vertebrobasilar permeable. Placa de aterma en segmento V4 izquierda que condiciona una estenosis focal leve/moderada a este nivel.
+Focos en vidrio deslustrado en el segmento anterior del LSD, en posible relación con patología inflamatoria/infecciosa. Cambios por estenotomía media. En los cortes torácicos se observa un dudoso defecto de repleción en una rama segmentaria (no identifciable si arteria o vena pulmonar), a valorar completar estudio con angioTC torácico para descartar TEP.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>lesiones isquémicas crónicas, lesiones isquémicas parenquimatosas crónicas</td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACMs</td>
+                <td>17232002</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>derecha</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>oclusió</td>
+                <td>2929001</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>intracraneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>artèria cerebral mitjana dreta</td>
+                <td>369352006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Infarto cerebral, Infart cerebral</td>
+                <td>432504007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACA</td>
+                <td>60176003</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACPs</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>izquierdo, izquierda</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias carótidas internas</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>90520006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>rertraso en mapas de tiempo</td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>segmento</td>
+                <td>of1</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenotomía</td>
+                <td>of15</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of24</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>lesiones isquémicas parenquimatosas subagudas</td>
+                <td>of4</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 77</span>
+                <span>F1 Local: 0.33</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+accidente cerebrovascular
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observan signos de hemorragia aguda intra o extraaxial.
+Diferenciación cortico-subcortical conservada. ASPECTS 10/10.
+Hipodensidades periventriculares en relación a enfermedad crónica de pequeño vaso leve.
+Se identifica una masa isodensa, de bordes bien definidos, extraxial, captante de contraste, con base dural en la lámina cribiforme, de 3,1 x 2,5 x 3,8 cm (AP x CC x LL), que protruye hacia el parénquima cerebral frontal paramedial bilateral, condicionando discreto efecto masa y mínima obliteración del asta frontal del VLi. Todo ello sugiere un meningioma, a valorar ampliar estudio mediante RM cerebral.
+Estructura de la línea media centradas.
+Leves cambios involutivos cortico-subcorticales que condicionan ensanchamiento de surcos y prominencia del sistema ventricular, acordes a la edad de la paciente.
+Cisternas de la base libres.
+Ocupación parcial por retenciones mucosas del seno maxilar derecho, con nivel hidroaéreo, que sugiere sinusopatía aguda.
+TC PERFUSIÓN:
+Retraso en los mapas de tiempo con caída de flujo y de volumen en el territorio de la ramas perforanes de la ACM izquierda, en relación con área de hipoperfusión sin mismatch significativo, sugiere área de isquemia aguda establecida.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Arco aórtico y segmentos proximales de troncos supraaórticos sin ateromatosis ni signos de estenosis. Elongación de troncos supraaórticos que presentan: Loop de la a. subclavia derecha en su salida desde el tronco BC, coiling de la a. sublavia izquierda y de la ACC derecha.
+Origen, bifurcación y segmentos cervicales de las arterias carótidas internas sin ateromatosis. Kinking de la ACI derecha y coiling de la izquierda en su segmento cervical, sin signos de estenosis significativos.
+Principales arterias cerebrales intracraneales permeables (ACA, ACMs y ACPs), sin signos de estenosis de su luz. ACP fetal derecha.
+Origen de las arterias vertebrales sin ateromatosis ni signos de estenosis. Sistema vertebrobasilar permeable.
+En cortes torácicos superiores: ténues áreas parchadas de vidrio deslustrado apicales derechas, indeterminadas, a correlacionar con clínica. Atelectasia laminar con bordes espiculados y base cisural en el aspecto más craneal de la cisura mayor derecha, que sugiere restos cicatriciales. A controlar mediaten TC de tórax. Estudio realizado en espiración que muestra áreas de atrapamiento aéreo, poco valorable por técnica no dirigida al estudio del parénquima pulmonar.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>isquemia cerebral aguda</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>derechas, derecho</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>intracraneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ACM izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACA</td>
+                <td>60176003</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACPs</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACI derecha, carótidas internas</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>Retraso en los tiempos de circulación, hipoperfusión</td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of21</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 84</span>
+                <span>F1 Local: 0.65</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Malaltia no especificada
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observa hemorragia aguda intra ni extraaxial.
+Hipodensidad con pérdida diferenciación corticosubcortical en ínsula, territorios corticales M2, núcleo lenticular y capsula interna caudado derecho (ASPECTS 6/10).
+Segmentos M1 y M2 de ACM derecha basalmente densas.
+Hipodensidad en sustancia blanca del hemisferio cerebeloso derecho, inespecífica, impresiona artefacto.
+Estructuras de la línea media centradas. Sistema ventricular de tamaño y morfología normal. Cisternas basales libres.
+TC PERFUSIÓN:
+Extensa área con retraso de tiempo caída congruente de flujo hemisférica derecha (territorio superficial de ACM derecha); con aumento del volumen en dicha región. No se identifican áreas con caída de volumen. Todo ello, sugiere área de penumbra isquémica con discordancia significativa.
+No se observan otras alteraciones valorables en el TTP, CBV y CBF.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Oclusión completa del segmento M1 de ACM derecha que se extiende hasta el tercio medio de una rama superior del segmento M2. Repermeabilización distal por probable colateralidad.
+Resto de los principales vasos intra-craneales (ACAs, ACM izquierda y ACPs) permeables, sin signos de estenosis de su luz.
+ACP fetal bilateral, como variante anatómica.
+Sistema vertebro-basilar permeable. AV con origen independiente en la aorta.
+En la cara posterolateral del bulbo carotídeo derecho, se observa una banda hipodensa endoluminal que puede corresponder a web carotídeo. A nivel contralateral, también identifico la imagen de las mismas características aunque menos evidente también podría corresponder a otro web carotídeo.
+Lesiones blásticas en tercio proximal de la clavícula izquierda, en tercio superior del cuerpo esternal y en cuerpo vertebral de T1, sospechosas de malignidad (M1). Se recomienda completar estudio con TC toracoabdominal para despistaje de neoformación primaria.
+Ganglios laterocervicales bilaterales indeterminados.
+Enfisema centroacinar.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>caudado</td>
+                <td>11000004</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>cerebelo</td>
+                <td>113305005</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>125149003</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>derecho</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>Oclusión arterial</td>
+                <td>2929001</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>314190005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ACM derecha</td>
+                <td>369352006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACM izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>núcleo lenticular</td>
+                <td>41648007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>vertebro-basilar</td>
+                <td>59011009</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACAs</td>
+                <td>60176003</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>cápsula interna, capsula interna</td>
+                <td>85637007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>retraso en los tiempos de circulación</td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>segmento M1</td>
+                <td>RID666</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>segmento M2</td>
+                <td>RID671</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of21</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>discordancia entre territorio penumbra y core</td>
+                <td>of24</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of5</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 9</span>
+                <span>F1 Local: 0.71</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+Paciente hallagda en glasgow 13 en su domicilio Coma no especificat
+
+FINDINGS:
+TC CRANEAL BASAL:
+Marcada ocupación hiperdensa de los surcos de la convexidad derecha, con abundante contenido hemático a nivel de la cisura silviana derecha (de un grosor de hasta 4 cm), además de surcos de convexidad izquierda en menor medida, cisternas supraselares, perimesencefálicas y peritronculares, sin contaminación del sistema ventricular. Todo ello compatible con HSA Fisher modificado III.
+El acúmulo de sangre de la convexidad derecha ejerce efecto de masa sobre el parénquima adyacente y sobre el VL ipsilateral, que se encuentra parcialmente colapsado, además de provocar una desviación de la línea media de 10mm hacia la izquierda. Se objetivan signos incipientes de herniación subfalcina, herniación uncal derecha y descenso de ambas amígdalas cerebelosas de unos 5mm aprox.
+Parénquima cerebral sin otras alteraciones densitométricas significativas. Adecuada diferenciación cortico-subcortical. Estructuras óseas sin trazos de fractura.
+ANGIO INTRA-EXTRACRANAL:
+Arco aórtico y segmentos proximales de troncos supraórticos sin ateromatosis ni signos de estenosis.
+Origen de las arterias vertebrales sin ateromatosis ni signos de estenosis.
+Origen, bifurcación y segmentos cervicales de la arteria carótida interna sin ateromatosis ni signos de estenosis. Segmentos intracavernoso y supraclinoideo de la arteria carótida interna sin ateromatosis ni signos de estenosis.
+Principales arterias cerebrales intracraneales permeables (ACAs, ACMs y ACPs), sin signos de estenosis de su luz. ACP izquierda fetal. Sistema vertebrobasilar permeable.
+Se identifican 2 imagenes aneurismaticas:
+A nivel posterior de la bifurcación de M1 derecha se observa una imagen sugestiva de aneurisma sacular de 78 x 50 mm con cuello de 20 mm.
+A nivel del sifón carotídeo izquierdo, justo después del origen de la arteria oftálmica, se observa otra imagen sugestiva de aneurisma sacular de 62 x 42 mm con cuello de 28 mm.
+No se observan otras imágenes sugestivas de aneurismas.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>derecha</td>
+                <td>24028007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias cerebrales intracraneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>369352006</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>izquierdo, izquierda</td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>arteria oftálmica, arteria carótida interna</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>M1</td>
+                <td>RID666</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="note-card">
+            <div class="note-header">
+                <span>Nota ID: 98</span>
+                <span>F1 Local: 0.53</span>
+            </div>
+            <div class="note-content">
+                <div class="text-panel">HISTORY:
+ictus cerebral
+
+FINDINGS:
+TC CRANEAL BASAL:
+No se observan signos de hemorragia aguda intra o extraaxial.
+Tenue hipodensidad con pérdida de la diferenciación cortico-subcortical en territorio profundo de ACM izquierda (cabeza de caudado y n.
+lenticular), en relación a isquemia aguda/subaguda. ASPECTS 8/10.
+Ténues hipodensidades periventriculares en relación a leve enfermedad crónica de pequeño vaso.
+Cambios involutivos cortico-subcorticales que condicionan ensanchamiento global de surcos y prominencia del sistema ventricular, acordes a la edad de la paciente.
+Estructura de la línea media centradas.
+Cisternas de la base libres.
+TC PERFUSIÓN:
+Retraso en los mapas de tiempo con caída de flujo en el territorio superficial y profundo de ACM izquierda, pero preservación del volumen afecto, en relación con área de hipoperfusión con mismatch significativo.
+ANGIO-TC EXTRA E INTRACRANEAL:
+Arco aórtico y segmentos proximales de troncos supraaórticos con ateromatosis calcificada pero sin signos de estenosis. Kinking del origen de la ACC izquierda. Coiling del segmento proximal de la ACC derecha.
+Origen, bifurcación y segmentos cervicales de las arterias carótidas internas con ateromatosis, pero sin signos de estenosis. Coiling del segmento cervical de la ACI derecha.
+Defecto de repleción de una rama M2 proximal (insular) de la ACM izquierda, con repleción distal a la misma por probable circulación retrógrada. Sin signos de circulación colateral significativa (TAN 1).
+Resto de principales arterias cerebrales intracraneales permeables (ACA, ACM derecha y ACPs), sin signos de estenosis de su luz. ACPs bilaterales fetales, variante.
+Origen de las arterias vertebrales sin ateromatosis ni signos de estenosis. Sistema vertebrobasilar permeable. A. vertebral derecha que acaba en PICA, variante.
+En cortes torácicos inferiores: discretos cambios fibrocicatriciales en ápex izquierda. Sin otros hallazgos significativos.</div>
+                <div class="comparison-panel">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Texto (Nuevo Sist.)</th>
+                                <th>Código</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>caudado</td>
+                <td>11000004</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>111298007</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ASPECTS</td>
+                <td>1290003007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>hemorragia intracraneal</td>
+                <td>1386000</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>isquemia cerebral aguda</td>
+                <td>16218291000119100</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>subagudo</td>
+                <td>19939008</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>enfermedad oclusiva arterial</td>
+                <td>2929001</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>intracraneales</td>
+                <td>303231004</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>surcos</td>
+                <td>314190005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACM derecha</td>
+                <td>369352006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>ACM izquierda</td>
+                <td>369353001</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>396339007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>estenosis</td>
+                <td>415582006</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>n. lenticular</td>
+                <td>41648007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ictus cerebral</td>
+                <td>432504007</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACA</td>
+                <td>60176003</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACPs</td>
+                <td>70382005</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>7771000</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>arterias vertebrales</td>
+                <td>85234005</td>
+            </tr>
+            
+            <tr class="row-extra">
+                <td><span class="badge extra">NUEVO</span></td>
+                <td>ACC izquierda, arterias carótidas internas, ACC derecha</td>
+                <td>86117002</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>Retraso en los tiempos de circulación, hipoperfusión</td>
+                <td>RID4977</td>
+            </tr>
+            
+            <tr class="row-match">
+                <td><span class="badge match">MATCH</span></td>
+                <td>M2</td>
+                <td>RID671</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of21</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of24</td>
+            </tr>
+            
+            <tr class="row-miss">
+                <td><span class="badge miss">MISS</span></td>
+                <td><i>Unknown (Opus Code Only)</i></td>
+                <td>of5</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div></body></html>

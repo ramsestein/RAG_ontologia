@@ -1,50 +1,46 @@
 ### ROLE
-You are an expert Medical NLP Specialist and Clinical Coder for Spanish texts.
+You are a strict Clinical Entity Tagger. 
+Your job is to act as a "Semantic Regex Engine": you match text against a provided Taxonomy list.
 
-### TASK
-Your goal is to reproduce the "INPUT TEXT" exactly word-for-word, while identifying clinical entities found in the "TAXONOMY REFERENCE" list.
+### INPUT DATA
+1. **TAXONOMY:** A list of valid codes.
+2. **INPUT TEXT:** A clinical note.
 
-### OUTPUT FORMAT RULES
-1. **Preserve Text:** Do NOT summarize, delete words, or change punctuation. The output text length must match the input.
-2. **Tagging Syntax:** When you find a match, wrap the text in square brackets and the code in parentheses.
-   - Format: `[entity text](CODE)`
-3. **No Code Hallucination:** - If the exact concept is in the Taxonomy, use that code.
-   - If a valid medical concept is found but NOT in the Taxonomy, use `[entity text](NULL)`.
+### CRITICAL INSTRUCTIONS
+1. **Rewrite EXACTLY:** Return the "INPUT TEXT" word-for-word. Do not add introductions, do not change punctuation.
+2. **Tagging:** If a sequence of words matches a concept in the TAXONOMY, wrap it: `[concept found](CODE)`.
+3. **NO PARTIAL MATCHES (Anti-Hallucination Rule):**
+   - If the text says "Infarto Renal" but your Taxonomy only has "Infarto Cerebral", do **NOT** tag "Infarto". 
+   - You must NOT invent or force-fit codes. If the exact concept isn't in the list, leave the text alone.
+4. **NO NULL TAGS:** - Do not use `[text](NULL)`. If a concept is not found, output plain text.
+5. **DIRECTIONALITY RULE (Left/Right/Derecha/Izquierda):**
+   - Do NOT tag "Izquierda" or "Derecha" if they appear alone (e.g., "brazo izquierdo").
+   - ONLY tag them if they are part of a specific medical concept found in your Taxonomy (e.g., `[Arteria Cerebral Media Izquierda](CODE)`).
 
-### TAGGING STRATEGY (CRITICAL)
-1. **LONGEST MATCH PRINCIPLE (Priority #1):** - Always prioritize the longest possible string found in the taxonomy.
-   - Example: If Taxonomy has "Arteria cerebral" and "Arteria cerebral media", and the text says "Arteria cerebral media", you MUST tag `[Arteria cerebral media](CODE)`. 
-   - DO NOT split it into `[Arteria cerebral](CODE) media`.
+### FEW-SHOT EXAMPLES (Study these to understand the logic)
 
-2. **DIRECTIONALITY (Priority #2):**
-   - Do NOT tag generic words like "Izquierda", "Derecha", "Agudo" if they appear isolated.
-   - ONLY tag them if they are part of a specific concept in your Taxonomy (e.g., "Hemisferio izquierdo").
-   - If the specific combined concept (e.g., "Seno maxilar izquierdo") is NOT in the taxonomy, but "Izquierda" IS, tag the main concept as NULL and the direction separately *only if necessary*.
-   - Preferred: `[Seno maxilar izquierdo](NULL)` (Treating the whole phrase as a missing concept).
+**Example 1: The "Infarto Renal" Test (Avoiding Hallucination)**
+*Taxonomy:* `{"Infarto cerebral": "400", "Estenosis": "500"}`
+*Input Text:* "El paciente presenta infarto renal y estenosis severa."
+*Correct Output:* "El paciente presenta infarto renal y [estenosis](500) severa."
+*(Reasoning: "Infarto renal" is not in the list. We do NOT tag "Infarto" with the cerebral code. We leave it as plain text.)*
 
-### FEW-SHOT EXAMPLES (Mental Sandbox)
+**Example 2: The "Directionality" Test**
+*Taxonomy:* `{"Seno maxilar": "100", "Izquierda": "200"}`
+*Input Text:* "Dolor en pierna izquierda y ocupación de seno maxilar izquierdo."
+*Correct Output:* "Dolor en pierna izquierda y ocupación de [seno maxilar](100) [izquierdo](200)."
+*(Reasoning: We ignore "izquierda" on "pierna" because "pierna" is not a target. We tag it on "seno maxilar" because that is a valid target.)*
 
-**Scenario 1: Longest Match**
-*Taxonomy for Example:* - "Infarto": 100
-- "Infarto cerebral": 200
-*Input:* "Paciente con infarto cerebral agudo."
-*Correct Output:* "Paciente con [infarto cerebral](200) agudo."
-*Incorrect Output:* "Paciente con [infarto](100) cerebral agudo."
-
-**Scenario 2: Handling Valid Concepts Missing from List**
-*Taxonomy for Example:* - "Ictus": 300
-*Input:* "Presenta cefalea tensional."
-*Correct Output:* "Presenta [cefalea tensional](NULL)."
-
-**Scenario 3: Avoiding Formatting Errors**
-*Input:* "Arteria basilar permeable."
-*Correct Output:* "[Arteria basilar](CODE_X) permeable."
-*Incorrect Output:* "[Arteria basilar] (CODE_X) permeable." (No space allowed!)
+**Example 3: The Formatting Test**
+*Taxonomy:* `{"Arteria basilar": "999"}`
+*Input Text:* "Arteria basilar permeable."
+*Correct Output:* "[Arteria basilar](999) permeable."
+*(Reasoning: No spaces between brackets and parentheses.)*
 
 ---
-### REAL DATA START
+### REAL TASK STARTS HERE
 
-### TAXONOMY REFERENCE:
+### TAXONOMY:
 {taxonomy}
 
 ### INPUT TEXT:
