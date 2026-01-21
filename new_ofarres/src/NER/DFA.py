@@ -1,9 +1,23 @@
+"""
+DFA (Deterministic Finite Automaton) based Entity Extractor for Spanish Radiology Reports.
+
+Uses FlashText for high-speed, exact keyword matching with Spanish accent normalization.
+"""
+
 import json
 import os
 import unicodedata
 from flashtext import KeywordProcessor
 
+
 class EntityExtractorDFA:
+    """
+    Dictionary-based Named Entity Recognition using FlashText.
+    
+    Handles Spanish text with accent normalization while preserving
+    accurate character indices for span extraction.
+    """
+    
     def __init__(self, taxonomy_path):
         """
         Initializes the Dictionary-based NER.
@@ -22,18 +36,25 @@ class EntityExtractorDFA:
     def _normalize_text(self, text):
         """
         Normalizes Spanish text to ensure robust matching.
-        1. Decomposes characters (NFD).
-        2. Removes non-spacing marks (accents).
-        3. Converts to lowercase.
         
-        Example: "Artería" -> "arteria"
+        Process:
+        1. Decomposes characters (NFD): 'á' -> 'a' + combining accent
+        2. Removes non-spacing marks (accents): 'a' + combining accent -> 'a'
+        3. Converts to lowercase
+        
+        Index Preservation:
+        For standard Spanish/Latin characters, the normalized text maintains
+        1:1 character position mapping with the original text, allowing
+        accurate span extraction from the original string.
+        
+        Example: "Artería" (7 chars) -> "arteria" (7 chars)
         """
         if not text:
             return ""
         
-        # NFD decomposition separates 'á' into 'a' + '´'
+        # NFD decomposition separates 'á' into 'a' + combining accent mark
         text = unicodedata.normalize('NFD', text)
-        # Filter out the accent marks
+        # Filter out the accent marks (category 'Mn' = Mark, Nonspacing)
         text = ''.join([c for c in text if unicodedata.category(c) != 'Mn'])
         return text.lower()
 
@@ -78,7 +99,7 @@ class EntityExtractorDFA:
         clean_text = self._normalize_text(text)
 
         # 2. Extract (returns list of (code, start_idx, end_idx))
-        # Note: We use clean_text for matching, but indices usually map 1:1 to original text 
+        # Note: We use clean_text for matching, but indices map 1:1 to original text
         # for standard Spanish/Latin characters.
         matches = self.keyword_processor.extract_keywords(clean_text, span_info=True)
 
@@ -139,6 +160,7 @@ class EntityExtractorDFA:
             })
 
         return processed_notes
+
 
 # --- Execution Block (for testing) ---
 if __name__ == "__main__":

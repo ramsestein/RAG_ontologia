@@ -1,4 +1,9 @@
-# -*- coding: utf-8 -*-
+"""
+Helper script to write ensamble.py file correctly.
+Run with: python write_ensamble.py
+"""
+
+code = '''# -*- coding: utf-8 -*-
 """
 Strict Hybrid Ensemble NER Pipeline for Spanish Radiology Reports.
 """
@@ -25,7 +30,7 @@ class NEREnsemble:
         self._load_taxonomy_for_lookup(taxonomy_path)
         
         print("[OK] Ensemble ready! (Strict mode: only coded entities survive)")
-        print("=" * 60 + "\n")
+        print("=" * 60 + "\\n")
 
     def _load_taxonomy_for_lookup(self, taxonomy_path: str):
         self.alias_to_code = {}
@@ -167,7 +172,7 @@ class NEREnsemble:
 
 
 def verify_note1(entities: List[Dict]) -> bool:
-    print("\n" + "=" * 60)
+    print("\\n" + "=" * 60)
     print("[VERIFY] Note 1 Requirements")
     print("=" * 60)
     
@@ -205,15 +210,23 @@ if __name__ == "__main__":
         
         with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
-        print(f"\n[SAVED] {OUTPUT_FILE}")
+        print(f"\\n[SAVED] {OUTPUT_FILE}")
         
         if results:
             note1 = results[0]
-            print(f"\n[NOTE 1] ID: {note1['id']}, Entities: {len(note1['extracted_entities'])}")
+            print(f"\\n[NOTE 1] ID: {note1['id']}, Entities: {len(note1['extracted_entities'])}")
             verify_note1(note1['extracted_entities'])
-            print("\n[JSON] Note 1:")
+            print("\\n[JSON] Note 1:")
             print(json.dumps(note1, indent=2, ensure_ascii=False))
     except Exception as e:
         print(f"[ERROR] {e}")
         import traceback
         traceback.print_exc()
+'''
+
+# Write the file
+with open('ensamble.py', 'w', encoding='utf-8') as f:
+    f.write(code)
+
+print("ensamble.py written successfully!")
+print(f"File size: {len(code)} bytes")

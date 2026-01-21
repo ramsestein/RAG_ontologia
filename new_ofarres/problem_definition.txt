@@ -13,18 +13,14 @@ generate like a tree where I can go up/down and keep track of all concepts appea
 
 Let's focus solely on the NER: Entity Extraction step.
 
-I have approached it as a multistep pipeline:
-    1-DFA (with ahocorasick), with TRIEs for obvious dictionary words
-    2-NegEx to delete false positives
-    3-LLM to filter everything out
+After numerous research, I have discovered that the best apporach for the NER is doing an ensamble.
+An ensamble that basically is the union of 2 approaches:
+    1. Dictionary approach -> DFA with ahocorasick with TRIEs
+    2. LLM approach (openAI)
 
-The idea is to use this as a cascade pipeline, where the maximum priority is recall 100%. The idea is
-that I cannot miss TP but having some FP it is not a problem. That is, the sole metric we need to maximize is recall.
-Ideally a recall of 100%. 
+The idea is to use this as an union, essentially just adding the 2 concepts. For the overlapped concepts such as:
+    "brain" or "left brain", the approach should be deleting "brain" and using only the "left brain" entity.
 
-Just for the entity recognisition, my idea is to identify the entitis with the union of 2 identifiers:
-    1-DFA (+NegEX to delete some FP)
-    2-LLM
 
 
     
