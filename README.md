@@ -1,82 +1,157 @@
 # Proyecto RAG Ontología
 
-Bienvenido al repositorio oficial del proyecto **RAG Ontología**. Este proyecto representa un esfuerzo de vanguardia en el desarrollo e implementación de soluciones basadas en **Generación Aumentada por Recuperación (RAG)** aplicadas a dominios ontológicos complejos, específicamente dentro del ámbito clínico y biomédico.
+Bienvenido al repositorio oficial del proyecto **RAG Ontología**. Este proyecto representa un esfuerzo de vanguardia en el desarrollo e implementación de soluciones basadas en **Generación Aumentada por Recuperación (RAG)** aplicadas a dominios ontológicos complejos, desarrollado en el **Hospital Clínic de Barcelona**.
 
-Desarrollado en el **Hospital Clínic de Barcelona**, este repositorio alberga la investigación y el código fuente necesarios para abordar desafíos críticos en la extracción de información y el procesamiento de lenguaje natural (PLN) clínico.
+El proyecto aborda la extracción precisa de información clínica y su enriquecimiento mediante ontologías médicas estándar como **SNOMED-CT**.
+
+---
 
 ## 📋 Tabla de Contenidos
 
-1.  [Descripción del Proyecto](#descripción-del-proyecto)
-2.  [Estructura del Repositorio](#estructura-del-repositorio)
-3.  [Soluciones Implementadas](#soluciones-implementadas)
-4.  [Tecnologías Clave](#tecnologías-clave)
-5.  [Autores y Reconocimientos](#autores-y-reconocimientos)
-6.  [Licencia](#licencia)
+1.  [Visión General](#visión-general)
+2.  [Arquitectura del Sistema](#arquitectura-del-sistema)
+    *   [Solución 1: Pipeline NER + RAG (`ofarres`)](#solución-1-pipeline-ner--rag-ofarres)
+    *   [Solución 2: Ensemble Híbrido Estricto (`new_ofarres`)](#solución-2-ensemble-híbrido-estricto-new_ofarres)
+3.  [Guía de Ejecución](#guía-de-ejecución)
+    *   [Ejecutar Frontend y API (`ofarres`)](#ejecutar-frontend-y-api-ofarres)
+    *   [Generar Visualizaciones (`new_ofarres`)](#generar-visualizaciones-new_ofarres)
+4.  [Estructura del Proyecto](#estructura-del-proyecto)
+5.  [Autores y Licencia](#autores-y-licencia)
 
-## 🏥 Descripción del Proyecto
+---
 
-El objetivo principal de este proyecto es mejorar la precisión y la interpretabilidad de los sistemas de IA en entornos clínicos mediante el uso de ontologías estructuradas (como SNOMED CT) para guiar y validar la generación de respuestas. El proyecto se divide en fases iterativas de resolución de problemas, donde cada fase aborda una complejidad creciente en la vinculación de entidades y el razonamiento ontológico.
+## 🏥 Visión General
 
-## 📂 Estructura del Repositorio
+El objetivo principal es mejorar la interpretabilidad y precisión de los sistemas de IA en entornos clínicos. Utilizamos ontologías estructuradas para validar y enriquecer las entidades extraídas de notas clínicas no estructuradas (ej. informes de radiología).
 
-El código base está organizado meticulosamente para separar las diferentes iteraciones de investigación y desarrollo. A continuación, se detalla la estructura principal:
+El repositorio está dividido en dos fases evolutivas:
+*   **`ofarres/`**: La primera iteración, centrada en un pipeline RAG completo con interfaz web.
+*   **`new_ofarres/`**: La iteración actual, centrada en un **Ensemble Híbrido** de alta precisión y visualización de grafos de conocimiento.
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+### Solución 1: Pipeline NER + RAG (`ofarres`)
+
+Esta solución implementa un flujo completo desde la extracción hasta la visualización web.
+
+#### Componentes Principales:
+1.  **Backend (FastAPI)**:
+    *   **NER Pipeline (Stage 1)**: Utiliza **spaCy**, **scispaCy** (SciBERT) y coincidencia exacta de ontologías para extraer entidades.
+    *   **RAG Module (Stage 2)**: Enriquece las entidades mediante búsqueda vectorial (**FAISS** + **SapBERT**) sobre SNOMED-CT.
+2.  **Frontend (React + Vite)**:
+    *   Interfaz moderna para visualizar notas clínicas.
+    *   Resaltado interactivo de entidades y exploración de la ontología.
+
+#### Diagrama de Flujo:
+```mermaid
+graph LR
+    User[Usuario] -->|Nota Clínica| React[Frontend React]
+    React -->|API Request| FastAPI[Backend FastAPI]
+    FastAPI -->|Extract| NER[Module NER]
+    NER -->|Enrich| RAG[Module RAG]
+    RAG -->|Context| SNOMED[SNOMED-CT DB]
+    FastAPI -->|JSON Response| React
+```
+
+---
+
+### Solución 2: Ensemble Híbrido Estricto (`new_ofarres`)
+
+Esta solución refina la precisión mediante un enfoque de "Voto Mayoritario Estricto" y visualización avanzada de jerarquías.
+
+#### Componentes Principales:
+1.  **Ensemble NER (`src/NER/ensamble.py`)**:
+    *   Combina dos extractores potentes:
+        *   **DFA Extractor**: Autómata Finito Determinista para coincidencias léxicas exactas y rápidas.
+        *   **LLM Extractor**: Modelos de lenguaje grandes para comprensión contextual.
+    *   **Lógica de "Maximal Munch"**: Resuelve conflictos de superposición priorizando tramos más largos y coincidencias de ontología verificadas.
+    *   **Filtrado Estricto**: Solo sobreviven las entidades que pueden mapearse a un código SNOMED válido.
+
+2.  **Tree Builder & Visualizer (`src/Ontology/tree_builder.py`)**:
+    *   Construye árboles jerárquicos basados en las relaciones `IS-A` de la ontología OWL.
+    *   Genera un grafo interactivo en HTML utilizando **D3.js**.
+
+---
+
+## 🚀 Guía de Ejecución
+
+Asegúrese de haber completado los pasos previos en [SETUP.md](SETUP.md).
+
+### Ejecutar Frontend y API (`ofarres`)
+
+Para interactuar con la interfaz web de la primera solución:
+
+#### 1. Iniciar el Frontend (React)
+Navegue al directorio del frontend e inicie el servidor de desarrollo:
+
+```bash
+cd ofarres/frontend
+npm install   # Solo la primera vez
+npm run dev
+```
+> El frontend estará disponible en: `http://localhost:5173` (o el puerto que indique Vite).
+
+#### 2. Iniciar el Backend (FastAPI)
+(Opcional, si desea que el frontend procese datos reales)
+
+```bash
+cd ofarres
+uvicorn api.main:app --reload
+```
+
+---
+
+### Generar Visualizaciones (`new_ofarres`)
+
+Para ejecutar el nuevo pipeline de ensemble y generar el Grafo de Conocimiento interactivo:
+
+#### 1. Ejecutar el Constructor de Árboles
+Este script procesará las notas, aplicará la ontología y generará el HTML.
+
+```bash
+# Desde la raíz del proyecto
+python new_ofarres/src/Ontology/tree_builder.py
+```
+
+#### 2. Visualizar el Resultado
+El script generará un archivo HTML en:
+`data/processed/knowledge_graph.html`
+
+Abra este archivo en su navegador web favorito (Chrome, Firefox, Edge) para ver el grafo interactivo.
+*   **Vista Árbol**: Muestra la jerarquía textual.
+*   **Vista Grafo**: Muestra una visualización de nodos y enlaces con D3.js.
+
+---
+
+## 📂 Estructura del Proyecto
 
 ```
 RAG_ontologia/
-├── ofarres/             # Solución al Planteamiento del Primer Problema
-├── new_ofarres/         # Solución al Planteamiento del Nuevo Problema (Actual)
-├── snomed-ct-entity.../ # Recursos y herramientas de vinculación de entidades SNOMED
-├── .venv/               # Entorno virtual (no incluido en control de versiones)
-├── README.md            # Este archivo
-├── SETUP.md             # Guía de instalación y configuración
-├── LICENSE.md           # Términos de licencia y uso
-├── CONTRIBUTING.md      # Guías para colaboradores
-└── CHANGELOG.md         # Registro de cambios y versiones
+├── ofarres/                      # SOLUCIÓN 1 (Frontend + Backend)
+│   ├── api/                      # Endpoints FastAPI
+│   ├── backend/                  # Lógica Core (NER, RAG)
+│   ├── frontend/                 # Aplicación React/Vite
+│   └── ARCHITECTURE.md           # Documentación técnica específica
+├── new_ofarres/                  # SOLUCIÓN 2 (Ensemble + Grafos)
+│   ├── src/
+│   │   ├── NER/                  # Scripts de Ensemble (DFA + LLM)
+│   │   └── Ontology/             # Scripts de Ontología y Visualización
+│   └── LLM_evaluation/           # Benchmarks de modelos
+├── data/                         # Datos compartidos (Notas, JSONs)
+├── snomed-ct-entity-linking/     # Submódulo de utilidades SNOMED
+├── README.md                     # Documentación Principal
+└── SETUP.md                      # Guía de Instalación
 ```
 
-## 🚀 Soluciones Implementadas
-
-### 1. Solución Inicial (`ofarres/`)
-Este directorio contiene la implementación original diseñada para el primer conjunto de desafíos planteados.
-*   **Enfoque:** Métodos tradicionales de recuperación y alineación básica con ontologías.
-*   **Estado:** Archivado/Referencia. Útil para entender la línea base del proyecto.
-
-### 2. Solución Avanzada (`new_ofarres/`)
-Este directorio alberga el desarrollo actual y más avanzado, respondiendo a los nuevos desafíos y complejidades descubiertas.
-*   **Enfoque:** Uso de ensembles de modelos NER (Reconocimiento de Entidades Nombradas), algoritmos de grafos para linaje ontológico, y estrategias de RAG más sofisticadas.
-*   **Estado:** Activo/En Desarrollo. Aquí reside el código fuente principal para la fase actual.
-
-## 🛠️ Tecnologías Clave
-
-Este proyecto hace uso extensivo de un stack tecnológico robusto en Python:
-
-*   **Procesamiento de Lenguaje Natural:** `spaCy`, `scispacy` (modelos biomédicos), `transformers` (Hugging Face).
-*   **Ontologías y Grafos:** `owlready2` para manipulación de OWL, algoritmos de grafos personalizados.
-*   **Machine Learning/Deep Learning:** `torch`, `tensorflow` (según los modelos específicos utilizados).
-*   **Infraestructura de Datos:** Gestión eficiente de datasets médicos y salidas JSON estructuradas.
-
-## 👥 Autores y Reconocimientos
-
-Este proyecto es el resultado del trabajo dedicado del **Departamento de Informática Clínica** del **Hospital Clínic de Barcelona**.
-
-### Autor Principal
-*   **Oriol Farrés**
-    *   *Rol:* Desarrollador Principal e Investigador.
-    *   *Contribución:* Implementación del código, diseño de algoritmos y experimentación.
-
-### Supervisión y Dirección
-*   **Santiago Frid**
-    *   *Rol:* Supervisor del Proyecto.
-    *   *Contribución:* Orientación estratégica y revisión técnica.
-*   **Ramsés Marrero**
-    *   *Rol:* Supervisor del Proyecto.
-    *   *Contribución:* Definición de objetivos clínicos y validación de metodología.
-
-## 📄 Licencia
-
-Este software es propiedad intelectual del **Hospital Clínic de Barcelona**.
-
-El uso, modificación y distribución de este software están regidos por las políticas internas del Hospital. Para más detalles, consulte el archivo [LICENSE.md](LICENSE.md).
-
 ---
-© Hospital Clínic de Barcelona - Departamento de Informática Clínica
+
+## 👥 Autores y Licencia
+
+**Departamento de Informática Clínica - Hospital Clínic de Barcelona**
+
+*   **Autor Principal:** Oriol Farrés
+*   **Supervisión:** Santiago Frid y Ramsés Marrero
+
+Consulte [LICENSE.md](LICENSE.md) para detalles legales.
