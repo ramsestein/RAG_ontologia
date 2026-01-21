@@ -1,0 +1,130 @@
+// Note 0000000010000000057609599
+digraph {
+	rankdir=LR
+	node [fontname=Helvetica shape=box style=rounded]
+	Note_0000000010000000057609599 [label="Note: 0000000010000000057609599" fillcolor="#E0E0E0" shape=doubleoctagon style=filled]
+	Note_0000000010000000057609599_findings [label=FINDINGS fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057609599 -> Note_0000000010000000057609599_findings
+	Note_0000000010000000057609599_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Estructura_corporal
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 [label=384763002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 [label=21031007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 [label=119237002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005 [label=113305005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005
+	"ENT_113305005_hemisferio cerebeloso derecho" [label=<hemisferio cerebeloso derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 113305005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005 -> "ENT_113305005_hemisferio cerebeloso derecho"
+	Note_0000000010000000057609599_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Estructura_corporal
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 [label=384763002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 [label=21031007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 [label=119237002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005 [label=113305005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005
+	"ENT_113305005_parénquima cerebeloso" [label=<parénquima cerebeloso<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 113305005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005 -> "ENT_113305005_parénquima cerebeloso"
+	Note_0000000010000000057609599_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Estructura_corporal
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 [label=384763002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 [label=21031007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 [label=119237002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_15926001 [label=15926001 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_15926001
+	"ENT_15926001_tronco encefálico" [label=<tronco encefálico<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 15926001</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_15926001 -> "ENT_15926001_tronco encefálico"
+	Note_0000000010000000057609599_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Estructura_corporal
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 [label=384763002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 [label=21031007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 [label=119237002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005 [label=113305005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002 -> Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005
+	"ENT_113305005_cisternas pontobulbocerebelosas" [label=<cisternas pontobulbocerebelosas<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 113305005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Estructura_corporal_384763002_21031007_119237002_113305005 -> "ENT_113305005_cisternas pontobulbocerebelosas"
+	Note_0000000010000000057609599_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Calificador
+	Note_0000000010000000057609599_findings_Calificador_7771000 [label=7771000 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Calificador -> Note_0000000010000000057609599_findings_Calificador_7771000
+	"ENT_7771000_Globo ocular izquierdo" [label=<Globo ocular izquierdo<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 7771000</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Calificador_7771000 -> "ENT_7771000_Globo ocular izquierdo"
+	Note_0000000010000000057609599_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Calificador
+	Note_0000000010000000057609599_findings_Calificador_303231004 [label=303231004 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Calificador -> Note_0000000010000000057609599_findings_Calificador_303231004
+	ENT_303231004_INTRACRANEAL [label=<INTRACRANEAL<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 303231004</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Calificador_303231004 -> ENT_303231004_INTRACRANEAL
+	Note_0000000010000000057609599_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Anomalia_morfologica
+	Note_0000000010000000057609599_findings_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Anomalia_morfologica -> Note_0000000010000000057609599_findings_Anomalia_morfologica_415582006
+	ENT_415582006_estenosis [label=<estenosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Anomalia_morfologica_415582006 -> ENT_415582006_estenosis
+	Note_0000000010000000057609599_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Anomalia_morfologica
+	Note_0000000010000000057609599_findings_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Anomalia_morfologica -> Note_0000000010000000057609599_findings_Anomalia_morfologica_415582006
+	ENT_415582006_estenosis [label=<estenosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Anomalia_morfologica_415582006 -> ENT_415582006_estenosis
+	Note_0000000010000000057609599_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Anomalia_morfologica
+	Note_0000000010000000057609599_findings_Anomalia_morfologica_396339007 [label=396339007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Anomalia_morfologica -> Note_0000000010000000057609599_findings_Anomalia_morfologica_396339007
+	"ENT_396339007_trombo mural" [label=<trombo mural<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 396339007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Anomalia_morfologica_396339007 -> "ENT_396339007_trombo mural"
+	Note_0000000010000000057609599_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings -> Note_0000000010000000057609599_findings_Calificador
+	Note_0000000010000000057609599_findings_Calificador_24028007 [label=24028007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_findings_Calificador -> Note_0000000010000000057609599_findings_Calificador_24028007
+	ENT_24028007_derecho [label=<derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 24028007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_findings_Calificador_24028007 -> ENT_24028007_derecho
+	Note_0000000010000000057609599_impression [label=IMPRESSION fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057609599 -> Note_0000000010000000057609599_impression
+	Note_0000000010000000057609599_impression_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression -> Note_0000000010000000057609599_impression_Estructura_corporal
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002 [label=384763002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007 [label=21031007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002 -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002 [label=119237002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007 -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002_113305005 [label=113305005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002 -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002_113305005
+	"ENT_113305005_hemisferio cerebeloso derecho" [label=<hemisferio cerebeloso derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 113305005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002_113305005 -> "ENT_113305005_hemisferio cerebeloso derecho"
+	Note_0000000010000000057609599_impression_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression -> Note_0000000010000000057609599_impression_Estructura_corporal
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002 [label=384763002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007 [label=21031007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002 -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002 [label=119237002 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007 -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002_113305005 [label=113305005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002 -> Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002_113305005
+	"ENT_113305005_cisternas pontobulbocerebelosas" [label=<cisternas pontobulbocerebelosas<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 113305005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_impression_Estructura_corporal_384763002_21031007_119237002_113305005 -> "ENT_113305005_cisternas pontobulbocerebelosas"
+	Note_0000000010000000057609599_impression_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression -> Note_0000000010000000057609599_impression_Anomalia_morfologica
+	Note_0000000010000000057609599_impression_Anomalia_morfologica_396339007 [label=396339007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Anomalia_morfologica -> Note_0000000010000000057609599_impression_Anomalia_morfologica_396339007
+	"ENT_396339007_trombo mural" [label=<trombo mural<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 396339007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_impression_Anomalia_morfologica_396339007 -> "ENT_396339007_trombo mural"
+	Note_0000000010000000057609599_impression_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression -> Note_0000000010000000057609599_impression_Calificador
+	Note_0000000010000000057609599_impression_Calificador_24028007 [label=24028007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057609599_impression_Calificador -> Note_0000000010000000057609599_impression_Calificador_24028007
+	ENT_24028007_derecho [label=<derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 24028007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057609599_impression_Calificador_24028007 -> ENT_24028007_derecho
+}

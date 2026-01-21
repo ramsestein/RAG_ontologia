@@ -1,0 +1,110 @@
+// Note 0000000010000000057562605
+digraph {
+	rankdir=LR
+	node [fontname=Helvetica shape=box style=rounded]
+	Note_0000000010000000057562605 [label="Note: 0000000010000000057562605" fillcolor="#E0E0E0" shape=doubleoctagon style=filled]
+	Note_0000000010000000057562605_history [label=HISTORY fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057562605 -> Note_0000000010000000057562605_history
+	Note_0000000010000000057562605_history_Unknown [label="RID666 (No Ontology Match)" fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_history -> Note_0000000010000000057562605_history_Unknown
+	"ENT_RID666_artèria cerebral" [label=<artèria cerebral<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: RID666</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_history_Unknown -> "ENT_RID666_artèria cerebral"
+	Note_0000000010000000057562605_findings [label=FINDINGS fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057562605 -> Note_0000000010000000057562605_findings
+	Note_0000000010000000057562605_findings_Unknown [label="1290003007 (No Ontology Match)" fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Unknown
+	ENT_1290003007_ASPECTS [label=<ASPECTS<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 1290003007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Unknown -> ENT_1290003007_ASPECTS
+	Note_0000000010000000057562605_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Calificador
+	Note_0000000010000000057562605_findings_Calificador_7771000 [label=7771000 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Calificador -> Note_0000000010000000057562605_findings_Calificador_7771000
+	"ENT_7771000_seno maxilar izquierdo" [label=<seno maxilar izquierdo<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 7771000</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Calificador_7771000 -> "ENT_7771000_seno maxilar izquierdo"
+	Note_0000000010000000057562605_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Calificador
+	Note_0000000010000000057562605_findings_Calificador_303231004 [label=303231004 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Calificador -> Note_0000000010000000057562605_findings_Calificador_303231004
+	ENT_303231004_INTRACRANEAL [label=<INTRACRANEAL<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 303231004</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Calificador_303231004 -> ENT_303231004_INTRACRANEAL
+	Note_0000000010000000057562605_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Estructura_corporal
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria [label=Arteria fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007 [label=47990007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_85234005 [label=85234005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007 -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_85234005
+	"ENT_85234005_arteria vertebral" [label=<arteria vertebral<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 85234005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_85234005 -> "ENT_85234005_arteria vertebral"
+	Note_0000000010000000057562605_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Anomalia_morfologica
+	Note_0000000010000000057562605_findings_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Anomalia_morfologica -> Note_0000000010000000057562605_findings_Anomalia_morfologica_415582006
+	ENT_415582006_Estenosis [label=<Estenosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Anomalia_morfologica_415582006 -> ENT_415582006_Estenosis
+	Note_0000000010000000057562605_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Anomalia_morfologica
+	Note_0000000010000000057562605_findings_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Anomalia_morfologica -> Note_0000000010000000057562605_findings_Anomalia_morfologica_415582006
+	ENT_415582006_estenosis [label=<estenosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Anomalia_morfologica_415582006 -> ENT_415582006_estenosis
+	Note_0000000010000000057562605_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Estructura_corporal
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria [label=Arteria fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007 [label=47990007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_85234005 [label=85234005 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007 -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_85234005
+	"ENT_85234005_arteria vertebral" [label=<arteria vertebral<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 85234005</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_85234005 -> "ENT_85234005_arteria vertebral"
+	Note_0000000010000000057562605_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Calificador
+	Note_0000000010000000057562605_findings_Calificador_303231004 [label=303231004 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Calificador -> Note_0000000010000000057562605_findings_Calificador_303231004
+	ENT_303231004_intracraneal [label=<intracraneal<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 303231004</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Calificador_303231004 -> ENT_303231004_intracraneal
+	Note_0000000010000000057562605_findings_Estructura_corporal [label=Estructura_corporal fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings -> Note_0000000010000000057562605_findings_Estructura_corporal
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria [label=Arteria fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007 [label=47990007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_59011009 [label=59011009 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007 -> Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_59011009
+	"ENT_59011009_Arteria basilar" [label=<Arteria basilar<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 59011009</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_findings_Estructura_corporal_Arteria_47990007_59011009 -> "ENT_59011009_Arteria basilar"
+	Note_0000000010000000057562605_impression [label=IMPRESSION fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057562605 -> Note_0000000010000000057562605_impression
+	Note_0000000010000000057562605_impression_Unknown [label="1290003007 (No Ontology Match)" fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression -> Note_0000000010000000057562605_impression_Unknown
+	ENT_1290003007_ASPECTS [label=<ASPECTS<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 1290003007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_impression_Unknown -> ENT_1290003007_ASPECTS
+	Note_0000000010000000057562605_impression_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression -> Note_0000000010000000057562605_impression_Calificador
+	Note_0000000010000000057562605_impression_Calificador_7771000 [label=7771000 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression_Calificador -> Note_0000000010000000057562605_impression_Calificador_7771000
+	ENT_7771000_izquierdo [label=<izquierdo<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 7771000</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_impression_Calificador_7771000 -> ENT_7771000_izquierdo
+	Note_0000000010000000057562605_impression_Unknown [label="of5 (No Ontology Match)" fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression -> Note_0000000010000000057562605_impression_Unknown
+	"ENT_of5_oclusión" [label=<oclusión<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: of5</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_impression_Unknown -> "ENT_of5_oclusión"
+	Note_0000000010000000057562605_impression_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression -> Note_0000000010000000057562605_impression_Anomalia_morfologica
+	Note_0000000010000000057562605_impression_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression_Anomalia_morfologica -> Note_0000000010000000057562605_impression_Anomalia_morfologica_415582006
+	ENT_415582006_estenosis [label=<estenosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_impression_Anomalia_morfologica_415582006 -> ENT_415582006_estenosis
+	Note_0000000010000000057562605_impression_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression -> Note_0000000010000000057562605_impression_Calificador
+	Note_0000000010000000057562605_impression_Calificador_303231004 [label=303231004 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression_Calificador -> Note_0000000010000000057562605_impression_Calificador_303231004
+	"ENT_303231004_flujo intracraneal" [label=<flujo intracraneal<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 303231004</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_impression_Calificador_303231004 -> "ENT_303231004_flujo intracraneal"
+	Note_0000000010000000057562605_impression_Unknown [label="of19 (No Ontology Match)" fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057562605_impression -> Note_0000000010000000057562605_impression_Unknown
+	"ENT_of19_vertebral izquierda" [label=<vertebral izquierda<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: of19</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057562605_impression_Unknown -> "ENT_of19_vertebral izquierda"
+}

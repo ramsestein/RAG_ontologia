@@ -30651,9 +30651,10 @@
         
         // Switch between Tree and Graph views
         function switchView(safeId, viewType) {
-            const noteCard = document.getElementById('note-' + safeId.replace(/_/g, '-')); # Assuming original ID logic might be needed, but safeId is used for DOM elements inside body
-            # Using parent element query selector is safer
-            const container = document.getElementById('note-' + safeId.replace(/_/g, '-')).querySelector('.note-body');
+            // Using parent element query selector
+            const cardId = 'note-' + safeId;
+            const noteCard = document.getElementById(cardId);
+            const container = noteCard.querySelector('.note-body');
             
             // Update tabs
             const tabs = container.querySelectorAll('.view-tab');
@@ -30689,7 +30690,7 @@
             
             const width = 800;
             const container = document.getElementById('graph-container-' + safeId);
-            const height = Math.max(400, data.children.length * 100); # Dynamic height
+            const height = Math.max(400, data.children.length * 100); // Dynamic height
             
             // Clear previous
             container.innerHTML = '';

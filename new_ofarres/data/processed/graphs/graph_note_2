@@ -1,0 +1,70 @@
+// Note 0000000010000000057600945
+digraph {
+	rankdir=LR
+	node [fontname=Helvetica shape=box style=rounded]
+	Note_0000000010000000057600945 [label="Note: 0000000010000000057600945" fillcolor="#E0E0E0" shape=doubleoctagon style=filled]
+	Note_0000000010000000057600945_findings [label=FINDINGS fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057600945 -> Note_0000000010000000057600945_findings
+	Note_0000000010000000057600945_findings_Trastorno [label=Trastorno fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Trastorno
+	Note_0000000010000000057600945_findings_Trastorno_131148009 [label=131148009 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Trastorno -> Note_0000000010000000057600945_findings_Trastorno_131148009
+	Note_0000000010000000057600945_findings_Trastorno_131148009_1386000 [label=1386000 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Trastorno_131148009 -> Note_0000000010000000057600945_findings_Trastorno_131148009_1386000
+	ENT_1386000_hemorragia [label=<hemorragia<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 1386000</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Trastorno_131148009_1386000 -> ENT_1386000_hemorragia
+	Note_0000000010000000057600945_findings_Unknown [label="1290003007 (No Ontology Match)" fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Unknown
+	"ENT_1290003007_ASPECTS 10" [label=<ASPECTS 10<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 1290003007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Unknown -> "ENT_1290003007_ASPECTS 10"
+	Note_0000000010000000057600945_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Calificador
+	Note_0000000010000000057600945_findings_Calificador_303231004 [label=303231004 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Calificador -> Note_0000000010000000057600945_findings_Calificador_303231004
+	ENT_303231004_INTRACRANEAL [label=<INTRACRANEAL<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 303231004</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Calificador_303231004 -> ENT_303231004_INTRACRANEAL
+	Note_0000000010000000057600945_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Anomalia_morfologica
+	Note_0000000010000000057600945_findings_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Anomalia_morfologica -> Note_0000000010000000057600945_findings_Anomalia_morfologica_415582006
+	ENT_415582006_estenosis [label=<estenosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Anomalia_morfologica_415582006 -> ENT_415582006_estenosis
+	Note_0000000010000000057600945_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Anomalia_morfologica
+	Note_0000000010000000057600945_findings_Anomalia_morfologica_396339007 [label=396339007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Anomalia_morfologica -> Note_0000000010000000057600945_findings_Anomalia_morfologica_396339007
+	ENT_396339007_trombosis [label=<trombosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 396339007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Anomalia_morfologica_396339007 -> ENT_396339007_trombosis
+	Note_0000000010000000057600945_findings_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Anomalia_morfologica
+	Note_0000000010000000057600945_findings_Anomalia_morfologica_415582006 [label=415582006 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Anomalia_morfologica -> Note_0000000010000000057600945_findings_Anomalia_morfologica_415582006
+	"ENT_415582006_estenosis crítica" [label=<estenosis crítica<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 415582006</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Anomalia_morfologica_415582006 -> "ENT_415582006_estenosis crítica"
+	Note_0000000010000000057600945_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Calificador
+	Note_0000000010000000057600945_findings_Calificador_24028007 [label=24028007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Calificador -> Note_0000000010000000057600945_findings_Calificador_24028007
+	ENT_24028007_derecho [label=<derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 24028007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Calificador_24028007 -> ENT_24028007_derecho
+	Note_0000000010000000057600945_findings_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings -> Note_0000000010000000057600945_findings_Calificador
+	Note_0000000010000000057600945_findings_Calificador_24028007 [label=24028007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_findings_Calificador -> Note_0000000010000000057600945_findings_Calificador_24028007
+	ENT_24028007_derecho [label=<derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 24028007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_findings_Calificador_24028007 -> ENT_24028007_derecho
+	Note_0000000010000000057600945_impression [label=IMPRESSION fillcolor="#D1C4E9" style=filled]
+	Note_0000000010000000057600945 -> Note_0000000010000000057600945_impression
+	Note_0000000010000000057600945_impression_Anomalia_morfologica [label=Anomalia_morfologica fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_impression -> Note_0000000010000000057600945_impression_Anomalia_morfologica
+	Note_0000000010000000057600945_impression_Anomalia_morfologica_396339007 [label=396339007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_impression_Anomalia_morfologica -> Note_0000000010000000057600945_impression_Anomalia_morfologica_396339007
+	ENT_396339007_Trombosis [label=<Trombosis<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 396339007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_impression_Anomalia_morfologica_396339007 -> ENT_396339007_Trombosis
+	Note_0000000010000000057600945_impression_Calificador [label=Calificador fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_impression -> Note_0000000010000000057600945_impression_Calificador
+	Note_0000000010000000057600945_impression_Calificador_24028007 [label=24028007 fillcolor="#BBDEFB" style=filled]
+	Note_0000000010000000057600945_impression_Calificador -> Note_0000000010000000057600945_impression_Calificador_24028007
+	"ENT_24028007_eje ilíaco derecho" [label=<eje ilíaco derecho<BR/><FONT POINT-SIZE='10' COLOR='gray'>Code: 24028007</FONT>> fillcolor="#C8E6C9" shape=note style=filled]
+	Note_0000000010000000057600945_impression_Calificador_24028007 -> "ENT_24028007_eje ilíaco derecho"
+}
